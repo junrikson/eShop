@@ -133,6 +133,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterCustomer> MasterCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterSupplier> MasterSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterWarehouse> MasterWarehouses { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.PurchaseOrder> PurchaseOrders { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.PurchaseOrderDetails> PurchaseOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ChartOfAccount> ChartOfAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SystemLog> SystemLogs { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Authorization> Authorizations { get; set; }

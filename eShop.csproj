@@ -324,7 +324,7 @@
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
     <Compile Include="Models\Master\MasterItems.cs" />
     <Compile Include="Models\Master\MasterWarehouse.cs" />
-    <Compile Include="Models\Purchase\PurchaseOrderHeader.cs" />
+    <Compile Include="Models\AP\PurchaseOrder.cs" />
     <Compile Include="Models\Settings\AccountViewModels.cs" />
     <Compile Include="Models\Master\MasterRegion.cs" />
     <Compile Include="Models\Settings\Authorization.cs" />
