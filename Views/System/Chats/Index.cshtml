@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Chat";
+    ViewBag.Current = "Chats";
+}
+
+@section Styles {
+    @Styles.Render("~/style/mvcgrid")
+}
+
+<style>
+    .tablegrid-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="content-wrapper">
+    <section class="content-header-fixed">
+        <h1 class="col-md-6">
+            Chat Log
+        </h1>
+        <div class="col-md-6 text-right">
+            @if (User.IsInRole("ChatsDelete"))
+            {
+                <button id="btnDelete" class="btn btn-danger" href="@Url.Action("Delete", "Chats")">
+                    <i class="fa fa-trash"></i> Delete
+                </button>
+            }
+            </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" style="margin-top:30px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-body" style="overflow:auto; white-space: nowrap">
+                        @Html.AjaxGrid(Url.Action("IndexGrid"), new { id = "data-table" })
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div id="deleteContainer">
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/mvcgrid")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/unobtrusive")
+
+    <script>
+        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+            new MvcGrid(element);
+        });
+
+        $('#btnDelete').click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data) {
+                $('#deleteContainer').html(data);
+                $('#deleteModal').modal('show');
+            });
+        });
+
+        $(document).on('keyup', '.mvc-grid-search', function () {
+            var grid = new MvcGrid(document.querySelector('#data-table'));
+            grid.query.set('search', this.value);
+
+            grid.reload();
+        });
+
+        function DeleteSuccess(data) {
+            if (data != "success") {
+                $('#deleteContainer').html(data);
+                return;
+            }
+            $('#deleteModal').modal('hide');
+            $('#deleteContainer').html("");
+        
+            var grid = new MvcGrid(document.querySelector('#data-table'));
+            grid.reload();
+        }
+    </script>
+}

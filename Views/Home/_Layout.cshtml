@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@ViewBag.Title - eShop System</title>
+
+    <!-- Meta tag Keywords -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Pelayaran, Bongkar Muat" />
+    <script>
+        addEventListener("load", function ()
+        {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar()
+        {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <!--// Meta tag Keywords -->
+    <!-- banner slider css -->
+    <link rel="shortcut icon" href="@Url.Content("~/dist/img/favicon.ico")" type="image/x-icon">
+    <link href="~/Content/frontend/css/minimal-slider.css" rel='stylesheet' type='text/css' />
+    <!-- //banner slider css -->
+    <!-- css files -->
+    <link rel="stylesheet" href="~/Content/frontend/css/bootstrap.css"> <!-- Bootstrap-Core-CSS -->
+    <link href="~/Content/frontend/css/style6.css" rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="~/Content/frontend/css/style.css" type="text/css" media="all" /> <!-- Style-CSS -->
+    <link rel="stylesheet" href="~/Content/frontend/css/fontawesome-all.css"> <!-- Font-Awesome-Icons-CSS -->
+    <!-- //css files -->
+    <!--web font-->
+    <link href="//fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin-ext" rel="stylesheet">
+    <!--//web font-->
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+
+    @Html.Partial("~/Views/Home/_Header.cshtml")
+
+    @RenderBody()
+
+    @Html.Partial("~/Views/Home/_Footer.cshtml")
+
+    <!-- js -->
+    <script src="~/Content/frontend/js/jquery-2.1.4.min.js"></script>
+    <script src="~/Content/frontend/js/bootstrap.js"></script> <!-- Necessary-JavaScript-File-For-Bootstrap -->
+    <!-- //js -->
+    <!-- search overlay -->
+    <script src="~/Content/frontend/js/modernizr-2.6.2.min.js"></script>
+    <!-- //search overlay -->
+    <!--search jQuery-->
+    <script src="~/Content/frontend/js/classie-search.js"></script>
+    <script src="~/Content/frontend/js/demo1-search.js"></script>
+    <!--//search jQuery-->
+    <!-- dropdown nav -->
+    <script>
+        $(document).ready(function ()
+        {
+            $(".dropdown").hover(
+                function ()
+                {
+                    $('.dropdown-menu', this).stop(true, true).slideDown("fast");
+                    $(this).toggleClass('open');
+                },
+                function ()
+                {
+                    $('.dropdown-menu', this).stop(true, true).slideUp("fast");
+                    $(this).toggleClass('open');
+                }
+            );
+        });
+    </script>
+    <!-- //dropdown nav -->
+    <!-- banner slider js -->
+    <script src="~/Content/frontend/js/minimal-slider.js"></script>
+    <!-- //banner slider js -->
+    <!-- Stats-Number-Scroller-Animation-JavaScript -->
+    <script src="~/Content/frontend/js/waypoints.min.js"></script>
+    <script src="~/Content/frontend/js/counterup.min.js"></script>
+    <script>
+        jQuery(document).ready(function ($)
+        {
+            $('.counter').counterUp({
+                delay: 100,
+                time: 1000
+            });
+        });
+    </script>
+    <!-- //Stats-Number-Scroller-Animation-JavaScript -->
+    <!-- start-smoth-scrolling -->
+    <script src="~/Content/frontend/js/SmoothScroll.min.js"></script>
+    <script src="~/Content/frontend/js/move-top.js"></script>
+    <script src="~/Content/frontend/js/easing.js"></script>
+    <script>
+        jQuery(document).ready(function ($)
+        {
+            $(".scroll").click(function (event)
+            {
+                event.preventDefault();
+                $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+            });
+        });
+    </script>
+    <!-- here stars scrolling icon -->
+    <script>
+        $(document).ready(function ()
+        {
+            /*
+                var defaults = {
+                containerID: 'toTop', // fading element id
+                containerHoverID: 'toTopHover', // fading element hover id
+                scrollSpeed: 1200,
+                easingType: 'linear'
+                };
+            */
+
+            $().UItoTop({ easingType: 'easeOutQuart' });
+
+        });
+    </script>
+    <!-- //here ends scrolling icon -->
+    <!-- start-smoth-scrolling -->
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

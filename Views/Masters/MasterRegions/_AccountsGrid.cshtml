@@ -1,0 +1,31 @@
+﻿@model IEnumerable<eShop.Models.MasterRegionAccount>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.ChartOfAccountId.ToString(), new { id = model.ChartOfAccountId.ToString(), value = model.ChartOfAccountId.ToString() })).Titled(Html.CheckBox("CheckAccountsAll"));
+        columns.Add(model => model.ChartOfAccount.MasterBusinessUnit.Name).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.MasterBusinessUnit.Name));
+        columns.Add(model => model.ChartOfAccount.Code).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Code)).Sortable(true).InitialSort(GridSortOrder.Asc);
+        columns.Add(model => model.ChartOfAccount.Name).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Name));
+        columns.Add(model => model.ChartOfAccount.Active).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Active)).RenderedAs(model => model.ChartOfAccount.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
+    })
+    .RowAttributed(model => new { @class = model.ChartOfAccount.Active == true ? "" : "grid-column-red" })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("accounts-table")
+)

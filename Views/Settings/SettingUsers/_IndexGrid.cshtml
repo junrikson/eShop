@@ -1,0 +1,33 @@
+﻿@model IEnumerable<eShop.Models.ApplicationUser>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => model.UserName).Titled(@Html.DisplayNameFor(model => model.UserName)).Sortable(true).InitialSort(GridSortOrder.Asc);
+        columns.Add(model => model.Email).Titled(@Html.DisplayNameFor(model => model.Email));
+        columns.Add(model => model.Authorization.Code).Titled(@Html.DisplayNameFor(model => model.Authorization.Code));
+        columns.Add(model => model.Id).Titled(@Html.DisplayNameFor(model => model.Id));
+        columns.Add(model => ((User.IsInRole("SettingUsersEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "SettingUsers", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("SettingUsersView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "SettingUsers", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
+        ((User.IsInRole("SettingUsersEdit")) ? "&nbsp;<a class=\"btn btn-warning btn-xs change-password\" href=\"" + @Url.Action("ChangePassword", "SettingUsers", new { id = model.Id }) + "\"><i class=\"fa fa-lock\"></i> Password</a>" : "") +
+        ((User.IsInRole("SettingUsersDelete")) ? "&nbsp;<a class=\"btn btn-danger btn-xs delete-data\" href=\"" + @Url.Action("Delete", "SettingUsers", new { id = model.Id }) + "\"><i class=\"fa fa-trash\"></i> Delete</a>" : "") + "</div>").Encoded(false);
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)

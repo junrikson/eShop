@@ -1,0 +1,73 @@
+﻿@model eShop.Models.ApplicationUser
+@using eShop.Models;
+
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Setting User</h4>
+        </div>
+        <div class="modal-body">
+            <div id="divEmp">
+                @using (Ajax.BeginForm("Edit", "SettingUsers", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "EditSuccess" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Email)
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @if (Model.IsCustomer != true)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.LabelFor(model => model.AuthorizationId)
+                                @Html.DatalistFor(model => model.AuthorizationId, new AuthorizationDatalist { Url = "/DatalistFilters/AllAuthorization" })
+                                @Html.ValidationMessageFor(model => model.AuthorizationId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    }
+                    @if (Model.IsCustomer != true)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label>Unit Bisnis</label>
+                            </div>
+                            @{
+                                List<eShop.Models.AssignedBusinessUnit> businessUnits = ViewBag.BusinessUnits;
+
+                                foreach (var obj in businessUnits)
+                                {
+                                    <div class="col-md-12">
+                                        <input type="checkbox"
+                                               name="selectedBusinessUnits"
+                                               value="@obj.Id"
+                                               @(Html.Raw(obj.Assigned ? "checked=\"checked\"" : "")) />
+                                        @obj.Title
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="col-md-12 text-right">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+﻿@model eShop.Models.RegisterViewModel
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header text-center">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <div class="login px-4 mx-auto mw-100">
+                <h5 class="text-center mb-4">Register an Account</h5>
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group has-feedback">
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Username" })
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group has-feedback">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email" })
+                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group has-feedback">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group has-feedback">
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Konfirmasi Password" })
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="row">
+                        <!-- /.col -->
+                        <div class="col-xs-4">
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">Daftar</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

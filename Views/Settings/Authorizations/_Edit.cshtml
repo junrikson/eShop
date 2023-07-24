@@ -1,0 +1,156 @@
+﻿@model eShop.Models.Authorization
+
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Otorisasi</h4>
+        </div>
+        <div class="modal-body">
+            <div id="divEmp">
+                @using (Ajax.BeginForm("Edit", "Authorizations", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "EditSuccess" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab_1" data-toggle="tab">General</a></li>
+                            <li><a href="#tab_2" data-toggle="tab">Otoritas</a></li>
+                        </ul>
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="tab-content">
+                            <div class="tab-pane active form-horizontal" id="tab_1">
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        @Html.LabelFor(model => model.Code)
+                                        @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                        @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        @Html.LabelFor(model => model.Active)
+                                        <div class="checkbox text-center">
+                                            @Html.EditorFor(model => model.Active)
+                                            @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.Notes)
+                                        @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane form-horizontal" id="tab_2">
+                                <div class="text-right" style="font-weight:bold;">Toggle All <input type="checkbox" onClick="toggle(this)" /></div>
+                                <div class="form-group">
+                                    <table class="table-bordered table-striped table-hover col-md-12">
+                                        @{
+                                            List<eShop.Models.AssignedRoles> menus = ViewBag.Roles;
+                                            string messages = "";
+
+                                            foreach (var obj in menus)
+                                            {
+                                                if (obj.Order == 1010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">M A S T E R</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 2010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">M A N A G E M E N T   K O N T A I N E R</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 3010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">I N V E N T O R Y</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 4010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">A / R</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 5010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">S A L E S</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 6010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">R E P O R T S</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 7010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">K A S / B A N K</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 80010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">A C C O U N T I N G</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 97010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">S E T T I N G S</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 91010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">P E N G A N G K U T A N</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 98010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">S Y S T E M S</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+                                                else if (obj.Order == 99010)
+                                                {
+                                                    messages = messages + "<tr><td colspan=\"7\" style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\">OTORITAS KHUSUS</td></tr>" +
+                                                                "<tr style=\"font-weight: bold; font-style: italic; background-color: #DDD; text-align: center;\"><td>Nama Menu</td><td>Active</td><td>Add</td><td>Edit</td><td>View</td><td>Delete</td><td>Print</td></tr>";
+                                                }
+
+                                                if (obj.Code.Substring(obj.Code.Length - 3, 3) == "ive")
+                                                {
+                                                    if (messages != "")
+                                                    {
+                                                        messages = messages + "</tr>";
+                                                    }
+
+                                                    messages = messages + "<tr><td>" + obj.Notes + "</td>";
+                                                }
+
+                                                if (obj.Active == true)
+                                                {
+                                                    messages = messages + "<td style=\"text-align: center;\"><input type=\"checkbox\" name=\"selectedMenus\" value=\"" + @obj.Id + "\"" + Html.Raw(obj.Assigned ? "checked=\"checked\"" : "") + "/></td>";
+                                                }
+                                                else
+                                                {
+                                                    messages = messages + "<td>&nbsp;</td>";
+                                                }
+                                            }
+                                            messages = messages + "</tr>";
+                                        }
+                                        @Html.Raw(messages)
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

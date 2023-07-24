@@ -1,0 +1,49 @@
+﻿@model IEnumerable<eShop.Models.MasterSupplier>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => ((User.IsInRole("MasterSuppliersEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "MasterSuppliers", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("MasterSuppliersView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "MasterSuppliers", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
+        columns.Add(model => model.FullName).Titled(@Html.DisplayNameFor(model => model.FullName));
+        columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
+        columns.Add(model => model.SupplierType).Titled(@Html.DisplayNameFor(model => model.SupplierType));
+        columns.Add(model => model.ContactPerson).Titled(@Html.DisplayNameFor(model => model.ContactPerson));
+        columns.Add(model => model.Birthday).Titled(@Html.DisplayNameFor(model => model.Birthday)).Formatted("{0:d}");
+        columns.Add(model => model.Phone1).Titled(@Html.DisplayNameFor(model => model.Phone1));
+        columns.Add(model => model.Phone2).Titled(@Html.DisplayNameFor(model => model.Phone2));
+        columns.Add(model => model.Mobile).Titled(@Html.DisplayNameFor(model => model.Mobile));
+        columns.Add(model => model.Fax).Titled(@Html.DisplayNameFor(model => model.Fax));
+        columns.Add(model => model.Email).Titled(@Html.DisplayNameFor(model => model.Email));
+        columns.Add(model => model.City).Titled(@Html.DisplayNameFor(model => model.City));
+        columns.Add(model => model.Postal).Titled(@Html.DisplayNameFor(model => model.Postal));
+        columns.Add(model => model.Address).Titled(@Html.DisplayNameFor(model => model.Address));
+        columns.Add(model => model.IDCard).Titled(@Html.DisplayNameFor(model => model.IDCard));
+        columns.Add(model => model.TaxID).Titled(@Html.DisplayNameFor(model => model.TaxID));
+        columns.Add(model => model.TaxName).Titled(@Html.DisplayNameFor(model => model.TaxName));
+        columns.Add(model => model.TaxAddress).Titled(@Html.DisplayNameFor(model => model.TaxAddress));
+        columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
+        columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
+        columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));
+        columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated)).InitialSort(GridSortOrder.Desc);
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)

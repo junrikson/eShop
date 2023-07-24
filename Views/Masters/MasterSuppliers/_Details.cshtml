@@ -1,0 +1,275 @@
+﻿@model eShop.Models.MasterSupplier
+
+@{
+    Layout = null;
+}
+
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Master Supplier</h4>
+        </div>
+        <div class="modal-body">
+            <table align="center">
+                <tr>
+                    <td style="font-weight:bold;" width="130px" valign="top">
+                        @Html.DisplayNameFor(model => model.Code)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Code)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Name)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.SupplierType)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.SupplierType)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.ContactPerson)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.ContactPerson)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.CompanyType)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.CompanyType)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Gender)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Gender)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Address)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Address)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.City)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.City)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.SourceCity)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.SourceCity)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Postal)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Postal)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Phone1)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Phone1)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Phone2)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Phone2)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Mobile)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Mobile)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Fax)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Fax)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Email)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.IDCard)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.IDCard)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.TaxID)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.TaxID)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.TaxName)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.TaxName)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.TaxAddress)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.TaxAddress)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Notes)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Notes)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Created)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Created)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Updated)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Updated)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Active)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Active)
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

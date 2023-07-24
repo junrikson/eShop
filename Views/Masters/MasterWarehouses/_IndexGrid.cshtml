@@ -1,0 +1,37 @@
+﻿@model IEnumerable<eShop.Models.MasterWarehouse>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => ((User.IsInRole("MasterWarehousesEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "MasterWarehouses", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("MasterWarehousesView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "MasterWarehouses", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
+        columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code)).Sortable(true).InitialSort(GridSortOrder.Desc);
+        columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));
+        columns.Add(model => model.Name).Titled(@Html.DisplayNameFor(model => model.Name));
+        columns.Add(model => model.Location).Titled(@Html.DisplayNameFor(model => model.Location));
+        columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
+        columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
+        columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));
+        columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated));
+        columns.Add(model => model.User.UserName).Titled("User");
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)

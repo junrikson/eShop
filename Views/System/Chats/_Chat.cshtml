@@ -1,0 +1,169 @@
+﻿@model IEnumerable<eShop.Models.Chat>
+
+@{
+    Layout = null;
+}
+
+<audio id="chatNotification" src="~/Content/notification.mpeg" preload="auto"></audio>
+
+<div class="box direct-chat direct-chat-primary" style="margin-bottom: -3px; width: 450px; height: 500px;">
+    <div class="box-header with-border">
+        <h3 class="box-title">eShop Chat Room</h3>
+
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle">
+                <i class="fa fa-comments"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" onclick="closeChat()"><i class="fa fa-times"></i></button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body" style="height: 400px;">
+        <!-- Conversations are loaded here -->
+        <div class="direct-chat-messages" id="discussion" style="height: 400px;">
+        </div>
+        <!--/.direct-chat-messages-->
+        <!-- Contacts are loaded here -->
+        <div class="direct-chat-contacts" style="height:400px">
+            <ul id="contactsList" style="margin-top:10px;"></ul>
+            <p style="text-align: justify; margin: 10px;">
+                <a href="#" onClick="addChatTag(':e1560')"><img class="chat-smiley" src="~/Content/emoji_png/e1560.png" /></a>
+                <a href="#" onClick="addChatTag(':e1561')"><img class="chat-smiley" src="~/Content/emoji_png/e1561.png" /></a>
+                <a href="#" onClick="addChatTag(':e1562')"><img class="chat-smiley" src="~/Content/emoji_png/e1562.png" /></a>
+                <a href="#" onClick="addChatTag(':e1563')"><img class="chat-smiley" src="~/Content/emoji_png/e1563.png" /></a>
+                <a href="#" onClick="addChatTag(':e1564')"><img class="chat-smiley" src="~/Content/emoji_png/e1564.png" /></a>
+                <a href="#" onClick="addChatTag(':e1565')"><img class="chat-smiley" src="~/Content/emoji_png/e1565.png" /></a>
+                <a href="#" onClick="addChatTag(':e1566')"><img class="chat-smiley" src="~/Content/emoji_png/e1566.png" /></a>
+                <a href="#" onClick="addChatTag(':e1567')"><img class="chat-smiley" src="~/Content/emoji_png/e1567.png" /></a>
+                <a href="#" onClick="addChatTag(':e1568')"><img class="chat-smiley" src="~/Content/emoji_png/e1568.png" /></a>
+                <a href="#" onClick="addChatTag(':e1569')"><img class="chat-smiley" src="~/Content/emoji_png/e1569.png" /></a>
+                <a href="#" onClick="addChatTag(':e1570')"><img class="chat-smiley" src="~/Content/emoji_png/e1570.png" /></a>
+                <a href="#" onClick="addChatTag(':e1571')"><img class="chat-smiley" src="~/Content/emoji_png/e1571.png" /></a>
+                <a href="#" onClick="addChatTag(':e1572')"><img class="chat-smiley" src="~/Content/emoji_png/e1572.png" /></a>
+                <a href="#" onClick="addChatTag(':e1573')"><img class="chat-smiley" src="~/Content/emoji_png/e1573.png" /></a>
+                <a href="#" onClick="addChatTag(':e1574')"><img class="chat-smiley" src="~/Content/emoji_png/e1574.png" /></a>
+                <a href="#" onClick="addChatTag(':e1575')"><img class="chat-smiley" src="~/Content/emoji_png/e1575.png" /></a>
+                <a href="#" onClick="addChatTag(':e1576')"><img class="chat-smiley" src="~/Content/emoji_png/e1576.png" /></a>
+                <a href="#" onClick="addChatTag(':e1577')"><img class="chat-smiley" src="~/Content/emoji_png/e1577.png" /></a>
+                <a href="#" onClick="addChatTag(':e1578')"><img class="chat-smiley" src="~/Content/emoji_png/e1578.png" /></a>
+                <a href="#" onClick="addChatTag(':e1579')"><img class="chat-smiley" src="~/Content/emoji_png/e1579.png" /></a>
+                <a href="#" onClick="addChatTag(':e1580')"><img class="chat-smiley" src="~/Content/emoji_png/e1580.png" /></a>
+                <a href="#" onClick="addChatTag(':e1581')"><img class="chat-smiley" src="~/Content/emoji_png/e1581.png" /></a>
+                <a href="#" onClick="addChatTag(':e1582')"><img class="chat-smiley" src="~/Content/emoji_png/e1582.png" /></a>
+                <a href="#" onClick="addChatTag(':e1583')"><img class="chat-smiley" src="~/Content/emoji_png/e1583.png" /></a>
+                <a href="#" onClick="addChatTag(':e1584')"><img class="chat-smiley" src="~/Content/emoji_png/e1584.png" /></a>
+                <a href="#" onClick="addChatTag(':e1585')"><img class="chat-smiley" src="~/Content/emoji_png/e1585.png" /></a>
+                <a href="#" onClick="addChatTag(':e1586')"><img class="chat-smiley" src="~/Content/emoji_png/e1586.png" /></a>
+                <a href="#" onClick="addChatTag(':e1587')"><img class="chat-smiley" src="~/Content/emoji_png/e1587.png" /></a>
+                <a href="#" onClick="addChatTag(':e1588')"><img class="chat-smiley" src="~/Content/emoji_png/e1588.png" /></a>
+                <a href="#" onClick="addChatTag(':e1589')"><img class="chat-smiley" src="~/Content/emoji_png/e1589.png" /></a>
+                <a href="#" onClick="addChatTag(':e1590')"><img class="chat-smiley" src="~/Content/emoji_png/e1590.png" /></a>
+                <a href="#" onClick="addChatTag(':e1591')"><img class="chat-smiley" src="~/Content/emoji_png/e1591.png" /></a>
+                <a href="#" onClick="addChatTag(':e1592')"><img class="chat-smiley" src="~/Content/emoji_png/e1592.png" /></a>
+                <a href="#" onClick="addChatTag(':e1593')"><img class="chat-smiley" src="~/Content/emoji_png/e1593.png" /></a>
+                <a href="#" onClick="addChatTag(':e1594')"><img class="chat-smiley" src="~/Content/emoji_png/e1594.png" /></a>
+                <a href="#" onClick="addChatTag(':e1595')"><img class="chat-smiley" src="~/Content/emoji_png/e1595.png" /></a>
+                <a href="#" onClick="addChatTag(':e1596')"><img class="chat-smiley" src="~/Content/emoji_png/e1596.png" /></a>
+                <a href="#" onClick="addChatTag(':e1597')"><img class="chat-smiley" src="~/Content/emoji_png/e1597.png" /></a>
+                <a href="#" onClick="addChatTag(':e1598')"><img class="chat-smiley" src="~/Content/emoji_png/e1598.png" /></a>
+                <a href="#" onClick="addChatTag(':e1599')"><img class="chat-smiley" src="~/Content/emoji_png/e1599.png" /></a>
+                <a href="#" onClick="addChatTag(':e1600')"><img class="chat-smiley" src="~/Content/emoji_png/e1600.png" /></a>
+                <a href="#" onClick="addChatTag(':e1601')"><img class="chat-smiley" src="~/Content/emoji_png/e1601.png" /></a>
+                <a href="#" onClick="addChatTag(':e1602')"><img class="chat-smiley" src="~/Content/emoji_png/e1602.png" /></a>
+                <a href="#" onClick="addChatTag(':e1603')"><img class="chat-smiley" src="~/Content/emoji_png/e1603.png" /></a>
+                <a href="#" onClick="addChatTag(':e1604')"><img class="chat-smiley" src="~/Content/emoji_png/e1604.png" /></a>
+                <a href="#" onClick="addChatTag(':e1605')"><img class="chat-smiley" src="~/Content/emoji_png/e1605.png" /></a>
+                <a href="#" onClick="addChatTag(':e1606')"><img class="chat-smiley" src="~/Content/emoji_png/e1606.png" /></a>
+                <a href="#" onClick="addChatTag(':e1607')"><img class="chat-smiley" src="~/Content/emoji_png/e1607.png" /></a>
+                <a href="#" onClick="addChatTag(':e1608')"><img class="chat-smiley" src="~/Content/emoji_png/e1608.png" /></a>
+                <a href="#" onClick="addChatTag(':e1609')"><img class="chat-smiley" src="~/Content/emoji_png/e1609.png" /></a>
+                <a href="#" onClick="addChatTag(':e1610')"><img class="chat-smiley" src="~/Content/emoji_png/e1610.png" /></a>
+                <a href="#" onClick="addChatTag(':e1611')"><img class="chat-smiley" src="~/Content/emoji_png/e1611.png" /></a>
+                <a href="#" onClick="addChatTag(':e1612')"><img class="chat-smiley" src="~/Content/emoji_png/e1612.png" /></a>
+                <a href="#" onClick="addChatTag(':e1613')"><img class="chat-smiley" src="~/Content/emoji_png/e1613.png" /></a>
+                <a href="#" onClick="addChatTag(':e1614')"><img class="chat-smiley" src="~/Content/emoji_png/e1614.png" /></a>
+                <a href="#" onClick="addChatTag(':e1615')"><img class="chat-smiley" src="~/Content/emoji_png/e1615.png" /></a>
+                <a href="#" onClick="addChatTag(':e1616')"><img class="chat-smiley" src="~/Content/emoji_png/e1616.png" /></a>
+                <a href="#" onClick="addChatTag(':e1626')"><img class="chat-smiley" src="~/Content/emoji_png/e1626.png" /></a>
+                <a href="#" onClick="addChatTag(':e1627')"><img class="chat-smiley" src="~/Content/emoji_png/e1627.png" /></a>
+                <a href="#" onClick="addChatTag(':e1628')"><img class="chat-smiley" src="~/Content/emoji_png/e1628.png" /></a>
+                <a href="#" onClick="addChatTag(':e1629')"><img class="chat-smiley" src="~/Content/emoji_png/e1629.png" /></a>
+                <a href="#" onClick="addChatTag(':e1870')"><img class="chat-smiley" src="~/Content/emoji_png/e1870.png" /></a>
+                <a href="#" onClick="addChatTag(':e1871')"><img class="chat-smiley" src="~/Content/emoji_png/e1871.png" /></a>
+                <a href="#" onClick="addChatTag(':e1872')"><img class="chat-smiley" src="~/Content/emoji_png/e1872.png" /></a>
+                <a href="#" onClick="addChatTag(':e1873')"><img class="chat-smiley" src="~/Content/emoji_png/e1873.png" /></a>
+                <a href="#" onClick="addChatTag(':e1874')"><img class="chat-smiley" src="~/Content/emoji_png/e1874.png" /></a>
+                <a href="#" onClick="addChatTag(':e1875')"><img class="chat-smiley" src="~/Content/emoji_png/e1875.png" /></a>
+                <a href="#" onClick="addChatTag(':e1876')"><img class="chat-smiley" src="~/Content/emoji_png/e1876.png" /></a>
+                <a href="#" onClick="addChatTag(':e1877')"><img class="chat-smiley" src="~/Content/emoji_png/e1877.png" /></a>
+                <a href="#" onClick="addChatTag(':e1926')"><img class="chat-smiley" src="~/Content/emoji_png/e1926.png" /></a>
+                <a href="#" onClick="addChatTag(':e1927')"><img class="chat-smiley" src="~/Content/emoji_png/e1927.png" /></a>
+                <a href="#" onClick="addChatTag(':e1928')"><img class="chat-smiley" src="~/Content/emoji_png/e1928.png" /></a>
+                <a href="#" onClick="addChatTag(':e1929')"><img class="chat-smiley" src="~/Content/emoji_png/e1929.png" /></a>
+                <a href="#" onClick="addChatTag(':e1930')"><img class="chat-smiley" src="~/Content/emoji_png/e1930.png" /></a>
+                <a href="#" onClick="addChatTag(':e1931')"><img class="chat-smiley" src="~/Content/emoji_png/e1931.png" /></a>
+                <a href="#" onClick="addChatTag(':e1944')"><img class="chat-smiley" src="~/Content/emoji_png/e1944.png" /></a>
+                <a href="#" onClick="addChatTag(':e1945')"><img class="chat-smiley" src="~/Content/emoji_png/e1945.png" /></a>
+                <a href="#" onClick="addChatTag(':e1946')"><img class="chat-smiley" src="~/Content/emoji_png/e1946.png" /></a>
+                <a href="#" onClick="addChatTag(':e1947')"><img class="chat-smiley" src="~/Content/emoji_png/e1947.png" /></a>
+                <a href="#" onClick="addChatTag(':e1948')"><img class="chat-smiley" src="~/Content/emoji_png/e1948.png" /></a>
+                <a href="#" onClick="addChatTag(':e1949')"><img class="chat-smiley" src="~/Content/emoji_png/e1949.png" /></a>
+                <a href="#" onClick="addChatTag(':e1950')"><img class="chat-smiley" src="~/Content/emoji_png/e1950.png" /></a>
+                <a href="#" onClick="addChatTag(':e1951')"><img class="chat-smiley" src="~/Content/emoji_png/e1951.png" /></a>
+                <a href="#" onClick="addChatTag(':e1952')"><img class="chat-smiley" src="~/Content/emoji_png/e1952.png" /></a>
+                <a href="#" onClick="addChatTag(':e2109')"><img class="chat-smiley" src="~/Content/emoji_png/e2109.png" /></a>
+                <a href="#" onClick="addChatTag(':e2110')"><img class="chat-smiley" src="~/Content/emoji_png/e2110.png" /></a>
+                <a href="#" onClick="addChatTag(':e2111')"><img class="chat-smiley" src="~/Content/emoji_png/e2111.png" /></a>
+                <a href="#" onClick="addChatTag(':e2112')"><img class="chat-smiley" src="~/Content/emoji_png/e2112.png" /></a>
+                <a href="#" onClick="addChatTag(':e2113')"><img class="chat-smiley" src="~/Content/emoji_png/e2113.png" /></a>
+                <a href="#" onClick="addChatTag(':e2114')"><img class="chat-smiley" src="~/Content/emoji_png/e2114.png" /></a>
+                <a href="#" onClick="addChatTag(':e2195')"><img class="chat-smiley" src="~/Content/emoji_png/e2195.png" /></a>
+                <a href="#" onClick="addChatTag(':e2424')"><img class="chat-smiley" src="~/Content/emoji_png/e2424.png" /></a>
+                <a href="#" onClick="addChatTag(':e2425')"><img class="chat-smiley" src="~/Content/emoji_png/e2425.png" /></a>
+                <a href="#" onClick="addChatTag(':e0713')"><img class="chat-smiley" src="~/Content/emoji_png/e0713.png" /></a>
+                <a href="#" onClick="addChatTag(':e0719')"><img class="chat-smiley" src="~/Content/emoji_png/e0719.png" /></a>
+                <a href="#" onClick="addChatTag(':e0725')"><img class="chat-smiley" src="~/Content/emoji_png/e0725.png" /></a>
+                <a href="#" onClick="addChatTag(':e0731')"><img class="chat-smiley" src="~/Content/emoji_png/e0731.png" /></a>
+                <a href="#" onClick="addChatTag(':e0737')"><img class="chat-smiley" src="~/Content/emoji_png/e0737.png" /></a>
+                <a href="#" onClick="addChatTag(':e0743')"><img class="chat-smiley" src="~/Content/emoji_png/e0743.png" /></a>
+                <a href="#" onClick="addChatTag(':e0749')"><img class="chat-smiley" src="~/Content/emoji_png/e0749.png" /></a>
+                <a href="#" onClick="addChatTag(':e0755')"><img class="chat-smiley" src="~/Content/emoji_png/e0755.png" /></a>
+                <a href="#" onClick="addChatTag(':e0761')"><img class="chat-smiley" src="~/Content/emoji_png/e0761.png" /></a>
+                <a href="#" onClick="addChatTag(':e0767')"><img class="chat-smiley" src="~/Content/emoji_png/e0767.png" /></a>
+                <a href="#" onClick="addChatTag(':e0773')"><img class="chat-smiley" src="~/Content/emoji_png/e0773.png" /></a>
+                <a href="#" onClick="addChatTag(':e1521')"><img class="chat-smiley" src="~/Content/emoji_png/e1521.png" /></a>
+                <a href="#" onClick="addChatTag(':e1527')"><img class="chat-smiley" src="~/Content/emoji_png/e1527.png" /></a>
+                <a href="#" onClick="addChatTag(':e1533')"><img class="chat-smiley" src="~/Content/emoji_png/e1533.png" /></a>
+                <a href="#" onClick="addChatTag(':e1686')"><img class="chat-smiley" src="~/Content/emoji_png/e1686.png" /></a>
+                <a href="#" onClick="addChatTag(':e1883')"><img class="chat-smiley" src="~/Content/emoji_png/e1883.png" /></a>
+                <a href="#" onClick="addChatTag(':e1889')"><img class="chat-smiley" src="~/Content/emoji_png/e1889.png" /></a>
+                <a href="#" onClick="addChatTag(':e1895')"><img class="chat-smiley" src="~/Content/emoji_png/e1895.png" /></a>
+                <a href="#" onClick="addChatTag(':e1901')"><img class="chat-smiley" src="~/Content/emoji_png/e1901.png" /></a>
+                <a href="#" onClick="addChatTag(':e1907')"><img class="chat-smiley" src="~/Content/emoji_png/e1907.png" /></a>
+                <a href="#" onClick="addChatTag(':e1913')"><img class="chat-smiley" src="~/Content/emoji_png/e1913.png" /></a>
+                <a href="#" onClick="addChatTag(':e1919')"><img class="chat-smiley" src="~/Content/emoji_png/e1919.png" /></a>
+                <a href="#" onClick="addChatTag(':e1925')"><img class="chat-smiley" src="~/Content/emoji_png/e1925.png" /></a>
+                <a href="#" onClick="addChatTag(':e1970')"><img class="chat-smiley" src="~/Content/emoji_png/e1970.png" /></a>
+                <a href="#" onClick="addChatTag(':e2415')"><img class="chat-smiley" src="~/Content/emoji_png/e2415.png" /></a>
+                <a href="#" onClick="addChatTag(':e2508')"><img class="chat-smiley" src="~/Content/emoji_png/e2508.png" /></a>
+                <a href="#" onClick="addChatTag(':e2514')"><img class="chat-smiley" src="~/Content/emoji_png/e2514.png" /></a>
+                <a href="#" onClick="addChatTag(':e2520')"><img class="chat-smiley" src="~/Content/emoji_png/e2520.png" /></a>
+                <a href="#" onClick="addChatTag(':e1716')"><img class="chat-smiley" src="~/Content/emoji_png/e1716.png" /></a>
+            </p>
+            <!-- /.contatcts-list -->
+        </div>
+        <!-- /.direct-chat-pane -->
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+        <div class="input-group">
+            <input type="text" spellcheck="false" autocomplete="off" id="message" name="message" placeholder="Type Message ..." class="form-control">
+            <span class="input-group-btn">
+                <input type="button" id="sendmessage" class="btn btn-primary btn-flat" value="Send" />
+            </span>
+            <input type="hidden" id="username" value="@User.Identity.Name" />
+        </div>
+    </div>
+    <!-- /.box-footer-->
+</div>
+<!--/.direct-chat -->

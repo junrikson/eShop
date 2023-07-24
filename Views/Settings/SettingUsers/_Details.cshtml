@@ -1,0 +1,129 @@
+﻿@model eShop.Models.ApplicationUser
+
+@{
+    Layout = null;
+}
+
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Setting User</h4>
+        </div>
+        <div class="modal-body">
+            <table align="center">
+                <tr>
+                    <td style="font-weight:bold;" width="130px" valign="top">
+                        Username
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.UserName)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Email)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        Handphone
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.PhoneNumber)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Gender)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Gender)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Address)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Address)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Skin)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Skin)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.ToggleSidebar)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.ToggleSidebar)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        Unit Bisnis
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @{
+                            List<eShop.Models.AssignedBusinessUnit> businessUnits = ViewBag.BusinessUnits;
+
+                            foreach (var obj in businessUnits)
+                            {
+                                @(Html.Raw(obj.Assigned ? obj.Title + "<br/>" : "")) 
+                                
+                            }
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Notes)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Notes)
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

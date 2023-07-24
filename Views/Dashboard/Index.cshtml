@@ -1,0 +1,64 @@
+﻿@using eShop.Models
+@{
+    ViewBag.Title = "Dashboard";
+    ViewBag.Current = "Dashboard";
+}
+
+@section Styles {
+    @Styles.Render("~/style/MvcDatalist")
+    @Styles.Render("~/style/mvcgrid")
+}
+<style>
+    .tablegrid-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .grid-column-red-blink {
+        color: #EE0000;
+        font-weight: bold;
+        animation: blinker 1s linear infinite;
+    }
+
+    @@keyframes blinker {
+        50% {
+            opacity: 30%;
+        }
+    }
+</style>
+@Html.Partial("MvcDatalist/_Dialog")
+@if (User.IsInRole("DashboardActive"))
+{
+    <div class="content-wrapper">
+        <section class="content-header-fixed">
+            <h1 class="col-md-6">
+                Tracking
+            </h1>
+        </section>
+
+        <!-- Main content -->
+        <section class="content" style="margin-top:30px;">
+            <div class="row">
+                <div class="col-xs-12">
+                </div>
+            </div>
+
+            <div class="nav-tabs-custom">
+            </div>
+        </section>
+    </div>
+    <div class="modal fade" id="trackingModal" role="dialog" aria-hidden="true" data-backdrop="static">
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/mvcgrid")
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/script/Select2")
+        @Scripts.Render("~/bundles/unobtrusive")
+        @Scripts.Render("~/bundles/MvcDatalist")
+        @Scripts.Render("~/script/tableHeadFixer")
+        @Scripts.Render("~/script/InputMask")
+
+        <script>
+        </script>
+    }
+    }

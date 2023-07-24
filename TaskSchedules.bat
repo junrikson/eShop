@@ -1,0 +1,1 @@
+curl -i -X POST -H "Content-Type:application/json" -d "{\"key\": \"31b661cc-ba2d-40c3-9ee6-24e006a63ac5\",  \"option\" : \"remove\" }" http://localhost/Emails/GenerateEmails

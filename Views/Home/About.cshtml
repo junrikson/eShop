@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+<!-- inner page banner -->
+<section class="inner-page-banner">
+    <div class="page-heading text-center">
+        <h2>About Page</h2>
+        <span class="section_1-breadcrumbs"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home home_1"></i> Home</a> <span>/ About page</span></span>
+    </div>
+</section>
+<!-- //inner page banner -->
+<!-- //Features -->
+<!--/Login-->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div id="loginContainer">
+    </div>
+</div>
+<!--//Login-->
+<!--/Register-->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div id="registerContainer">
+    </div>
+</div>
+<!--//Register-->
+<!--/ForgotPassword-->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div id="forgotPasswordContainer">
+    </div>
+</div>
+<!--//ForgotPassword-->
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/unobtrusive")
+
+
+    <script>
+        $('#SignIn').click(function (event)
+        {
+            event.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data)
+            {
+                $('#loginContainer').html(data);
+                $('#loginModal').modal('show');
+
+                $('form').each(function ()
+                {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                })
+            });
+        });
+
+        $('#Register').click(function (event)
+        {
+            event.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data)
+            {
+                $('#registerContainer').html(data);
+                $('#registerModal').modal('show');
+
+                $('form').each(function ()
+                {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                })
+            });
+        });
+
+        $('#ForgotPassword').click(function (event)
+        {
+            event.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data)
+            {
+                $('#forgotPasswordContainer').html(data);
+                $('#forgotPasswordModal').modal('show');
+
+                $('form').each(function ()
+                {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                })
+            });
+        });
+    </script>
+}

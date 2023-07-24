@@ -1,0 +1,28 @@
+﻿@model IEnumerable<eShop.Models.Chat>
+@{
+    Layout = null;
+}
+
+@(Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created)).Sortable(true).InitialSort(GridSortOrder.Desc);
+            columns.Add(model => model.Message).Titled(@Html.DisplayNameFor(model => model.Message));
+            columns.Add(model => model.User.UserName).Titled(@Html.DisplayNameFor(model => model.User.UserName));
+        })
+        .Empty("Tidak ada data.")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 10;
+        })
+        .UsingFilterMode(GridFilterMode.Row)
+        .Filterable()
+        .Sortable()
+        .AppendCss("tablegrid-hover table-striped fix-table")
+        .Id("data-table")
+)

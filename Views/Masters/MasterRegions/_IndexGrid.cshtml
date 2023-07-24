@@ -1,0 +1,33 @@
+﻿@model IEnumerable<eShop.Models.MasterRegion>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => ((User.IsInRole("MasterRegionsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "MasterRegions", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("MasterRegionsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "MasterRegions", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
+        ((User.IsInRole("MasterRegionsEdit")) ? "&nbsp;<a class=\"btn btn-warning btn-xs accounts-data\" href=\"" + @Url.Action("Accounts", "MasterRegions", new { id = model.Id }) + "\"><i class=\"fa fa-list\"></i> Bagan Akun</a></div>" : "")).Encoded(false);
+        columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
+        columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
+        columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
+    })
+    .RowAttributed(model => new { @class = model.Active == true ? "" : "grid-column-red" })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)

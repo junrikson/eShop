@@ -1,0 +1,39 @@
+﻿@model IEnumerable<eShop.Models.MasterBusinessUnit>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => ((User.IsInRole("MasterBusinessUnitsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "MasterBusinessUnits", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("MasterBusinessUnitsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "MasterBusinessUnits", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
+        columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code)).Sortable(true).InitialSort(GridSortOrder.Asc);
+        columns.Add(model => model.Name).Titled(@Html.DisplayNameFor(model => model.Name));
+        columns.Add(model => model.Management).Titled(@Html.DisplayNameFor(model => model.Management));
+        columns.Add(model => model.Address).Titled(@Html.DisplayNameFor(model => model.Address));
+        columns.Add(model => model.Phone1).Titled(@Html.DisplayNameFor(model => model.Phone1));
+        columns.Add(model => model.Phone2).Titled(@Html.DisplayNameFor(model => model.Phone2));
+        columns.Add(model => model.Mobile).Titled(@Html.DisplayNameFor(model => model.Mobile));
+        columns.Add(model => model.Fax).Titled(@Html.DisplayNameFor(model => model.Fax));
+        columns.Add(model => model.Email).Titled(@Html.DisplayNameFor(model => model.Email));
+        columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
+        columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)
