@@ -19,23 +19,31 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Item unit must be filled.")]
+        [Required(ErrorMessage = "Kode Satuan harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Item Unit")]
-        [StringLength(128, ErrorMessage = "Maximum 128 Characters.")]
-        [Remote("IsCodeExists", "MasterUnit", AdditionalFields = "Id", ErrorMessage = "This code has been used.")]
+        [Display(Name = "Kode Satuan")]
+        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
+        [Remote("IsCodeExists", "MasterUnits", AdditionalFields = "Id", ErrorMessage = "This code has been used.")]
         public string Code { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Unit name must be filled.")]
-        [Display(Name = "Item Name")]
-        [StringLength(256, ErrorMessage = "Maximum 128 Characters.")]
+        [Required(ErrorMessage = "Nama Satuan harus diisi.")]
+        [Display(Name = "Nama Satuan")]
+        [StringLength(256, ErrorMessage = "Maksimal 128 huruf.")]
         public string Name { get; set; }
+
+        [Display(Name = "Rasio")]
+        [Required(ErrorMessage = "Rasio harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
+        public decimal Ratio { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        [Display(Name = "Default")]
+        public bool Default { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }

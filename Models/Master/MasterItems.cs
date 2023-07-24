@@ -56,6 +56,44 @@ namespace eShop.Models
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
     }
+    public class MasterItemUnits
+    {
+        [Display(Name = "Master Item")]
+        [Required(ErrorMessage = "Master Item harus diisi.")]
+        public int MasterItemId { get; set; }
+
+        [Display(Name = "Master Item")]
+        public virtual MasterItem MasterItem { get; set; }
+
+        [Display(Name = "Satuan")]
+        [Required(ErrorMessage = "Master Item harus diisi.")]
+        public int MasterUnitId { get; set; }
+
+        [Display(Name = "Satuan")]
+        public virtual MasterUnit MasterUnit { get; set; }
+
+        [Display(Name = "Default")]
+        public bool Default { get; set; }
+
+        [Display(Name = "Aktif")]
+        public bool Active { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
 
     public class MasterItemsDatalist : MvcDatalist<MasterItem>
     {
