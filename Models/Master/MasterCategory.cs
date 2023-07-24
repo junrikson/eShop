@@ -23,7 +23,7 @@ namespace eShop.Models
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Kode Kategori")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "MasterKategoris", AdditionalFields = "Id", ErrorMessage = "This code has been used.")]
+        [Remote("IsCodeExists", "MasterCategories", AdditionalFields = "Id", ErrorMessage = "This code has been used.")]
         public string Code { get; set; }
 
         [DatalistColumn]
