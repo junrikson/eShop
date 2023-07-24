@@ -298,6 +298,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Masters\MasterItemsController.cs" />
     <Compile Include="Controllers\Masters\MasterCustomersController.cs" />
+    <Compile Include="Controllers\Masters\MasterUnitsController.cs" />
     <Compile Include="Controllers\Masters\MasterRegionsController.cs" />
     <Compile Include="Controllers\Masters\MasterSuppliersController.cs" />
     <Compile Include="Controllers\Masters\MasterWarehousesController.cs" />
@@ -6864,6 +6865,11 @@
     <Content Include="Views\Masters\MasterItems\Index.cshtml" />
     <Content Include="Views\Masters\MasterItems\_Create.cshtml" />
     <Content Include="Views\Masters\MasterItems\_Edit.cshtml" />
+    <Content Include="Views\Masters\MasterUnits\_Create.cshtml" />
+    <Content Include="Views\Masters\MasterUnits\_Details.cshtml" />
+    <Content Include="Views\Masters\MasterUnits\_Edit.cshtml" />
+    <Content Include="Views\Masters\MasterUnits\_IndexGrid.cshtml" />
+    <Content Include="Views\Masters\MasterUnits\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
