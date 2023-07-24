@@ -23,7 +23,7 @@ namespace eShop.Models
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Kode Kategori")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "MasterCategories", AdditionalFields = "Id", ErrorMessage = "This code has been used.")]
+        [Remote("IsCodeExists", "MasterKategoris", AdditionalFields = "Id", ErrorMessage = "This code has been used.")]
         public string Code { get; set; }
 
         [DatalistColumn]
@@ -36,6 +36,9 @@ namespace eShop.Models
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        [Display(Name = "Default")]
+        public bool Default { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
@@ -55,5 +58,7 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
-    }   
+    }
+
+   
 }
