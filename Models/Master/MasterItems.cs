@@ -32,6 +32,12 @@ namespace eShop.Models
         [StringLength(256, ErrorMessage = "Maximum 128 Characters.")]
         public string Name { get; set; }
 
+        [Display(Name = "Kategori")]
+        public virtual MasterCategory MasterCategory { get; set; }
+
+        [Display(Name = "Kategori")]
+        public int? MasterCategoryId { get; set; }
+
         [DatalistColumn]
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
@@ -58,6 +64,7 @@ namespace eShop.Models
     }
     public class MasterItemUnits
     {
+        [Key, Column(Order = 0)]
         [Display(Name = "Master Item")]
         [Required(ErrorMessage = "Master Item harus diisi.")]
         public int MasterItemId { get; set; }
@@ -65,6 +72,7 @@ namespace eShop.Models
         [Display(Name = "Master Item")]
         public virtual MasterItem MasterItem { get; set; }
 
+        [Key, Column(Order = 1)]
         [Display(Name = "Satuan")]
         [Required(ErrorMessage = "Master Item harus diisi.")]
         public int MasterUnitId { get; set; }

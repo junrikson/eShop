@@ -135,6 +135,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterCustomer> MasterCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterSupplier> MasterSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterWarehouse> MasterWarehouses { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterCategory> MasterCategories { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrder> PurchaseOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrderDetails> PurchaseOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ChartOfAccount> ChartOfAccounts { get; set; }
