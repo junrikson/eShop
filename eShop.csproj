@@ -322,6 +322,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
+    <Compile Include="Models\Master\MasterCategory.cs" />
     <Compile Include="Models\Master\MasterUnit.cs" />
     <Compile Include="Models\Master\MasterItems.cs" />
     <Compile Include="Models\Master\MasterWarehouse.cs" />
