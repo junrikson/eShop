@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/Web.config
+/Web.Debug.config
+/Web.Release.config
