@@ -61,6 +61,25 @@ namespace eShop.Models
         [Display(Name = "Purchase Order")]
         public virtual PurchaseOrder PurchaseOrder { get; set; }
 
+        [Display(Name = "Master Item")]
+        [Required(ErrorMessage = "Master Item harus diisi.")]
+        public int MasterItemId { get; set; }
+
+        [Display(Name = "Master Item")]
+        public virtual MasterItem MasterItem { get; set; }
+
+        [Display(Name = "Satuan")]
+        [Required(ErrorMessage = "Master Item harus diisi.")]
+        public int MasterUnitId { get; set; }
+
+        [Display(Name = "Satuan")]
+        public virtual MasterUnit MasterUnit { get; set; }
+
+        [Display(Name = "Quantity")]
+        [Required(ErrorMessage = "Quantity harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0}", ApplyFormatInEditMode = true)]
+        public int Ratio { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
