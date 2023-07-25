@@ -78,7 +78,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterUnitsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,notes,Ratio,Active,Created,Updated,UserId")] MasterUnit masterUnit)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,notes,Ratio,Active,Created,Updated,UserId")] MasterUnit masterUnit)
         {
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -87,9 +87,10 @@ namespace eShop.Controllers
                     if (ModelState.IsValid)
                     {
                         if (!string.IsNullOrEmpty(masterUnit.Code)) masterUnit.Code = masterUnit.Code.ToUpper();
+                        if (!string.IsNullOrEmpty(masterUnit.Name)) masterUnit.Name = masterUnit.Name.ToUpper();
                         if (!string.IsNullOrEmpty(masterUnit.Notes)) masterUnit.Notes = masterUnit.Notes.ToUpper();
-
                         masterUnit.Ratio = masterUnit.Ratio;
+
                         masterUnit.Created = DateTime.Now;
                         masterUnit.Updated = DateTime.Now;
                         masterUnit.UserId = User.Identity.GetUserId<int>();
@@ -155,7 +156,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterUnitsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Ratio,notes,Active,updated")] MasterUnit masterUnit)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,notes,Ratio,Active,updated")] MasterUnit masterUnit)
         {
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -165,11 +166,15 @@ namespace eShop.Controllers
                     if (ModelState.IsValid)
                     {
                         if (!string.IsNullOrEmpty(masterUnit.Code)) masterUnit.Code = masterUnit.Code.ToUpper();
+                        if (!string.IsNullOrEmpty(masterUnit.Name)) masterUnit.Name = masterUnit.Name.ToUpper();
                         if (!string.IsNullOrEmpty(masterUnit.Notes)) masterUnit.Notes = masterUnit.Notes.ToUpper();
                         masterUnit.Ratio = masterUnit.Ratio;
+
                         db.Entry(masterUnit).State = EntityState.Unchanged;
                         db.Entry(masterUnit).Property("Code").IsModified = true;
+                        db.Entry(masterUnit).Property("Name").IsModified = true;
                         db.Entry(masterUnit).Property("Notes").IsModified = true;
+                        db.Entry(masterUnit).Property("Ratio").IsModified = true;
                         db.Entry(masterUnit).Property("Active").IsModified = true;
                         db.Entry(masterUnit).Property("Updated").IsModified = true;
                         masterUnit.UserId = User.Identity.GetUserId<int>();

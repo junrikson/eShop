@@ -130,7 +130,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterRegion> MasterRegions { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterItem> MasterItems { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterItemUnits> MasterItemsUnits { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterCategory> MasterCategories { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterCategorie> MasterCategories { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterUnit> MasterUnits { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegionAccount> MasterRegionAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterCustomer> MasterCustomers { get; set; }

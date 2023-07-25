@@ -298,6 +298,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Masters\MasterItemsController.cs" />
     <Compile Include="Controllers\Masters\MasterCustomersController.cs" />
+    <Compile Include="Controllers\Masters\MasterCategoriesController.cs" />
     <Compile Include="Controllers\Masters\MasterUnitsController.cs" />
     <Compile Include="Controllers\Masters\MasterRegionsController.cs" />
     <Compile Include="Controllers\Masters\MasterSuppliersController.cs" />
@@ -323,7 +324,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
-    <Compile Include="Models\Master\MasterCategory.cs" />
+    <Compile Include="Models\Master\MasterCategorie.cs" />
     <Compile Include="Models\Master\MasterUnit.cs" />
     <Compile Include="Models\Master\MasterItems.cs" />
     <Compile Include="Models\Master\MasterWarehouse.cs" />
@@ -6870,6 +6871,11 @@
     <Content Include="Views\Masters\MasterUnits\_Edit.cshtml" />
     <Content Include="Views\Masters\MasterUnits\_IndexGrid.cshtml" />
     <Content Include="Views\Masters\MasterUnits\Index.cshtml" />
+    <Content Include="Views\Masters\MasterCategories\_Create.cshtml" />
+    <Content Include="Views\Masters\MasterCategories\_Details.cshtml" />
+    <Content Include="Views\Masters\MasterCategories\_Edit.cshtml" />
+    <Content Include="Views\Masters\MasterCategories\_IndexGrid.cshtml" />
+    <Content Include="Views\Masters\MasterCategories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
