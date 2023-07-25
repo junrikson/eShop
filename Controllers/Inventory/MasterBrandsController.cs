@@ -78,24 +78,25 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterBrandsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,notes,Active,Created,Updated,UserId")] MasterBrand masterBrand)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,Notes,Active,Created,Updated,UserId")] MasterBrand masterBrand)
         {
+            if (!string.IsNullOrEmpty(masterBrand.Code)) masterBrand.Code = masterBrand.Code.ToUpper();
+            if (!string.IsNullOrEmpty(masterBrand.Name)) masterBrand.Name = masterBrand.Name.ToUpper();
+            if (!string.IsNullOrEmpty(masterBrand.Notes)) masterBrand.Notes = masterBrand.Notes.ToUpper();
+
+            masterBrand.Created = DateTime.Now;
+            masterBrand.Updated = DateTime.Now;
+            masterBrand.UserId = User.Identity.GetUserId<int>();
+
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
                 try
                 {
                     if (ModelState.IsValid)
                     {
-                        if (!string.IsNullOrEmpty(masterBrand.Code)) masterBrand.Code = masterBrand.Code.ToUpper();
-                        if (!string.IsNullOrEmpty(masterBrand.Name)) masterBrand.Name = masterBrand.Name.ToUpper();
-                        if (!string.IsNullOrEmpty(masterBrand.Notes)) masterBrand.Notes = masterBrand.Notes.ToUpper();
-
-
-                        masterBrand.Created = DateTime.Now;
-                        masterBrand.Updated = DateTime.Now;
-                        masterBrand.UserId = User.Identity.GetUserId<int>();
                         db.MasterBrands.Add(masterBrand);
                         db.SaveChanges();
+
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBrand, MenuId = masterBrand.Id, MenuCode = masterBrand.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
@@ -156,27 +157,30 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterBrandsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,notes,Active,updated,UserId")] MasterBrand masterBrand)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,Notes,Active,Updated,UserId")] MasterBrand masterBrand)
         {
+            masterBrand.Updated = DateTime.Now;
+            masterBrand.UserId = User.Identity.GetUserId<int>();
+
+            if (!string.IsNullOrEmpty(masterBrand.Code)) masterBrand.Code = masterBrand.Code.ToUpper();
+            if (!string.IsNullOrEmpty(masterBrand.Name)) masterBrand.Name = masterBrand.Name.ToUpper();
+            if (!string.IsNullOrEmpty(masterBrand.Notes)) masterBrand.Notes = masterBrand.Notes.ToUpper();
+
+            db.Entry(masterBrand).State = EntityState.Unchanged;
+            db.Entry(masterBrand).Property("Code").IsModified = true;
+            db.Entry(masterBrand).Property("Name").IsModified = true;
+            db.Entry(masterBrand).Property("Notes").IsModified = true;
+            db.Entry(masterBrand).Property("Active").IsModified = true;
+            db.Entry(masterBrand).Property("Updated").IsModified = true;
+
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
                 try
                 {
-                    masterBrand.Updated = DateTime.Now;
                     if (ModelState.IsValid)
                     {
-                        if (!string.IsNullOrEmpty(masterBrand.Code)) masterBrand.Code = masterBrand.Code.ToUpper();
-                        if (!string.IsNullOrEmpty(masterBrand.Name)) masterBrand.Name = masterBrand.Name.ToUpper();
-                        if (!string.IsNullOrEmpty(masterBrand.Notes)) masterBrand.Notes = masterBrand.Notes.ToUpper();
-
-                        db.Entry(masterBrand).State = EntityState.Unchanged;
-                        db.Entry(masterBrand).Property("Code").IsModified = true;
-                        db.Entry(masterBrand).Property("Name").IsModified = true;
-                        db.Entry(masterBrand).Property("Notes").IsModified = true;
-                        db.Entry(masterBrand).Property("Active").IsModified = true;
-                        db.Entry(masterBrand).Property("Updated").IsModified = true;
-                        masterBrand.UserId = User.Identity.GetUserId<int>();
                         db.SaveChanges();
+
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBrand, MenuId = masterBrand.Id, MenuCode = masterBrand.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
@@ -214,18 +218,20 @@ namespace eShop.Controllers
                         foreach (int id in ids)
                         {
                             MasterBrand obj = db.MasterBrands.Find(id);
+
                             if (obj == null)
                                 failed++;
                             else
                             {
                                 MasterBrand tmp = obj;
+
                                 db.MasterBrands.Remove(obj);
                                 db.SaveChanges();
+
                                 db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBrand, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
 
                                 dbTran.Commit();
-
                             }
                         }
                         return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
@@ -235,8 +241,6 @@ namespace eShop.Controllers
                         dbTran.Rollback();
                         throw ex;
                     }
-
-
                 }
             }
         }

@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<eShop.Models.MasterBrand>
 
 @{
-    ViewBag.Title = "Master Unit";
-    ViewBag.Current = "MasterUnits";
+    ViewBag.Title = "Merek";
+    ViewBag.Current = "MasterBrands";
 }
 
 @section Styles {
@@ -17,7 +17,7 @@
 <div class="content-wrapper">
     <section class="content-header-fixed">
         <h1 class="col-md-6">
-            Master Brand
+            Merek
         </h1>
         <div class="col-md-6 text-right">
             @if (User.IsInRole("MasterBrandsAdd"))
