@@ -72,6 +72,16 @@
                 </tr>
                 <tr>
                     <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.User.UserName)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.User.UserName)
+                    </td>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
                         @Html.DisplayNameFor(model => model.Active)
                     </td>
                     <td style="font-weight:bold;" valign="top">

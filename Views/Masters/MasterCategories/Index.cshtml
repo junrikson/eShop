@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eShop.Models.MasterUnit>
+﻿@model IEnumerable<eShop.Models.MasterCategorie>
 
 @{
     ViewBag.Title = "Master Unit";
@@ -17,16 +17,16 @@
 <div class="content-wrapper">
     <section class="content-header-fixed">
         <h1 class="col-md-6">
-            Master Unit
+            Master Categorie
         </h1>
         <div class="col-md-6 text-right">
-            @if (User.IsInRole("MasterUnitsAdd"))
+            @if (User.IsInRole("MasterCategoriesAdd"))
             {
-                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "MasterUnits")">
+                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "MasterCategories")">
                     <i class="fa fa-plus"></i> Add
                 </button>
             }
-            @if (User.IsInRole("MasterUnitsDelete"))
+            @if (User.IsInRole("MasterCategoriesDelete"))
             {
                 <button id="batchDelete" class="btn btn-danger mx-1">
                     <i class="fa fa-trash"></i> Delete
@@ -146,7 +146,7 @@
                     bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/MasterUnits/BatchDelete";
+                            options.url = "/MasterCategories/BatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
