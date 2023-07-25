@@ -189,7 +189,9 @@ namespace eShop.Models
         [Display(Name = "Master Category")]
         MasterCategory = 91,
         [Display(Name = "Master Brand")]
-        MasterBrand = 92
+        MasterBrand = 92,
+        [Display(Name = "Purchase Order")]
+        PurchaseOrder = 93
     }
 
     public enum EnumActions
