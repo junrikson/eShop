@@ -37,9 +37,6 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Display(Name = "Default")]
-        public bool Default { get; set; }
-
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
 
@@ -58,7 +55,5 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
-    }
-
-   
+    }   
 }
