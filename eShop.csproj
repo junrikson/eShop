@@ -297,6 +297,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Inventory\MasterItemsController.cs" />
+    <Compile Include="Controllers\Inventory\MasterBrandsController.cs" />
     <Compile Include="Controllers\Masters\MasterCustomersController.cs" />
     <Compile Include="Controllers\Inventory\MasterCategoriesController.cs" />
     <Compile Include="Controllers\Inventory\MasterUnitsController.cs" />
@@ -325,6 +326,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
     <Compile Include="Models\Inventory\MasterCategory.cs" />
+    <Compile Include="Models\Inventory\MasterBrand.cs" />
     <Compile Include="Models\Inventory\MasterUnit.cs" />
     <Compile Include="Models\Inventory\MasterItems.cs" />
     <Compile Include="Models\Master\MasterWarehouse.cs" />
@@ -6876,6 +6878,11 @@
     <Content Include="Views\Inventory\MasterCategories\_Edit.cshtml" />
     <Content Include="Views\Inventory\MasterCategories\_IndexGrid.cshtml" />
     <Content Include="Views\Inventory\MasterCategories\Index.cshtml" />
+    <Content Include="Views\Inventory\MasterBrands\_Create.cshtml" />
+    <Content Include="Views\Inventory\MasterBrands\_Details.cshtml" />
+    <Content Include="Views\Inventory\MasterBrands\_Edit.cshtml" />
+    <Content Include="Views\Inventory\MasterBrands\_IndexGrid.cshtml" />
+    <Content Include="Views\Inventory\MasterBrands\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
