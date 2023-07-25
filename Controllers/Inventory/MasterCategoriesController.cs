@@ -80,12 +80,7 @@ namespace eShop.Controllers
         [Authorize(Roles = "MasterCategoriesAdd")]
         public ActionResult Create([Bind(Include = "Id,Code,Name,notes,Active,Created,Updated,UserId")] MasterCategory masterCategory)
         {
-            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-            {
-                try
-                {
-                    if (ModelState.IsValid)
-                    {
+           
                         if (!string.IsNullOrEmpty(masterCategory.Code)) masterCategory.Code = masterCategory.Code.ToUpper();
                         if (!string.IsNullOrEmpty(masterCategory.Name)) masterCategory.Name = masterCategory.Name.ToUpper();
                         if (!string.IsNullOrEmpty(masterCategory.Notes)) masterCategory.Notes = masterCategory.Notes.ToUpper();
@@ -94,6 +89,13 @@ namespace eShop.Controllers
                         masterCategory.Created = DateTime.Now;
                         masterCategory.Updated = DateTime.Now;
                         masterCategory.UserId = User.Identity.GetUserId<int>();
+
+            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (ModelState.IsValid)
+                    {
                         db.MasterCategories.Add(masterCategory);
                         db.SaveChanges();
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterCategory, MenuId = masterCategory.Id, MenuCode = masterCategory.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
@@ -158,17 +160,12 @@ namespace eShop.Controllers
         [Authorize(Roles = "MasterCategoriesEdit")]
         public ActionResult Edit([Bind(Include = "Id,Code,Name,notes,Default,Active,updated")] MasterCategory masterCategory)
         {
-            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-            {
-                try
-                {
-                    masterCategory.Updated = DateTime.Now;
-                    if (ModelState.IsValid)
-                    {
+           
                         if (!string.IsNullOrEmpty(masterCategory.Code)) masterCategory.Code = masterCategory.Code.ToUpper();
                         if (!string.IsNullOrEmpty(masterCategory.Name)) masterCategory.Name = masterCategory.Name.ToUpper();
                         if (!string.IsNullOrEmpty(masterCategory.Notes)) masterCategory.Notes = masterCategory.Notes.ToUpper();
                         masterCategory.Default = masterCategory.Default;
+
                         db.Entry(masterCategory).State = EntityState.Unchanged;
                         db.Entry(masterCategory).Property("Code").IsModified = true;
                         db.Entry(masterCategory).Property("Name").IsModified = true;
@@ -177,6 +174,14 @@ namespace eShop.Controllers
                         db.Entry(masterCategory).Property("Active").IsModified = true;
                         db.Entry(masterCategory).Property("Updated").IsModified = true;
                         masterCategory.UserId = User.Identity.GetUserId<int>();
+                        masterCategory.Updated = DateTime.Now;
+
+            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+            {
+                try
+                {                    
+                    if (ModelState.IsValid)
+                    {
                         db.SaveChanges();
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterCategory, MenuId = masterCategory.Id, MenuCode = masterCategory.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();

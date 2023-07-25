@@ -10,32 +10,19 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public class PurchaseOrder
+    public class PurchaseRequest
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Kode PO harus diisi.")]
+        [Required(ErrorMessage = "Kode PR harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode PO")]
+        [Display(Name = "Kode PR")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "PurchaseOrders", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
+        [Remote("IsCodeExists", "PurchaseRequests", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
         public string Code { get; set; }
-
-        [Required(ErrorMessage = "Tanggal Purchase Order harus diisi.")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime? Tanggal { get; set; }
-
-        [DatalistColumn]
-        [Display(Name = "Kode Supplier")]
-        [Required(ErrorMessage = "Kode Supplier harus diisi.")]
-        public string MasterSupplierId { get; set; }
-
-        [Display(Name = "Kode Supplier")]
-        public virtual MasterSupplier MasterSupplier { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
@@ -61,18 +48,18 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class PurchaseOrderDetails
+    public class PurchaseRequestDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Display(Name = "Purchase Order")]
+        [Display(Name = "Purchase Request")]
         [Required(ErrorMessage = "Invoice harus diisi.")]
-        public int PurchaseOrderId { get; set; }
+        public int PurchaseRequestId { get; set; }
 
-        [Display(Name = "Purchase Order")]
-        public virtual PurchaseOrder PurchaseOrder { get; set; }
+        [Display(Name = "Purchase Request")]
+        public virtual PurchaseRequest PurchaseRequest { get; set; }
 
         [Display(Name = "Master Item")]
         [Required(ErrorMessage = "Master Item harus diisi.")]
