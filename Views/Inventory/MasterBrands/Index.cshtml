@@ -1,8 +1,8 @@
-﻿@model IEnumerable<eShop.Models.MasterCategory>
+﻿@model IEnumerable<eShop.Models.MasterBrand>
 
 @{
-    ViewBag.Title = "Master Category";
-    ViewBag.Current = "MasterCategories";
+    ViewBag.Title = "Master Unit";
+    ViewBag.Current = "MasterUnits";
 }
 
 @section Styles {
@@ -17,16 +17,16 @@
 <div class="content-wrapper">
     <section class="content-header-fixed">
         <h1 class="col-md-6">
-            Master Categorie
+            Master Brand
         </h1>
         <div class="col-md-6 text-right">
-            @if (User.IsInRole("MasterCategoriesAdd"))
+            @if (User.IsInRole("MasterBrandsAdd"))
             {
-                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "MasterCategories")">
+                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "MasterBrands")">
                     <i class="fa fa-plus"></i> Add
                 </button>
             }
-            @if (User.IsInRole("MasterCategoriesDelete"))
+            @if (User.IsInRole("MasterBrandsDelete"))
             {
                 <button id="batchDelete" class="btn btn-danger mx-1">
                     <i class="fa fa-trash"></i> Delete
@@ -146,7 +146,7 @@
                     bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/MasterCategories/BatchDelete";
+                            options.url = "/MasterBrands/BatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);

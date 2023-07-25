@@ -1,6 +1,5 @@
-﻿@model eShop.Models.MasterCategory
+﻿@model eShop.Models.MasterBrand
 @using eShop.Models;
-
 
 @{
     Layout = null;
@@ -12,11 +11,11 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title">Create - Master Categorie</h4>
+            <h4 class="modal-title">Edit - Master Brand</h4>
         </div>
         <div class="modal-body">
             <div id="divEmp">
-                @using (Ajax.BeginForm("Create", "MasterCategories", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
+                @using (Ajax.BeginForm("Edit", "MasterBrands", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "EditSuccess" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(model => model.Id)
@@ -26,14 +25,9 @@
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.LabelFor(model => model.Code)
-                                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" }, @readonly = "readonly" })
+                                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" , @readonly = "readonly" }})
                                 @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
-                            </div>
-                            @*<div class="col-md-3">
-                                    @Html.LabelFor(model => model.Default)
-                                    @Html.EditorFor(model => model.Default, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                    @Html.ValidationMessageFor(model => model.Default, "", new { @class = "text-danger" })
-                                </div>*@
+                            </div> 
                             <div class="col-md-2 text-center">
                                 @Html.LabelFor(model => model.Active)
                                 <div class="checkbox text-center">

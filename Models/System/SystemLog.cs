@@ -185,7 +185,11 @@ namespace eShop.Models
         [Display(Name = "On/Off Hire")]
         ContainerHire = 89,
         [Display(Name = "Master Item")]
-        MasterItem = 90
+        MasterItem = 90,
+        [Display(Name = "Master Category")]
+        MasterCategory = 91,
+        [Display(Name = "Master Brand")]
+        MasterBrand = 92
     }
 
     public enum EnumActions
