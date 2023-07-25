@@ -19,7 +19,7 @@ namespace eShop.Controllers
         [Authorize(Roles = "MasterItemsActive")]
         public ActionResult Index()
         {
-            return View("../Masters/MasterItems/Index");
+            return View("../Inventory/MasterItems/Index");
         }
 
         [HttpGet]
@@ -27,9 +27,9 @@ namespace eShop.Controllers
         public PartialViewResult IndexGrid(String search)
         {
             if (String.IsNullOrEmpty(search))
-                return PartialView("../Masters/MasterItems/_IndexGrid", db.Set<MasterItem>().AsQueryable());
+                return PartialView("../Inventory/MasterItems/_IndexGrid", db.Set<MasterItem>().AsQueryable());
             else
-                return PartialView("../Masters/MasterItems/_IndexGrid", db.Set<MasterItem>().AsQueryable().Where(y => y.Code.Contains(search) || y.Name.Contains(search)));
+                return PartialView("../Inventory/MasterItems/_IndexGrid", db.Set<MasterItem>().AsQueryable().Where(y => y.Code.Contains(search) || y.Name.Contains(search)));
         }
 
         [Authorize(Roles = "MasterItemsActive")]
@@ -71,7 +71,7 @@ namespace eShop.Controllers
             {
                 return HttpNotFound();
             }
-            return PartialView("../Masters/MasterItems/_Details", MasterItem);
+            return PartialView("../Inventory/MasterItems/_Details", MasterItem);
         }
 
         // GET: MasterItems/Create
@@ -88,7 +88,7 @@ namespace eShop.Controllers
             else
                 MasterItem.Code = code + (Convert.ToInt32(lastData.Code.Substring(lastData.Code.Length - 4, 4)) + 1).ToString("D4");
 
-            return PartialView("../Masters/MasterItems/_Create", MasterItem);
+            return PartialView("../Inventory/MasterItems/_Create", MasterItem);
         }
 
         // POST: MasterItems/Create
@@ -118,7 +118,7 @@ namespace eShop.Controllers
                 return Json("success", JsonRequestBehavior.AllowGet);
             }
 
-            return PartialView("../Masters/MasterItems/_Create", MasterItem);
+            return PartialView("../Inventory/MasterItems/_Create", MasterItem);
         }
 
         // GET: MasterItems/Edit/5
@@ -134,7 +134,7 @@ namespace eShop.Controllers
             {
                 return HttpNotFound();
             }
-            return PartialView("../Masters/MasterItems/_Edit", MasterItem);
+            return PartialView("../Inventory/MasterItems/_Edit", MasterItem);
         }
 
         // POST: MasterItems/Edit/5
@@ -168,7 +168,7 @@ namespace eShop.Controllers
 
                 return Json("success", JsonRequestBehavior.AllowGet);
             }
-            return PartialView("../Masters/MasterItems/_Edit", MasterItem);
+            return PartialView("../Inventory/MasterItems/_Edit", MasterItem);
         }
 
         [HttpPost]

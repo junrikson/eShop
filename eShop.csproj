@@ -296,10 +296,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\Masters\MasterItemsController.cs" />
+    <Compile Include="Controllers\Inventory\MasterItemsController.cs" />
     <Compile Include="Controllers\Masters\MasterCustomersController.cs" />
-    <Compile Include="Controllers\Masters\MasterCategoriesController.cs" />
-    <Compile Include="Controllers\Masters\MasterUnitsController.cs" />
+    <Compile Include="Controllers\Inventory\MasterCategoriesController.cs" />
+    <Compile Include="Controllers\Inventory\MasterUnitsController.cs" />
     <Compile Include="Controllers\Masters\MasterRegionsController.cs" />
     <Compile Include="Controllers\Masters\MasterSuppliersController.cs" />
     <Compile Include="Controllers\Masters\MasterWarehousesController.cs" />
@@ -324,11 +324,11 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
-    <Compile Include="Models\Master\MasterCategorie.cs" />
-    <Compile Include="Models\Master\MasterUnit.cs" />
-    <Compile Include="Models\Master\MasterItems.cs" />
+    <Compile Include="Models\Inventory\MasterCategory.cs" />
+    <Compile Include="Models\Inventory\MasterUnit.cs" />
+    <Compile Include="Models\Inventory\MasterItems.cs" />
     <Compile Include="Models\Master\MasterWarehouse.cs" />
-    <Compile Include="Models\AP\PurchaseOrder.cs" />
+    <Compile Include="Models\Buying\PurchaseOrder.cs" />
     <Compile Include="Models\Settings\AccountViewModels.cs" />
     <Compile Include="Models\Master\MasterRegion.cs" />
     <Compile Include="Models\Settings\Authorization.cs" />
@@ -6861,25 +6861,28 @@
     <Content Include="Views\Masters\MasterRegions\_Details.cshtml" />
     <Content Include="Views\Masters\MasterRegions\_Edit.cshtml" />
     <Content Include="Views\Masters\MasterRegions\_IndexGrid.cshtml" />
-    <Content Include="Views\Masters\MasterItems\_Details.cshtml" />
-    <Content Include="Views\Masters\MasterItems\_IndexGrid.cshtml" />
-    <Content Include="Views\Masters\MasterItems\Index.cshtml" />
-    <Content Include="Views\Masters\MasterItems\_Create.cshtml" />
-    <Content Include="Views\Masters\MasterItems\_Edit.cshtml" />
-    <Content Include="Views\Masters\MasterUnits\_Create.cshtml" />
-    <Content Include="Views\Masters\MasterUnits\_Details.cshtml" />
-    <Content Include="Views\Masters\MasterUnits\_Edit.cshtml" />
-    <Content Include="Views\Masters\MasterUnits\_IndexGrid.cshtml" />
-    <Content Include="Views\Masters\MasterUnits\Index.cshtml" />
-    <Content Include="Views\Masters\MasterCategories\_Create.cshtml" />
-    <Content Include="Views\Masters\MasterCategories\_Details.cshtml" />
-    <Content Include="Views\Masters\MasterCategories\_Edit.cshtml" />
-    <Content Include="Views\Masters\MasterCategories\_IndexGrid.cshtml" />
-    <Content Include="Views\Masters\MasterCategories\Index.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\_Details.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\_IndexGrid.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\Index.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\_Create.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\_Edit.cshtml" />
+    <Content Include="Views\Inventory\MasterUnits\_Create.cshtml" />
+    <Content Include="Views\Inventory\MasterUnits\_Details.cshtml" />
+    <Content Include="Views\Inventory\MasterUnits\_Edit.cshtml" />
+    <Content Include="Views\Inventory\MasterUnits\_IndexGrid.cshtml" />
+    <Content Include="Views\Inventory\MasterUnits\Index.cshtml" />
+    <Content Include="Views\Inventory\MasterCategories\_Create.cshtml" />
+    <Content Include="Views\Inventory\MasterCategories\_Details.cshtml" />
+    <Content Include="Views\Inventory\MasterCategories\_Edit.cshtml" />
+    <Content Include="Views\Inventory\MasterCategories\_IndexGrid.cshtml" />
+    <Content Include="Views\Inventory\MasterCategories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CrystalReports\" />
+    <Folder Include="Models\AP\" />
+    <Folder Include="Models\AR\" />
+    <Folder Include="Models\Selling\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

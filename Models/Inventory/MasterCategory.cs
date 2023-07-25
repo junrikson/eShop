@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public class MasterCategorie
+    public class MasterCategory
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

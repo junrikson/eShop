@@ -33,7 +33,7 @@ namespace eShop.Models
         public string Name { get; set; }
 
         [Display(Name = "Kategori")]
-        public virtual MasterCategorie MasterCategorie { get; set; }
+        public virtual MasterCategory MasterCategory { get; set; }
 
         [Display(Name = "Kategori")]
         public int? MasterCategoryId { get; set; }

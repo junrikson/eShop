@@ -19,7 +19,7 @@ namespace eShop.Controllers
         [Authorize(Roles = "MasterUnitsActive")]
         public ActionResult Index()
         {
-            return View("../Masters/MasterUnits/Index");
+            return View("../Inventory/MasterUnits/Index");
         }
 
         [HttpGet]
@@ -27,9 +27,9 @@ namespace eShop.Controllers
         public PartialViewResult IndexGrid(String search)
         {
             if (String.IsNullOrEmpty(search))
-                return PartialView("../Masters/MasterUnits/_IndexGrid", db.Set<MasterUnit>().AsQueryable());
+                return PartialView("../Inventory/MasterUnits/_IndexGrid", db.Set<MasterUnit>().AsQueryable());
             else
-                return PartialView("../Masters/MasterUnits/_IndexGrid", db.Set<MasterUnit>().AsQueryable()
+                return PartialView("../Inventory/MasterUnits/_IndexGrid", db.Set<MasterUnit>().AsQueryable()
                     .Where(x => x.Code.Contains(search)));
         }
 
@@ -59,7 +59,7 @@ namespace eShop.Controllers
             {
                 return HttpNotFound();
             }
-            return PartialView("../Masters/MasterUnits/_Details", masterUnit);
+            return PartialView("../Inventory/MasterUnits/_Details", masterUnit);
         }
 
         // GET: MasterUnits/Create
@@ -69,7 +69,7 @@ namespace eShop.Controllers
             MasterUnit masterUnit = new MasterUnit();
             masterUnit.Active = true;
 
-            return PartialView("../Masters/MasterUnits/_Create", masterUnit);
+            return PartialView("../Inventory/MasterUnits/_Create", masterUnit);
         }
 
         // POST: MasterUnits/Create
@@ -110,7 +110,7 @@ namespace eShop.Controllers
                     throw ex;
                 }
 
-                return PartialView("../Masters/MasterUnits/_Create", masterUnit);
+                return PartialView("../Inventory/MasterUnits/_Create", masterUnit);
             }
         }
 
@@ -147,7 +147,7 @@ namespace eShop.Controllers
             {
                 return HttpNotFound();
             }
-            return PartialView("../Masters/MasterUnits/_Edit", masterUnit);
+            return PartialView("../Inventory/MasterUnits/_Edit", masterUnit);
         }
 
         // POST: MasterUnits/Edit/5
@@ -192,7 +192,7 @@ namespace eShop.Controllers
                     dbTran.Rollback();
                     throw ex;
                 }
-                return PartialView("../Masters/MasterUnits/_Edit", masterUnit);
+                return PartialView("../Inventory/MasterUnits/_Edit", masterUnit);
 
             }
         }
