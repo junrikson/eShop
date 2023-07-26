@@ -33,19 +33,6 @@ namespace eShop.Controllers
                     .Where(x => x.Code.Contains(search)));
         }
 
-        [Authorize(Roles = "MasterUnitsActive")]
-        public JsonResult IsCodeExists(string Code, int? Id)
-        {
-            if (Id == null)
-            {
-                return Json(!db.MasterUnits.Any(x => x.Code == Code), JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(!db.MasterUnits.Any(x => x.Code == Code && x.Id != Id), JsonRequestBehavior.AllowGet);
-            }
-        }
-
         // GET: MasterUnits/Details/
         [Authorize(Roles = "MasterUnitsView")]
         public ActionResult Details(int? id)
