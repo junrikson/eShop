@@ -44,6 +44,72 @@
                     if (User.IsInRole("MasterItemsActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterItems" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterItems", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Barang</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
+                if (User.IsInRole("MasterBanksActive") || User.IsInRole("CashBankInsActive") || User.IsInRole("CashBankOutsActive") || User.IsInRole("BankInsActive") || User.IsInRole("BankOutsActive") || User.IsInRole("BankOutsPendingActive") || User.IsInRole("GiroChequeInsActive") || User.IsInRole("GiroChequeOutsActive") || User.IsInRole("SalesDepositsActive") || User.IsInRole("GiroChequeCashOutActive") || User.IsInRole("ReportBankBallanceActive") || User.IsInRole("ReportBankMutationActive") || User.IsInRole("ReportBankDetailsActive") || User.IsInRole("ReportListGiroChequesActive"))
+                {
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "MasterBanks" || ViewBag.Current == "CashBankIns" || ViewBag.Current == "CashBankOuts" || ViewBag.Current == "BankIns" || ViewBag.Current == "BankOuts" || ViewBag.Current == "BankOutsPending" || ViewBag.Current == "GiroChequeIns" || ViewBag.Current == "GiroChequeOuts" || ViewBag.Current == "SalesDeposits" || ViewBag.Current == "GiroChequeCashOuts" || ViewBag.Current == "ReportBankBallance" || ViewBag.Current == "ReportBankMutation" || ViewBag.Current == "ReportBankDetails" || ViewBag.Current == "ReportListGiroCheques") ? " active" : "") + "\">";
+                    messages = messages + "<a href=\"#\"><i class=\"fa fa-bank\"></i><span>Kas & Bank</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
+                    if (User.IsInRole("MasterBanksActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterBanks" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterBanks", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Master Kas & Bank</a></li>"; }
+                    if (User.IsInRole("CashBankInsActive")) { messages = messages + "<li" + (ViewBag.Current == "CashBankIns" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "CashBankIns", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Penerimaan Kas & Bank</a></li>"; }
+                    if (User.IsInRole("CashBankOutsActive")) { messages = messages + "<li" + (ViewBag.Current == "CashBankOuts" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "CashBankOuts", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pengeluaran Kas & Bank</a></li>"; }
+                    if (User.IsInRole("BankInsActive")) { messages = messages + "<li" + (ViewBag.Current == "BankIns" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "BankIns", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Penerimaan Kas & Bank</a></li>"; }
+                    if (User.IsInRole("BankOutsActive")) { messages = messages + "<li" + (ViewBag.Current == "BankOuts" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "BankOuts", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pengeluaran Kas & Bank</a></li>"; }
+                    if (User.IsInRole("BankOutsPendingActive")) { messages = messages + "<li" + (ViewBag.Current == "BankOutsPending" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "BankOutsPending", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pengajuan Pengeluaran</a></li>"; }
+                    if (User.IsInRole("SalesDepositsActive")) { messages = messages + "<li" + (ViewBag.Current == "SalesDeposits" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "SalesDeposits", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Setoran Sales</a></li>"; }
+                    if (User.IsInRole("GiroChequeInsActive") || User.IsInRole("GiroChequeOutsActive") || User.IsInRole("GiroChequeCashOutsActive"))
+                    {
+                        messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "GiroChequeIns" || ViewBag.Current == "GiroChequeOuts" || ViewBag.Current == "GiroChequeCashOuts") ? " active" : "") + "\">";
+                        messages = messages + "<a href=\"#\"><i class=\"fa fa-angle-right\"></i><span>Giro & Cek</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
+                        if (User.IsInRole("GiroChequeInsActive")) { messages = messages + "<li" + (ViewBag.Current == "GiroChequeIns" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "GiroChequeIns", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Giro & Cek Masuk</a></li>"; }
+                        if (User.IsInRole("GiroChequeOutsActive")) { messages = messages + "<li" + (ViewBag.Current == "GiroChequeOuts" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "GiroChequeOuts", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Giro & Cek Keluar</a></li>"; }
+                        if (User.IsInRole("GiroChequeCashOutsActive")) { messages = messages + "<li" + (ViewBag.Current == "GiroChequeCashOuts" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "GiroChequeCashOuts", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pencairan Giro & Cek</a></li>"; }
+                        messages = messages + "</ul></li>";
+                    }
+                    if (User.IsInRole("ReportBankBallanceActive") || User.IsInRole("ReportBankMutationActive") || User.IsInRole("ReportBankDetailsActive") || User.IsInRole("ReportListGiroChequesActive"))
+                    {
+                        messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "ReportBankBallance" || ViewBag.Current == "ReportBankMutation" || ViewBag.Current == "ReportBankDetails" || ViewBag.Current == "ReportListGiroCheques") ? " active" : "") + "\">";
+                        messages = messages + "<a href=\"#\"><i class=\"fa fa-angle-right\"></i><span>Laporan</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
+                        if (User.IsInRole("ReportBankBallanceActive")) { messages = messages + "<li" + (ViewBag.Current == "ReportBankBallance" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "ReportBankBallance", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Saldo Kas / Bank</a></li>"; }
+                        if (User.IsInRole("ReportBankMutationActive")) { messages = messages + "<li" + (ViewBag.Current == "ReportBankMutation" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "ReportBankMutation", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Mutasi Kas / Bank</a></li>"; }
+                        if (User.IsInRole("ReportBankDetailsActive")) { messages = messages + "<li" + (ViewBag.Current == "ReportBankDetails" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "ReportBankDetails", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Rincian Kas / Bank</a></li>"; }
+                        if (User.IsInRole("ReportListGiroChequesActive")) { messages = messages + "<li" + (ViewBag.Current == "ReportListGiroCheques" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "ReportListGiroCheques", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Daftar Giro & Cek</a></li>"; }
+                        messages = messages + "</ul></li>";
+                    }
+                    messages = messages + "</ul></li>";
+                }
+                if (User.IsInRole("DebitNotesActive") || User.IsInRole("PaymentsActive"))
+                {
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "DebitNotes" || ViewBag.Current == "Payments") ? " active" : "") + "\">";
+                    messages = messages + "<a href=\"#\"><i class=\"fa fa-money\"></i><span>A / P</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
+                    if (User.IsInRole("DebitNotesActive")) { messages = messages + "<li" + (ViewBag.Current == "DebitNotes" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "DebitNotes", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Nota Debit</a></li>"; }
+                    if (User.IsInRole("PaymentsActive")) { messages = messages + "<li" + (ViewBag.Current == "Payments" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Payments", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pembayaran Hutang</a></li>"; }
+                    messages = messages + "</ul></li>";
+                }
+                if (User.IsInRole("CreditNotesActive") || User.IsInRole("RepaymentsActive"))
+                {
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "CreditNotes" || ViewBag.Current == "Repayments") ? " active" : "") + "\">";
+                    messages = messages + "<a href=\"#\"><i class=\"fa fa-money\"></i><span>A / R</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
+                    if (User.IsInRole("CreditNotesActive")) { messages = messages + "<li" + (ViewBag.Current == "CreditNotes" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "CreditNotes", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Nota Kredit</a></li>"; }
+                    if (User.IsInRole("RepaymentsActive")) { messages = messages + "<li" + (ViewBag.Current == "Repayments" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Repayments", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pelunasan Piutang</a></li>"; }
+                    messages = messages + "</ul></li>";
+                }
+                if (User.IsInRole("PurchaseRequestsActive") || User.IsInRole("PurchaseOrdersActive") || User.IsInRole("PurchasesActive"))
+                {
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "PurchaseRequests" || ViewBag.Current == "PurchaseOrders" || ViewBag.Current == "Purchases") ? " active" : "") + "\">";
+                    messages = messages + "<a href=\"#\"><i class=\"fa fa-shopping-cart\"></i><span>Pembelian</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
+                    if (User.IsInRole("PurchaseRequestsActive")) { messages = messages + "<li" + (ViewBag.Current == "PurchaseRequests" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "PurchaseRequests", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Purchase Request</a></li>"; }
+                    if (User.IsInRole("PurchaseOrdersActive")) { messages = messages + "<li" + (ViewBag.Current == "PurchaseOrders" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "PurchaseOrders", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Purchase Order</a></li>"; }
+                    if (User.IsInRole("PurchasesActive")) { messages = messages + "<li" + (ViewBag.Current == "Purchases" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Purchases", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pembelian</a></li>"; }
+                    messages = messages + "</ul></li>";
+                }
+                if (User.IsInRole("SalesRequestsActive") || User.IsInRole("SalesOrdersActive") || User.IsInRole("SalesActive"))
+                {
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "SalesRequests" || ViewBag.Current == "SalesOrders" || ViewBag.Current == "Sales") ? " active" : "") + "\">";
+                    messages = messages + "<a href=\"#\"><i class=\"fa fa-shopping-cart\"></i><span>Penjualan</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
+                    if (User.IsInRole("SalesRequestsActive")) { messages = messages + "<li" + (ViewBag.Current == "SalesRequests" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "SalesRequests", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Sales Request</a></li>"; }
+                    if (User.IsInRole("SalesOrdersActive")) { messages = messages + "<li" + (ViewBag.Current == "SalesOrders" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "SalesOrders", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Sales Order</a></li>"; }
+                    if (User.IsInRole("SalesActive")) { messages = messages + "<li" + (ViewBag.Current == "Sales" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Sales", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Penjualan</a></li>"; }
+                    messages = messages + "</ul></li>";
+                }
                 if (User.IsInRole("RolesActive") || User.IsInRole("GroupAuthorizationsActive") || User.IsInRole("AuthorizationsActive") || User.IsInRole("SettingUsersActive"))
                 {
                     messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "Roles" || ViewBag.Current == "GroupAuthorizations" || ViewBag.Current == "Authorizations" || ViewBag.Current == "SettingUsers") ? " active" : "") + "\">";
@@ -62,13 +128,6 @@
                     if (User.IsInRole("VerificationHistoriesActive")) { messages = messages + "<li" + (ViewBag.Current == "VerificationHistories" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "VerificationHistories", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Verification History</a></li>"; }
                     if (User.IsInRole("ChatsActive")) { messages = messages + "<li" + (ViewBag.Current == "Chats" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Chats", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Chat History</a></li>"; }
                     if (User.IsInRole("EmailsActive")) { messages = messages + "<li" + (ViewBag.Current == "Emails" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Emails", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Email</a></li>"; }
-                    messages = messages + "</ul></li>";
-                }
-                if (User.IsInRole("PurchaseOrdersActive") )
-                {
-                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "PurchaseOrders")  ? " active" : "") + "\">";
-                    messages = messages + "<a href=\"#\"><i class=\"fa fa-desktop\"></i><span>Buying</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
-                    if (User.IsInRole("PurchaseOrdersActive")) { messages = messages + "<li" + (ViewBag.Current == "PurchaseOrders" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "PurchaseOrders", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Purchase Order</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
             }
