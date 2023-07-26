@@ -154,13 +154,14 @@ namespace eShop.Controllers
             if (!string.IsNullOrEmpty(masterItem.Name)) masterItem.Name = masterItem.Name.ToUpper();
             if (!string.IsNullOrEmpty(masterItem.Notes)) masterItem.Notes = masterItem.Notes.ToUpper();
 
+            db.Entry(masterItem).State = EntityState.Modified;
+
             if (ModelState.IsValid)
             {
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
                     try
                     {
-                        db.MasterItems.Add(masterItem);
                         db.SaveChanges();
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterItem, MenuId = masterItem.Id, MenuCode = masterItem.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
