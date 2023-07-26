@@ -1,4 +1,5 @@
 ﻿using eShop.Models;
+using eShop.Properties;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Data;
@@ -68,6 +69,13 @@ namespace eShop.Controllers
         {
             PurchaseOrder PurchaseOrder = new PurchaseOrder();
             PurchaseOrder.Active = true;
+
+            string code = Settings.Default.PurchaseOrderCode + DateTime.Now.Year.ToString().Substring(2, 2) + DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") + "/";
+            var lastData = db.PurchaseOrders.Where(x => x.Code.StartsWith(code)).OrderByDescending(x => x.Code).FirstOrDefault();
+            if (lastData == null)
+                PurchaseOrder.Code = code + "0001";
+            else
+                PurchaseOrder.Code = code + (Convert.ToInt32(lastData.Code.Substring(lastData.Code.Length - 4, 4)) + 1).ToString("D4");
 
             return PartialView("../Buying/PurchaseOrders/_Create", PurchaseOrder);
         }
