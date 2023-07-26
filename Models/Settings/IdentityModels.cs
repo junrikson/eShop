@@ -71,15 +71,21 @@ namespace eShop.Models
         public int? MasterCustomerId { get; set; }
 
         [Display(Name = "Konsumen")]
+        public virtual MasterCustomer MasterCustomer { get; set; }
+
+        [Display(Name = "Konsumen")]
         public Boolean? IsCustomer { get; set; }
 
         public virtual ICollection<MasterBusinessUnit> MasterBusinessUnits { get; set; }
+
+        public virtual ICollection<MasterRegion> MasterRegions { get; set; }
 
         public virtual ICollection<SystemLog> SystemLogs { get; set; }
 
         public ApplicationUser()
         {
             this.MasterBusinessUnits = new HashSet<MasterBusinessUnit>();
+            this.MasterRegions = new HashSet<MasterRegion>();
         }
     }
 
@@ -129,7 +135,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnit> MasterBusinessUnits { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegion> MasterRegions { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterItem> MasterItems { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterItemUnits> MasterItemsUnits { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterItemUnit> MasterItemUnits { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterCategory> MasterCategories { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterUnit> MasterUnits { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBrand> MasterBrands { get; set; }
@@ -158,6 +164,9 @@ namespace eShop.Models
             modelBuilder.Entity<MasterBusinessUnit>().Property(x => x.FCLLoadFee).HasPrecision(18, 2);
             modelBuilder.Entity<MasterBusinessUnit>().Property(x => x.LCLLoadFee).HasPrecision(18, 2);
             modelBuilder.Entity<MasterBusinessUnit>().Property(x => x.EmptyLoadFee).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseOrder>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Total).HasPrecision(18, 2);
         }
     }
 }

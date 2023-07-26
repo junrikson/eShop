@@ -93,6 +93,8 @@ namespace eShop.Controllers
 
             PopulateAssignedBusinessUnit(user);
 
+            PopulateAssignedRegion(user);
+
             if (user == null)
             {
                 return HttpNotFound();
@@ -119,6 +121,24 @@ namespace eShop.Controllers
             ViewBag.BusinessUnits = viewModel;
         }
 
+        [Authorize(Roles = "SettingUsersActive")]
+        private void PopulateAssignedRegion(ApplicationUser user)
+        {
+            var allRegions = db.MasterRegions;
+            var userRegions = new HashSet<int>(user.MasterRegions.Select(c => c.Id));
+            var viewModel = new List<AssignedRegion>();
+            foreach (var obj in allRegions)
+            {
+                viewModel.Add(new AssignedRegion
+                {
+                    Id = obj.Id,
+                    Title = obj.Code,
+                    Assigned = userRegions.Contains(obj.Id)
+                });
+            }
+            ViewBag.Regions = viewModel;
+        }
+
         // POST: SettingUsers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -139,6 +159,8 @@ namespace eShop.Controllers
             try
             {
                 UpdateUserBusinessUnits(selectedBusinessUnits, userToUpdate);
+
+                UpdateUserRegions(selectedRegions, userToUpdate);
 
                 Models.Authorization authorization = db.Authorizations.Find(AuthorizationId);
                 if (authorization != null)
@@ -163,6 +185,8 @@ namespace eShop.Controllers
             }
 
             PopulateAssignedBusinessUnit(userToUpdate);
+
+            PopulateAssignedRegion(userToUpdate);
 
             return PartialView("../Settings/SettingUsers/_Edit", userToUpdate);
         }
@@ -213,6 +237,37 @@ namespace eShop.Controllers
                     if (userBusinessUnits.Contains(obj.Id))
                     {
                         userToUpdate.MasterBusinessUnits.Remove(obj);
+                    }
+                }
+            }
+        }
+
+        [Authorize(Roles = "SettingUsersActive")]
+        private void UpdateUserRegions(int[] selectedRegions, ApplicationUser userToUpdate)
+        {
+            if (selectedRegions == null)
+            {
+                userToUpdate.MasterRegions = new List<MasterRegion>();
+                return;
+            }
+
+            var selectedRegionsHS = new HashSet<int>(selectedRegions);
+            var userRegions = new HashSet<int>
+                (userToUpdate.MasterRegions.Select(c => c.Id));
+            foreach (var obj in db.MasterRegions)
+            {
+                if (selectedRegionsHS.Contains(obj.Id))
+                {
+                    if (!userRegions.Contains(obj.Id))
+                    {
+                        userToUpdate.MasterRegions.Add(obj);
+                    }
+                }
+                else
+                {
+                    if (userRegions.Contains(obj.Id))
+                    {
+                        userToUpdate.MasterRegions.Remove(obj);
                     }
                 }
             }

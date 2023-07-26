@@ -54,6 +54,26 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterItem(DatalistFilter filter)
+        {
+            MasterItemDatalist datalist = new MasterItemDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterItemUnit(DatalistFilter filter)
+        {
+            MasterItemUnitDatalist datalist = new MasterItemUnitDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllAuthorization(DatalistFilter filter)
         {
             AuthorizationDatalist datalist = new AuthorizationDatalist(db);

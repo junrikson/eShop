@@ -8,71 +8,26 @@
     <Setting Name="WarehouseCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">WH/</Value>
     </Setting>
-    <Setting Name="ContainerInputCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">CI/</Value>
-    </Setting>
     <Setting Name="WarehouseInputCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">WHI/</Value>
-    </Setting>
-    <Setting Name="LoadingCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">MB/</Value>
-    </Setting>
-    <Setting Name="ShipmentCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">SHIP/</Value>
     </Setting>
     <Setting Name="CreditNoteCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">CN/</Value>
     </Setting>
-    <Setting Name="QuotationCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">QUO/</Value>
-    </Setting>
-    <Setting Name="InvoiceDetailsCost" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="BookingOrderCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">BO/</Value>
-    </Setting>
     <Setting Name="BankInCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">BIN/</Value>
-    </Setting>
-    <Setting Name="CashInCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">CIN/</Value>
     </Setting>
     <Setting Name="BankOutCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">BOU/</Value>
     </Setting>
-    <Setting Name="CashOutCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">COU/</Value>
-    </Setting>
     <Setting Name="JournalCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">GL/</Value>
-    </Setting>
-    <Setting Name="ForwardingQuotationCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">FQ/</Value>
-    </Setting>
-    <Setting Name="ForwardingJobOrderCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">SI</Value>
-    </Setting>
-    <Setting Name="ForwardingSellingDetailsCost" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="MasterCurrencyDefault" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="RepaymentCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">RP/</Value>
     </Setting>
-    <Setting Name="GiroChequeCashOutCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">CO/</Value>
-    </Setting>
-    <Setting Name="EmptyDeliveryOrder" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">SJE/</Value>
-    </Setting>
-    <Setting Name="ManualDeliveryOrder" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">SJM/</Value>
-    </Setting>
-    <Setting Name="TallySheetCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">TS/</Value>
+    <Setting Name="PurchaseOrderCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PO/</Value>
     </Setting>
   </Settings>
 </SettingsFile>

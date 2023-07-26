@@ -107,7 +107,7 @@ namespace eShop.Controllers
                     {
                         foreach(MasterUnit masterUnit in masterUnits)
                         {
-                            MasterItemUnits masterItemUnits = new MasterItemUnits
+                            MasterItemUnit masterItemUnit = new MasterItemUnit
                             {
                                 MasterItemId = masterItem.Id,
                                 MasterUnitId = masterUnit.Id,
@@ -118,7 +118,7 @@ namespace eShop.Controllers
                                 UserId = User.Identity.GetUserId<int>()
                             };
 
-                            db.MasterItemsUnits.Add(masterItemUnits);
+                            db.MasterItemUnits.Add(masterItemUnit);
                             db.SaveChanges();
                         }
                     }
@@ -197,7 +197,7 @@ namespace eShop.Controllers
                         {
                             try
                             {
-                                db.MasterItemsUnits.RemoveRange(db.MasterItemsUnits.Where(x => x.MasterItemId == obj.Id));
+                                db.MasterItemUnits.RemoveRange(db.MasterItemUnits.Where(x => x.MasterItemId == obj.Id));
                                 db.SaveChanges();
 
                                 db.MasterItems.Remove(obj);
@@ -310,7 +310,7 @@ namespace eShop.Controllers
                                 {
                                     MasterItem tmp = obj;
 
-                                    db.MasterItemsUnits.RemoveRange(db.MasterItemsUnits.Where(x => x.MasterItemId == obj.Id));
+                                    db.MasterItemUnits.RemoveRange(db.MasterItemUnits.Where(x => x.MasterItemId == obj.Id));
                                     db.SaveChanges();
 
                                     db.MasterItems.Remove(obj);
@@ -338,7 +338,7 @@ namespace eShop.Controllers
         [Authorize(Roles = "MasterItemsActive")]
         public PartialViewResult DetailsGrid(int Id)
         {
-            return PartialView("../Inventory/MasterItems/_DetailsGrid", db.MasterItemsUnits
+            return PartialView("../Inventory/MasterItems/_DetailsGrid", db.MasterItemUnits
                 .Where(x => x.MasterItemId == Id).ToList());
         }
 
@@ -357,24 +357,24 @@ namespace eShop.Controllers
                 return HttpNotFound();
             }
 
-            MasterItemUnits masterItemUnits = new MasterItemUnits
+            MasterItemUnit masterItemUnit = new MasterItemUnit
             {
                 MasterItemId = masterItem.Id,
                 Default = false,
                 Active = true
             };
 
-            return PartialView("../Inventory/MasterItems/_DetailsCreate", masterItemUnits);
+            return PartialView("../Inventory/MasterItems/_DetailsCreate", masterItemUnit);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterItemsActive")]
-        public ActionResult DetailsCreate([Bind(Include = "MasterItemId,MasterUnitId,Default,Active,Created,Updated,UserId")] MasterItemUnits masterItemUnits)
+        public ActionResult DetailsCreate([Bind(Include = "MasterItemId,MasterUnitId,Default,Active,Created,Updated,UserId")] MasterItemUnit masterItemUnit)
         {
-            masterItemUnits.Created = DateTime.Now;
-            masterItemUnits.Updated = DateTime.Now;
-            masterItemUnits.UserId = User.Identity.GetUserId<int>();
+            masterItemUnit.Created = DateTime.Now;
+            masterItemUnit.Updated = DateTime.Now;
+            masterItemUnit.UserId = User.Identity.GetUserId<int>();
 
             if (ModelState.IsValid)
             {
@@ -382,10 +382,10 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        db.MasterItemsUnits.Add(masterItemUnits);
+                        db.MasterItemUnits.Add(masterItemUnit);
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterItemUnits, MenuId = masterItemUnits.MasterUnitId, MenuCode = masterItemUnits.MasterItemId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterItemUnits, MenuId = masterItemUnit.MasterUnitId, MenuCode = masterItemUnit.MasterItemId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -400,7 +400,7 @@ namespace eShop.Controllers
                     }
                 }
             }
-            return PartialView("../Inventory/MasterItems/_DetailsCreate", masterItemUnits);
+            return PartialView("../Inventory/MasterItems/_DetailsCreate", masterItemUnit);
         }
 
         [Authorize(Roles = "MasterItemsActive")]
@@ -411,7 +411,7 @@ namespace eShop.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            MasterItemUnits obj = db.MasterItemsUnits.Find(id);
+            MasterItemUnit obj = db.MasterItemUnits.Find(id);
 
             if (obj == null)
             {
@@ -423,17 +423,17 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterItemsActive")]
-        public ActionResult DetailsEdit([Bind(Include = "Id,MasterItemId,MasterUnitId,Default,Active,Created,Updated,UserId")] MasterItemUnits masterItemUnits)
+        public ActionResult DetailsEdit([Bind(Include = "Id,MasterItemId,MasterUnitId,Default,Active,Created,Updated,UserId")] MasterItemUnit masterItemUnit)
         {
-            masterItemUnits.Updated = DateTime.Now;
-            masterItemUnits.UserId = User.Identity.GetUserId<int>();
+            masterItemUnit.Updated = DateTime.Now;
+            masterItemUnit.UserId = User.Identity.GetUserId<int>();
 
-            db.Entry(masterItemUnits).State = EntityState.Unchanged;
-            db.Entry(masterItemUnits).Property("MasterUnitId").IsModified = true;
-            db.Entry(masterItemUnits).Property("Default").IsModified = true;
-            db.Entry(masterItemUnits).Property("Active").IsModified = true;
-            db.Entry(masterItemUnits).Property("Updated").IsModified = true;
-            db.Entry(masterItemUnits).Property("UserId").IsModified = true;
+            db.Entry(masterItemUnit).State = EntityState.Unchanged;
+            db.Entry(masterItemUnit).Property("MasterUnitId").IsModified = true;
+            db.Entry(masterItemUnit).Property("Default").IsModified = true;
+            db.Entry(masterItemUnit).Property("Active").IsModified = true;
+            db.Entry(masterItemUnit).Property("Updated").IsModified = true;
+            db.Entry(masterItemUnit).Property("UserId").IsModified = true;
 
             if (ModelState.IsValid)
             {
@@ -443,7 +443,7 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterItemUnits, MenuId = masterItemUnits.MasterUnitId, MenuCode = masterItemUnits.MasterItemId.ToString(), Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterItemUnits, MenuId = masterItemUnit.MasterUnitId, MenuCode = masterItemUnit.MasterItemId.ToString(), Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -458,7 +458,7 @@ namespace eShop.Controllers
                 }
             }
 
-            return PartialView("../Inventory/MasterItems/_DetailsEdit", masterItemUnits);
+            return PartialView("../Inventory/MasterItems/_DetailsEdit", masterItemUnit);
         }
 
         [HttpPost]
@@ -475,7 +475,7 @@ namespace eShop.Controllers
                     int failed = 0;
                     foreach (int id in ids)
                     {
-                        MasterItemUnits obj = db.MasterItemsUnits.Find(id);
+                        MasterItemUnit obj = db.MasterItemUnits.Find(id);
                         if (obj == null)
                             failed++;
                         else
@@ -484,9 +484,9 @@ namespace eShop.Controllers
                             {
                                 try
                                 {
-                                    MasterItemUnits tmp = obj;
+                                    MasterItemUnit tmp = obj;
 
-                                    db.MasterItemsUnits.Remove(obj);
+                                    db.MasterItemUnits.Remove(obj);
                                     db.SaveChanges();
 
                                     db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterItemUnits, MenuId = tmp.MasterUnitId, MenuCode = tmp.MasterItemId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });

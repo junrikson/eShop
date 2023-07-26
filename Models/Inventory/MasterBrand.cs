@@ -55,7 +55,5 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
-    }
-
-   
+    }   
 }

@@ -1,12 +1,22 @@
 ﻿@model IEnumerable<eShop.Models.PurchaseOrder>
 
 @{
-    ViewBag.Title = "Po";
+    ViewBag.Title = "Purchase Order";
     ViewBag.Current = "PurchaseOrders";
 }
 
 @section Styles {
     @Styles.Render("~/style/mvcgrid")
+    <style>
+        .grid-column-red {
+            color: #EE0000;
+            font-weight: bold;
+        }
+
+        .grid-column-green {
+            color: #009900;
+        }
+    </style>
 }
 
 <style>
@@ -22,9 +32,9 @@
         <div class="col-md-6 text-right">
             @if (User.IsInRole("PurchaseOrdersAdd"))
             {
-                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "PurchaseOrders")">
+                <a class="btn btn-success mx-1" href="@Url.Action("Create", "PurchaseOrders")">
                     <i class="fa fa-plus"></i> Add
-                </button>
+                </a>
             }
             @if (User.IsInRole("PurchaseOrdersDelete"))
             {
@@ -49,16 +59,6 @@
         </div>
     </section>
 </div>
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-    <div id="addContainer">
-    </div>
-</div>
-
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-    <div id="editContainer">
-    </div>
-</div>
-
 <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
     <div id="viewContainer">
     </div>
@@ -76,22 +76,6 @@
             new MvcGrid(element);
         });
 
-        $('#btnAdd').click(function (event) {
-            event.preventDefault();
-            var url = $(this).attr("href");
-            $.get(url, function (data) {
-                $('#addContainer').html(data);
-                $('#addModal').modal('show');        
-
-                $('form').each(function ()
-                {
-                    var $el = $(this);
-                    $el.data('validator', null);
-                    $.validator.unobtrusive.parse($el);
-                });
-            });
-        });
-
         $(document).on('keyup', '.mvc-grid-search', function () {
             var grid = new MvcGrid(document.querySelector('#data-table'));
             grid.query.set('search', this.value);
@@ -99,32 +83,6 @@
             grid.reload();
         });
 
-        function CreateSuccess(data) {
-            if (data !== "success") {
-                $('#addContainer').html(data);
-                return;
-            }
-            $('#addModal').modal('hide');
-            $('#addContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#data-table'));
-            grid.reload();
-        }
-
-        function EditSuccess(data) {
-            if (data !== "success") {
-                $('#editContainer').html(data);
-                return;
-            }
-            $('#editModal').modal('hide');
-            $('#editContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#data-table'));
-            grid.reload();
-        }
-    </script>
-
-    <script>
         var token = $('input[name="__RequestVerificationToken"]').val();
         var headers = {};
         headers['__RequestVerificationToken'] = token;
@@ -173,22 +131,6 @@
                 var checkedStatus = this.checked;
                 $('#data-table tbody tr').find('td:first :checkbox').each(function () {
                     $(this).prop('checked', checkedStatus);
-                });
-            });
-
-            $('#data-table').on("click", ".edit-data", function (event) {
-                event.preventDefault();
-                var url = $(this).attr("href");
-                $.get(url, function (data) {
-                    $('#editContainer').html(data);
-                    $('#editModal').modal('show');        
-
-                    $('form').each(function ()
-                    {
-                        var $el = $(this);
-                        $el.data('validator', null);
-                        $.validator.unobtrusive.parse($el);
-                    });
                 });
             });
 

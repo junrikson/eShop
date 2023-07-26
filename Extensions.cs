@@ -65,6 +65,28 @@ namespace eShop.Extensions
 
     public static class SharedFunctions
     {
+        public static decimal GetTotalPurchaseOrder(ApplicationDbContext db, int purchaseOrderId, int? purchaseOrderDetailsId = null)
+        {
+            decimal total = 0;
+            List<PurchaseOrderDetails> purchaseOrderDetails = null;
+
+            if (purchaseOrderDetailsId == null)
+            {
+                purchaseOrderDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrderId).ToList();
+            }
+            else
+            {
+                purchaseOrderDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrderId && x.Id != purchaseOrderDetailsId).ToList();
+            }
+
+            if (purchaseOrderDetails != null)
+            {
+                total = purchaseOrderDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
         public static string EncodeTo64(string m_enc)
         {
             byte[] toEncodeAsBytes =
