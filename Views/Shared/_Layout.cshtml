@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@ViewBag.Title - Online Shop System</title>
+    <title>@ViewBag.Title - eShop System</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="shortcut icon" href="@Url.Content("~/dist/img/favicon.ico")" type="image/x-icon">
@@ -58,7 +58,7 @@
             <div class="pull-right hidden-xs">
                 <b>Version</b> 2.0
             </div>
-            <strong>Copyright &copy; @DateTime.Now.Year.ToString() <a href="mailto:junrikson@gmail.com" target="_blank">Online Shop System</a>.</strong> All rights reserved.
+            <strong>Copyright &copy; @DateTime.Now.Year.ToString() <a href="mailto:junrikson@gmail.com" target="_blank">eShop System</a>.</strong> All rights reserved.
         </footer>
 
         <!-- Control Sidebar -->
@@ -102,5 +102,64 @@
 
     <!-- Common -->
     @Scripts.Render("~/script/Common")
+
+<script>
+        $(document).ready(function () {
+            fetchNotifications();
+        });
+
+        function fetchNotifications() {
+            @{
+                if(User.IsInRole("ForwardingSellingOthersActive") || User.IsInRole("ForwardingJobOrderOthersActive"))
+            {
+            <text>
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            var headers = {};
+            headers['__RequestVerificationToken'] = token;
+
+            $.ajax({
+                url: '/Notifications/ForwardingJobOthers',
+                type: 'POST',
+                headers: headers,
+                contentType: 'application/json',
+                dataType: 'json',
+                global: false,
+                success: function (data) {
+                    if (data.length > 0) {
+                        var details = '';
+                        data.forEach((element) => {
+                            details = details + '<li><a href="#"> <i class="fa fa-check text-red"></i> Job Order ' + element.Code + ' is Ready!</a></li>';
+                        });
+                        document.getElementById("AjaxNotifications").innerHTML =
+                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                            '<i class="fa fa-bell-o fa-pulse"></i>' +
+                            '<span class="label label-warning">' + data.length + '</span>' +
+                            '</a>' +
+                            '<ul class="dropdown-menu">' +
+                            '<li class="header">You have ' + data.length + ' notifications</li>' +
+                            '<li><ul class="menu">' + details + '</ul></li>' +
+                            '<li class="footer"><a href="#">' + data.length + ' notifications</a></li>' +
+                            '</ul>';
+                    }
+                    else {
+                        document.getElementById("AjaxNotifications").innerHTML =
+                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                            '<i class="fa fa-bell-o"></i>' +
+                            '</a>' +
+                            '<ul class="dropdown-menu">' +
+                            '<li class="header">You have no notifications</li>' +
+                            '<li class="footer"><a href="#">0 notifications</a></li>' +
+                            '</ul>';
+                    }
+                },
+                complete: function (data) {
+                    setTimeout(fetchNotifications, 60000);
+                }
+            });
+            </text>
+            }
+             }
+        }
+</script>
 </body>
 </html>
