@@ -115,26 +115,6 @@ namespace eShop.Controllers
             return PartialView("../Inventory/MasterBrands/_Create", masterBrand);
         }
 
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "MasterBrandsAdd")]
-        public ActionResult Cancel(int? id)
-        {
-            if (id != null)
-            {
-                MasterBrand obj = db.MasterBrands.Find(id);
-                if (obj != null)
-                {
-                    if (!obj.Active)
-                    {
-                        db.MasterBrands.Remove(obj);
-                        db.SaveChanges();
-                    }
-                }
-            }
-            return Json(id);
-        }
-
         // GET: MasterBrands/Edit/5
         [Authorize(Roles = "MasterBrandsEdit")]
         public ActionResult Edit(int? id)

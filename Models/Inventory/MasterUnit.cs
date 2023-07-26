@@ -32,6 +32,7 @@ namespace eShop.Models
         [StringLength(256, ErrorMessage = "Maksimal 128 huruf.")]
         public string Name { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Rasio")]
         [Required(ErrorMessage = "Rasio harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
@@ -65,5 +66,29 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-   
+    public class MasterUnitDatalist : MvcDatalist<MasterUnit>
+    {
+        private DbContext Context { get; }
+
+        public MasterUnitDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code;
+        }
+        public MasterUnitDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterUnit";
+            Title = "Satuan";
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterUnit> GetModels()
+        {
+            return Context.Set<MasterUnit>();
+        }
+    }
 }

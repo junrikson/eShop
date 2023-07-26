@@ -11,56 +11,63 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title">Edit - Master Unit</h4>
+            <h4 class="modal-title">Edit - Satuan</h4>
         </div>
         <div class="modal-body">
             <div id="divEmp">
                 @using (Ajax.BeginForm("Create", "MasterUnits", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.HiddenFor(model => model.Id)
-
-                    <div class="form-horizontal">
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.LabelFor(model => model.Code)
-                                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" }, @readonly = "readonly" })
-                                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-3">
-                                @Html.LabelFor(model => model.Ratio)
-                                @Html.EditorFor(model => model.Ratio, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                @Html.ValidationMessageFor(model => model.Ratio, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-2 text-center">
-                                @Html.LabelFor(model => model.Active)
-                                <div class="checkbox text-center">
-                                    @Html.EditorFor(model => model.Active)
-                                    @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.Code)
+                            @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" }, @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                         </div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                @Html.LabelFor(model => model.Name)
-                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                @Html.LabelFor(model => model.Notes)
-                                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-12 text-right">
-                                <input type="submit" value="Save" class="btn btn-primary" />
+                        <div class="col-md-2 text-center">
+                            @Html.LabelFor(model => model.Active)
+                            <div class="checkbox text-center">
+                                @Html.EditorFor(model => model.Active)
+                                @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Name)
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.Ratio)
+                            @Html.EditorFor(model => model.Ratio, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.Ratio, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-2 text-center">
+                            @Html.LabelFor(model => model.Default)
+                            <div class="checkbox text-center">
+                                @Html.EditorFor(model => model.Default)
+                                @Html.ValidationMessageFor(model => model.Default, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Notes)
+                            @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 text-right">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
                 }
             </div>
         </div>

@@ -115,26 +115,6 @@ namespace eShop.Controllers
             return PartialView("../Inventory/MasterCategories/_Create", masterCategory);
         }
 
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "MasterCategoriesAdd")]
-        public ActionResult Cancel(int? id)
-        {
-            if (id != null)
-            {
-                MasterCategory obj = db.MasterCategories.Find(id);
-                if (obj != null)
-                {
-                    if (!obj.Active)
-                    {
-                        db.MasterCategories.Remove(obj);
-                        db.SaveChanges();
-                    }
-                }
-            }
-            return Json(id);
-        }
-
         // GET: MasterCategories/Edit/5
         [Authorize(Roles = "MasterCategoriesEdit")]
         public ActionResult Edit(int? id)

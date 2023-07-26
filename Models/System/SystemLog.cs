@@ -154,8 +154,8 @@ namespace eShop.Models
         MasterRegionAccounts = 73,
         [Display(Name = "Surat Jalan")]
         DeliveryOrder = 74,
-        [Display(Name = "Tally Sheet")]
-        TallySheets = 75,
+        [Display(Name = "Satuan Barang")]
+        MasterItemUnits = 75,
         [Display(Name = "Detail Tally Sheet")]
         TallySheetsDetails = 76,
         [Display(Name = "Jenis Kontainer")]

@@ -13,6 +13,7 @@
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
         columns.Add(model => model.Name).Titled(@Html.DisplayNameFor(model => model.Name));
         columns.Add(model => model.Ratio).Titled(@Html.DisplayNameFor(model => model.Ratio));
+        columns.Add(model => model.Default).Titled(@Html.DisplayNameFor(model => model.Default)).RenderedAs(model => model.Default == true ? "&#x2713;" : "&#x2717;").Encoded(false);
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
         columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
         columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));

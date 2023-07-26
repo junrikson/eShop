@@ -6868,8 +6868,7 @@
     <Content Include="Views\Inventory\MasterItems\_Details.cshtml" />
     <Content Include="Views\Inventory\MasterItems\_IndexGrid.cshtml" />
     <Content Include="Views\Inventory\MasterItems\Index.cshtml" />
-    <Content Include="Views\Inventory\MasterItems\_Create.cshtml" />
-    <Content Include="Views\Inventory\MasterItems\_Edit.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\Create.cshtml" />
     <Content Include="Views\Inventory\MasterUnits\_Create.cshtml" />
     <Content Include="Views\Inventory\MasterUnits\_Details.cshtml" />
     <Content Include="Views\Inventory\MasterUnits\_Edit.cshtml" />
@@ -6888,6 +6887,10 @@
     <Content Include="Views\Buying\PurchaseOrders\Index.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_IndexGrid.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_Create.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\_DetailsCreate.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\_DetailsEdit.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\_DetailsGrid.cshtml" />
+    <None Include="Views\Inventory\MasterItems\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

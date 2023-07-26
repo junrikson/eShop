@@ -27,7 +27,6 @@ namespace eShop.Models
         public string Code { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Item name must be filled.")]
         [Display(Name = "Item Name")]
         [StringLength(256, ErrorMessage = "Maximum 128 Characters.")]
         public string Name { get; set; }
@@ -64,7 +63,10 @@ namespace eShop.Models
     }
     public class MasterItemUnits
     {
-        [Key, Column(Order = 0)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
         [Display(Name = "Master Item")]
         [Required(ErrorMessage = "Master Item harus diisi.")]
         public int MasterItemId { get; set; }
@@ -72,7 +74,6 @@ namespace eShop.Models
         [Display(Name = "Master Item")]
         public virtual MasterItem MasterItem { get; set; }
 
-        [Key, Column(Order = 1)]
         [Display(Name = "Satuan")]
         [Required(ErrorMessage = "Master Item harus diisi.")]
         public int MasterUnitId { get; set; }

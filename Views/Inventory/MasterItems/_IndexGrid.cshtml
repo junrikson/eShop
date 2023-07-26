@@ -18,6 +18,7 @@
         columns.Add(model => model.User.FullName).Titled(@Html.DisplayNameFor(model => model.User.FullName));
         columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated)).InitialSort(GridSortOrder.Desc);
     })
+    .RowAttributed(model => new { @class = (model.Active == true ? "" : "grid-column-red") })
     .Empty("Tidak ada data.")
     .Pageable(pager =>
     {

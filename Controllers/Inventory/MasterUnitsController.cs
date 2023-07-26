@@ -78,24 +78,25 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterUnitsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,notes,Ratio,Active,Created,Updated,UserId")] MasterUnit masterUnit)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,Ratio,Default,Notes,Active,Created,Updated,UserId")] MasterUnit masterUnit)
         {
-            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-            {
-                try
-                {
-                    if (ModelState.IsValid)
-                    {
-                        if (!string.IsNullOrEmpty(masterUnit.Code)) masterUnit.Code = masterUnit.Code.ToUpper();
-                        if (!string.IsNullOrEmpty(masterUnit.Name)) masterUnit.Name = masterUnit.Name.ToUpper();
-                        if (!string.IsNullOrEmpty(masterUnit.Notes)) masterUnit.Notes = masterUnit.Notes.ToUpper();
-                        masterUnit.Ratio = masterUnit.Ratio;
+            masterUnit.Created = DateTime.Now;
+            masterUnit.Updated = DateTime.Now;
+            masterUnit.UserId = User.Identity.GetUserId<int>();
 
-                        masterUnit.Created = DateTime.Now;
-                        masterUnit.Updated = DateTime.Now;
-                        masterUnit.UserId = User.Identity.GetUserId<int>();
+            if (!string.IsNullOrEmpty(masterUnit.Code)) masterUnit.Code = masterUnit.Code.ToUpper();
+            if (!string.IsNullOrEmpty(masterUnit.Name)) masterUnit.Name = masterUnit.Name.ToUpper();
+            if (!string.IsNullOrEmpty(masterUnit.Notes)) masterUnit.Notes = masterUnit.Notes.ToUpper();
+
+            if (ModelState.IsValid)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
                         db.MasterUnits.Add(masterUnit);
                         db.SaveChanges();
+
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterUnit, MenuId = masterUnit.Id, MenuCode = masterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
@@ -103,35 +104,15 @@ namespace eShop.Controllers
 
                         return Json("success", JsonRequestBehavior.AllowGet);
                     }
-                }
-                catch (DbEntityValidationException ex)
-                {
-                    dbTran.Rollback();
-                    throw ex;
-                }
-
-                return PartialView("../Inventory/MasterUnits/_Create", masterUnit);
-            }
-        }
-
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "MasterUnitsAdd")]
-        public ActionResult Cancel(int? id)
-        {
-            if (id != null)
-            {
-                MasterUnit obj = db.MasterUnits.Find(id);
-                if (obj != null)
-                {
-                    if (!obj.Active)
+                    catch (DbEntityValidationException ex)
                     {
-                        db.MasterUnits.Remove(obj);
-                        db.SaveChanges();
+                        dbTran.Rollback();
+                        throw ex;
                     }
                 }
             }
-            return Json(id);
+
+            return PartialView("../Inventory/MasterUnits/_Create", masterUnit);
         }
 
         // GET: MasterUnits/Edit/5
@@ -156,29 +137,33 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterUnitsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,notes,Ratio,Active,updated")] MasterUnit masterUnit)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,Ratio,Default,Notes,Active,Created,Updated,UserId")] MasterUnit masterUnit)
         {
-            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-            {
-                try
-                {
-                    masterUnit.Updated = DateTime.Now;
-                    if (ModelState.IsValid)
-                    {
-                        if (!string.IsNullOrEmpty(masterUnit.Code)) masterUnit.Code = masterUnit.Code.ToUpper();
-                        if (!string.IsNullOrEmpty(masterUnit.Name)) masterUnit.Name = masterUnit.Name.ToUpper();
-                        if (!string.IsNullOrEmpty(masterUnit.Notes)) masterUnit.Notes = masterUnit.Notes.ToUpper();
-                        masterUnit.Ratio = masterUnit.Ratio;
+            masterUnit.UserId = User.Identity.GetUserId<int>();
+            masterUnit.Updated = DateTime.Now;
 
-                        db.Entry(masterUnit).State = EntityState.Unchanged;
-                        db.Entry(masterUnit).Property("Code").IsModified = true;
-                        db.Entry(masterUnit).Property("Name").IsModified = true;
-                        db.Entry(masterUnit).Property("Notes").IsModified = true;
-                        db.Entry(masterUnit).Property("Ratio").IsModified = true;
-                        db.Entry(masterUnit).Property("Active").IsModified = true;
-                        db.Entry(masterUnit).Property("Updated").IsModified = true;
-                        masterUnit.UserId = User.Identity.GetUserId<int>();
+            if (!string.IsNullOrEmpty(masterUnit.Code)) masterUnit.Code = masterUnit.Code.ToUpper();
+            if (!string.IsNullOrEmpty(masterUnit.Name)) masterUnit.Name = masterUnit.Name.ToUpper();
+            if (!string.IsNullOrEmpty(masterUnit.Notes)) masterUnit.Notes = masterUnit.Notes.ToUpper();
+
+            db.Entry(masterUnit).State = EntityState.Unchanged;
+            db.Entry(masterUnit).Property("Code").IsModified = true;
+            db.Entry(masterUnit).Property("Name").IsModified = true;
+            db.Entry(masterUnit).Property("Notes").IsModified = true;
+            db.Entry(masterUnit).Property("Ratio").IsModified = true;
+            db.Entry(masterUnit).Property("Default").IsModified = true;
+            db.Entry(masterUnit).Property("Active").IsModified = true;
+            db.Entry(masterUnit).Property("Updated").IsModified = true;
+            db.Entry(masterUnit).Property("UserId").IsModified = true;
+
+            if (ModelState.IsValid)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
                         db.SaveChanges();
+
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterUnit, MenuId = masterUnit.Id, MenuCode = masterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
@@ -186,17 +171,16 @@ namespace eShop.Controllers
 
                         return Json("success", JsonRequestBehavior.AllowGet);
                     }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
                 }
-                catch (DbEntityValidationException ex)
-                {
-                    dbTran.Rollback();
-                    throw ex;
-                }
-                return PartialView("../Inventory/MasterUnits/_Edit", masterUnit);
-
             }
-        }
 
+            return PartialView("../Inventory/MasterUnits/_Edit", masterUnit);
+        }
 
 
         [HttpPost]
@@ -221,13 +205,14 @@ namespace eShop.Controllers
                             else
                             {
                                 MasterUnit tmp = obj;
+
                                 db.MasterUnits.Remove(obj);
                                 db.SaveChanges();
+
                                 db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterUnit, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
 
                                 dbTran.Commit();
-
                             }
                         }
                         return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");

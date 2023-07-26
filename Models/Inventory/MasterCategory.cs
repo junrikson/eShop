@@ -55,5 +55,31 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
-    }   
+    }
+
+    public class MasterCategoryDatalist : MvcDatalist<MasterCategory>
+    {
+        private DbContext Context { get; }
+
+        public MasterCategoryDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code;
+        }
+        public MasterCategoryDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterCategory";
+            Title = "Kategori Barang";
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterCategory> GetModels()
+        {
+            return Context.Set<MasterCategory>();
+        }
+    }
 }
