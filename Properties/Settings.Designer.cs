@@ -238,5 +238,16 @@ namespace eShop.Properties {
                 return ((string)(this["TallySheetCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PO/")]
+        public string PurchaseOrderCode
+        {
+            get
+            {
+                return ((string)(this["PurchaseOrderCode"]));
+            }
+        }
     }
 }
