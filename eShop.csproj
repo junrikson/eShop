@@ -6890,6 +6890,7 @@
     <Content Include="Views\Inventory\MasterItems\_DetailsCreate.cshtml" />
     <Content Include="Views\Inventory\MasterItems\_DetailsEdit.cshtml" />
     <Content Include="Views\Inventory\MasterItems\_DetailsGrid.cshtml" />
+    <Content Include="Views\Buying\PurchaseOrders\_DetailsCreate.cshtml" />
     <None Include="Views\Inventory\MasterItems\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
