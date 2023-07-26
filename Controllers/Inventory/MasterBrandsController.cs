@@ -88,11 +88,11 @@ namespace eShop.Controllers
             masterBrand.Updated = DateTime.Now;
             masterBrand.UserId = User.Identity.GetUserId<int>();
 
-            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+            if (ModelState.IsValid)
             {
-                try
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
-                    if (ModelState.IsValid)
+                    try
                     {
                         db.MasterBrands.Add(masterBrand);
                         db.SaveChanges();
@@ -104,15 +104,15 @@ namespace eShop.Controllers
 
                         return Json("success", JsonRequestBehavior.AllowGet);
                     }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
                 }
-                catch (DbEntityValidationException ex)
-                {
-                    dbTran.Rollback();
-                    throw ex;
-                }
-
-                return PartialView("../Inventory/MasterBrands/_Create", masterBrand);
             }
+
+            return PartialView("../Inventory/MasterBrands/_Create", masterBrand);
         }
 
         [HttpPost]
@@ -172,12 +172,13 @@ namespace eShop.Controllers
             db.Entry(masterBrand).Property("Notes").IsModified = true;
             db.Entry(masterBrand).Property("Active").IsModified = true;
             db.Entry(masterBrand).Property("Updated").IsModified = true;
+            db.Entry(masterBrand).Property("UserId").IsModified = true;
 
-            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+            if (ModelState.IsValid)
             {
-                try
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
-                    if (ModelState.IsValid)
+                    try
                     {
                         db.SaveChanges();
 
@@ -188,15 +189,14 @@ namespace eShop.Controllers
 
                         return Json("success", JsonRequestBehavior.AllowGet);
                     }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
                 }
-                catch (DbEntityValidationException ex)
-                {
-                    dbTran.Rollback();
-                    throw ex;
-                }
-                return PartialView("../Inventory/MasterBrands/_Edit", masterBrand);
-
             }
+            return PartialView("../Inventory/MasterBrands/_Edit", masterBrand);
         }
 
 

@@ -78,26 +78,25 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterCategoriesAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,notes,Active,Created,Updated,UserId")] MasterCategory masterCategory)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,Notes,Active,Created,Updated,UserId")] MasterCategory masterCategory)
         {
-           
-                        if (!string.IsNullOrEmpty(masterCategory.Code)) masterCategory.Code = masterCategory.Code.ToUpper();
-                        if (!string.IsNullOrEmpty(masterCategory.Name)) masterCategory.Name = masterCategory.Name.ToUpper();
-                        if (!string.IsNullOrEmpty(masterCategory.Notes)) masterCategory.Notes = masterCategory.Notes.ToUpper();
+            masterCategory.Created = DateTime.Now;
+            masterCategory.Updated = DateTime.Now;
+            masterCategory.UserId = User.Identity.GetUserId<int>();
 
-                        masterCategory.Default = masterCategory.Default;
-                        masterCategory.Created = DateTime.Now;
-                        masterCategory.Updated = DateTime.Now;
-                        masterCategory.UserId = User.Identity.GetUserId<int>();
+            if (!string.IsNullOrEmpty(masterCategory.Code)) masterCategory.Code = masterCategory.Code.ToUpper();
+            if (!string.IsNullOrEmpty(masterCategory.Name)) masterCategory.Name = masterCategory.Name.ToUpper();
+            if (!string.IsNullOrEmpty(masterCategory.Notes)) masterCategory.Notes = masterCategory.Notes.ToUpper();
 
-            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+            if (ModelState.IsValid)
             {
-                try
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
-                    if (ModelState.IsValid)
+                    try
                     {
                         db.MasterCategories.Add(masterCategory);
                         db.SaveChanges();
+
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterCategory, MenuId = masterCategory.Id, MenuCode = masterCategory.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
@@ -105,15 +104,15 @@ namespace eShop.Controllers
 
                         return Json("success", JsonRequestBehavior.AllowGet);
                     }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
                 }
-                catch (DbEntityValidationException ex)
-                {
-                    dbTran.Rollback();
-                    throw ex;
-                }
-
-                return PartialView("../Inventory/MasterCategories/_Create", masterCategory);
             }
+
+            return PartialView("../Inventory/MasterCategories/_Create", masterCategory);
         }
 
         [HttpPost]
@@ -158,31 +157,31 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterCategoriesEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,notes,Default,Active,updated")] MasterCategory masterCategory)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,Notes,Active,Updated")] MasterCategory masterCategory)
         {
-           
-                        if (!string.IsNullOrEmpty(masterCategory.Code)) masterCategory.Code = masterCategory.Code.ToUpper();
-                        if (!string.IsNullOrEmpty(masterCategory.Name)) masterCategory.Name = masterCategory.Name.ToUpper();
-                        if (!string.IsNullOrEmpty(masterCategory.Notes)) masterCategory.Notes = masterCategory.Notes.ToUpper();
-                        masterCategory.Default = masterCategory.Default;
+            masterCategory.UserId = User.Identity.GetUserId<int>();
+            masterCategory.Updated = DateTime.Now;
 
-                        db.Entry(masterCategory).State = EntityState.Unchanged;
-                        db.Entry(masterCategory).Property("Code").IsModified = true;
-                        db.Entry(masterCategory).Property("Name").IsModified = true;
-                        db.Entry(masterCategory).Property("Notes").IsModified = true;
-                        db.Entry(masterCategory).Property("Default").IsModified = true;
-                        db.Entry(masterCategory).Property("Active").IsModified = true;
-                        db.Entry(masterCategory).Property("Updated").IsModified = true;
-                        masterCategory.UserId = User.Identity.GetUserId<int>();
-                        masterCategory.Updated = DateTime.Now;
+            if (!string.IsNullOrEmpty(masterCategory.Code)) masterCategory.Code = masterCategory.Code.ToUpper();
+            if (!string.IsNullOrEmpty(masterCategory.Name)) masterCategory.Name = masterCategory.Name.ToUpper();
+            if (!string.IsNullOrEmpty(masterCategory.Notes)) masterCategory.Notes = masterCategory.Notes.ToUpper();
+            
+            db.Entry(masterCategory).State = EntityState.Unchanged;
+            db.Entry(masterCategory).Property("Code").IsModified = true;
+            db.Entry(masterCategory).Property("Name").IsModified = true;
+            db.Entry(masterCategory).Property("Notes").IsModified = true;
+            db.Entry(masterCategory).Property("Active").IsModified = true;
+            db.Entry(masterCategory).Property("Updated").IsModified = true;
+            db.Entry(masterCategory).Property("UserId").IsModified = true;
 
-            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+            if (ModelState.IsValid)
             {
-                try
-                {                    
-                    if (ModelState.IsValid)
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
                     {
                         db.SaveChanges();
+
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterCategory, MenuId = masterCategory.Id, MenuCode = masterCategory.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
@@ -190,17 +189,16 @@ namespace eShop.Controllers
 
                         return Json("success", JsonRequestBehavior.AllowGet);
                     }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
                 }
-                catch (DbEntityValidationException ex)
-                {
-                    dbTran.Rollback();
-                    throw ex;
-                }
-                return PartialView("../Inventory/MasterCategories/_Edit", masterCategory);
-
             }
-        }
 
+            return PartialView("../Inventory/MasterCategories/_Edit", masterCategory);
+        }
 
 
         [HttpPost]
@@ -225,8 +223,10 @@ namespace eShop.Controllers
                             else
                             {
                                 MasterCategory tmp = obj;
+
                                 db.MasterCategories.Remove(obj);
                                 db.SaveChanges();
+
                                 db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterCategory, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
 
@@ -241,8 +241,6 @@ namespace eShop.Controllers
                         dbTran.Rollback();
                         throw ex;
                     }
-
-
                 }
             }
         }
