@@ -6888,6 +6888,9 @@
     <Content Include="Views\Buying\PurchaseOrders\Index.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_IndexGrid.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_Create.cshtml" />
+    <Content Include="Views\Buying\PurchaseRequest\_Create.cshtml" />
+    <Content Include="Views\Buying\PurchaseRequest\_IndexGrid.cshtml" />
+    <Content Include="Views\Buying\PurchaseRequest\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -64,11 +64,12 @@
                     if (User.IsInRole("EmailsActive")) { messages = messages + "<li" + (ViewBag.Current == "Emails" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Emails", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Email</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
-                if (User.IsInRole("PurchaseOrdersActive") )
+                if (User.IsInRole("PurchaseOrdersActive") || User.IsInRole("PurchaseRequestsActive"))
                 {
                     messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "PurchaseOrders")  ? " active" : "") + "\">";
                     messages = messages + "<a href=\"#\"><i class=\"fa fa-desktop\"></i><span>Buying</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
                     if (User.IsInRole("PurchaseOrdersActive")) { messages = messages + "<li" + (ViewBag.Current == "PurchaseOrders" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "PurchaseOrders", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Purchase Order</a></li>"; }
+                    if (User.IsInRole("PurchaseRequestsActive")) { messages = messages + "<li" + (ViewBag.Current == "PurchaseOrders" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "PurchaseOrders", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Purchase Order</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
             }
