@@ -20,10 +20,8 @@ namespace eShop.Models
 
         [DatalistColumn]
         [Required(ErrorMessage = "Kode Satuan harus diisi.")]
-        [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Kode Satuan")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "MasterUnits", AdditionalFields = "Id", ErrorMessage = "This code has been used.")]
         public string Code { get; set; }
 
         [DatalistColumn]
