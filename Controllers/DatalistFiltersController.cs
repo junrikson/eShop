@@ -64,10 +64,11 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        public JsonResult AllMasterItemUnit(DatalistFilter filter)
+        public JsonResult AllMasterItemUnit(DatalistFilter filter, int? masterUnitId = 0)
         {
             MasterItemUnitDatalist datalist = new MasterItemUnitDatalist(db);
             filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterUnitId"] = masterUnitId;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);

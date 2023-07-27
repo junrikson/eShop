@@ -200,6 +200,7 @@ namespace eShop.Models
         {
             Url = "/DatalistFilters/AllMasterItemUnit";
             Title = "Master Item";
+            AdditionalFilters.Add("MasterUnitId");
 
             Filter.Sort = "MasterUnitCode";
             Filter.Order = DatalistSortOrder.Asc;
