@@ -24,9 +24,42 @@ namespace eShop.Models
         [Remote("IsCodeExists", "PurchaseRequests", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
         public string Code { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Tanggal")]
+        [Required(ErrorMessage = "Tanggal harus diisi.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kode Supplier")]
+        [Required(ErrorMessage = "Kode Supplier harus diisi.")]
+        public int MasterSupplierId { get; set; }
+
+        [Display(Name = "Kode Supplier")]
+        public virtual MasterSupplier MasterSupplier { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        [Display(Name = "Total (Rp)")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Total { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
@@ -46,6 +79,9 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
+
+        [Display(Name = "Print")]
+        public bool IsPrint { get; set; }
     }
 
     public class PurchaseRequestDetails
@@ -70,15 +106,20 @@ namespace eShop.Models
 
         [Display(Name = "Satuan")]
         [Required(ErrorMessage = "Master Item harus diisi.")]
-        public int MasterUnitId { get; set; }
+        public int MasterItemUnitId { get; set; }
 
         [Display(Name = "Satuan")]
-        public virtual MasterUnit MasterUnit { get; set; }
+        public virtual MasterItemUnit MasterItemUnit { get; set; }
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0}", ApplyFormatInEditMode = true)]
-        public int Ratio { get; set; }
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Quantity { get; set; }
+
+        [Display(Name = "Harga (Rp)")]
+        [Required(ErrorMessage = "Harga harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Price { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]

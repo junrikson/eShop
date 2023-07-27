@@ -103,5 +103,16 @@ namespace eShop.Properties {
                 return ((string)(this["PurchaseOrderCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PR/")]
+        public string PurchaseRequestCode
+        {
+            get
+            {
+                return ((string)(this["PurchaseRequestCode"]));
+            }
+        }
     }
 }
