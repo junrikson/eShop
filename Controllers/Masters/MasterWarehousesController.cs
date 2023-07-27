@@ -148,7 +148,7 @@ namespace eShop.Controllers
                 db.Entry(masterWarehouse).Property("Name").IsModified = true;
                 db.Entry(masterWarehouse).Property("MasterRegionId").IsModified = true;
                 db.Entry(masterWarehouse).Property("Location").IsModified = true;
-                db.Entry(masterWarehouse).Property("MasterPortId").IsModified = true;
+                //db.Entry(masterWarehouse).Property("MasterPortId").IsModified = true;
                 db.Entry(masterWarehouse).Property("Notes").IsModified = true;
                 db.Entry(masterWarehouse).Property("Active").IsModified = true;
                 db.Entry(masterWarehouse).Property("Updated").IsModified = true;

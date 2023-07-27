@@ -1,9 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Datalist;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace eShop.Models
@@ -14,6 +17,7 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [DatalistColumn]
         [Required(ErrorMessage = "Kode unit bisnis harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Kode Unit Bisnis")]
@@ -21,6 +25,7 @@ namespace eShop.Models
         [Remote("IsCodeExists", "MasterBusinessUnits", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
         public string Code { get; set; }
 
+        [DatalistColumn]
         [Required(ErrorMessage = "Nama unit bisnis harus diisi.")]
         [Display(Name = "Nama Unit Bisnis")]
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
@@ -94,6 +99,33 @@ namespace eShop.Models
         public MasterBusinessUnit()
         {
             this.ApplicationUsers = new HashSet<ApplicationUser>();
+        }
+
+        public class MasterBusinessUnitDatalist : MvcDatalist<MasterBusinessUnit>
+        {
+            private DbContext Context { get; }
+
+            public MasterBusinessUnitDatalist(DbContext context)
+            {
+                Context = context;
+
+                GetLabel = (model) => model.Code;
+            }
+
+            public MasterBusinessUnitDatalist()
+            {
+                Url = "AllMasterBusinessUnit";
+                Title = "Master Unit Bisnis";
+
+                Filter.Sort = "Name";
+                Filter.Order = DatalistSortOrder.Asc;
+                Filter.Rows = 10;
+            }
+
+            public override IQueryable<MasterBusinessUnit> GetModels()
+            {
+                return Context.Set<MasterBusinessUnit>();
+            }
         }
     }
 }
