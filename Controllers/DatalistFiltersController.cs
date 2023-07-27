@@ -82,16 +82,6 @@ namespace eShop.Controllers
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
         }
-
-        [HttpGet]
-        public JsonResult AllMasterBusinessUnit(DatalistFilter filter)
-        {
-            MasterBusinessUnit.MasterBusinessUnitDatalist datalist = new MasterBusinessUnit.MasterBusinessUnitDatalist(db);
-            filter.AdditionalFilters["Active"] = true;
-            datalist.Filter = filter;
-
-            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
-        }
     }
 
     public class CrystalReportPdfResult : ActionResult
