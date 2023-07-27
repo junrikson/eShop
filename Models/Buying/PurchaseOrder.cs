@@ -119,8 +119,8 @@ namespace eShop.Models
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0}", ApplyFormatInEditMode = true)]
-        public int Quantity { get; set; }
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Quantity { get; set; }
 
         [Display(Name = "Harga (Rp)")]
         [Required(ErrorMessage = "Harga harus diisi.")]

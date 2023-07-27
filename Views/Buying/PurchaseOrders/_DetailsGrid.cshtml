@@ -8,7 +8,7 @@
         .Build(columns =>
         {
             columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
-            columns.Add(model => ((User.IsInRole("PurchaseOrdersEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success edit-data btn-xs\" href=\"" + @Url.Action("DetailsEdit", "ARpayments", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") + "</div>").Encoded(false);
+            columns.Add(model => ((User.IsInRole("PurchaseOrdersEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success edit-data btn-xs\" href=\"" + @Url.Action("DetailsEdit", "PurchaseOrders", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") + "</div>").Encoded(false);
             columns.Add(model => model.MasterItem.Code).Titled(@Html.DisplayNameFor(model => model.MasterItem.Code));
             columns.Add(model => model.MasterItem.Name).Titled(@Html.DisplayNameFor(model => model.MasterItem.Name));
             columns.Add(model => model.MasterItemUnit.MasterUnit.Code).Titled(@Html.DisplayNameFor(model => model.MasterItemUnit.MasterUnit.Code));

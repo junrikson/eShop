@@ -165,6 +165,7 @@ namespace eShop.Models
             modelBuilder.Entity<MasterBusinessUnit>().Property(x => x.LCLLoadFee).HasPrecision(18, 2);
             modelBuilder.Entity<MasterBusinessUnit>().Property(x => x.EmptyLoadFee).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseOrder>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Total).HasPrecision(18, 2);
         }

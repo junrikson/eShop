@@ -226,17 +226,17 @@
                         options.contentType = "application/json";
                         options.dataType = "json";
                         options.success = function (msg) {
-                            document.getElementById("MasterItemUnitId").value = msg;
+                            document.getElementById('MasterItemUnitId').value = msg;
 
                             [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                new MvcDatalist(element);
+                                new MvcDatalist(element).reload();
                             });
                         };
                         options.error = function () {
-                            document.getElementById("MasterItemUnitId").value = 0;
+                            document.getElementById('MasterItemUnitId').value = 0;
 
                             [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                new MvcDatalist(element);
+                                new MvcDatalist(element).reload();
                             });
                         };
                         $.ajax(options);
@@ -296,9 +296,6 @@
             };
             $.ajax(options);
         }
-    </script>
-
-    <script>
 
         var token = $('input[name="__RequestVerificationToken"]').val();
         var headers = {};
@@ -492,14 +489,14 @@
                                 document.getElementById('MasterItemUnitId').value = msg;
 
                                 [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                    new MvcDatalist(element);
+                                    new MvcDatalist(element).reload();
                                 });
                             };
                             options.error = function () {
                                 document.getElementById('MasterItemUnitId').value = 0;
 
                                 [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                    new MvcDatalist(element);
+                                    new MvcDatalist(element).reload();
                                 });
                             };
                             $.ajax(options);
