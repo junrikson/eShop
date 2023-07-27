@@ -94,6 +94,22 @@ namespace eShop.Controllers
                     db.PurchaseOrders.Add(purchaseOrder);
                     db.SaveChanges();
 
+
+                         PurchaseOrderDetails   purchaseOrderDetails = new PurchaseOrderDetails
+                         {
+                            PurchaseOrderId = purchaseOrder.Id,
+                            MasterItemId = MasterItem.Id,
+                            Default = false,
+                            Active = true,
+                            Created = DateTime.Now,
+                            Updated = DateTime.Now,
+                            UserId = User.Identity.GetUserId<int>()
+                        };
+
+                        db.MasterItemUnits.Add(masterItemUnit);
+                        db.SaveChanges();
+                  
+
                     dbTran.Commit();
 
                     purchaseOrder.Code = "";
