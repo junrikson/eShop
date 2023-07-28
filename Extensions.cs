@@ -87,6 +87,30 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalPurchaseRequest(ApplicationDbContext db, int purchaseRequestId, int? purchaseRequestDetailsId = null)
+        {
+            decimal total = 0;
+            List<PurchaseRequestDetails> purchaseRequestDetails = null;
+
+            if (purchaseRequestDetailsId == null)
+            {
+                purchaseRequestDetails = db.PurchaseRequestsDetails.Where(x => x.PurchaseRequestId == purchaseRequestId).ToList();
+            }
+            else
+            {
+                purchaseRequestDetails = db.PurchaseRequestsDetails.Where(x => x.PurchaseRequestId == purchaseRequestId && x.Id != purchaseRequestDetailsId).ToList();
+            }
+
+            if (purchaseRequestDetails != null)
+            {
+                total = purchaseRequestDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+
+
         public static string EncodeTo64(string m_enc)
         {
             byte[] toEncodeAsBytes =

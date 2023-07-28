@@ -193,7 +193,11 @@ namespace eShop.Models
         [Display(Name = "Purchase Order")]
         PurchaseOrder = 93,
         [Display(Name = "Purchase Order Details")]
-        PurchaseOrderDetails = 94
+        PurchaseOrderDetails = 94,
+        [Display(Name = "Purchase Request")]
+        PurchaseRequest = 95,
+        [Display(Name = "Purchase Request Details")]
+        PurchaseRequestDetails = 96
     }
 
     public enum EnumActions
