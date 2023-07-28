@@ -114,5 +114,49 @@ namespace eShop.Properties {
                 return ((string)(this["PurchaseRequestCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("IN/")]
+        public string PurchaseCode
+        {
+            get
+            {
+                return ((string)(this["PurchaseCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SR/")]
+        public string SalesRequestCode
+        {
+            get
+            {
+                return ((string)(this["SalesRequestCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SO/")]
+        public string SalesOrderCode
+        {
+            get
+            {
+                return ((string)(this["SalesOrderCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("INV/")]
+        public string SalesCode
+        {
+            get
+            {
+                return ((string)(this["SalesCode"]));
+            }
+        }
     }
 }

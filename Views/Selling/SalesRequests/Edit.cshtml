@@ -1,8 +1,8 @@
-﻿@model eShop.Models.PurchaseRequest
+﻿@model eShop.Models.SalesRequest
 
 @{
-    ViewBag.Title = "Purchase Request";
-    ViewBag.Current = "PurchaseRequests";
+    ViewBag.Title = "Sales Request";
+    ViewBag.Current = "SalesRequests";
 }
 
 @section Styles {
@@ -27,7 +27,7 @@
                     <div class="box-header with-bRequest">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Edit - Purchase Request</h3>
+                        <h3 class="box-title">Edit - Sales Request</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -74,9 +74,9 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        @Html.LabelFor(model => model.MasterSupplierId)
-                                        @Html.DatalistFor(model => model.MasterSupplierId, new eShop.Models.MasterSupplierDatalist())
-                                        @Html.ValidationMessageFor(model => model.MasterSupplierId, "", new { @class = "text-danger" })
+                                        @Html.LabelFor(model => model.MasterCustomerId)
+                                        @Html.DatalistFor(model => model.MasterCustomerId, new eShop.Models.MasterCustomerDatalist())
+                                        @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -116,7 +116,7 @@
                         <div class="text-right col-md-10">
                             <label style="font-weight: bold">TOTAL :</label>
                             <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "PurchaseRequests")">
+                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "SalesRequests")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
                             <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
@@ -197,7 +197,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?purchaseRequestId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?salesRequestId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -220,7 +220,7 @@
                         var data = { id: Id };
                         var options = {};
 
-                        options.url = "/PurchaseRequests/GetMasterUnit";
+                        options.url = "/SalesRequests/GetMasterUnit";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -260,7 +260,7 @@
             var param = { purchaseRequestId: $("#Id").val() };
             var options = {};
 
-            options.url = "/PurchaseRequests/GetTotal";
+            options.url = "/SalesRequests/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -286,7 +286,7 @@
             var param = { purchaseRequestId: $("#Id").val() };
             var options = {};
 
-            options.url = "/PurchaseRequests/GetTotal";
+            options.url = "/SalesRequests/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -318,7 +318,7 @@
                     bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/PurchaseRequests/DetailsBatchDelete";
+                            options.url = "/SalesRequests/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
@@ -333,7 +333,7 @@
                                 var param = { purchaseRequestId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/PurchaseRequests/GetTotal";
+                                options2.url = "/SalesRequests/GetTotal";
                                 options2.type = "POST";
                                 options2.headers = headers;
                                 options2.data = JSON.stringify(param);
@@ -388,7 +388,7 @@
                             var data = { id: Id };
                             var options = {};
 
-                            options.url = "/PurchaseRequests/GetMasterUnit";
+                            options.url = "/SalesRequests/GetMasterUnit";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(data);

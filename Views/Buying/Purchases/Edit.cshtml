@@ -1,8 +1,8 @@
-﻿@model eShop.Models.PurchaseRequest
+﻿@model eShop.Models.Purchase
 
 @{
-    ViewBag.Title = "Purchase Request";
-    ViewBag.Current = "PurchaseRequests";
+    ViewBag.Title = "Purchase";
+    ViewBag.Current = "Purchases";
 }
 
 @section Styles {
@@ -24,10 +24,10 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="box box-primary">
-                    <div class="box-header with-bRequest">
+                    <div class="box-header with-border">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Edit - Purchase Request</h3>
+                        <h3 class="box-title">Edit - Purchase</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -107,7 +107,7 @@
 
             <div class="col-md-8">
                 <div class="box box-primary">
-                    <div class="box-header with-bRequest">
+                    <div class="box-header with-border">
                         <div class="col-md-2">
                             <i class="fa fa-info"></i>
 
@@ -116,7 +116,7 @@
                         <div class="text-right col-md-10">
                             <label style="font-weight: bold">TOTAL :</label>
                             <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "PurchaseRequests")">
+                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "Purchases")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
                             <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
@@ -197,7 +197,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?purchaseRequestId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?purchaseId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -220,7 +220,7 @@
                         var data = { id: Id };
                         var options = {};
 
-                        options.url = "/PurchaseRequests/GetMasterUnit";
+                        options.url = "/Purchases/GetMasterUnit";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -257,10 +257,10 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { purchaseRequestId: $("#Id").val() };
+            var param = { purchaseOrderId: $("#Id").val() };
             var options = {};
 
-            options.url = "/PurchaseRequests/GetTotal";
+            options.url = "/Purchases/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -283,10 +283,10 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { purchaseRequestId: $("#Id").val() };
+            var param = { purchaseOrderId: $("#Id").val() };
             var options = {};
 
-            options.url = "/PurchaseRequests/GetTotal";
+            options.url = "/Purchases/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -318,7 +318,7 @@
                     bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/PurchaseRequests/DetailsBatchDelete";
+                            options.url = "/Purchases/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
@@ -330,10 +330,10 @@
                                 var grid = new MvcGrid(document.querySelector('#detail-table'));
                                 grid.reload();
 
-                                var param = { purchaseRequestId: $("#Id").val() };
+                                var param = { purchaseOrderId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/PurchaseRequests/GetTotal";
+                                options2.url = "/Purchases/GetTotal";
                                 options2.type = "POST";
                                 options2.headers = headers;
                                 options2.data = JSON.stringify(param);
@@ -388,7 +388,7 @@
                             var data = { id: Id };
                             var options = {};
 
-                            options.url = "/PurchaseRequests/GetMasterUnit";
+                            options.url = "/Purchases/GetMasterUnit";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(data);

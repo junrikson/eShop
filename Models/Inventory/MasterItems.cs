@@ -37,6 +37,14 @@ namespace eShop.Models
         [Display(Name = "Kategori")]
         public int? MasterCategoryId { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Kode Supplier")]
+        [Required(ErrorMessage = "Kode Supplier harus diisi.")]
+        public int? MasterSupplierId { get; set; }
+
+        [Display(Name = "Kode Supplier")]
+        public virtual MasterSupplier MasterSupplier { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }

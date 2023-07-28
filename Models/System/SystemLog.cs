@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace eShop.Models
 {
@@ -197,7 +198,24 @@ namespace eShop.Models
         [Display(Name = "Purchase Request")]
         PurchaseRequest = 95,
         [Display(Name = "Purchase Request Details")]
-        PurchaseRequestDetails = 96
+        PurchaseRequestDetails = 96,
+        [Display(Name = "Purchase")]
+        Purchase = 97,
+        [Display(Name = "Purchase Details")]
+        PurchaseDetails = 98,
+        [Display(Name = "SalesRequest")]
+        SalesRequest = 99,
+        [Display(Name = "SalesRequestDetails")]
+        SalesRequestDetails = 100,
+        [Display(Name = "Sales Order")]
+        SalesOrder = 101,
+        [Display(Name = "Sales Order Details")]
+        SalesOrderDetails = 102,
+        [Display(Name = "Sale")]
+        Sale = 103,
+        [Display(Name = "Sale Details")]
+        SaleDetails = 104,
+
     }
 
     public enum EnumActions

@@ -109,7 +109,94 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalPurchase(ApplicationDbContext db, int purchaseId, int? purchaseDetailsId = null)
+        {
+            decimal total = 0;
+            List<PurchaseDetails> purchaseDetails = null;
 
+            if (purchaseDetailsId == null)
+            {
+                purchaseDetails = db.PurchasesDetails.Where(x => x.PurchaseId == purchaseId).ToList();
+            }
+            else
+            {
+                purchaseDetails = db.PurchasesDetails.Where(x => x.PurchaseId == purchaseId && x.Id != purchaseDetailsId).ToList();
+            }
+
+            if (purchaseDetails != null)
+            {
+                total = purchaseDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+        public static decimal GetTotalSalesRequest(ApplicationDbContext db, int salesRequestId, int? salesRequestDetailsId = null)
+        {
+            decimal total = 0;
+            List<SalesRequestDetails> salesRequestDetails = null;
+
+            if (salesRequestDetailsId == null)
+            {
+                salesRequestDetails = db.SalesRequestsDetails.Where(x => x.SalesRequestId == salesRequestId).ToList();
+            }
+            else
+            {
+                salesRequestDetails = db.SalesRequestsDetails.Where(x => x.SalesRequestId == salesRequestId && x.Id != salesRequestDetailsId).ToList();
+            }
+
+            if (salesRequestDetails != null)
+            {
+                total = salesRequestDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+        public static decimal GetTotalSalesOrder(ApplicationDbContext db, int salesOrderId, int? salesOrderDetailsId = null)
+        {
+            decimal total = 0;
+            List<SalesOrderDetails> salesOrderDetails = null;
+
+            if (salesOrderDetailsId == null)
+            {
+                salesOrderDetails = db.SalesOrdersDetails.Where(x => x.SalesOrderId == salesOrderId).ToList();
+            }
+            else
+            {
+                salesOrderDetails = db.SalesOrdersDetails.Where(x => x.SalesOrderId == salesOrderId && x.Id != salesOrderDetailsId).ToList();
+            }
+
+            if (salesOrderDetails != null)
+            {
+                total = salesOrderDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+
+       public static decimal GetTotalSale(ApplicationDbContext db, int saleId, int? saleDetailsId = null)
+             {
+            decimal total = 0;
+            List<SaleDetails> saleDetails = null;
+
+            if (saleDetailsId == null)
+            {
+                saleDetails = db.SalesDetails.Where(x => x.SaleId == saleId).ToList();
+            }
+            else
+            {
+                saleDetails = db.SalesDetails.Where(x => x.SaleId == saleId && x.Id != saleDetailsId).ToList();
+            }
+
+            if (saleDetails != null)
+            {
+                total = saleDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
 
         public static string EncodeTo64(string m_enc)
         {
