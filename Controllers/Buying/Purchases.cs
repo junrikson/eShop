@@ -19,25 +19,25 @@ using System.Web.Mvc;
 
 namespace eShop.Controllers
 {
-    public class PurchaseRequestsController : Controller
+    public class PurchasesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: PurchaseRequests
-        [Authorize(Roles = "PurchaseRequestsActive")]
+        // GET: Purchases
+        [Authorize(Roles = "PurchasesActive")]
         public ActionResult Index()
         {
-            return View("../Buying/PurchaseRequests/Index");
+            return View("../Buying/Purchases/Index");
         }
 
         [HttpGet]
-        [Authorize(Roles = "PurchaseRequestsActive")]
+        [Authorize(Roles = "PurchasesActive")]
         public PartialViewResult IndexGrid(String search)
         {
             if (String.IsNullOrEmpty(search))
-                return PartialView("../Buying/PurchaseRequests/_IndexGrid", db.Set<PurchaseRequest>().AsQueryable());
+                return PartialView("../Buying/Purchases/_IndexGrid", db.Set<Purchase>().AsQueryable());
             else
-                return PartialView("../Buying/PurchaseRequests/_IndexGrid", db.Set<PurchaseRequest>().AsQueryable()
+                return PartialView("../Buying/Purchases/_IndexGrid", db.Set<Purchase>().AsQueryable()
                     .Where(x => x.Code.Contains(search)));
         }
 
@@ -50,35 +50,35 @@ namespace eShop.Controllers
         {
             if (Id == null || Id == 0)
             {
-                return db.PurchaseRequests.Any(x => x.Code == Code);
+                return db.Purchases.Any(x => x.Code == Code);
             }
             else
             {
-                return db.PurchaseRequests.Any(x => x.Code == Code && x.Id != Id);
+                return db.Purchases.Any(x => x.Code == Code && x.Id != Id);
             }
         }
 
-        // GET: PurchaseRequests/Details/
-        [Authorize(Roles = "PurchaseRequestsView")]
+        // GET: Purchases/Details/
+        [Authorize(Roles = "PurchasesView")]
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PurchaseRequest PurchaseRequest = db.PurchaseRequests.Find(id);
-            if (PurchaseRequest == null)
+            Purchase Purchase = db.Purchases.Find(id);
+            if (Purchase == null)
             {
                 return HttpNotFound();
             }
-            return PartialView("../Buying/PurchaseRequests/_Details", PurchaseRequest);
+            return PartialView("../Buying/Purchases/_Details", Purchase);
         }
 
-        // GET: PurchaseRequests/Create
-        [Authorize(Roles = "PurchaseRequestsAdd")]
+        // GET: Purchases/Create
+        [Authorize(Roles = "PurchasesAdd")]
         public ActionResult Create()
         {
-            PurchaseRequest purchaseRequest = new PurchaseRequest
+            Purchase purchase = new Purchase
             {
                 Code = "temp/" + Guid.NewGuid().ToString(),
                 Date = DateTime.Now,
@@ -96,16 +96,16 @@ namespace eShop.Controllers
             {
                 try
                 {
-                    db.PurchaseRequests.Add(purchaseRequest);
+                    db.Purchases.Add(purchase);
                     db.SaveChanges();
 
                     dbTran.Commit();
 
-                    purchaseRequest.Code = "";
-                    purchaseRequest.Active = true;
-                    purchaseRequest.MasterBusinessUnitId = 0;
-                    purchaseRequest.MasterRegionId = 0;
-                    purchaseRequest.MasterSupplierId = 0;
+                    purchase.Code = "";
+                    purchase.Active = true;
+                    purchase.MasterBusinessUnitId = 0;
+                    purchase.MasterRegionId = 0;
+                    purchase.MasterSupplierId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -120,31 +120,31 @@ namespace eShop.Controllers
             ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes");
             ViewBag.Total = "0";
 
-            return View("../Buying/PurchaseRequests/Create", purchaseRequest);
+            return View("../Buying/Purchases/Create", purchase);
         }
 
-        // POST: PurchaseRequests/Create
+        // POST: Purchases/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseRequestsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] PurchaseRequest purchaseRequest)
+        [Authorize(Roles = "PurchasesAdd")]
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
         {
-            purchaseRequest.Created = DateTime.Now;
-            purchaseRequest.Updated = DateTime.Now;
-            purchaseRequest.UserId = User.Identity.GetUserId<int>();
-            purchaseRequest.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseRequest.Id);
+            purchase.Created = DateTime.Now;
+            purchase.Updated = DateTime.Now;
+            purchase.UserId = User.Identity.GetUserId<int>();
+            purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id);
 
-            if (!string.IsNullOrEmpty(purchaseRequest.Code)) purchaseRequest.Code = purchaseRequest.Code.ToUpper();
-            if (!string.IsNullOrEmpty(purchaseRequest.Notes)) purchaseRequest.Notes = purchaseRequest.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(purchase.Code)) purchase.Code = purchase.Code.ToUpper();
+            if (!string.IsNullOrEmpty(purchase.Notes)) purchase.Notes = purchase.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
-                purchaseRequest = GetModelState(purchaseRequest);
+                purchase = GetModelState(purchase);
             }
 
-            db.Entry(purchaseRequest).State = EntityState.Modified;
+            db.Entry(purchase).State = EntityState.Modified;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -154,7 +154,7 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseRequest, MenuId = purchaseRequest.Id, MenuCode = purchaseRequest.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Purchase, MenuId = purchase.Id, MenuCode = purchase.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -170,22 +170,22 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseRequest.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseRequest.MasterRegionId);
-                ViewBag.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseRequest.Id).ToString("N2");
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchase.MasterBusinessUnitId);
+                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchase.MasterRegionId);
+                ViewBag.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id).ToString("N2");
 
-                return View("../Buying/PurchaseRequests/Create", purchaseRequest);
+                return View("../Buying/Purchases/Create", purchase);
             }
         }
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseRequestsAdd")]
+        [Authorize(Roles = "PurchasesAdd")]
         public ActionResult Cancel(int? id)
         {
             if (id != null)
             {
-                PurchaseRequest obj = db.PurchaseRequests.Find(id);
+                Purchase obj = db.Purchases.Find(id);
                 if (obj != null)
                 {
                     if (!obj.Active)
@@ -194,10 +194,10 @@ namespace eShop.Controllers
                         {
                             try
                             {
-                                db.PurchaseRequestsDetails.RemoveRange(db.PurchaseRequestsDetails.Where(x => x.PurchaseRequestId == obj.Id));
+                                db.PurchasesDetails.RemoveRange(db.PurchasesDetails.Where(x => x.PurchaseId == obj.Id));
                                 db.SaveChanges();
 
-                                db.PurchaseRequests.Remove(obj);
+                                db.Purchases.Remove(obj);
                                 db.SaveChanges();
 
                                 dbTran.Commit();
@@ -214,60 +214,60 @@ namespace eShop.Controllers
             return Json(id);
         }
 
-        // GET: PurchaseRequests/Edit/5
-        [Authorize(Roles = "PurchaseRequestsEdit")]
+        // GET: Purchases/Edit/5
+        [Authorize(Roles = "PurchasesEdit")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PurchaseRequest purchaseRequest = db.PurchaseRequests.Find(id);
-            if (purchaseRequest == null)
+            Purchase purchase = db.Purchases.Find(id);
+            if (purchase == null)
             {
                 return HttpNotFound();
             }
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseRequest.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseRequest.MasterRegionId);
-            ViewBag.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseRequest.Id).ToString("N2");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchase.MasterBusinessUnitId);
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchase.MasterRegionId);
+            ViewBag.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id).ToString("N2");
 
-            return View("../Buying/PurchaseRequests/Edit", purchaseRequest);
+            return View("../Buying/Purchases/Edit", purchase);
         }
 
-        // POST: PurchaseRequests/Edit/5
+        // POST: Purchases/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseRequestsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] PurchaseRequest purchaseRequest)
+        [Authorize(Roles = "PurchasesEdit")]
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
         {
-            purchaseRequest.Updated = DateTime.Now;
-            purchaseRequest.UserId = User.Identity.GetUserId<int>();
-            purchaseRequest.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseRequest.Id);
+            purchase.Updated = DateTime.Now;
+            purchase.UserId = User.Identity.GetUserId<int>();
+            purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id);
 
-            if (!string.IsNullOrEmpty(purchaseRequest.Code)) purchaseRequest.Code = purchaseRequest.Code.ToUpper();
-            if (!string.IsNullOrEmpty(purchaseRequest.Notes)) purchaseRequest.Notes = purchaseRequest.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(purchase.Code)) purchase.Code = purchase.Code.ToUpper();
+            if (!string.IsNullOrEmpty(purchase.Notes)) purchase.Notes = purchase.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
-                purchaseRequest = GetModelState(purchaseRequest);
+                purchase = GetModelState(purchase);
             }
 
-            db.Entry(purchaseRequest).State = EntityState.Unchanged;
-            db.Entry(purchaseRequest).Property("Code").IsModified = true;
-            db.Entry(purchaseRequest).Property("Date").IsModified = true;
-            db.Entry(purchaseRequest).Property("MasterBusinessUnitId").IsModified = true;
-            db.Entry(purchaseRequest).Property("MasterRegionId").IsModified = true;
-            db.Entry(purchaseRequest).Property("PurchaseRequestId").IsModified = true;
-            db.Entry(purchaseRequest).Property("MasterSupplierId").IsModified = true;
-            db.Entry(purchaseRequest).Property("Total").IsModified = true;
-            db.Entry(purchaseRequest).Property("Notes").IsModified = true;
-            db.Entry(purchaseRequest).Property("Active").IsModified = true;
-            db.Entry(purchaseRequest).Property("Updated").IsModified = true;
+            db.Entry(purchase).State = EntityState.Unchanged;
+            db.Entry(purchase).Property("Code").IsModified = true;
+            db.Entry(purchase).Property("Date").IsModified = true;
+            db.Entry(purchase).Property("MasterBusinessUnitId").IsModified = true;
+            db.Entry(purchase).Property("MasterRegionId").IsModified = true;
+            db.Entry(purchase).Property("PurchaseRequestId").IsModified = true;
+            db.Entry(purchase).Property("MasterSupplierId").IsModified = true;
+            db.Entry(purchase).Property("Total").IsModified = true;
+            db.Entry(purchase).Property("Notes").IsModified = true;
+            db.Entry(purchase).Property("Active").IsModified = true;
+            db.Entry(purchase).Property("Updated").IsModified = true;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -277,7 +277,7 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseRequest, MenuId = purchaseRequest.Id, MenuCode = purchaseRequest.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Purchase, MenuId = purchase.Id, MenuCode = purchase.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -293,16 +293,16 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseRequest.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseRequest.MasterRegionId);
-                ViewBag.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseRequest.Id).ToString("N2");
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchase.MasterBusinessUnitId);
+                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchase.MasterRegionId);
+                ViewBag.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id).ToString("N2");
 
-                return View("../Buying/PurchaseRequests/Edit", purchaseRequest);
+                return View("../Buying/Purchases/Edit", purchase);
             }
         }
 
         [HttpPost]
-        [Authorize(Roles = "PurchaseRequestsDelete")]
+        [Authorize(Roles = "PurchasesDelete")]
         [ValidateJsonAntiForgeryToken]
         public ActionResult BatchDelete(int[] ids)
         {
@@ -317,21 +317,21 @@ namespace eShop.Controllers
                         int failed = 0;
                         foreach (int id in ids)
                         {
-                            PurchaseRequest obj = db.PurchaseRequests.Find(id);
+                            Purchase obj = db.Purchases.Find(id);
 
                             if (obj == null)
                                 failed++;
                             else
                             {
-                                PurchaseRequest tmp = obj;
+                                Purchase tmp = obj;
 
-                                db.PurchaseRequestsDetails.RemoveRange(db.PurchaseRequestsDetails.Where(x => x.PurchaseRequestId == obj.Id));
+                                db.PurchasesDetails.RemoveRange(db.PurchasesDetails.Where(x => x.PurchaseId == obj.Id));
                                 db.SaveChanges();
 
-                                db.PurchaseRequests.Remove(obj);
+                                db.Purchases.Remove(obj);
                                 db.SaveChanges();
 
-                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseRequest, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Purchase, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
 
                                 dbTran.Commit();
@@ -348,10 +348,10 @@ namespace eShop.Controllers
             }
         }
 
-        [Authorize(Roles = "PurchaseRequestsPrint")]
+        [Authorize(Roles = "PurchasesPrint")]
         public ActionResult Print(int? id)
         {
-            PurchaseRequest obj = db.PurchaseRequests.Find(id);
+            Purchase obj = db.Purchases.Find(id);
 
             if (obj == null)
             {
@@ -364,7 +364,7 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormPurchaseRequest.rpt"));
+                        rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormPurchase.rpt"));
                         rd.SetParameterValue("Code", obj.Code);
                         rd.SetParameterValue("Terbilang", "# " + TerbilangExtension.Terbilang(Math.Floor(obj.Total)).ToUpper() + " RUPIAH #");
 
@@ -409,10 +409,10 @@ namespace eShop.Controllers
             }
         }
 
-        [Authorize(Roles = "PurchaseRequestsActive")]
-        private PurchaseRequest GetModelState(PurchaseRequest purchase)
+        [Authorize(Roles = "PurchasesActive")]
+        private Purchase GetModelState(Purchase purchase)
         {
-            List<PurchaseRequestDetails> purchaseRequestDetails = db.PurchaseRequestsDetails.Where(x => x.PurchaseRequestId == purchase.Id).ToList();
+            List<PurchaseDetails> purchaseDetails = db.PurchasesDetails.Where(x => x.PurchaseId == purchase.Id).ToList();
 
             if (ModelState.IsValid)
             {
@@ -422,48 +422,48 @@ namespace eShop.Controllers
 
             if (ModelState.IsValid)
             {
-                if (purchaseRequestDetails == null || purchaseRequestDetails.Count == 0)
+                if (purchaseDetails == null || purchaseDetails.Count == 0)
                     ModelState.AddModelError(string.Empty, "Data masih kosong, mohon isi detail terlebih dahulu!");
             }
 
             return purchase;
         }
 
-        [Authorize(Roles = "PurchaseRequestsActive")]
-        public ActionResult DetailsCreate(int purchaseRequestId)
+        [Authorize(Roles = "PurchasesActive")]
+        public ActionResult DetailsCreate(int purchaseId)
         {
-            PurchaseRequest purchaseRequest = db.PurchaseRequests.Find(purchaseRequestId);
+            Purchase purchase = db.Purchases.Find(purchaseId);
 
-            if (purchaseRequest == null)
+            if (purchase == null)
             {
                 return HttpNotFound();
             }
 
-            PurchaseRequestDetails purchaseRequestDetails = new PurchaseRequestDetails
+            PurchaseDetails purchaseDetails = new PurchaseDetails
             {
-                PurchaseRequestId = purchaseRequestId
+                PurchaseId = purchaseId
             };
 
-            return PartialView("../Buying/PurchaseRequests/_DetailsCreate", purchaseRequestDetails);
+            return PartialView("../Buying/Purchases/_DetailsCreate", purchaseDetails);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseRequestsActive")]
-        public ActionResult DetailsCreate([Bind(Include = "Id,PurchaseRequestId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] PurchaseRequestDetails purchaseRequestDetails)
+        [Authorize(Roles = "PurchasesActive")]
+        public ActionResult DetailsCreate([Bind(Include = "Id,PurchaseId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] PurchaseDetails purchaseDetails)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseRequestDetails.MasterItemUnitId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseDetails.MasterItemUnitId);
 
             if (masterItemUnit == null)
-                purchaseRequestDetails.Total = 0;
+                purchaseDetails.Total = 0;
             else
-                purchaseRequestDetails.Total = purchaseRequestDetails.Quantity * purchaseRequestDetails.Price * masterItemUnit.MasterUnit.Ratio;
+                purchaseDetails.Total = purchaseDetails.Quantity * purchaseDetails.Price * masterItemUnit.MasterUnit.Ratio;
 
-            purchaseRequestDetails.Created = DateTime.Now;
-            purchaseRequestDetails.Updated = DateTime.Now;
-            purchaseRequestDetails.UserId = User.Identity.GetUserId<int>();
+            purchaseDetails.Created = DateTime.Now;
+            purchaseDetails.Updated = DateTime.Now;
+            purchaseDetails.UserId = User.Identity.GetUserId<int>();
 
-            if (!string.IsNullOrEmpty(purchaseRequestDetails.Notes)) purchaseRequestDetails.Notes = purchaseRequestDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(purchaseDetails.Notes)) purchaseDetails.Notes = purchaseDetails.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
@@ -471,16 +471,16 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        db.PurchaseRequestsDetails.Add(purchaseRequestDetails);
+                        db.PurchasesDetails.Add(purchaseDetails);
                         db.SaveChanges();
 
-                        PurchaseRequest purchaseRequest = db.PurchaseRequests.Find(purchaseRequestDetails.PurchaseRequestId);
-                        purchaseRequest.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseRequest.Id, purchaseRequestDetails.Id) + purchaseRequestDetails.Total;
+                        Purchase purchase = db.Purchases.Find(purchaseDetails.PurchaseId);
+                        purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id, purchaseDetails.Id) + purchaseDetails.Total;
 
-                        db.Entry(purchaseRequest).State = EntityState.Modified;
+                        db.Entry(purchase).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseRequestDetails, MenuId = purchaseRequestDetails.Id, MenuCode = purchaseRequestDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseDetails, MenuId = purchaseDetails.Id, MenuCode = purchaseDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -495,10 +495,10 @@ namespace eShop.Controllers
                 }
             }
 
-            return PartialView("../Buying/PurchaseRequests/_DetailsCreate", purchaseRequestDetails);
+            return PartialView("../Buying/Purchases/_DetailsCreate", purchaseDetails);
         }
 
-        [Authorize(Roles = "PurchaseRequestsActive")]
+        [Authorize(Roles = "PurchasesActive")]
         public ActionResult DetailsEdit(int? id)
         {
             if (id == null)
@@ -506,41 +506,41 @@ namespace eShop.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            PurchaseRequestDetails obj = db.PurchaseRequestsDetails.Find(id);
+            PurchaseDetails obj = db.PurchasesDetails.Find(id);
 
             if (obj == null)
             {
                 return HttpNotFound();
             }
-            return PartialView("../Buying/PurchaseRequests/_DetailsEdit", obj);
+            return PartialView("../Buying/Purchases/_DetailsEdit", obj);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseRequestsActive")]
-        public ActionResult DetailsEdit([Bind(Include = "Id,PurchaseRequestId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] PurchaseRequestDetails purchaseRequestDetails)
+        [Authorize(Roles = "PurchasesActive")]
+        public ActionResult DetailsEdit([Bind(Include = "Id,PurchaseId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] PurchaseDetails purchaseDetails)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseRequestDetails.MasterItemUnitId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseDetails.MasterItemUnitId);
 
             if (masterItemUnit == null)
-                purchaseRequestDetails.Total = 0;
+                purchaseDetails.Total = 0;
             else
-                purchaseRequestDetails.Total = purchaseRequestDetails.Quantity * purchaseRequestDetails.Price * masterItemUnit.MasterUnit.Ratio;
+                purchaseDetails.Total = purchaseDetails.Quantity * purchaseDetails.Price * masterItemUnit.MasterUnit.Ratio;
 
-            purchaseRequestDetails.Updated = DateTime.Now;
-            purchaseRequestDetails.UserId = User.Identity.GetUserId<int>();
+            purchaseDetails.Updated = DateTime.Now;
+            purchaseDetails.UserId = User.Identity.GetUserId<int>();
 
-            if (!string.IsNullOrEmpty(purchaseRequestDetails.Notes)) purchaseRequestDetails.Notes = purchaseRequestDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(purchaseDetails.Notes)) purchaseDetails.Notes = purchaseDetails.Notes.ToUpper();
 
-            db.Entry(purchaseRequestDetails).State = EntityState.Unchanged;
-            db.Entry(purchaseRequestDetails).Property("MasterItemId").IsModified = true;
-            db.Entry(purchaseRequestDetails).Property("MasterItemUnitId").IsModified = true;
-            db.Entry(purchaseRequestDetails).Property("Quantity").IsModified = true;
-            db.Entry(purchaseRequestDetails).Property("Price").IsModified = true;
-            db.Entry(purchaseRequestDetails).Property("Total").IsModified = true;
-            db.Entry(purchaseRequestDetails).Property("Notes").IsModified = true;
-            db.Entry(purchaseRequestDetails).Property("Updated").IsModified = true;
-            db.Entry(purchaseRequestDetails).Property("UserId").IsModified = true;
+            db.Entry(purchaseDetails).State = EntityState.Unchanged;
+            db.Entry(purchaseDetails).Property("MasterItemId").IsModified = true;
+            db.Entry(purchaseDetails).Property("MasterItemUnitId").IsModified = true;
+            db.Entry(purchaseDetails).Property("Quantity").IsModified = true;
+            db.Entry(purchaseDetails).Property("Price").IsModified = true;
+            db.Entry(purchaseDetails).Property("Total").IsModified = true;
+            db.Entry(purchaseDetails).Property("Notes").IsModified = true;
+            db.Entry(purchaseDetails).Property("Updated").IsModified = true;
+            db.Entry(purchaseDetails).Property("UserId").IsModified = true;
 
             if (ModelState.IsValid)
             {
@@ -550,13 +550,13 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        PurchaseRequest purchaseRequest = db.PurchaseRequests.Find(purchaseRequestDetails.PurchaseRequestId);
-                        purchaseRequest.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseRequest.Id, purchaseRequestDetails.Id) + purchaseRequestDetails.Total;
+                        Purchase purchase = db.Purchases.Find(purchaseDetails.PurchaseId);
+                        purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id, purchaseDetails.Id) + purchaseDetails.Total;
 
-                        db.Entry(purchaseRequest).State = EntityState.Modified;
+                        db.Entry(purchase).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseRequestDetails, MenuId = purchaseRequestDetails.Id, MenuCode = purchaseRequestDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseDetails, MenuId = purchaseDetails.Id, MenuCode = purchaseDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -570,12 +570,12 @@ namespace eShop.Controllers
                     }
                 }
             }
-            return PartialView("../Buying/PurchaseRequests/_DetailsEdit", purchaseRequestDetails);
+            return PartialView("../Buying/Purchases/_DetailsEdit", purchaseDetails);
         }
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseRequestsActive")]
+        [Authorize(Roles = "PurchasesActive")]
         public ActionResult DetailsBatchDelete(int[] ids)
         {
             if (ids == null || ids.Length <= 0)
@@ -587,7 +587,7 @@ namespace eShop.Controllers
                     int failed = 0;
                     foreach (int id in ids)
                     {
-                        PurchaseRequestDetails obj = db.PurchaseRequestsDetails.Find(id);
+                        PurchaseDetails obj = db.PurchasesDetails.Find(id);
                         if (obj == null)
                             failed++;
                         else
@@ -596,19 +596,19 @@ namespace eShop.Controllers
                             {
                                 try
                                 {
-                                    PurchaseRequestDetails tmp = obj;
+                                    PurchaseDetails tmp = obj;
 
-                                    PurchaseRequest purchaseRequest = db.PurchaseRequests.Find(tmp.PurchaseRequestId);
+                                    Purchase purchase = db.Purchases.Find(tmp.PurchaseId);
 
-                                    purchaseRequest.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseRequest.Id, tmp.Id);
+                                    purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id, tmp.Id);
 
-                                    db.Entry(purchaseRequest).State = EntityState.Modified;
+                                    db.Entry(purchase).State = EntityState.Modified;
                                     db.SaveChanges();
 
-                                    db.PurchaseRequestsDetails.Remove(obj);
+                                    db.PurchasesDetails.Remove(obj);
                                     db.SaveChanges();
 
-                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseRequestDetails, MenuId = tmp.Id, MenuCode = tmp.Id.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseDetails, MenuId = tmp.Id, MenuCode = tmp.Id.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                     db.SaveChanges();
                                     dbTran.Commit();
                                 }
@@ -626,16 +626,16 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "PurchaseRequestsActive")]
+        [Authorize(Roles = "PurchasesActive")]
         public PartialViewResult DetailsGrid(int Id)
         {
-            return PartialView("../Buying/PurchaseRequests/_DetailsGrid", db.PurchaseRequestsDetails
-                .Where(x => x.PurchaseRequestId == Id).ToList());
+            return PartialView("../Buying/Purchases/_DetailsGrid", db.PurchasesDetails
+                .Where(x => x.PurchaseId == Id).ToList());
         }
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseRequestsActive")]
+        [Authorize(Roles = "PurchasesActive")]
         public JsonResult GetMasterUnit(int id)
         {
             int masterItemUnitId = 0;
@@ -661,34 +661,34 @@ namespace eShop.Controllers
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseRequestsActive")]
+        [Authorize(Roles = "PurchasesActive")]
         public JsonResult GetCode(int id, int masterBusinessUnitId, int masterRegionId)
         {
             string code = null;
             MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
             MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
 
-            PurchaseRequest purchaseRequest = db.PurchaseRequests.Find(id);
+            Purchase purchase = db.Purchases.Find(id);
 
-            if (masterBusinessUnit != null && purchaseRequest != null && masterRegion != null)
+            if (masterBusinessUnit != null && purchase != null && masterRegion != null)
             {
                 code = GetCode(masterBusinessUnit, masterRegion);
-                purchaseRequest.MasterBusinessUnitId = masterBusinessUnitId;
-                purchaseRequest.MasterRegionId = masterRegionId;
-                db.Entry(purchaseRequest).State = EntityState.Modified;
+                purchase.MasterBusinessUnitId = masterBusinessUnitId;
+                purchase.MasterRegionId = masterRegionId;
+                db.Entry(purchase).State = EntityState.Modified;
                 db.SaveChanges();
             }
 
             return Json(code);
         }
 
-        [Authorize(Roles = "PurchaseRequestsActive")]
+        [Authorize(Roles = "PurchasesActive")]
         private string GetCode(MasterBusinessUnit masterBusinessUnit, MasterRegion masterRegion)
         {
             string romanMonth = SharedFunctions.RomanNumeralFrom((int)DateTime.Now.Month);
-            string code = "/" + Settings.Default.PurchaseRequestCode + masterBusinessUnit.Code + "/" + masterRegion.Code + "/" + SharedFunctions.RomanNumeralFrom(DateTime.Now.Month) + "/" + DateTime.Now.Year.ToString().Substring(2, 2);
+            string code = "/" + Settings.Default.PurchaseCode + masterBusinessUnit.Code + "/" + masterRegion.Code + "/" + SharedFunctions.RomanNumeralFrom(DateTime.Now.Month) + "/" + DateTime.Now.Year.ToString().Substring(2, 2);
 
-            PurchaseRequest lastData = db.PurchaseRequests
+            Purchase lastData = db.Purchases
                 .Where(x => (x.Code.Contains(code)))
                 .OrderByDescending(z => z.Code).FirstOrDefault();
 
@@ -702,10 +702,10 @@ namespace eShop.Controllers
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseRequestsActive")]
-        public JsonResult GetTotal(int purchaseRequestId)
+        [Authorize(Roles = "PurchasesActive")]
+        public JsonResult GetTotal(int purchaseId)
         {
-            return Json(SharedFunctions.GetTotalPurchaseRequest(db, purchaseRequestId).ToString("N2"));
+            return Json(SharedFunctions.GetTotalPurchase(db, purchaseId).ToString("N2"));
         }
 
         protected override void Dispose(bool disposing)

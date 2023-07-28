@@ -64,6 +64,16 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterCustomer(DatalistFilter filter)
+        {
+            MasterCustomerDatalist datalist = new MasterCustomerDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterItemUnit(DatalistFilter filter, int? masterUnitId = 0)
         {
             MasterItemUnitDatalist datalist = new MasterItemUnitDatalist(db);

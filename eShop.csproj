@@ -296,6 +296,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Buying\Purchases.cs" />
     <Compile Include="Controllers\Buying\PurchaseRequestsController.cs" />
     <Compile Include="Controllers\Buying\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\Inventory\MasterItemsController.cs" />
@@ -306,6 +307,9 @@
     <Compile Include="Controllers\Masters\MasterRegionsController.cs" />
     <Compile Include="Controllers\Masters\MasterSuppliersController.cs" />
     <Compile Include="Controllers\Masters\MasterWarehousesController.cs" />
+    <Compile Include="Controllers\Selling\SalesController.cs" />
+    <Compile Include="Controllers\Selling\SalesOrdersController.cs" />
+    <Compile Include="Controllers\Selling\SalesRequestsController.cs" />
     <Compile Include="Hubs\PostingHub.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Controllers\Settings\AuthorizationsController.cs" />
@@ -327,6 +331,10 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
+    <Compile Include="Models\Selling\Sale.cs" />
+    <Compile Include="Models\Selling\SalesOrder.cs" />
+    <Compile Include="Models\Selling\SalesRequest.cs" />
+    <Compile Include="Models\Buying\Purchase.cs" />
     <Compile Include="Models\Buying\PurchaseRequest.cs" />
     <Compile Include="Models\Inventory\MasterCategory.cs" />
     <Compile Include="Models\Inventory\MasterBrand.cs" />
@@ -6897,6 +6905,27 @@
     <Content Include="Views\Buying\PurchaseOrders\_DetailsCreate.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_DetailsEdit.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_DetailsGrid.cshtml" />
+    <Content Include="Views\Buying\Purchases\_DetailsCreate.cshtml" />
+    <Content Include="Views\Buying\Purchases\_DetailsEdit.cshtml" />
+    <Content Include="Views\Buying\Purchases\_DetailsGrid.cshtml" />
+    <Content Include="Views\Buying\Purchases\_IndexGrid.cshtml" />
+    <Content Include="Views\Buying\Purchases\Create.cshtml" />
+    <Content Include="Views\Buying\Purchases\Edit.cshtml" />
+    <Content Include="Views\Buying\Purchases\Index.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\_DetailsCreate.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\_DetailsEdit.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\_DetailsGrid.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\_IndexGrid.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\Create.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\Edit.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\Index.cshtml" />
+    <Content Include="Views\Selling\SalesRequests\_DetailsCreate.cshtml" />
+    <Content Include="Views\Selling\SalesRequests\_DetailsEdit.cshtml" />
+    <Content Include="Views\Selling\SalesRequests\_DetailsGrid.cshtml" />
+    <Content Include="Views\Selling\SalesRequests\_IndexGrid.cshtml" />
+    <Content Include="Views\Selling\SalesRequests\Create.cshtml" />
+    <Content Include="Views\Selling\SalesRequests\Edit.cshtml" />
+    <Content Include="Views\Selling\SalesRequests\Index.cshtml" />
     <Content Include="Views\Buying\PurchaseRequests\_DetailsCreate.cshtml" />
     <Content Include="Views\Buying\PurchaseRequests\_DetailsEdit.cshtml" />
     <Content Include="Views\Buying\PurchaseRequests\_DetailsGrid.cshtml" />
@@ -6904,13 +6933,19 @@
     <Content Include="Views\Buying\PurchaseRequests\Create.cshtml" />
     <Content Include="Views\Buying\PurchaseRequests\Edit.cshtml" />
     <Content Include="Views\Buying\PurchaseRequests\Index.cshtml" />
+    <Content Include="Views\Selling\Sales\_DetailsCreate.cshtml" />
+    <Content Include="Views\Selling\Sales\_DetailsEdit.cshtml" />
+    <Content Include="Views\Selling\Sales\_DetailsGrid.cshtml" />
+    <Content Include="Views\Selling\Sales\_IndexGrid.cshtml" />
+    <Content Include="Views\Selling\Sales\Create.cshtml" />
+    <Content Include="Views\Selling\Sales\Edit.cshtml" />
+    <Content Include="Views\Selling\Sales\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CrystalReports\" />
     <Folder Include="Models\AP\" />
     <Folder Include="Models\AR\" />
-    <Folder Include="Models\Selling\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

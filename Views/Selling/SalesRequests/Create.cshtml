@@ -1,8 +1,8 @@
-﻿@model eShop.Models.PurchaseRequest
+﻿@model eShop.Models.SalesRequest
 
 @{
-    ViewBag.Title = "Purchase Request";
-    ViewBag.Current = "PurchaseRequests";
+    ViewBag.Title = "Sales Request";
+    ViewBag.Current = "SalesRequests";
 }
 
 @section Styles {
@@ -27,7 +27,7 @@
                     <div class="box-header with-bRequest">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Edit - Purchase Request</h3>
+                        <h3 class="box-title">Add - Sales Request</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -74,9 +74,9 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        @Html.LabelFor(model => model.MasterSupplierId)
-                                        @Html.DatalistFor(model => model.MasterSupplierId, new eShop.Models.MasterSupplierDatalist())
-                                        @Html.ValidationMessageFor(model => model.MasterSupplierId, "", new { @class = "text-danger" })
+                                        @Html.LabelFor(model => model.MasterCustomerId)
+                                        @Html.DatalistFor(model => model.MasterCustomerId, new eShop.Models.MasterCustomerDatalist())
+                                        @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -87,7 +87,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="col-md-6 text-left">
-                                            <a href="@Url.Action("Index")" id="cancel" class="btn btn-danger" style="margin-top:10px">
+                                            <a href="#" id="cancel" class="btn btn-danger" style="margin-top:10px">
                                                 Cancel
                                             </a>
                                         </div>
@@ -116,7 +116,7 @@
                         <div class="text-right col-md-10">
                             <label style="font-weight: bold">TOTAL :</label>
                             <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "PurchaseRequests")">
+                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "SalesRequests")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
                             <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
@@ -162,7 +162,6 @@
     </script>
 
     <script>
-
         [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
             new MvcDatalist(element);
         });
@@ -197,7 +196,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?purchaseRequestId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?salesRequestId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -220,7 +219,7 @@
                         var data = { id: Id };
                         var options = {};
 
-                        options.url = "/PurchaseRequests/GetMasterUnit";
+                        options.url = "/SalesRequests/GetMasterUnit";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -260,7 +259,7 @@
             var param = { purchaseRequestId: $("#Id").val() };
             var options = {};
 
-            options.url = "/PurchaseRequests/GetTotal";
+            options.url = "/SalesRequests/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -286,7 +285,7 @@
             var param = { purchaseRequestId: $("#Id").val() };
             var options = {};
 
-            options.url = "/PurchaseRequests/GetTotal";
+            options.url = "/SalesRequests/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -302,29 +301,38 @@
         var headers = {};
         headers['__RequestVerificationToken'] = token;
 
-        $(document).ready(function () {
-            $("#DetailsBatchDelete").click(function () {
+        $(document).ready(function ()
+        {
+            $("#DetailsBatchDelete").click(function ()
+            {
                 var selectedIDs = new Array();
-                $('#detail-table tbody tr').find('td:first :checkbox').each(function () {
-                    if ($(this).prop('checked')) {
+                $('#detail-table tbody tr').find('td:first :checkbox').each(function ()
+                {
+                    if ($(this).prop('checked'))
+                    {
                         selectedIDs.push($(this).val());
                     }
                 });
 
-                if (selectedIDs.length <= 0) {
+                if (selectedIDs.length <= 0)
+                {
                     bootbox.alert("Pilih salah satu data yang akan dihapus.");
                 }
-                else {
-                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
-                        if (result) {
+                else
+                {
+                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result)
+                    {
+                        if (result)
+                        {
                             var options = {};
-                            options.url = "/PurchaseRequests/DetailsBatchDelete";
+                            options.url = "/SalesRequests/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
                             options.contentType = "application/json";
                             options.dataType = "json";
-                            options.success = function (msg) {
+                            options.success = function (msg)
+                            {
                                 bootbox.alert(msg);
 
                                 var grid = new MvcGrid(document.querySelector('#detail-table'));
@@ -333,18 +341,20 @@
                                 var param = { purchaseRequestId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/PurchaseRequests/GetTotal";
+                                options2.url = "/SalesRequests/GetTotal";
                                 options2.type = "POST";
                                 options2.headers = headers;
                                 options2.data = JSON.stringify(param);
                                 options2.contentType = "application/json";
                                 options2.dataType = "json";
-                                options2.success = function (msg) {
+                                options2.success = function (msg)
+                                {
                                     document.getElementById('Total').value = msg;
                                 };
                                 $.ajax(options2);
                             };
-                            options.error = function () {
+                            options.error = function ()
+                            {
                                 bootbox.alert("Terjadi kesalahan saat menghapus.");
                             };
                             $.ajax(options);
@@ -352,6 +362,87 @@
                     });
                 }
             });
+
+            $("#cancel").click(function () {
+                var data = { id: $("input#Id").val() };
+                var options = {};
+                options.url = "/SalesRequests/Cancel";
+                options.type = "POST";
+                options.headers = headers;
+                options.data = JSON.stringify(data);
+                options.contentType = "application/json";
+                options.dataType = "json";
+                options.success = function (msg) {
+                    window.location.href = '@Url.Action("Index", "SalesRequests")';
+                };
+                options.error = function () {
+                    window.location.href = '@Url.Action("Index", "SalesRequests")';
+                };
+                $.ajax(options);
+            });
+
+            $("#MasterRegionId").on("change", function () {
+                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                var masterRegionId = $("#MasterRegionId").val();
+                var id = $("#Id").val();
+                var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
+                var options = {};
+
+                if (masterRegionId !== 0 && masterRegionId !== '') {
+                    if ($("#MasterBusinessUnitId").val() === "") {
+                        bootbox.alert("Unit Bisnis belum dipilih!");
+                        document.getElementById('MasterRegionId').value = "0";
+                    }
+                    else {
+                        options.url = "/SalesRequests/GetCode";
+                        options.type = "POST";
+                        options.headers = headers;
+                        options.data = JSON.stringify(data);
+                        options.contentType = "application/json";
+                        options.dataType = "json";
+                        options.success = function (code) {
+                            document.getElementById('Code').value = code;
+
+                            [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                                new MvcDatalist(element).reload();
+                            });
+                        };
+                        options.error = function () {
+                            document.getElementById('Code').value = "";
+                            grid.reload();
+                        };
+                        $.ajax(options);
+                    }
+                }
+            }).change();
+
+            $("#MasterBusinessUnitId").on("change", function () {
+                var id = $("#Id").val();
+                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                var masterRegionId = $("#MasterRegionId").val();
+                var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
+                var options = {};
+
+                if (masterRegionId !== 0 && masterRegionId !== '') {
+                    options.url = "/SalesRequests/GetCode";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(data);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (code) {
+                        document.getElementById('Code').value = code;
+
+                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                            new MvcDatalist(element).reload();
+                        });
+                    };
+                    options.error = function () {
+                        document.getElementById('Code').value = "";
+                    };
+                    $.ajax(options);
+                }
+            }).change();
         });
 
         document.addEventListener('reloadend', function (e) {
@@ -388,7 +479,7 @@
                             var data = { id: Id };
                             var options = {};
 
-                            options.url = "/PurchaseRequests/GetMasterUnit";
+                            options.url = "/SalesRequests/GetMasterUnit";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(data);
