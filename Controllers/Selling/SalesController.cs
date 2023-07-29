@@ -409,60 +409,60 @@ namespace eShop.Controllers
         }
 
         [Authorize(Roles = "SalesActive")]
-        private Sale GetModelState(Sale sales)
+        private Sale GetModelState(Sale sale)
         {
-            List<SaleDetails> salesDetails = db.SalesDetails.Where(x => x.SaleId == sales.Id).ToList();
+            List<SaleDetails> saleDetails = db.SalesDetails.Where(x => x.SaleId == sale.Id).ToList();
 
             if (ModelState.IsValid)
             {
-                if (IsAnyCode(sales.Code, sales.Id))
+                if (IsAnyCode(sale.Code, sale.Id))
                     ModelState.AddModelError(string.Empty, "Nomor transaksi sudah dipakai!");
             }
 
             if (ModelState.IsValid)
             {
-                if (salesDetails == null || salesDetails.Count == 0)
+                if (saleDetails == null || saleDetails.Count == 0)
                     ModelState.AddModelError(string.Empty, "Data masih kosong, mohon isi detail terlebih dahulu!");
             }
 
-            return sales;
+            return sale;
         }
 
         [Authorize(Roles = "SalesActive")]
-        public ActionResult DetailsCreate(int salesId)
+        public ActionResult DetailsCreate(int saleId)
         {
-            Sale sales = db.Sales.Find(salesId);
+            Sale sale = db.Sales.Find(saleId);
 
-            if (sales == null)
+            if (sale == null)
             {
                 return HttpNotFound();
             }
 
-            SaleDetails salesDetails = new SaleDetails
+            SaleDetails saleDetails = new SaleDetails
             {
-                SaleId = salesId
+                SaleId = saleId
             };
 
-            return PartialView("../Selling/Sales/_DetailsCreate", salesDetails);
+            return PartialView("../Selling/Sales/_DetailsCreate", saleDetails);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SalesActive")]
-        public ActionResult DetailsCreate([Bind(Include = "Id,SaleId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] SaleDetails salesDetails)
+        public ActionResult DetailsCreate([Bind(Include = "Id,SaleId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] SaleDetails saleDetails)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(salesDetails.MasterItemUnitId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(saleDetails.MasterItemUnitId);
 
             if (masterItemUnit == null)
-                salesDetails.Total = 0;
+                saleDetails.Total = 0;
             else
-                salesDetails.Total = salesDetails.Quantity * salesDetails.Price * masterItemUnit.MasterUnit.Ratio;
+                saleDetails.Total = saleDetails.Quantity * saleDetails.Price * masterItemUnit.MasterUnit.Ratio;
 
-            salesDetails.Created = DateTime.Now;
-            salesDetails.Updated = DateTime.Now;
-            salesDetails.UserId = User.Identity.GetUserId<int>();
+            saleDetails.Created = DateTime.Now;
+            saleDetails.Updated = DateTime.Now;
+            saleDetails.UserId = User.Identity.GetUserId<int>();
 
-            if (!string.IsNullOrEmpty(salesDetails.Notes)) salesDetails.Notes = salesDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(saleDetails.Notes)) saleDetails.Notes = saleDetails.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
@@ -470,16 +470,16 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        db.SalesDetails.Add(salesDetails);
+                        db.SalesDetails.Add(saleDetails);
                         db.SaveChanges();
 
-                        Sale sales = db.Sales.Find(salesDetails.SaleId);
-                        sales.Total = SharedFunctions.GetTotalSale(db, sales.Id, salesDetails.Id) + salesDetails.Total;
+                        Sale sale = db.Sales.Find(saleDetails.SaleId);
+                        sale.Total = SharedFunctions.GetTotalSale(db, sale.Id, saleDetails.Id) + saleDetails.Total;
 
-                        db.Entry(sales).State = EntityState.Modified;
+                        db.Entry(sale).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SaleDetails, MenuId = salesDetails.Id, MenuCode = salesDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SaleDetails, MenuId = saleDetails.Id, MenuCode = saleDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -494,7 +494,7 @@ namespace eShop.Controllers
                 }
             }
 
-            return PartialView("../Selling/Sales/_DetailsCreate", salesDetails);
+            return PartialView("../Selling/Sales/_DetailsCreate", saleDetails);
         }
 
         [Authorize(Roles = "SalesActive")]
@@ -517,29 +517,29 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SalesActive")]
-        public ActionResult DetailsEdit([Bind(Include = "Id,SaleId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] SaleDetails salesDetails)
+        public ActionResult DetailsEdit([Bind(Include = "Id,SaleId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] SaleDetails saleDetails)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(salesDetails.MasterItemUnitId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(saleDetails.MasterItemUnitId);
 
             if (masterItemUnit == null)
-                salesDetails.Total = 0;
+                saleDetails.Total = 0;
             else
-                salesDetails.Total = salesDetails.Quantity * salesDetails.Price * masterItemUnit.MasterUnit.Ratio;
+                saleDetails.Total = saleDetails.Quantity * saleDetails.Price * masterItemUnit.MasterUnit.Ratio;
 
-            salesDetails.Updated = DateTime.Now;
-            salesDetails.UserId = User.Identity.GetUserId<int>();
+            saleDetails.Updated = DateTime.Now;
+            saleDetails.UserId = User.Identity.GetUserId<int>();
 
-            if (!string.IsNullOrEmpty(salesDetails.Notes)) salesDetails.Notes = salesDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(saleDetails.Notes)) saleDetails.Notes = saleDetails.Notes.ToUpper();
 
-            db.Entry(salesDetails).State = EntityState.Unchanged;
-            db.Entry(salesDetails).Property("MasterItemId").IsModified = true;
-            db.Entry(salesDetails).Property("MasterItemUnitId").IsModified = true;
-            db.Entry(salesDetails).Property("Quantity").IsModified = true;
-            db.Entry(salesDetails).Property("Price").IsModified = true;
-            db.Entry(salesDetails).Property("Total").IsModified = true;
-            db.Entry(salesDetails).Property("Notes").IsModified = true;
-            db.Entry(salesDetails).Property("Updated").IsModified = true;
-            db.Entry(salesDetails).Property("UserId").IsModified = true;
+            db.Entry(saleDetails).State = EntityState.Unchanged;
+            db.Entry(saleDetails).Property("MasterItemId").IsModified = true;
+            db.Entry(saleDetails).Property("MasterItemUnitId").IsModified = true;
+            db.Entry(saleDetails).Property("Quantity").IsModified = true;
+            db.Entry(saleDetails).Property("Price").IsModified = true;
+            db.Entry(saleDetails).Property("Total").IsModified = true;
+            db.Entry(saleDetails).Property("Notes").IsModified = true;
+            db.Entry(saleDetails).Property("Updated").IsModified = true;
+            db.Entry(saleDetails).Property("UserId").IsModified = true;
 
             if (ModelState.IsValid)
             {
@@ -549,13 +549,13 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        Sale sales = db.Sales.Find(salesDetails.SaleId);
-                        sales.Total = SharedFunctions.GetTotalSale(db, sales.Id, salesDetails.Id) + salesDetails.Total;
+                        Sale sale = db.Sales.Find(saleDetails.SaleId);
+                        sale.Total = SharedFunctions.GetTotalSale(db, sale.Id, saleDetails.Id) + saleDetails.Total;
 
-                        db.Entry(sales).State = EntityState.Modified;
+                        db.Entry(sale).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SaleDetails, MenuId = salesDetails.Id, MenuCode = salesDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SaleDetails, MenuId = saleDetails.Id, MenuCode = saleDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -569,7 +569,7 @@ namespace eShop.Controllers
                     }
                 }
             }
-            return PartialView("../Selling/Sales/_DetailsEdit", salesDetails);
+            return PartialView("../Selling/Sales/_DetailsEdit", saleDetails);
         }
 
         [HttpPost]
@@ -597,11 +597,11 @@ namespace eShop.Controllers
                                 {
                                     SaleDetails tmp = obj;
 
-                                    Sale sales = db.Sales.Find(tmp.SaleId);
+                                    Sale sale = db.Sales.Find(tmp.SaleId);
 
-                                    sales.Total = SharedFunctions.GetTotalSale(db, sales.Id, tmp.Id);
+                                    sale.Total = SharedFunctions.GetTotalSale(db, sale.Id, tmp.Id);
 
-                                    db.Entry(sales).State = EntityState.Modified;
+                                    db.Entry(sale).State = EntityState.Modified;
                                     db.SaveChanges();
 
                                     db.SalesDetails.Remove(obj);
@@ -667,14 +667,14 @@ namespace eShop.Controllers
             MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
             MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
 
-            Sale sales = db.Sales.Find(id);
+            Sale sale = db.Sales.Find(id);
 
-            if (masterBusinessUnit != null && sales != null && masterRegion != null)
+            if (masterBusinessUnit != null && sale != null && masterRegion != null)
             {
                 code = GetCode(masterBusinessUnit, masterRegion);
-                sales.MasterBusinessUnitId = masterBusinessUnitId;
-                sales.MasterRegionId = masterRegionId;
-                db.Entry(sales).State = EntityState.Modified;
+                sale.MasterBusinessUnitId = masterBusinessUnitId;
+                sale.MasterRegionId = masterRegionId;
+                db.Entry(sale).State = EntityState.Modified;
                 db.SaveChanges();
             }
 
