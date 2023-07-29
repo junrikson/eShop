@@ -40,7 +40,7 @@ namespace eShop.Models
         [DatalistColumn]
         [Display(Name = "Kode Supplier")]
         [Required(ErrorMessage = "Kode Supplier harus diisi.")]
-        public int? MasterSupplierId { get; set; }
+        public int MasterSupplierId { get; set; }
 
         [Display(Name = "Kode Supplier")]
         public virtual MasterSupplier MasterSupplier { get; set; }

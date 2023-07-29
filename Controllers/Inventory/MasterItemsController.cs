@@ -87,7 +87,7 @@ namespace eShop.Controllers
                 Code = "temp/" + Guid.NewGuid().ToString(),
                 Name = "",
                 MasterCategoryId = null,
-                MasterSupplierId = null,
+                MasterSupplierId = db.MasterSuppliers.FirstOrDefault().Id,
                 Notes = "",
                 Active = false,
                 Created = DateTime.Now,
@@ -128,6 +128,7 @@ namespace eShop.Controllers
 
                     masterItem.Code = "";
                     masterItem.Active = true;
+                    masterItem.MasterSupplierId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
