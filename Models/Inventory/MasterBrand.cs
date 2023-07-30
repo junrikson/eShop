@@ -55,5 +55,31 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
-    }   
+    }
+
+    public class MasterBrandDatalist : MvcDatalist<MasterBrand>
+    {
+        private DbContext Context { get; }
+
+        public MasterBrandDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code;
+        }
+        public MasterBrandDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterBrand";
+            Title = "Master Merek";
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterBrand> GetModels()
+        {
+            return Context.Set<MasterBrand>();
+        }
+    }
 }

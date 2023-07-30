@@ -34,6 +34,16 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterBrand(DatalistFilter filter)
+        {
+            MasterBrandDatalist datalist = new MasterBrandDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterCategory(DatalistFilter filter)
         {
             MasterCategoryDatalist datalist = new MasterCategoryDatalist(db);

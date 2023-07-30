@@ -12,6 +12,8 @@
         ((User.IsInRole("MasterItemsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "MasterItems", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
         columns.Add(model => model.Name).Titled(@Html.DisplayNameFor(model => model.Name));
+        columns.Add(model => model.MasterCategory.Name).Titled(@Html.DisplayNameFor(model => model.MasterCategory.Name));
+        columns.Add(model => model.MasterBrand.Name).Titled(@Html.DisplayNameFor(model => model.MasterBrand.Name));
         columns.Add(model => model.MasterSupplier.Name).Titled(@Html.DisplayNameFor(model => model.MasterSupplier.Name));
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
         columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
