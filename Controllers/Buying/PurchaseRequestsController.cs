@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.IO;
@@ -129,7 +130,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseRequestsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] PurchaseRequest purchaseRequest)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] PurchaseRequest purchaseRequest)
         {
             purchaseRequest.Created = DateTime.Now;
             purchaseRequest.Updated = DateTime.Now;
@@ -243,7 +244,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseRequestsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] PurchaseRequest purchaseRequest)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] PurchaseRequest purchaseRequest)
         {
             purchaseRequest.Updated = DateTime.Now;
             purchaseRequest.UserId = User.Identity.GetUserId<int>();
@@ -262,14 +263,14 @@ namespace eShop.Controllers
             db.Entry(purchaseRequest).Property("Date").IsModified = true;
             db.Entry(purchaseRequest).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(purchaseRequest).Property("MasterRegionId").IsModified = true;
-            db.Entry(purchaseRequest).Property("PurchaseRequestId").IsModified = true;
             db.Entry(purchaseRequest).Property("MasterSupplierId").IsModified = true;
             db.Entry(purchaseRequest).Property("Total").IsModified = true;
             db.Entry(purchaseRequest).Property("Notes").IsModified = true;
             db.Entry(purchaseRequest).Property("Active").IsModified = true;
             db.Entry(purchaseRequest).Property("Updated").IsModified = true;
 
-            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+
+                    using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
                 try
                 {

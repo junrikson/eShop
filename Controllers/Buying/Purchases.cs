@@ -129,7 +129,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchasesAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseOrderId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
         {
             purchase.Created = DateTime.Now;
             purchase.Updated = DateTime.Now;
@@ -243,7 +243,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchasesEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseOrderId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
         {
             purchase.Updated = DateTime.Now;
             purchase.UserId = User.Identity.GetUserId<int>();
@@ -262,7 +262,7 @@ namespace eShop.Controllers
             db.Entry(purchase).Property("Date").IsModified = true;
             db.Entry(purchase).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(purchase).Property("MasterRegionId").IsModified = true;
-            db.Entry(purchase).Property("PurchaseRequestId").IsModified = true;
+            db.Entry(purchase).Property("PurchaseOrderId").IsModified = true;
             db.Entry(purchase).Property("MasterSupplierId").IsModified = true;
             db.Entry(purchase).Property("Total").IsModified = true;
             db.Entry(purchase).Property("Notes").IsModified = true;

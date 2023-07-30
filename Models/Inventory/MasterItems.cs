@@ -32,12 +32,19 @@ namespace eShop.Models
         public string Name { get; set; }
 
         [Display(Name = "Kategori")]
-        public virtual MasterCategory MasterCategory { get; set; }
+        [Required(ErrorMessage = "Kode Kategori harus diisi.")]
+        public int MasterCategoryId { get; set; }
 
         [Display(Name = "Kategori")]
-        public int? MasterCategoryId { get; set; }
+        public virtual MasterCategory MasterCategory { get; set; }
 
-        [DatalistColumn]
+        [Display(Name = "Merek")]
+        [Required(ErrorMessage = "Kode Merek harus diisi.")]
+        public int MasterBrandId { get; set; }
+
+        [Display(Name = "Merek")]
+        public virtual MasterBrand MasterBrand { get; set; }
+
         [Display(Name = "Kode Supplier")]
         [Required(ErrorMessage = "Kode Supplier harus diisi.")]
         public int MasterSupplierId { get; set; }
