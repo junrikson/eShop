@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public class Purchase
+    public class PurchaseReturn
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -21,7 +21,7 @@ namespace eShop.Models
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Nomor")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "Purchases", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
+        [Remote("IsCodeExists", "PurchaseReturns", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
 
         [DatalistColumn]
@@ -45,31 +45,22 @@ namespace eShop.Models
         [Display(Name = "Wilayah")]
         public virtual MasterRegion MasterRegion { get; set; }
 
-        [Display(Name = "Purchase Order")]
-        public int? PurchaseOrderId { get; set; }
-
-        [Display(Name = "Purchase Order")]
-        public virtual PurchaseOrder PurchaseOrder { get; set; }
-
         [Display(Name = "Gudang")]
         public int MasterWarehouseId { get; set; }
 
         [Display(Name = "Gudang")]
         public virtual MasterWarehouse MasterWarehouse { get; set; }
 
-        [DatalistColumn]
-        [Display(Name = "Kode Supplier")]
-        [Required(ErrorMessage = "Kode Supplier harus diisi.")]
-        public int MasterSupplierId { get; set; }
+        [Display(Name = "Kode Pembelian")]
+        public int PurchaseId { get; set; }
 
-        [Display(Name = "Kode Supplier")]
-        public virtual MasterSupplier MasterSupplier { get; set; }
+        [Display(Name = "Kode Pembelian")]
+        public virtual Purchase Purchase { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Total (Rp)")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
@@ -97,18 +88,18 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class PurchaseDetails
+    public class PurchaseReturnDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Display(Name = "Purchase")]
+        [Display(Name = "Purchase Return")]
         [Required(ErrorMessage = "Invoice harus diisi.")]
-        public int PurchaseId { get; set; }
+        public int PurchaseReturnId { get; set; }
 
-        [Display(Name = "Purchase")]
-        public virtual Purchase Purchase { get; set; }
+        [Display(Name = "Purchase Return")]
+        public virtual PurchaseReturn PurchaseReturn { get; set; }
 
         [Display(Name = "Master Item")]
         [Required(ErrorMessage = "Master Item harus diisi.")]
@@ -158,30 +149,5 @@ namespace eShop.Models
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
     }
-
-    public class PurchaseDatalist : MvcDatalist<Purchase>
-    {
-        private DbContext Context { get; }
-
-        public PurchaseDatalist(DbContext context)
-        {
-            Context = context;
-
-            GetLabel = (model) => model.Code;
-        }
-        public PurchaseDatalist()
-        {
-            Url = "/DatalistFilters/AllPurchase";
-            Title = "Purchase";
-
-            Filter.Sort = "Code";
-            Filter.Order = DatalistSortOrder.Asc;
-            Filter.Rows = 10;
-        }
-
-        public override IQueryable<Purchase> GetModels()
-        {
-            return Context.Set<Purchase>();
-        }
-    }
+       
 }

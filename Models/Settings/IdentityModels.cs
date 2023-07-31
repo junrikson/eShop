@@ -149,6 +149,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.PurchaseDetails> PurchasesDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseRequest> PurchaseRequests { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseRequestDetails> PurchaseRequestsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.PurchaseReturn> PurchaseReturns { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.PurchaseReturnDetails> PurchaseReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesRequest> SalesRequests { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesRequestDetails> SalesRequestsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesOrder> SalesOrders { get; set; }

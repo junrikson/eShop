@@ -128,6 +128,17 @@ namespace eShop.Properties {
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("RIN/")]
+        public string PurchaseReturn
+        {
+            get
+            {
+                return ((string)(this["PurchaseReturnCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("SR/")]
         public string SalesRequestCode
         {
