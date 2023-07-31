@@ -330,7 +330,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Accounting\AccountBallance.cs" />
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
+    <Compile Include="Models\Accounting\Journal.cs" />
+    <Compile Include="Models\CashAndBank\CashBankTransaction.cs" />
+    <Compile Include="Models\CashAndBank\GiroCheque.cs" />
+    <Compile Include="Models\CashAndBank\MasterCashBank.cs" />
     <Compile Include="Models\Selling\Sale.cs" />
     <Compile Include="Models\Selling\SalesOrder.cs" />
     <Compile Include="Models\Selling\SalesRequest.cs" />
