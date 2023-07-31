@@ -84,11 +84,31 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterWarehouse(DatalistFilter filter)
+        {
+            MasterWarehouseDatalist datalist = new MasterWarehouseDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterItemUnit(DatalistFilter filter, int? masterUnitId = 0)
         {
             MasterItemUnitDatalist datalist = new MasterItemUnitDatalist(db);
             filter.AdditionalFilters["Active"] = true;
             filter.AdditionalFilters["MasterUnitId"] = masterUnitId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllPurchase(DatalistFilter filter)
+        {
+            PurchaseDatalist datalist = new PurchaseDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);

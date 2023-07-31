@@ -79,7 +79,7 @@ namespace eShop.Models
 
         public MasterWarehouseDatalist()
         {
-            Url = "AllMasterWarehouse";
+            Url = "/DatalistFilters/AllMasterWarehouse";
             Title = "Master Gudang";
 
             Filter.Sort = "Name";

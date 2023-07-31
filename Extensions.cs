@@ -109,6 +109,28 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalPurchaseReturn(ApplicationDbContext db, int purchaseReturnId, int? purchaseReturnDetailsId = null)
+        {
+            decimal total = 0;
+            List<PurchaseReturnDetails> purchaseReturnDetails = null;
+
+            if (purchaseReturnDetailsId == null)
+            {
+                purchaseReturnDetails = db.PurchaseReturnsDetails.Where(x => x.PurchaseReturnId == purchaseReturnId).ToList();
+            }
+            else
+            {
+                purchaseReturnDetails = db.PurchaseReturnsDetails.Where(x => x.PurchaseReturnId == purchaseReturnId && x.Id != purchaseReturnDetailsId).ToList();
+            }
+
+            if (purchaseReturnDetails != null)
+            {
+                total = purchaseReturnDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
         public static decimal GetTotalPurchase(ApplicationDbContext db, int purchaseId, int? purchaseDetailsId = null)
         {
             decimal total = 0;

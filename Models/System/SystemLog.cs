@@ -214,7 +214,11 @@ namespace eShop.Models
         [Display(Name = "Sale")]
         Sale = 103,
         [Display(Name = "Sale Details")]
-        SaleDetails = 104,
+        SaleDetails = 104,       
+        [Display(Name = "Purchase Return")]
+        PurchaseReturn = 105,
+        [Display(Name = "Purchase Return Details")]
+        PurchaseReturnDetails = 106,
 
     }
 

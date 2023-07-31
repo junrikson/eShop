@@ -1,8 +1,8 @@
-﻿@model eShop.Models.Purchase
+﻿@model eShop.Models.PurchaseOrder
 
 @{
-    ViewBag.Title = "Purchase";
-    ViewBag.Current = "Purchases";
+    ViewBag.Title = "Purchase Order";
+    ViewBag.Current = "PurchaseOrders";
 }
 
 @section Styles {
@@ -27,7 +27,7 @@
                     <div class="box-header with-border">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Edit - Purchase</h3>
+                        <h3 class="box-title">Edit - Purchase Order</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -73,15 +73,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         @Html.LabelFor(model => model.MasterSupplierId)
                                         @Html.DatalistFor(model => model.MasterSupplierId, new eShop.Models.MasterSupplierDatalist())
                                         @Html.ValidationMessageFor(model => model.MasterSupplierId, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="col-md-6">
-                                        @Html.LabelFor(model => model.MasterWarehouseId)
-                                        @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterWarehouseDatalist())
-                                        @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -121,7 +116,7 @@
                         <div class="text-right col-md-10">
                             <label style="font-weight: bold">TOTAL :</label>
                             <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "Purchases")">
+                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "PurchaseOrders")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
                             <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
@@ -202,7 +197,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?purchaseId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?purchaseOrderId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -225,7 +220,7 @@
                         var data = { id: Id };
                         var options = {};
 
-                        options.url = "/Purchases/GetMasterUnit";
+                        options.url = "/PurchaseOrders/GetMasterUnit";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -265,7 +260,7 @@
             var param = { purchaseOrderId: $("#Id").val() };
             var options = {};
 
-            options.url = "/Purchases/GetTotal";
+            options.url = "/PurchaseOrders/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -291,7 +286,7 @@
             var param = { purchaseOrderId: $("#Id").val() };
             var options = {};
 
-            options.url = "/Purchases/GetTotal";
+            options.url = "/PurchaseOrders/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -323,7 +318,7 @@
                     bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/Purchases/DetailsBatchDelete";
+                            options.url = "/PurchaseOrders/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
@@ -338,7 +333,7 @@
                                 var param = { purchaseOrderId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/Purchases/GetTotal";
+                                options2.url = "/PurchaseOrders/GetTotal";
                                 options2.type = "POST";
                                 options2.headers = headers;
                                 options2.data = JSON.stringify(param);
@@ -393,7 +388,7 @@
                             var data = { id: Id };
                             var options = {};
 
-                            options.url = "/Purchases/GetMasterUnit";
+                            options.url = "/PurchaseOrders/GetMasterUnit";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(data);
