@@ -217,11 +217,16 @@ namespace eShop.Models
         SaleDetails = 104,       
         [Display(Name = "Purchase Return")]
         PurchaseReturn = 105,
-        [Display(Name = "Sales Return Details")]
+        [Display(Name = "Purchase Return Details")]
         PurchaseReturnDetails = 106,
+        [Display(Name = "Sales Return")]
         SalesReturn = 107,
         [Display(Name = "Sales Return Details")]
         SalesReturnDetails = 108,
+        [Display(Name = "Adjustment")]
+        StockAdjustment = 109,
+        [Display(Name = "Adjustment Details")]
+        StockAdjustmentDetails = 110,
     }
 
     public enum EnumActions

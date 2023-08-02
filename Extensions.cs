@@ -109,6 +109,28 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalStockAdjustment(ApplicationDbContext db, int stockAdjustmentId, int? stockAdjustmentDetailsId = null)
+        {
+            decimal total = 0;
+            List<StockAdjustmentDetails> stockAdjustmentDetails = null;
+
+            if (stockAdjustmentDetailsId == null)
+            {
+                stockAdjustmentDetails = db.StockAdjustmentsDetails.Where(x => x.StockAdjustmentId == stockAdjustmentId).ToList();
+            }
+            else
+            {
+                stockAdjustmentDetails = db.StockAdjustmentsDetails.Where(x => x.StockAdjustmentId == stockAdjustmentId && x.Id != stockAdjustmentDetailsId).ToList();
+            }
+
+            if (stockAdjustmentDetails != null)
+            {
+                total = stockAdjustmentDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
         public static decimal GetTotalPurchaseReturn(ApplicationDbContext db, int purchaseReturnId, int? purchaseReturnDetailsId = null)
         {
             decimal total = 0;

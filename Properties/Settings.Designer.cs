@@ -180,5 +180,16 @@ namespace eShop.Properties {
                 return ((string)(this["SalesReturnCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ADJ/")]
+        public string StockAdjustmentCode
+        {
+            get
+            {
+                return ((string)(this["StockAdjustmentCode"]));
+            }
+        }
     }
 }

@@ -19,25 +19,25 @@ using System.Web.Mvc;
 
 namespace eShop.Controllers
 {
-    public class PurchaseReturnsController : Controller
+    public class StockAdjustmentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: PurchaseReturns
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        // GET: PurchaseOrders
+        [Authorize(Roles = "StockAdjustmentsActive")]
         public ActionResult Index()
         {
-            return View("../Buying/PurchaseReturns/Index");
+            return View("../Inventory/StockAdjustments/Index");
         }
 
         [HttpGet]
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "StockAdjustmentsActive")]
         public PartialViewResult IndexGrid(String search)
         {
             if (String.IsNullOrEmpty(search))
-                return PartialView("../Buying/PurchaseReturns/_IndexGrid", db.Set<PurchaseReturn>().AsQueryable());
+                return PartialView("../Inventory/StockAdjustments/_IndexGrid", db.Set<StockAdjustment>().AsQueryable());
             else
-                return PartialView("../Buying/PurchaseReturns/_IndexGrid", db.Set<PurchaseReturn>().AsQueryable()
+                return PartialView("../Inventory/StockAdjustments/_IndexGrid", db.Set<StockAdjustment>().AsQueryable()
                     .Where(x => x.Code.Contains(search)));
         }
 
@@ -50,42 +50,41 @@ namespace eShop.Controllers
         {
             if (Id == null || Id == 0)
             {
-                return db.PurchaseReturns.Any(x => x.Code == Code);
+                return db.StockAdjustments.Any(x => x.Code == Code);
             }
             else
             {
-                return db.PurchaseReturns.Any(x => x.Code == Code && x.Id != Id);
+                return db.StockAdjustments.Any(x => x.Code == Code && x.Id != Id);
             }
         }
 
-        // GET: PurchaseReturns/Details/
-        [Authorize(Roles = "PurchaseReturnsView")]
+        // GET: PurchaseOrders/Details/
+        [Authorize(Roles = "StockAdjustmentsView")]
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PurchaseReturn PurchaseReturn = db.PurchaseReturns.Find(id);
-            if (PurchaseReturn == null)
+            StockAdjustment StockAdjustment = db.StockAdjustments.Find(id);
+            if (StockAdjustment == null)
             {
                 return HttpNotFound();
             }
-            return PartialView("../Buying/PurchaseReturns/_Details", PurchaseReturn);
+            return PartialView("../Inventory/StockAdjustments/_Details", StockAdjustment);
         }
 
-        // GET: PurchaseReturns/Create
-        [Authorize(Roles = "PurchaseReturnsAdd")]
+        // GET: PurchaseOrders/Create
+        [Authorize(Roles = "StockAdjustmentsAdd")]
         public ActionResult Create()
         {
-            PurchaseReturn purchaseReturn = new PurchaseReturn
+            StockAdjustment stockAdjustment = new StockAdjustment
             {
                 Code = "temp/" + Guid.NewGuid().ToString(),
                 Date = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
-                PurchaseId = db.Purchases.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -97,17 +96,16 @@ namespace eShop.Controllers
             {
                 try
                 {
-                    db.PurchaseReturns.Add(purchaseReturn);
+                    db.StockAdjustments.Add(stockAdjustment);
                     db.SaveChanges();
 
                     dbTran.Commit();
 
-                    purchaseReturn.Code = "";
-                    purchaseReturn.Active = true;
-                    purchaseReturn.MasterBusinessUnitId = 0;
-                    purchaseReturn.MasterRegionId = 0;
-                    purchaseReturn.MasterWarehouseId = 0;
-                    purchaseReturn.PurchaseId = 0;
+                    stockAdjustment.Code = "";
+                    stockAdjustment.Active = true;
+                    stockAdjustment.MasterBusinessUnitId = 0;
+                    stockAdjustment.MasterRegionId = 0;
+                    stockAdjustment.MasterWarehouseId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -122,31 +120,31 @@ namespace eShop.Controllers
             ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes");
             ViewBag.Total = "0";
 
-            return View("../Buying/PurchaseReturns/Create", purchaseReturn);
+            return View("../Inventory/StockAdjustments/Create", stockAdjustment);
         }
 
-        // POST: PurchaseReturns/Create
+        // POST: PurchaseOrders/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] PurchaseReturn purchaseReturn)
+        [Authorize(Roles = "StockAdjustmentsAdd")]
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] StockAdjustment stockAdjustment)
         {
-            purchaseReturn.Created = DateTime.Now;
-            purchaseReturn.Updated = DateTime.Now;
-            purchaseReturn.UserId = User.Identity.GetUserId<int>();
-            purchaseReturn.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id);
+            stockAdjustment.Created = DateTime.Now;
+            stockAdjustment.Updated = DateTime.Now;
+            stockAdjustment.UserId = User.Identity.GetUserId<int>();
+            stockAdjustment.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id);
 
-            if (!string.IsNullOrEmpty(purchaseReturn.Code)) purchaseReturn.Code = purchaseReturn.Code.ToUpper();
-            if (!string.IsNullOrEmpty(purchaseReturn.Notes)) purchaseReturn.Notes = purchaseReturn.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(stockAdjustment.Code)) stockAdjustment.Code = stockAdjustment.Code.ToUpper();
+            if (!string.IsNullOrEmpty(stockAdjustment.Notes)) stockAdjustment.Notes = stockAdjustment.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
-                purchaseReturn = GetModelState(purchaseReturn);
+                stockAdjustment = GetModelState(stockAdjustment);
             }
 
-            db.Entry(purchaseReturn).State = EntityState.Modified;
+            db.Entry(stockAdjustment).State = EntityState.Modified;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -156,7 +154,7 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturn, MenuId = purchaseReturn.Id, MenuCode = purchaseReturn.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.StockAdjustment, MenuId = stockAdjustment.Id, MenuCode = stockAdjustment.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -172,22 +170,22 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseReturn.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseReturn.MasterRegionId);
-                ViewBag.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id).ToString("N2");
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", stockAdjustment.MasterBusinessUnitId);
+                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", stockAdjustment.MasterRegionId);
+                ViewBag.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id).ToString("N2");
 
-                return View("../Buying/PurchaseReturns/Create", purchaseReturn);
+                return View("../Inventory/StockAdjustments/Create", stockAdjustment);
             }
         }
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsAdd")]
+        [Authorize(Roles = "StockAdjustmentsAdd")]
         public ActionResult Cancel(int? id)
         {
             if (id != null)
             {
-                PurchaseReturn obj = db.PurchaseReturns.Find(id);
+                StockAdjustment obj = db.StockAdjustments.Find(id);
                 if (obj != null)
                 {
                     if (!obj.Active)
@@ -196,10 +194,10 @@ namespace eShop.Controllers
                         {
                             try
                             {
-                                db.PurchaseReturnsDetails.RemoveRange(db.PurchaseReturnsDetails.Where(x => x.PurchaseReturnId == obj.Id));
+                                db.StockAdjustmentsDetails.RemoveRange(db.StockAdjustmentsDetails.Where(x => x.StockAdjustmentId == obj.Id));
                                 db.SaveChanges();
 
-                                db.PurchaseReturns.Remove(obj);
+                                db.StockAdjustments.Remove(obj);
                                 db.SaveChanges();
 
                                 dbTran.Commit();
@@ -216,60 +214,59 @@ namespace eShop.Controllers
             return Json(id);
         }
 
-        // GET: PurchaseReturns/Edit/5
-        [Authorize(Roles = "PurchaseReturnsEdit")]
+        // GET: PurchaseOrders/Edit/5
+        [Authorize(Roles = "StockAdjustmentsEdit")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(id);
-            if (purchaseReturn == null)
+            StockAdjustment stockAdjustment = db.StockAdjustments.Find(id);
+            if (stockAdjustment == null)
             {
                 return HttpNotFound();
             }
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseReturn.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseReturn.MasterRegionId);
-            ViewBag.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id).ToString("N2");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", stockAdjustment.MasterBusinessUnitId);
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", stockAdjustment.MasterRegionId);
+            ViewBag.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id).ToString("N2");
 
-            return View("../Buying/PurchaseReturns/Edit", purchaseReturn);
+            return View("../Inventory/StockAdjustments/Edit", stockAdjustment);
         }
 
-        // POST: PurchaseReturns/Edit/5
+        // POST: PurchaseOrders/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] PurchaseReturn purchaseReturn)
+        [Authorize(Roles = "StockAdjustmentsEdit")]
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] StockAdjustment stockAdjustment)
         {
-            purchaseReturn.Updated = DateTime.Now;
-            purchaseReturn.UserId = User.Identity.GetUserId<int>();
-            purchaseReturn.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id);
+            stockAdjustment.Updated = DateTime.Now;
+            stockAdjustment.UserId = User.Identity.GetUserId<int>();
+            stockAdjustment.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id);
 
-            if (!string.IsNullOrEmpty(purchaseReturn.Code)) purchaseReturn.Code = purchaseReturn.Code.ToUpper();
-            if (!string.IsNullOrEmpty(purchaseReturn.Notes)) purchaseReturn.Notes = purchaseReturn.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(stockAdjustment.Code)) stockAdjustment.Code = stockAdjustment.Code.ToUpper();
+            if (!string.IsNullOrEmpty(stockAdjustment.Notes)) stockAdjustment.Notes = stockAdjustment.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
-                purchaseReturn = GetModelState(purchaseReturn);
+                stockAdjustment = GetModelState(stockAdjustment);
             }
 
-            db.Entry(purchaseReturn).State = EntityState.Unchanged;
-            db.Entry(purchaseReturn).Property("Code").IsModified = true;
-            db.Entry(purchaseReturn).Property("Date").IsModified = true;
-            db.Entry(purchaseReturn).Property("MasterBusinessUnitId").IsModified = true;
-            db.Entry(purchaseReturn).Property("MasterRegionId").IsModified = true;
-            db.Entry(purchaseReturn).Property("PurchaseId").IsModified = true;
-            db.Entry(purchaseReturn).Property("MasterWarehouseId").IsModified = true;
-            db.Entry(purchaseReturn).Property("Total").IsModified = true;
-            db.Entry(purchaseReturn).Property("Notes").IsModified = true;
-            db.Entry(purchaseReturn).Property("Active").IsModified = true;
-            db.Entry(purchaseReturn).Property("Updated").IsModified = true;
+            db.Entry(stockAdjustment).State = EntityState.Unchanged;
+            db.Entry(stockAdjustment).Property("Code").IsModified = true;
+            db.Entry(stockAdjustment).Property("Date").IsModified = true;
+            db.Entry(stockAdjustment).Property("MasterBusinessUnitId").IsModified = true;
+            db.Entry(stockAdjustment).Property("MasterRegionId").IsModified = true;
+            db.Entry(stockAdjustment).Property("MasterWarehouseId").IsModified = true;
+            db.Entry(stockAdjustment).Property("Total").IsModified = true;
+            db.Entry(stockAdjustment).Property("Notes").IsModified = true;
+            db.Entry(stockAdjustment).Property("Active").IsModified = true;
+            db.Entry(stockAdjustment).Property("Updated").IsModified = true;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -279,7 +276,7 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturn, MenuId = purchaseReturn.Id, MenuCode = purchaseReturn.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.StockAdjustmentDetails, MenuId = stockAdjustment.Id, MenuCode = stockAdjustment.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -295,16 +292,16 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseReturn.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseReturn.MasterRegionId);
-                ViewBag.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id).ToString("N2");
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", stockAdjustment.MasterBusinessUnitId);
+                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", stockAdjustment.MasterRegionId);
+                ViewBag.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id).ToString("N2");
 
-                return View("../Buying/PurchaseReturns/Edit", purchaseReturn);
+                return View("../Inventory/StockAdjustments/Edit", stockAdjustment);
             }
         }
 
         [HttpPost]
-        [Authorize(Roles = "PurchaseReturnsDelete")]
+        [Authorize(Roles = "StockAdjustmentsDelete")]
         [ValidateJsonAntiForgeryToken]
         public ActionResult BatchDelete(int[] ids)
         {
@@ -319,21 +316,21 @@ namespace eShop.Controllers
                         int failed = 0;
                         foreach (int id in ids)
                         {
-                            PurchaseReturn obj = db.PurchaseReturns.Find(id);
+                            StockAdjustment obj = db.StockAdjustments.Find(id);
 
                             if (obj == null)
                                 failed++;
                             else
                             {
-                                PurchaseReturn tmp = obj;
+                                StockAdjustment tmp = obj;
 
-                                db.PurchaseReturnsDetails.RemoveRange(db.PurchaseReturnsDetails.Where(x => x.PurchaseReturnId == obj.Id));
+                                db.StockAdjustmentsDetails.RemoveRange(db.StockAdjustmentsDetails.Where(x => x.StockAdjustmentId == obj.Id));
                                 db.SaveChanges();
 
-                                db.PurchaseReturns.Remove(obj);
+                                db.StockAdjustments.Remove(obj);
                                 db.SaveChanges();
 
-                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturn, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.StockAdjustment, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
 
                                 dbTran.Commit();
@@ -350,10 +347,10 @@ namespace eShop.Controllers
             }
         }
 
-        [Authorize(Roles = "PurchaseReturnsPrint")]
+        [Authorize(Roles = "StockAdjustmentsPrint")]
         public ActionResult Print(int? id)
         {
-            PurchaseReturn obj = db.PurchaseReturns.Find(id);
+            StockAdjustment obj = db.StockAdjustments.Find(id);
 
             if (obj == null)
             {
@@ -366,7 +363,7 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormPurchaseReturn.rpt"));
+                        rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormStockAdjustment.rpt"));
                         rd.SetParameterValue("Code", obj.Code);
                         rd.SetParameterValue("Terbilang", "# " + TerbilangExtension.Terbilang(Math.Floor(obj.Total)).ToUpper() + " RUPIAH #");
 
@@ -411,61 +408,61 @@ namespace eShop.Controllers
             }
         }
 
-        [Authorize(Roles = "PurchaseReturnsActive")]
-        private PurchaseReturn GetModelState(PurchaseReturn purchaseReturn)
+        [Authorize(Roles = "StockAdjustmentsActive")]
+        private StockAdjustment GetModelState(StockAdjustment stockAdjustment)
         {
-            List<PurchaseReturnDetails> purchaseReturnDetails = db.PurchaseReturnsDetails.Where(x => x.PurchaseReturnId == purchaseReturn.Id).ToList();
-
+            List<StockAdjustmentDetails> stockAdjustmentDetails = db.StockAdjustmentsDetails.Where(x => x.StockAdjustmentId == stockAdjustment.Id).ToList();
+            
             if (ModelState.IsValid)
             {
-                if (IsAnyCode(purchaseReturn.Code, purchaseReturn.Id))
+                if (IsAnyCode(stockAdjustment.Code, stockAdjustment.Id))
                     ModelState.AddModelError(string.Empty, "Nomor transaksi sudah dipakai!");
             }
 
             if (ModelState.IsValid)
             {
-                if (purchaseReturnDetails == null || purchaseReturnDetails.Count == 0)
+                if (stockAdjustmentDetails == null || stockAdjustmentDetails.Count == 0)
                     ModelState.AddModelError(string.Empty, "Data masih kosong, mohon isi detail terlebih dahulu!");
             }
 
-            return purchaseReturn;
+            return stockAdjustment;
         }
 
-        [Authorize(Roles = "PurchaseReturnsActive")]
-        public ActionResult DetailsCreate(int purchaseReturnId)
+        [Authorize(Roles = "StockAdjustmentsActive")]
+        public ActionResult DetailsCreate(int stockAdjustmentId)
         {
-            PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(purchaseReturnId);
+            StockAdjustment stockAdjustment = db.StockAdjustments.Find(stockAdjustmentId);
 
-            if (purchaseReturn == null)
+            if (stockAdjustment == null)
             {
                 return HttpNotFound();
             }
 
-            PurchaseReturnDetails purchaseReturnDetails = new PurchaseReturnDetails
+            StockAdjustmentDetails stockAdjustmentDetails = new StockAdjustmentDetails
             {
-                PurchaseReturnId = purchaseReturnId
+                StockAdjustmentId = stockAdjustmentId
             };
 
-            return PartialView("../Buying/PurchaseReturns/_DetailsCreate", purchaseReturnDetails);
+            return PartialView("../Inventory/stockAdjustments/_DetailsCreate", stockAdjustmentDetails);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
-        public ActionResult DetailsCreate([Bind(Include = "Id,PurchaseReturnId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] PurchaseReturnDetails purchaseReturnDetails)
+        [Authorize(Roles = "StockAdjustmentsActive")]
+        public ActionResult DetailsCreate([Bind(Include = "Id,StockAdjustmentId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] StockAdjustmentDetails stockAdjustmentDetails)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseReturnDetails.MasterItemUnitId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(stockAdjustmentDetails.MasterItemUnitId);
 
-            if (masterItemUnit == null)
-                purchaseReturnDetails.Total = 0;
+            if(masterItemUnit == null)
+                stockAdjustmentDetails.Total = 0;
             else
-                purchaseReturnDetails.Total = purchaseReturnDetails.Quantity * purchaseReturnDetails.Price * masterItemUnit.MasterUnit.Ratio;
+                stockAdjustmentDetails.Total = stockAdjustmentDetails.Quantity * stockAdjustmentDetails.Price * masterItemUnit.MasterUnit.Ratio;
 
-            purchaseReturnDetails.Created = DateTime.Now;
-            purchaseReturnDetails.Updated = DateTime.Now;
-            purchaseReturnDetails.UserId = User.Identity.GetUserId<int>();
+            stockAdjustmentDetails.Created = DateTime.Now;
+            stockAdjustmentDetails.Updated = DateTime.Now;
+            stockAdjustmentDetails.UserId = User.Identity.GetUserId<int>();
 
-            if (!string.IsNullOrEmpty(purchaseReturnDetails.Notes)) purchaseReturnDetails.Notes = purchaseReturnDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(stockAdjustmentDetails.Notes)) stockAdjustmentDetails.Notes = stockAdjustmentDetails.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
@@ -473,16 +470,16 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        db.PurchaseReturnsDetails.Add(purchaseReturnDetails);
+                        db.StockAdjustmentsDetails.Add(stockAdjustmentDetails);
                         db.SaveChanges();
 
-                        PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(purchaseReturnDetails.PurchaseReturnId);
-                        purchaseReturn.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id, purchaseReturnDetails.Id) + purchaseReturnDetails.Total;
+                        StockAdjustment stockAdjustment = db.StockAdjustments.Find(stockAdjustmentDetails.StockAdjustmentId);
+                        stockAdjustment.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id, stockAdjustmentDetails.Id) + stockAdjustmentDetails.Total;
 
-                        db.Entry(purchaseReturn).State = EntityState.Modified;
+                        db.Entry(stockAdjustment).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturnDetails, MenuId = purchaseReturnDetails.Id, MenuCode = purchaseReturnDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.StockAdjustmentDetails, MenuId = stockAdjustmentDetails.Id, MenuCode = stockAdjustmentDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -497,10 +494,10 @@ namespace eShop.Controllers
                 }
             }
 
-            return PartialView("../Buying/PurchaseReturns/_DetailsCreate", purchaseReturnDetails);
+            return PartialView("../Inventory/StockAdjustments/_DetailsCreate", stockAdjustmentDetails);
         }
 
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "StockAdjustmentsActive")]
         public ActionResult DetailsEdit(int? id)
         {
             if (id == null)
@@ -508,41 +505,41 @@ namespace eShop.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            PurchaseReturnDetails obj = db.PurchaseReturnsDetails.Find(id);
+            StockAdjustmentDetails obj = db.StockAdjustmentsDetails.Find(id);
 
             if (obj == null)
             {
                 return HttpNotFound();
             }
-            return PartialView("../Buying/PurchaseReturns/_DetailsEdit", obj);
+            return PartialView("../Inventory/StockAdjustments/_DetailsEdit", obj);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
-        public ActionResult DetailsEdit([Bind(Include = "Id,PurchaseReturnId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] PurchaseReturnDetails purchaseReturnDetails)
+        [Authorize(Roles = "StockAdjustmentsActive")]
+        public ActionResult DetailsEdit([Bind(Include = "Id,StockAdjustmentId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] StockAdjustmentDetails stockAdjustmentDetails)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseReturnDetails.MasterItemUnitId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(stockAdjustmentDetails.MasterItemUnitId);
 
             if (masterItemUnit == null)
-                purchaseReturnDetails.Total = 0;
+                stockAdjustmentDetails.Total = 0;
             else
-                purchaseReturnDetails.Total = purchaseReturnDetails.Quantity * purchaseReturnDetails.Price * masterItemUnit.MasterUnit.Ratio;
+                stockAdjustmentDetails.Total = stockAdjustmentDetails.Quantity * stockAdjustmentDetails.Price * masterItemUnit.MasterUnit.Ratio;
 
-            purchaseReturnDetails.Updated = DateTime.Now;
-            purchaseReturnDetails.UserId = User.Identity.GetUserId<int>();
+            stockAdjustmentDetails.Updated = DateTime.Now;
+            stockAdjustmentDetails.UserId = User.Identity.GetUserId<int>();
 
-            if (!string.IsNullOrEmpty(purchaseReturnDetails.Notes)) purchaseReturnDetails.Notes = purchaseReturnDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(stockAdjustmentDetails.Notes)) stockAdjustmentDetails.Notes = stockAdjustmentDetails.Notes.ToUpper();
 
-            db.Entry(purchaseReturnDetails).State = EntityState.Unchanged;
-            db.Entry(purchaseReturnDetails).Property("MasterItemId").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("MasterItemUnitId").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("Quantity").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("Price").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("Total").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("Notes").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("Updated").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("UserId").IsModified = true;
+            db.Entry(stockAdjustmentDetails).State = EntityState.Unchanged;
+            db.Entry(stockAdjustmentDetails).Property("MasterItemId").IsModified = true;
+            db.Entry(stockAdjustmentDetails).Property("MasterItemUnitId").IsModified = true;
+            db.Entry(stockAdjustmentDetails).Property("Quantity").IsModified = true;
+            db.Entry(stockAdjustmentDetails).Property("Price").IsModified = true;
+            db.Entry(stockAdjustmentDetails).Property("Total").IsModified = true;
+            db.Entry(stockAdjustmentDetails).Property("Notes").IsModified = true;
+            db.Entry(stockAdjustmentDetails).Property("Updated").IsModified = true;
+            db.Entry(stockAdjustmentDetails).Property("UserId").IsModified = true;
 
             if (ModelState.IsValid)
             {
@@ -552,13 +549,13 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(purchaseReturnDetails.PurchaseReturnId);
-                        purchaseReturn.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id, purchaseReturnDetails.Id) + purchaseReturnDetails.Total;
+                        StockAdjustment stockAdjustment = db.StockAdjustments.Find(stockAdjustmentDetails.StockAdjustmentId);
+                        stockAdjustment.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id, stockAdjustmentDetails.Id) + stockAdjustmentDetails.Total;
 
-                        db.Entry(purchaseReturn).State = EntityState.Modified;
+                        db.Entry(stockAdjustment).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturnDetails, MenuId = purchaseReturnDetails.Id, MenuCode = purchaseReturnDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.StockAdjustmentDetails, MenuId = stockAdjustmentDetails.Id, MenuCode = stockAdjustmentDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -572,12 +569,12 @@ namespace eShop.Controllers
                     }
                 }
             }
-            return PartialView("../Buying/PurchaseReturns/_DetailsEdit", purchaseReturnDetails);
+            return PartialView("../Inventory/StockAdjustments/_DetailsEdit", stockAdjustmentDetails);
         }
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "StockAdjustmentsActive")]
         public ActionResult DetailsBatchDelete(int[] ids)
         {
             if (ids == null || ids.Length <= 0)
@@ -589,7 +586,7 @@ namespace eShop.Controllers
                     int failed = 0;
                     foreach (int id in ids)
                     {
-                        PurchaseReturnDetails obj = db.PurchaseReturnsDetails.Find(id);
+                        StockAdjustmentDetails obj = db.StockAdjustmentsDetails.Find(id);
                         if (obj == null)
                             failed++;
                         else
@@ -598,19 +595,19 @@ namespace eShop.Controllers
                             {
                                 try
                                 {
-                                    PurchaseReturnDetails tmp = obj;
+                                    StockAdjustmentDetails tmp = obj;
 
-                                    PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(tmp.PurchaseReturnId);
+                                    StockAdjustment stockAdjustment = db.StockAdjustments.Find(tmp.StockAdjustmentId);
 
-                                    purchaseReturn.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id, tmp.Id);
+                                    stockAdjustment.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id, tmp.Id);
 
-                                    db.Entry(purchaseReturn).State = EntityState.Modified;
+                                    db.Entry(stockAdjustment).State = EntityState.Modified;
                                     db.SaveChanges();
 
-                                    db.PurchaseReturnsDetails.Remove(obj);
+                                    db.StockAdjustmentsDetails.Remove(obj);
                                     db.SaveChanges();
 
-                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturnDetails, MenuId = tmp.Id, MenuCode = tmp.Id.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.StockAdjustmentDetails, MenuId = tmp.Id, MenuCode = tmp.Id.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                     db.SaveChanges();
                                     dbTran.Commit();
                                 }
@@ -628,22 +625,22 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "StockAdjustmentsActive")]
         public PartialViewResult DetailsGrid(int Id)
         {
-            return PartialView("../Buying/PurchaseReturns/_DetailsGrid", db.PurchaseReturnsDetails
-                .Where(x => x.PurchaseReturnId == Id).ToList());
+            return PartialView("../Inventory/StockAdjustments/_DetailsGrid", db.StockAdjustmentsDetails
+                .Where(x => x.StockAdjustmentId == Id).ToList());
         }
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "StockAdjustmentsActive")]
         public JsonResult GetMasterUnit(int id)
         {
             int masterItemUnitId = 0;
             MasterItem masterItem = db.MasterItems.Find(id);
 
-            if (masterItem != null)
+            if(masterItem != null)
             {
                 MasterItemUnit masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id && x.Default).FirstOrDefault();
 
@@ -663,34 +660,34 @@ namespace eShop.Controllers
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "StockAdjustmentsActive")]
         public JsonResult GetCode(int id, int masterBusinessUnitId, int masterRegionId)
         {
             string code = null;
             MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
             MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
 
-            PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(id);
+            StockAdjustment stockAdjustment = db.StockAdjustments.Find(id);
 
-            if (masterBusinessUnit != null && purchaseReturn != null && masterRegion != null)
+            if (masterBusinessUnit != null && stockAdjustment != null && masterRegion != null)
             {
                 code = GetCode(masterBusinessUnit, masterRegion);
-                purchaseReturn.MasterBusinessUnitId = masterBusinessUnitId;
-                purchaseReturn.MasterRegionId = masterRegionId;
-                db.Entry(purchaseReturn).State = EntityState.Modified;
+                stockAdjustment.MasterBusinessUnitId = masterBusinessUnitId;
+                stockAdjustment.MasterRegionId = masterRegionId;
+                db.Entry(stockAdjustment).State = EntityState.Modified;
                 db.SaveChanges();
             }
 
             return Json(code);
         }
 
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "StockAdjustmentsActive")]
         private string GetCode(MasterBusinessUnit masterBusinessUnit, MasterRegion masterRegion)
         {
             string romanMonth = SharedFunctions.RomanNumeralFrom((int)DateTime.Now.Month);
-            string code = "/" + Settings.Default.PurchaseOrderCode + masterBusinessUnit.Code + "/" + masterRegion.Code + "/" + SharedFunctions.RomanNumeralFrom(DateTime.Now.Month) + "/" + DateTime.Now.Year.ToString().Substring(2, 2);
+            string code = "/" + Settings.Default.StockAdjustmentCode + masterBusinessUnit.Code + "/" + masterRegion.Code + "/" + SharedFunctions.RomanNumeralFrom(DateTime.Now.Month) + "/" + DateTime.Now.Year.ToString().Substring(2, 2);
 
-            PurchaseReturn lastData = db.PurchaseReturns
+            PurchaseOrder lastData = db.PurchaseOrders
                 .Where(x => (x.Code.Contains(code)))
                 .OrderByDescending(z => z.Code).FirstOrDefault();
 
@@ -704,10 +701,10 @@ namespace eShop.Controllers
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
-        public JsonResult GetTotal(int purchaseReturnId)
+        [Authorize(Roles = "StockAdjustmentsActive")]
+        public JsonResult GetTotal(int stockAdjustmentId)
         {
-            return Json(SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturnId).ToString("N2"));
+            return Json(SharedFunctions.GetTotalStockAdjustment(db, stockAdjustmentId).ToString("N2"));
         }
 
         protected override void Dispose(bool disposing)
