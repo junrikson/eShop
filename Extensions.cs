@@ -175,6 +175,28 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalSalesReturn(ApplicationDbContext db, int salesReturnId, int? salesReturnDetailsId = null)
+        {
+            decimal total = 0;
+            List<SalesReturnDetails> salesReturnDetails = null;
+
+            if (salesReturnDetailsId == null)
+            {
+                salesReturnDetails = db.SalesReturnsDetails.Where(x => x.SalesReturnId == salesReturnId).ToList();
+            }
+            else
+            {
+                salesReturnDetails = db.SalesReturnsDetails.Where(x => x.SalesReturnId == salesReturnId && x.Id != salesReturnDetailsId).ToList();
+            }
+
+            if (salesReturnDetails != null)
+            {
+                total = salesReturnDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
         public static decimal GetTotalSalesOrder(ApplicationDbContext db, int salesOrderId, int? salesOrderDetailsId = null)
         {
             decimal total = 0;

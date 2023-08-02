@@ -155,6 +155,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.SalesRequestDetails> SalesRequestsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesOrder> SalesOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesOrderDetails> SalesOrdersDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SalesReturn> SalesReturns { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SalesReturnDetails> SalesReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Sale> Sales { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleDetails> SalesDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ChartOfAccount> ChartOfAccounts { get; set; }

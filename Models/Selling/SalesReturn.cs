@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public class Sale
+    public class SalesReturn
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -21,7 +21,7 @@ namespace eShop.Models
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Nomor")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "Sales", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
+        [Remote("IsCodeExists", "SalesReturns", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
 
         [DatalistColumn]
@@ -46,12 +46,23 @@ namespace eShop.Models
         public virtual MasterRegion MasterRegion { get; set; }
 
         [DatalistColumn]
+        [Display(Name = "Kode Sale")]
+        [Required(ErrorMessage = "Kode Sale harus diisi.")]
+        public int SaleId { get; set; }
+
+        [Display(Name = "Kode Sale")]
+        public virtual Sale Sale { get; set; }
+
+        [DatalistColumn]
         [Display(Name = "Kode Customer")]
-        [Required(ErrorMessage = "Kode Customer harus diisi.")]
         public int MasterCustomerId { get; set; }
 
-        [Display(Name = "Kode Customer")]
-        public virtual MasterCustomer MasterCustomer { get; set; }
+        [Display(Name = "Gudang")]
+        [Required(ErrorMessage = "Gudang harus diisi.")]
+        public int MasterWarehouseId { get; set; }
+
+        [Display(Name = "Gudang")]
+        public virtual MasterWarehouse MasterWarehouse { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
@@ -84,18 +95,18 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class SaleDetails
+    public class SalesReturnDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Display(Name = "Sale")]
+        [Display(Name = "Sales Return")]
         [Required(ErrorMessage = "Invoice harus diisi.")]
-        public int SaleId { get; set; }
+        public int SalesReturnId { get; set; }
 
-        [Display(Name = "Sale")]
-        public virtual Sale Sale { get; set; }
+        [Display(Name = "Sales Return")]
+        public virtual SalesReturn SalesReturn { get; set; }
 
         [Display(Name = "Master Item")]
         [Required(ErrorMessage = "Master Item harus diisi.")]
@@ -144,31 +155,5 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
-    }
-
-    public class SaleDatalist : MvcDatalist<Sale>
-    {
-        private DbContext Context { get; }
-
-        public SaleDatalist(DbContext context)
-        {
-            Context = context;
-
-            GetLabel = (model) => model.Code;
-        }
-        public SaleDatalist()
-        {
-            Url = "/DatalistFilters/AllSale";
-            Title = "Sale";
-
-            Filter.Sort = "Code";
-            Filter.Order = DatalistSortOrder.Asc;
-            Filter.Rows = 10;
-        }
-
-        public override IQueryable<Sale> GetModels()
-        {
-            return Context.Set<Sale>();
-        }
     }
 }
