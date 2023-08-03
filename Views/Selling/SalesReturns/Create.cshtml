@@ -1,8 +1,8 @@
-﻿@model eShop.Models.Sale
+﻿@model eShop.Models.SalesReturn
 
 @{
-    ViewBag.Title = "Sale";
-    ViewBag.Current = "Sales";
+    ViewBag.Title = "Sales Return";
+    ViewBag.Current = "SalesReturns";
 }
 
 @section Styles {
@@ -27,7 +27,7 @@
                     <div class="box-header with-border">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Add - Sale</h3>
+                        <h3 class="box-title">Add - Sales Return</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -70,6 +70,18 @@
                                     @Html.LabelFor(model => model.Date)
                                     @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.MasterWarehouseId)
+                                    @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterWarehouseDatalist())
+                                    @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.SaleId)
+                                    @Html.DatalistFor(model => model.SaleId, new eShop.Models.SaleDatalist())
+                                    @Html.ValidationMessageFor(model => model.SaleId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -196,7 +208,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?saleId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?salesOrderId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -219,7 +231,7 @@
                         var data = { id: Id };
                         var options = {};
 
-                        options.url = "/Sales/GetMasterUnit";
+                        options.url = "/SalesReturns/GetMasterUnit";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -256,10 +268,10 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { saleId: $("#Id").val() };
+            var param = { purchaseOrderId: $("#Id").val() };
             var options = {};
 
-            options.url = "/Sales/GetTotal";
+            options.url = "/SalesReturns/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -282,10 +294,10 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { saleId: $("#Id").val() };
+            var param = { purchaseOrderId: $("#Id").val() };
             var options = {};
 
-            options.url = "/Sales/GetTotal";
+            options.url = "/SalesReturns/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -325,7 +337,7 @@
                         if (result)
                         {
                             var options = {};
-                            options.url = "/Sales/DetailsBatchDelete";
+                            options.url = "/SalesReturns/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
@@ -338,10 +350,10 @@
                                 var grid = new MvcGrid(document.querySelector('#detail-table'));
                                 grid.reload();
 
-                                var param = { saleId: $("#Id").val() };
+                                var param = { purchaseOrderId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/Sales/GetTotal";
+                                options2.url = "/SalesReturns/GetTotal";
                                 options2.type = "POST";
                                 options2.headers = headers;
                                 options2.data = JSON.stringify(param);
@@ -366,17 +378,17 @@
             $("#cancel").click(function () {
                 var data = { id: $("input#Id").val() };
                 var options = {};
-                options.url = "/Sales/Cancel";
+                options.url = "/SalesReturns/Cancel";
                 options.type = "POST";
                 options.headers = headers;
                 options.data = JSON.stringify(data);
                 options.contentType = "application/json";
                 options.dataType = "json";
                 options.success = function (msg) {
-                    window.location.href = '@Url.Action("Index", "Sales")';
+                    window.location.href = '@Url.Action("Index", "SalesOrders")';
                 };
                 options.error = function () {
-                    window.location.href = '@Url.Action("Index", "Sales")';
+                    window.location.href = '@Url.Action("Index", "SalesOrders")';
                 };
                 $.ajax(options);
             });
@@ -394,7 +406,7 @@
                         document.getElementById('MasterRegionId').value = "0";
                     }
                     else {
-                        options.url = "/Sales/GetCode";
+                        options.url = "/SalesReturns/GetCode";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -424,7 +436,7 @@
                 var options = {};
 
                 if (masterRegionId !== 0 && masterRegionId !== '') {
-                    options.url = "/Sales/GetCode";
+                    options.url = "/SalesReturns/GetCode";
                     options.type = "POST";
                     options.headers = headers;
                     options.data = JSON.stringify(data);
@@ -479,7 +491,7 @@
                             var data = { id: Id };
                             var options = {};
 
-                            options.url = "/Sales/GetMasterUnit";
+                            options.url = "/SalesReturns/GetMasterUnit";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(data);

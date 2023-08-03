@@ -109,6 +109,28 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalStockAdjustment(ApplicationDbContext db, int stockAdjustmentId, int? stockAdjustmentDetailsId = null)
+        {
+            decimal total = 0;
+            List<StockAdjustmentDetails> stockAdjustmentDetails = null;
+
+            if (stockAdjustmentDetailsId == null)
+            {
+                stockAdjustmentDetails = db.StockAdjustmentsDetails.Where(x => x.StockAdjustmentId == stockAdjustmentId).ToList();
+            }
+            else
+            {
+                stockAdjustmentDetails = db.StockAdjustmentsDetails.Where(x => x.StockAdjustmentId == stockAdjustmentId && x.Id != stockAdjustmentDetailsId).ToList();
+            }
+
+            if (stockAdjustmentDetails != null)
+            {
+                total = stockAdjustmentDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
         public static decimal GetTotalPurchaseReturn(ApplicationDbContext db, int purchaseReturnId, int? purchaseReturnDetailsId = null)
         {
             decimal total = 0;
@@ -170,6 +192,28 @@ namespace eShop.Extensions
             if (salesRequestDetails != null)
             {
                 total = salesRequestDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+        public static decimal GetTotalSalesReturn(ApplicationDbContext db, int salesReturnId, int? salesReturnDetailsId = null)
+        {
+            decimal total = 0;
+            List<SalesReturnDetails> salesReturnDetails = null;
+
+            if (salesReturnDetailsId == null)
+            {
+                salesReturnDetails = db.SalesReturnsDetails.Where(x => x.SalesReturnId == salesReturnId).ToList();
+            }
+            else
+            {
+                salesReturnDetails = db.SalesReturnsDetails.Where(x => x.SalesReturnId == salesReturnId && x.Id != salesReturnDetailsId).ToList();
+            }
+
+            if (salesReturnDetails != null)
+            {
+                total = salesReturnDetails.Sum(y => y.Total);
             }
 
             return total;

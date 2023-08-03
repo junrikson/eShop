@@ -143,6 +143,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterCustomer> MasterCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterSupplier> MasterSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterWarehouse> MasterWarehouses { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.StockAdjustment> StockAdjustments { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.StockAdjustmentDetails> StockAdjustmentsDetails { get; set; }        
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrder> PurchaseOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrderDetails> PurchaseOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Purchase> Purchases { get; set; }
@@ -155,6 +157,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.SalesRequestDetails> SalesRequestsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesOrder> SalesOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesOrderDetails> SalesOrdersDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SalesReturn> SalesReturns { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SalesReturnDetails> SalesReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Sale> Sales { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleDetails> SalesDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ChartOfAccount> ChartOfAccounts { get; set; }

@@ -1,8 +1,8 @@
-﻿@model eShop.Models.Sale
+﻿@model eShop.Models.StockAdjustment
 
 @{
-    ViewBag.Title = "Sale";
-    ViewBag.Current = "Sales";
+    ViewBag.Title = "Stock Adjustment";
+    ViewBag.Current = "StockAdjustments";
 }
 
 @section Styles {
@@ -27,7 +27,7 @@
                     <div class="box-header with-border">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Add - Sale</h3>
+                        <h3 class="box-title">Add - Stock Adjustment</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -57,46 +57,47 @@
                                     @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
                                     @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="col-md-2 text-center">
-                                    @Html.LabelFor(model => model.Active)
-                                    <div class="checkbox text-center">
-                                        @Html.CheckBoxFor(model => model.Active)
-                                        @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                    <div class="col-md-2 text-center">
+                                        @Html.LabelFor(model => model.Active)
+                                        <div class="checkbox text-center">
+                                            @Html.CheckBoxFor(model => model.Active)
+                                            @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.Date)
+                                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.MasterWarehouseId)
+                                        @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterWarehouseDatalist())
+                                        @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.Notes)
+                                        @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 text-left">
+                                            <a href="#" id="cancel" class="btn btn-danger" style="margin-top:10px">
+                                                Cancel
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.Date)
-                                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.MasterCustomerId)
-                                    @Html.DatalistFor(model => model.MasterCustomerId, new eShop.Models.MasterCustomerDatalist())
-                                    @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.Notes)
-                                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-6 text-left">
-                                        <a href="#" id="cancel" class="btn btn-danger" style="margin-top:10px">
-                                            Cancel
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         }
                     </div>
                     <!-- /.box-body -->
@@ -116,7 +117,7 @@
                         <div class="text-right col-md-10">
                             <label style="font-weight: bold">TOTAL :</label>
                             <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "Sales")">
+                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "StockAdjustments")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
                             <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
@@ -196,7 +197,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?saleId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?stockAdjustmentId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -219,7 +220,7 @@
                         var data = { id: Id };
                         var options = {};
 
-                        options.url = "/Sales/GetMasterUnit";
+                        options.url = "/StockAdjustments/GetMasterUnit";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -256,10 +257,10 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { saleId: $("#Id").val() };
+            var param = { stockAdjustmentId: $("#Id").val() };
             var options = {};
 
-            options.url = "/Sales/GetTotal";
+            options.url = "/StockAdjustments/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -282,10 +283,10 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { saleId: $("#Id").val() };
+            var param = { stockAdjustmentId: $("#Id").val() };
             var options = {};
 
-            options.url = "/Sales/GetTotal";
+            options.url = "/StockAdjustments/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -325,7 +326,7 @@
                         if (result)
                         {
                             var options = {};
-                            options.url = "/Sales/DetailsBatchDelete";
+                            options.url = "/StockAdjustments/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
@@ -338,10 +339,10 @@
                                 var grid = new MvcGrid(document.querySelector('#detail-table'));
                                 grid.reload();
 
-                                var param = { saleId: $("#Id").val() };
+                                var param = { stockAdjustmentId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/Sales/GetTotal";
+                                options2.url = "/StockAdjustments/GetTotal";
                                 options2.type = "POST";
                                 options2.headers = headers;
                                 options2.data = JSON.stringify(param);
@@ -366,17 +367,17 @@
             $("#cancel").click(function () {
                 var data = { id: $("input#Id").val() };
                 var options = {};
-                options.url = "/Sales/Cancel";
+                options.url = "/StockAdjustments/Cancel";
                 options.type = "POST";
                 options.headers = headers;
                 options.data = JSON.stringify(data);
                 options.contentType = "application/json";
                 options.dataType = "json";
                 options.success = function (msg) {
-                    window.location.href = '@Url.Action("Index", "Sales")';
+                    window.location.href = '@Url.Action("Index", "StockAdjustments")';
                 };
                 options.error = function () {
-                    window.location.href = '@Url.Action("Index", "Sales")';
+                    window.location.href = '@Url.Action("Index", "StockAdjustments")';
                 };
                 $.ajax(options);
             });
@@ -394,7 +395,7 @@
                         document.getElementById('MasterRegionId').value = "0";
                     }
                     else {
-                        options.url = "/Sales/GetCode";
+                        options.url = "/StockAdjustments/GetCode";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -424,7 +425,7 @@
                 var options = {};
 
                 if (masterRegionId !== 0 && masterRegionId !== '') {
-                    options.url = "/Sales/GetCode";
+                    options.url = "/StockAdjustments/GetCode";
                     options.type = "POST";
                     options.headers = headers;
                     options.data = JSON.stringify(data);
@@ -479,7 +480,7 @@
                             var data = { id: Id };
                             var options = {};
 
-                            options.url = "/Sales/GetMasterUnit";
+                            options.url = "/StockAdjustments/GetMasterUnit";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(data);

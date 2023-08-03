@@ -19,25 +19,25 @@ using System.Web.Mvc;
 
 namespace eShop.Controllers
 {
-    public class PurchaseReturnsController : Controller
+    public class SalesReturnsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: PurchaseReturns
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        // GET: SalesReturns
+        [Authorize(Roles = "SalesReturnsActive")]
         public ActionResult Index()
         {
-            return View("../Buying/PurchaseReturns/Index");
+            return View("../Selling/SalesReturns/Index");
         }
 
         [HttpGet]
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "SalesReturnsActive")]
         public PartialViewResult IndexGrid(String search)
         {
             if (String.IsNullOrEmpty(search))
-                return PartialView("../Buying/PurchaseReturns/_IndexGrid", db.Set<PurchaseReturn>().AsQueryable());
+                return PartialView("../Selling/SalesReturns/_IndexGrid", db.Set<SalesReturn>().AsQueryable());
             else
-                return PartialView("../Buying/PurchaseReturns/_IndexGrid", db.Set<PurchaseReturn>().AsQueryable()
+                return PartialView("../Selling/SalesReturns/_IndexGrid", db.Set<SalesReturn>().AsQueryable()
                     .Where(x => x.Code.Contains(search)));
         }
 
@@ -50,42 +50,43 @@ namespace eShop.Controllers
         {
             if (Id == null || Id == 0)
             {
-                return db.PurchaseReturns.Any(x => x.Code == Code);
+                return db.SalesReturns.Any(x => x.Code == Code);
             }
             else
             {
-                return db.PurchaseReturns.Any(x => x.Code == Code && x.Id != Id);
+                return db.SalesReturns.Any(x => x.Code == Code && x.Id != Id);
             }
         }
 
-        // GET: PurchaseReturns/Details/
-        [Authorize(Roles = "PurchaseReturnsView")]
+        // GET: SalesReturns/Details/
+        [Authorize(Roles = "SalesReturnsView")]
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PurchaseReturn PurchaseReturn = db.PurchaseReturns.Find(id);
-            if (PurchaseReturn == null)
+            SalesReturn SalesReturn = db.SalesReturns.Find(id);
+            if (SalesReturn == null)
             {
                 return HttpNotFound();
             }
-            return PartialView("../Buying/PurchaseReturns/_Details", PurchaseReturn);
+            return PartialView("../Selling/SalesReturns/_Details", SalesReturn);
         }
 
-        // GET: PurchaseReturns/Create
-        [Authorize(Roles = "PurchaseReturnsAdd")]
+        // GET: SalesReturns/Create
+        [Authorize(Roles = "SalesReturnsAdd")]
         public ActionResult Create()
         {
-            PurchaseReturn purchaseReturn = new PurchaseReturn
+            SalesReturn salesReturn = new SalesReturn
             {
                 Code = "temp/" + Guid.NewGuid().ToString(),
                 Date = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
+                MasterCustomerId = db.MasterCustomers.FirstOrDefault().Id,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
-                PurchaseId = db.Purchases.FirstOrDefault().Id,
+                SaleId = db.Sales.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -97,17 +98,18 @@ namespace eShop.Controllers
             {
                 try
                 {
-                    db.PurchaseReturns.Add(purchaseReturn);
+                    db.SalesReturns.Add(salesReturn);
                     db.SaveChanges();
 
                     dbTran.Commit();
 
-                    purchaseReturn.Code = "";
-                    purchaseReturn.Active = true;
-                    purchaseReturn.MasterBusinessUnitId = 0;
-                    purchaseReturn.MasterRegionId = 0;
-                    purchaseReturn.MasterWarehouseId = 0;
-                    purchaseReturn.PurchaseId = 0;
+                    salesReturn.Code = "";
+                    salesReturn.Active = true;
+                    salesReturn.MasterBusinessUnitId = 0;
+                    salesReturn.MasterRegionId = 0;
+                    salesReturn.MasterCustomerId = 0;
+                    salesReturn.MasterWarehouseId = 0;
+                    salesReturn.SaleId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -122,7 +124,7 @@ namespace eShop.Controllers
             ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes");
             ViewBag.Total = "0";
 
-            return View("../Buying/PurchaseReturns/Create", purchaseReturn);
+            return View("../Selling/SalesReturns/Create", salesReturn);
         }
 
         // POST: PurchaseReturns/Create
@@ -130,23 +132,23 @@ namespace eShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] PurchaseReturn purchaseReturn)
+        [Authorize(Roles = "SalesReturnsAdd")]
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterCustomerId,Notes,Active,Created,Updated,UserId")] SalesReturn salesReturn)
         {
-            purchaseReturn.Created = DateTime.Now;
-            purchaseReturn.Updated = DateTime.Now;
-            purchaseReturn.UserId = User.Identity.GetUserId<int>();
-            purchaseReturn.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id);
+            salesReturn.Created = DateTime.Now;
+            salesReturn.Updated = DateTime.Now;
+            salesReturn.UserId = User.Identity.GetUserId<int>();
+            salesReturn.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id);
 
-            if (!string.IsNullOrEmpty(purchaseReturn.Code)) purchaseReturn.Code = purchaseReturn.Code.ToUpper();
-            if (!string.IsNullOrEmpty(purchaseReturn.Notes)) purchaseReturn.Notes = purchaseReturn.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(salesReturn.Code)) salesReturn.Code = salesReturn.Code.ToUpper();
+            if (!string.IsNullOrEmpty(salesReturn.Notes)) salesReturn.Notes = salesReturn.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
-                purchaseReturn = GetModelState(purchaseReturn);
+                salesReturn = GetModelState(salesReturn);
             }
 
-            db.Entry(purchaseReturn).State = EntityState.Modified;
+            db.Entry(salesReturn).State = EntityState.Modified;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -156,7 +158,7 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturn, MenuId = purchaseReturn.Id, MenuCode = purchaseReturn.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SalesReturn, MenuId = salesReturn.Id, MenuCode = salesReturn.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -172,22 +174,22 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseReturn.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseReturn.MasterRegionId);
-                ViewBag.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id).ToString("N2");
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", salesReturn.MasterBusinessUnitId);
+                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", salesReturn.MasterRegionId);
+                ViewBag.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id).ToString("N2");
 
-                return View("../Buying/PurchaseReturns/Create", purchaseReturn);
+                return View("../Selling/SalesReturns/Create", salesReturn);
             }
         }
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsAdd")]
+        [Authorize(Roles = "SalesReturnsAdd")]
         public ActionResult Cancel(int? id)
         {
             if (id != null)
             {
-                PurchaseReturn obj = db.PurchaseReturns.Find(id);
+                SalesReturn obj = db.SalesReturns.Find(id);
                 if (obj != null)
                 {
                     if (!obj.Active)
@@ -196,10 +198,10 @@ namespace eShop.Controllers
                         {
                             try
                             {
-                                db.PurchaseReturnsDetails.RemoveRange(db.PurchaseReturnsDetails.Where(x => x.PurchaseReturnId == obj.Id));
+                                db.SalesReturnsDetails.RemoveRange(db.SalesReturnsDetails.Where(x => x.SalesReturnId == obj.Id));
                                 db.SaveChanges();
 
-                                db.PurchaseReturns.Remove(obj);
+                                db.SalesReturns.Remove(obj);
                                 db.SaveChanges();
 
                                 dbTran.Commit();
@@ -216,27 +218,27 @@ namespace eShop.Controllers
             return Json(id);
         }
 
-        // GET: PurchaseReturns/Edit/5
-        [Authorize(Roles = "PurchaseReturnsEdit")]
+        // GET: SalesReturns/Edit/5
+        [Authorize(Roles = "SalesReturnsEdit")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(id);
-            if (purchaseReturn == null)
+            SalesReturn salesReturn = db.SalesReturns.Find(id);
+            if (salesReturn == null)
             {
                 return HttpNotFound();
             }
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseReturn.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseReturn.MasterRegionId);
-            ViewBag.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id).ToString("N2");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", salesReturn.MasterBusinessUnitId);
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", salesReturn.MasterRegionId);
+            ViewBag.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id).ToString("N2");
 
-            return View("../Buying/PurchaseReturns/Edit", purchaseReturn);
+            return View("../selling/SalesReturns/Edit", salesReturn);
         }
 
         // POST: PurchaseReturns/Edit/5
@@ -244,32 +246,32 @@ namespace eShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] PurchaseReturn purchaseReturn)
+        [Authorize(Roles = "SalesReturnsEdit")]
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterCustomerId,Notes,Active,Created,Updated,UserId")] SalesReturn salesReturn)
         {
-            purchaseReturn.Updated = DateTime.Now;
-            purchaseReturn.UserId = User.Identity.GetUserId<int>();
-            purchaseReturn.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id);
+            salesReturn.Updated = DateTime.Now;
+            salesReturn.UserId = User.Identity.GetUserId<int>();
+            salesReturn.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id);
 
-            if (!string.IsNullOrEmpty(purchaseReturn.Code)) purchaseReturn.Code = purchaseReturn.Code.ToUpper();
-            if (!string.IsNullOrEmpty(purchaseReturn.Notes)) purchaseReturn.Notes = purchaseReturn.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(salesReturn.Code)) salesReturn.Code = salesReturn.Code.ToUpper();
+            if (!string.IsNullOrEmpty(salesReturn.Notes)) salesReturn.Notes = salesReturn.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
-                purchaseReturn = GetModelState(purchaseReturn);
+                salesReturn = GetModelState(salesReturn);
             }
 
-            db.Entry(purchaseReturn).State = EntityState.Unchanged;
-            db.Entry(purchaseReturn).Property("Code").IsModified = true;
-            db.Entry(purchaseReturn).Property("Date").IsModified = true;
-            db.Entry(purchaseReturn).Property("MasterBusinessUnitId").IsModified = true;
-            db.Entry(purchaseReturn).Property("MasterRegionId").IsModified = true;
-            db.Entry(purchaseReturn).Property("PurchaseId").IsModified = true;
-            db.Entry(purchaseReturn).Property("MasterWarehouseId").IsModified = true;
-            db.Entry(purchaseReturn).Property("Total").IsModified = true;
-            db.Entry(purchaseReturn).Property("Notes").IsModified = true;
-            db.Entry(purchaseReturn).Property("Active").IsModified = true;
-            db.Entry(purchaseReturn).Property("Updated").IsModified = true;
+            db.Entry(salesReturn).State = EntityState.Unchanged;
+            db.Entry(salesReturn).Property("Code").IsModified = true;
+            db.Entry(salesReturn).Property("Date").IsModified = true;
+            db.Entry(salesReturn).Property("MasterBusinessUnitId").IsModified = true;
+            db.Entry(salesReturn).Property("MasterRegionId").IsModified = true;
+            // db.Entry(salesReturn).Property("PurchaseRequestId").IsModified = true;
+            db.Entry(salesReturn).Property("MasterCustomerId").IsModified = true;
+            db.Entry(salesReturn).Property("Total").IsModified = true;
+            db.Entry(salesReturn).Property("Notes").IsModified = true;
+            db.Entry(salesReturn).Property("Active").IsModified = true;
+            db.Entry(salesReturn).Property("Updated").IsModified = true;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -279,7 +281,7 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturn, MenuId = purchaseReturn.Id, MenuCode = purchaseReturn.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SalesReturn, MenuId = salesReturn.Id, MenuCode = salesReturn.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -295,16 +297,16 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseReturn.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseReturn.MasterRegionId);
-                ViewBag.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id).ToString("N2");
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", salesReturn.MasterBusinessUnitId);
+                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", salesReturn.MasterRegionId);
+                ViewBag.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id).ToString("N2");
 
-                return View("../Buying/PurchaseReturns/Edit", purchaseReturn);
+                return View("../Selling/SalesReturns/Edit", salesReturn);
             }
         }
 
         [HttpPost]
-        [Authorize(Roles = "PurchaseReturnsDelete")]
+        [Authorize(Roles = "SalesReturnsDelete")]
         [ValidateJsonAntiForgeryToken]
         public ActionResult BatchDelete(int[] ids)
         {
@@ -319,21 +321,21 @@ namespace eShop.Controllers
                         int failed = 0;
                         foreach (int id in ids)
                         {
-                            PurchaseReturn obj = db.PurchaseReturns.Find(id);
+                            SalesReturn obj = db.SalesReturns.Find(id);
 
                             if (obj == null)
                                 failed++;
                             else
                             {
-                                PurchaseReturn tmp = obj;
+                                SalesReturn tmp = obj;
 
-                                db.PurchaseReturnsDetails.RemoveRange(db.PurchaseReturnsDetails.Where(x => x.PurchaseReturnId == obj.Id));
+                                db.SalesReturnsDetails.RemoveRange(db.SalesReturnsDetails.Where(x => x.SalesReturnId == obj.Id));
                                 db.SaveChanges();
 
-                                db.PurchaseReturns.Remove(obj);
+                                db.SalesReturns.Remove(obj);
                                 db.SaveChanges();
 
-                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturn, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SalesReturn, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
 
                                 dbTran.Commit();
@@ -350,10 +352,10 @@ namespace eShop.Controllers
             }
         }
 
-        [Authorize(Roles = "PurchaseReturnsPrint")]
+        [Authorize(Roles = "SalesReturnsPrint")]
         public ActionResult Print(int? id)
         {
-            PurchaseReturn obj = db.PurchaseReturns.Find(id);
+            SalesReturn obj = db.SalesReturns.Find(id);
 
             if (obj == null)
             {
@@ -366,7 +368,7 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormPurchaseReturn.rpt"));
+                        rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormSalesReturn.rpt"));
                         rd.SetParameterValue("Code", obj.Code);
                         rd.SetParameterValue("Terbilang", "# " + TerbilangExtension.Terbilang(Math.Floor(obj.Total)).ToUpper() + " RUPIAH #");
 
@@ -411,61 +413,61 @@ namespace eShop.Controllers
             }
         }
 
-        [Authorize(Roles = "PurchaseReturnsActive")]
-        private PurchaseReturn GetModelState(PurchaseReturn purchaseReturn)
+        [Authorize(Roles = "SalesReturnsActive")]
+        private SalesReturn GetModelState(SalesReturn salesReturn)
         {
-            List<PurchaseReturnDetails> purchaseReturnDetails = db.PurchaseReturnsDetails.Where(x => x.PurchaseReturnId == purchaseReturn.Id).ToList();
+            List<SalesReturnDetails> salesReturnDetails = db.SalesReturnsDetails.Where(x => x.SalesReturnId == salesReturn.Id).ToList();
 
             if (ModelState.IsValid)
             {
-                if (IsAnyCode(purchaseReturn.Code, purchaseReturn.Id))
+                if (IsAnyCode(salesReturn.Code, salesReturn.Id))
                     ModelState.AddModelError(string.Empty, "Nomor transaksi sudah dipakai!");
             }
 
             if (ModelState.IsValid)
             {
-                if (purchaseReturnDetails == null || purchaseReturnDetails.Count == 0)
+                if (salesReturnDetails == null || salesReturnDetails.Count == 0)
                     ModelState.AddModelError(string.Empty, "Data masih kosong, mohon isi detail terlebih dahulu!");
             }
 
-            return purchaseReturn;
+            return salesReturn;
         }
 
-        [Authorize(Roles = "PurchaseReturnsActive")]
-        public ActionResult DetailsCreate(int purchaseReturnId)
+        [Authorize(Roles = "SalesReturnsActive")]
+        public ActionResult DetailsCreate(int salesReturnId)
         {
-            PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(purchaseReturnId);
+            SalesReturn salesReturn = db.SalesReturns.Find(salesReturnId);
 
-            if (purchaseReturn == null)
+            if (salesReturn == null)
             {
                 return HttpNotFound();
             }
 
-            PurchaseReturnDetails purchaseReturnDetails = new PurchaseReturnDetails
+            SalesReturnDetails salesReturnDetails = new SalesReturnDetails
             {
-                PurchaseReturnId = purchaseReturnId
+                SalesReturnId = salesReturnId
             };
 
-            return PartialView("../Buying/PurchaseReturns/_DetailsCreate", purchaseReturnDetails);
+            return PartialView("../Selling/SalesReturns/_DetailsCreate", salesReturnDetails);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
-        public ActionResult DetailsCreate([Bind(Include = "Id,PurchaseReturnId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] PurchaseReturnDetails purchaseReturnDetails)
+        [Authorize(Roles = "SalesReturnsActive")]
+        public ActionResult DetailsCreate([Bind(Include = "Id,SalesReturnId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] SalesReturnDetails salesReturnDetails)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseReturnDetails.MasterItemUnitId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(salesReturnDetails.MasterItemUnitId);
 
             if (masterItemUnit == null)
-                purchaseReturnDetails.Total = 0;
+                salesReturnDetails.Total = 0;
             else
-                purchaseReturnDetails.Total = purchaseReturnDetails.Quantity * purchaseReturnDetails.Price * masterItemUnit.MasterUnit.Ratio;
+                salesReturnDetails.Total = salesReturnDetails.Quantity * salesReturnDetails.Price * masterItemUnit.MasterUnit.Ratio;
 
-            purchaseReturnDetails.Created = DateTime.Now;
-            purchaseReturnDetails.Updated = DateTime.Now;
-            purchaseReturnDetails.UserId = User.Identity.GetUserId<int>();
+            salesReturnDetails.Created = DateTime.Now;
+            salesReturnDetails.Updated = DateTime.Now;
+            salesReturnDetails.UserId = User.Identity.GetUserId<int>();
 
-            if (!string.IsNullOrEmpty(purchaseReturnDetails.Notes)) purchaseReturnDetails.Notes = purchaseReturnDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(salesReturnDetails.Notes)) salesReturnDetails.Notes = salesReturnDetails.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
@@ -473,16 +475,16 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        db.PurchaseReturnsDetails.Add(purchaseReturnDetails);
+                        db.SalesReturnsDetails.Add(salesReturnDetails);
                         db.SaveChanges();
 
-                        PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(purchaseReturnDetails.PurchaseReturnId);
-                        purchaseReturn.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id, purchaseReturnDetails.Id) + purchaseReturnDetails.Total;
+                        SalesReturn salesReturn = db.SalesReturns.Find(salesReturnDetails.SalesReturnId);
+                        salesReturn.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id, salesReturnDetails.Id) + salesReturnDetails.Total;
 
-                        db.Entry(purchaseReturn).State = EntityState.Modified;
+                        db.Entry(salesReturn).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturnDetails, MenuId = purchaseReturnDetails.Id, MenuCode = purchaseReturnDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SalesReturnDetails, MenuId = salesReturnDetails.Id, MenuCode = salesReturnDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -497,10 +499,10 @@ namespace eShop.Controllers
                 }
             }
 
-            return PartialView("../Buying/PurchaseReturns/_DetailsCreate", purchaseReturnDetails);
+            return PartialView("../Selling/SalesReturns/_DetailsCreate", salesReturnDetails);
         }
 
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "SalesReturnsActive")]
         public ActionResult DetailsEdit(int? id)
         {
             if (id == null)
@@ -508,41 +510,41 @@ namespace eShop.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            PurchaseReturnDetails obj = db.PurchaseReturnsDetails.Find(id);
+            SalesReturnDetails obj = db.SalesReturnsDetails.Find(id);
 
             if (obj == null)
             {
                 return HttpNotFound();
             }
-            return PartialView("../Buying/PurchaseReturns/_DetailsEdit", obj);
+            return PartialView("../Selling/SalesReturns/_DetailsEdit", obj);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
-        public ActionResult DetailsEdit([Bind(Include = "Id,PurchaseReturnId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] PurchaseReturnDetails purchaseReturnDetails)
+        [Authorize(Roles = "SalesReturnsActive")]
+        public ActionResult DetailsEdit([Bind(Include = "Id,SalesReturnId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] SalesReturnDetails salesReturnDetails)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseReturnDetails.MasterItemUnitId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(salesReturnDetails.MasterItemUnitId);
 
             if (masterItemUnit == null)
-                purchaseReturnDetails.Total = 0;
+                salesReturnDetails.Total = 0;
             else
-                purchaseReturnDetails.Total = purchaseReturnDetails.Quantity * purchaseReturnDetails.Price * masterItemUnit.MasterUnit.Ratio;
+                salesReturnDetails.Total = salesReturnDetails.Quantity * salesReturnDetails.Price * masterItemUnit.MasterUnit.Ratio;
 
-            purchaseReturnDetails.Updated = DateTime.Now;
-            purchaseReturnDetails.UserId = User.Identity.GetUserId<int>();
+            salesReturnDetails.Updated = DateTime.Now;
+            salesReturnDetails.UserId = User.Identity.GetUserId<int>();
 
-            if (!string.IsNullOrEmpty(purchaseReturnDetails.Notes)) purchaseReturnDetails.Notes = purchaseReturnDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(salesReturnDetails.Notes)) salesReturnDetails.Notes = salesReturnDetails.Notes.ToUpper();
 
-            db.Entry(purchaseReturnDetails).State = EntityState.Unchanged;
-            db.Entry(purchaseReturnDetails).Property("MasterItemId").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("MasterItemUnitId").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("Quantity").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("Price").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("Total").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("Notes").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("Updated").IsModified = true;
-            db.Entry(purchaseReturnDetails).Property("UserId").IsModified = true;
+            db.Entry(salesReturnDetails).State = EntityState.Unchanged;
+            db.Entry(salesReturnDetails).Property("MasterItemId").IsModified = true;
+            db.Entry(salesReturnDetails).Property("MasterItemUnitId").IsModified = true;
+            db.Entry(salesReturnDetails).Property("Quantity").IsModified = true;
+            db.Entry(salesReturnDetails).Property("Price").IsModified = true;
+            db.Entry(salesReturnDetails).Property("Total").IsModified = true;
+            db.Entry(salesReturnDetails).Property("Notes").IsModified = true;
+            db.Entry(salesReturnDetails).Property("Updated").IsModified = true;
+            db.Entry(salesReturnDetails).Property("UserId").IsModified = true;
 
             if (ModelState.IsValid)
             {
@@ -552,13 +554,13 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(purchaseReturnDetails.PurchaseReturnId);
-                        purchaseReturn.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id, purchaseReturnDetails.Id) + purchaseReturnDetails.Total;
+                        SalesReturn salesReturn = db.SalesReturns.Find(salesReturnDetails.SalesReturnId);
+                        salesReturn.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id, salesReturnDetails.Id) + salesReturnDetails.Total;
 
-                        db.Entry(purchaseReturn).State = EntityState.Modified;
+                        db.Entry(salesReturn).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturnDetails, MenuId = purchaseReturnDetails.Id, MenuCode = purchaseReturnDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SalesReturnDetails, MenuId = salesReturnDetails.Id, MenuCode = salesReturnDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -572,12 +574,12 @@ namespace eShop.Controllers
                     }
                 }
             }
-            return PartialView("../Buying/PurchaseReturns/_DetailsEdit", purchaseReturnDetails);
+            return PartialView("../Selling/SalesReturns/_DetailsEdit", salesReturnDetails);
         }
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "SalesReturnsActive")]
         public ActionResult DetailsBatchDelete(int[] ids)
         {
             if (ids == null || ids.Length <= 0)
@@ -589,7 +591,7 @@ namespace eShop.Controllers
                     int failed = 0;
                     foreach (int id in ids)
                     {
-                        PurchaseReturnDetails obj = db.PurchaseReturnsDetails.Find(id);
+                        SalesReturnDetails obj = db.SalesReturnsDetails.Find(id);
                         if (obj == null)
                             failed++;
                         else
@@ -598,19 +600,19 @@ namespace eShop.Controllers
                             {
                                 try
                                 {
-                                    PurchaseReturnDetails tmp = obj;
+                                    SalesReturnDetails tmp = obj;
 
-                                    PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(tmp.PurchaseReturnId);
+                                    SalesReturn salesReturn = db.SalesReturns.Find(tmp.SalesReturnId);
 
-                                    purchaseReturn.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id, tmp.Id);
+                                    salesReturn.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id, tmp.Id);
 
-                                    db.Entry(purchaseReturn).State = EntityState.Modified;
+                                    db.Entry(salesReturn).State = EntityState.Modified;
                                     db.SaveChanges();
 
-                                    db.PurchaseReturnsDetails.Remove(obj);
+                                    db.SalesReturnsDetails.Remove(obj);
                                     db.SaveChanges();
 
-                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseReturnDetails, MenuId = tmp.Id, MenuCode = tmp.Id.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SalesReturnDetails, MenuId = tmp.Id, MenuCode = tmp.Id.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                     db.SaveChanges();
                                     dbTran.Commit();
                                 }
@@ -628,16 +630,16 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "SalesReturnsActive")]
         public PartialViewResult DetailsGrid(int Id)
         {
-            return PartialView("../Buying/PurchaseReturns/_DetailsGrid", db.PurchaseReturnsDetails
-                .Where(x => x.PurchaseReturnId == Id).ToList());
+            return PartialView("../Selling/SalesReturns/_DetailsGrid", db.SalesReturnsDetails
+                .Where(x => x.SalesReturnId == Id).ToList());
         }
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "SalesReturnsActive")]
         public JsonResult GetMasterUnit(int id)
         {
             int masterItemUnitId = 0;
@@ -663,34 +665,34 @@ namespace eShop.Controllers
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "SalesReturnsActive")]
         public JsonResult GetCode(int id, int masterBusinessUnitId, int masterRegionId)
         {
             string code = null;
             MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
             MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
 
-            PurchaseReturn purchaseReturn = db.PurchaseReturns.Find(id);
+            SalesReturn salesReturn = db.SalesReturns.Find(id);
 
-            if (masterBusinessUnit != null && purchaseReturn != null && masterRegion != null)
+            if (masterBusinessUnit != null && salesReturn != null && masterRegion != null)
             {
                 code = GetCode(masterBusinessUnit, masterRegion);
-                purchaseReturn.MasterBusinessUnitId = masterBusinessUnitId;
-                purchaseReturn.MasterRegionId = masterRegionId;
-                db.Entry(purchaseReturn).State = EntityState.Modified;
+                salesReturn.MasterBusinessUnitId = masterBusinessUnitId;
+                salesReturn.MasterRegionId = masterRegionId;
+                db.Entry(salesReturn).State = EntityState.Modified;
                 db.SaveChanges();
             }
 
             return Json(code);
         }
 
-        [Authorize(Roles = "PurchaseReturnsActive")]
+        [Authorize(Roles = "SalesReturnsActive")]
         private string GetCode(MasterBusinessUnit masterBusinessUnit, MasterRegion masterRegion)
         {
             string romanMonth = SharedFunctions.RomanNumeralFrom((int)DateTime.Now.Month);
-            string code = "/" + Settings.Default.PurchaseOrderCode + masterBusinessUnit.Code + "/" + masterRegion.Code + "/" + SharedFunctions.RomanNumeralFrom(DateTime.Now.Month) + "/" + DateTime.Now.Year.ToString().Substring(2, 2);
+            string code = "/" + Settings.Default.SalesReturnCode + masterBusinessUnit.Code + "/" + masterRegion.Code + "/" + SharedFunctions.RomanNumeralFrom(DateTime.Now.Month) + "/" + DateTime.Now.Year.ToString().Substring(2, 2);
 
-            PurchaseReturn lastData = db.PurchaseReturns
+            SalesReturn lastData = db.SalesReturns
                 .Where(x => (x.Code.Contains(code)))
                 .OrderByDescending(z => z.Code).FirstOrDefault();
 
@@ -704,10 +706,10 @@ namespace eShop.Controllers
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "PurchaseReturnsActive")]
-        public JsonResult GetTotal(int purchaseReturnId)
+        [Authorize(Roles = "SalesReturnsActive")]
+        public JsonResult GetTotal(int salesReturnId)
         {
-            return Json(SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturnId).ToString("N2"));
+            return Json(SharedFunctions.GetTotalSalesReturn(db, salesReturnId).ToString("N2"));
         }
 
         protected override void Dispose(bool disposing)

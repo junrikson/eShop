@@ -115,6 +115,16 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllSale(DatalistFilter filter)
+        {
+            SaleDatalist datalist = new SaleDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllAuthorization(DatalistFilter filter)
         {
             AuthorizationDatalist datalist = new AuthorizationDatalist(db);

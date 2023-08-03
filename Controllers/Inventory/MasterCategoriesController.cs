@@ -11,38 +11,38 @@ using System.Web.Mvc;
 
 namespace eShop.Controllers
 {
-    public class MasterCategoriesController : Controller
+    public class MasterCategorysController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: MasterCategories
-        [Authorize(Roles = "MasterCategoriesActive")]
+        [Authorize(Roles = "StockAdjustmentsActive")]
         public ActionResult Index()
         {
-            return View("../Inventory/MasterCategories/Index");
+            return View("../Inventory/StockAdjustments/Index");
         }
 
         [HttpGet]
-        [Authorize(Roles = "MasterCategoriesActive")]
+        [Authorize(Roles = "StockAdjustmentsActive")]
         public PartialViewResult IndexGrid(String search)
         {
             if (String.IsNullOrEmpty(search))
-                return PartialView("../Inventory/MasterCategories/_IndexGrid", db.Set<MasterCategory>().AsQueryable());
+                return PartialView("../Inventory/StockAdjustments/_IndexGrid", db.Set<StockAdjustment>().AsQueryable());
             else
-                return PartialView("../Inventory/MasterCategories/_IndexGrid", db.Set<MasterCategory>().AsQueryable()
+                return PartialView("../Inventory/StockAdjustments/_IndexGrid", db.Set<StockAdjustment>().AsQueryable()
                     .Where(x => x.Code.Contains(search)));
         }
 
-        [Authorize(Roles = "MasterCategoriesActive")]
+        [Authorize(Roles = "StockAdjustmentsActive")]
         public JsonResult IsCodeExists(string Code, int? Id)
         {
             if (Id == null)
             {
-                return Json(!db.MasterCategories.Any(x => x.Code == Code), JsonRequestBehavior.AllowGet);
+                return Json(!db.StockAdjustments.Any(x => x.Code == Code), JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(!db.MasterCategories.Any(x => x.Code == Code && x.Id != Id), JsonRequestBehavior.AllowGet);
+                return Json(!db.StockAdjustments.Any(x => x.Code == Code && x.Id != Id), JsonRequestBehavior.AllowGet);
             }
         }
 

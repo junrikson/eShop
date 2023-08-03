@@ -1,8 +1,8 @@
-﻿@model eShop.Models.Sale
+﻿@model eShop.Models.SalesReturn
 
 @{
-    ViewBag.Title = "Sale";
-    ViewBag.Current = "Sales";
+    ViewBag.Title = "Sales Return";
+    ViewBag.Current = "SalesReturns";
 }
 
 @section Styles {
@@ -27,7 +27,7 @@
                     <div class="box-header with-border">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Add - Sale</h3>
+                        <h3 class="box-title">Edit - Sales Return</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -35,68 +35,68 @@
                         {
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(model => model.Id)
-                        <div class="form-horizontal">
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.MasterBusinessUnitId)
-                                    @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.MasterBusinessUnitId)
+                                        @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.MasterRegionId)
-                                    @Html.DropDownList("MasterRegionId", null, "- Pilih Wilayah -", htmlAttributes: new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.MasterRegionId)
+                                        @Html.DropDownList("MasterRegionId", null, "- Pilih Wilayah -", htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.LabelFor(model => model.Code)
-                                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        @Html.LabelFor(model => model.Code)
+                                        @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                        @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        @Html.LabelFor(model => model.Active)
+                                        <div class="checkbox text-center">
+                                            @Html.CheckBoxFor(model => model.Active)
+                                            @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-2 text-center">
-                                    @Html.LabelFor(model => model.Active)
-                                    <div class="checkbox text-center">
-                                        @Html.CheckBoxFor(model => model.Active)
-                                        @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.Date)
+                                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.MasterCustomerId)
+                                        @Html.DatalistFor(model => model.MasterCustomerId, new eShop.Models.MasterCustomerDatalist())
+                                        @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.Notes)
+                                        @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 text-left">
+                                            <a href="@Url.Action("Index")" id="cancel" class="btn btn-danger" style="margin-top:10px">
+                                                Cancel
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.Date)
-                                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.MasterCustomerId)
-                                    @Html.DatalistFor(model => model.MasterCustomerId, new eShop.Models.MasterCustomerDatalist())
-                                    @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.Notes)
-                                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-6 text-left">
-                                        <a href="#" id="cancel" class="btn btn-danger" style="margin-top:10px">
-                                            Cancel
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         }
                     </div>
                     <!-- /.box-body -->
@@ -162,6 +162,7 @@
     </script>
 
     <script>
+
         [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
             new MvcDatalist(element);
         });
@@ -196,7 +197,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?saleId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?salesOrderId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -256,7 +257,7 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { saleId: $("#Id").val() };
+            var param = { purchaseOrderId: $("#Id").val() };
             var options = {};
 
             options.url = "/Sales/GetTotal";
@@ -282,7 +283,7 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { saleId: $("#Id").val() };
+            var param = { purchaseOrderId: $("#Id").val() };
             var options = {};
 
             options.url = "/Sales/GetTotal";
@@ -301,29 +302,21 @@
         var headers = {};
         headers['__RequestVerificationToken'] = token;
 
-        $(document).ready(function ()
-        {
-            $("#DetailsBatchDelete").click(function ()
-            {
+        $(document).ready(function () {
+            $("#DetailsBatchDelete").click(function () {
                 var selectedIDs = new Array();
-                $('#detail-table tbody tr').find('td:first :checkbox').each(function ()
-                {
-                    if ($(this).prop('checked'))
-                    {
+                $('#detail-table tbody tr').find('td:first :checkbox').each(function () {
+                    if ($(this).prop('checked')) {
                         selectedIDs.push($(this).val());
                     }
                 });
 
-                if (selectedIDs.length <= 0)
-                {
+                if (selectedIDs.length <= 0) {
                     bootbox.alert("Pilih salah satu data yang akan dihapus.");
                 }
-                else
-                {
-                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result)
-                    {
-                        if (result)
-                        {
+                else {
+                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                        if (result) {
                             var options = {};
                             options.url = "/Sales/DetailsBatchDelete";
                             options.type = "POST";
@@ -331,14 +324,13 @@
                             options.data = JSON.stringify(selectedIDs);
                             options.contentType = "application/json";
                             options.dataType = "json";
-                            options.success = function (msg)
-                            {
+                            options.success = function (msg) {
                                 bootbox.alert(msg);
 
                                 var grid = new MvcGrid(document.querySelector('#detail-table'));
                                 grid.reload();
 
-                                var param = { saleId: $("#Id").val() };
+                                var param = { purchaseOrderId: $("#Id").val() };
                                 var options2 = {};
 
                                 options2.url = "/Sales/GetTotal";
@@ -347,14 +339,12 @@
                                 options2.data = JSON.stringify(param);
                                 options2.contentType = "application/json";
                                 options2.dataType = "json";
-                                options2.success = function (msg)
-                                {
+                                options2.success = function (msg) {
                                     document.getElementById('Total').value = msg;
                                 };
                                 $.ajax(options2);
                             };
-                            options.error = function ()
-                            {
+                            options.error = function () {
                                 bootbox.alert("Terjadi kesalahan saat menghapus.");
                             };
                             $.ajax(options);
@@ -362,87 +352,6 @@
                     });
                 }
             });
-
-            $("#cancel").click(function () {
-                var data = { id: $("input#Id").val() };
-                var options = {};
-                options.url = "/Sales/Cancel";
-                options.type = "POST";
-                options.headers = headers;
-                options.data = JSON.stringify(data);
-                options.contentType = "application/json";
-                options.dataType = "json";
-                options.success = function (msg) {
-                    window.location.href = '@Url.Action("Index", "Sales")';
-                };
-                options.error = function () {
-                    window.location.href = '@Url.Action("Index", "Sales")';
-                };
-                $.ajax(options);
-            });
-
-            $("#MasterRegionId").on("change", function () {
-                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
-                var masterRegionId = $("#MasterRegionId").val();
-                var id = $("#Id").val();
-                var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
-                var options = {};
-
-                if (masterRegionId !== 0 && masterRegionId !== '') {
-                    if ($("#MasterBusinessUnitId").val() === "") {
-                        bootbox.alert("Unit Bisnis belum dipilih!");
-                        document.getElementById('MasterRegionId').value = "0";
-                    }
-                    else {
-                        options.url = "/Sales/GetCode";
-                        options.type = "POST";
-                        options.headers = headers;
-                        options.data = JSON.stringify(data);
-                        options.contentType = "application/json";
-                        options.dataType = "json";
-                        options.success = function (code) {
-                            document.getElementById('Code').value = code;
-
-                            [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                                new MvcDatalist(element).reload();
-                            });
-                        };
-                        options.error = function () {
-                            document.getElementById('Code').value = "";
-                            grid.reload();
-                        };
-                        $.ajax(options);
-                    }
-                }
-            }).change();
-
-            $("#MasterBusinessUnitId").on("change", function () {
-                var id = $("#Id").val();
-                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
-                var masterRegionId = $("#MasterRegionId").val();
-                var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
-                var options = {};
-
-                if (masterRegionId !== 0 && masterRegionId !== '') {
-                    options.url = "/Sales/GetCode";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (code) {
-                        document.getElementById('Code').value = code;
-
-                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                            new MvcDatalist(element).reload();
-                        });
-                    };
-                    options.error = function () {
-                        document.getElementById('Code').value = "";
-                    };
-                    $.ajax(options);
-                }
-            }).change();
         });
 
         document.addEventListener('reloadend', function (e) {
