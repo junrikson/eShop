@@ -194,8 +194,13 @@ namespace eShop.Controllers
                         {
                             try
                             {
-                                db.SalesOrdersDetails.RemoveRange(db.SalesOrdersDetails.Where(x => x.SalesOrderId == obj.Id));
-                                db.SaveChanges();
+                                var details = db.SalesOrdersDetails.Where(x => x.SalesOrderId == obj.Id).ToList();
+
+                                if (details != null)
+                                {
+                                    db.SalesOrdersDetails.RemoveRange(details);
+                                    db.SaveChanges();
+                                }
 
                                 db.SalesOrders.Remove(obj);
                                 db.SaveChanges();
@@ -325,18 +330,24 @@ namespace eShop.Controllers
                             {
                                 SalesOrder tmp = obj;
 
-                                db.SalesOrdersDetails.RemoveRange(db.SalesOrdersDetails.Where(x => x.SalesOrderId == obj.Id));
-                                db.SaveChanges();
+                                var details = db.SalesOrdersDetails.Where(x => x.SalesOrderId == obj.Id).ToList();
+
+                                if (details != null)
+                                {
+                                    db.SalesOrdersDetails.RemoveRange(details);
+                                    db.SaveChanges();
+                                }
 
                                 db.SalesOrders.Remove(obj);
                                 db.SaveChanges();
 
                                 db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SalesOrder, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
-
-                                dbTran.Commit();
                             }
                         }
+
+                        dbTran.Commit();
+
                         return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
                     }
                     catch (DbEntityValidationException ex)

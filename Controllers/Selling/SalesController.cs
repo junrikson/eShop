@@ -194,8 +194,13 @@ namespace eShop.Controllers
                         {
                             try
                             {
-                                db.SalesDetails.RemoveRange(db.SalesDetails.Where(x => x.SaleId == obj.Id));
-                                db.SaveChanges();
+                                var details = db.SalesDetails.Where(x => x.SaleId == obj.Id).ToList();
+
+                                if (details != null)
+                                {
+                                    db.SalesDetails.RemoveRange(details);
+                                    db.SaveChanges();
+                                }
 
                                 db.Sales.Remove(obj);
                                 db.SaveChanges();
@@ -324,18 +329,24 @@ namespace eShop.Controllers
                             {
                                 Sale tmp = obj;
 
-                                db.SalesDetails.RemoveRange(db.SalesDetails.Where(x => x.SaleId == obj.Id));
-                                db.SaveChanges();
+                                var details = db.SalesDetails.Where(x => x.SaleId == obj.Id).ToList();
+
+                                if (details != null)
+                                {
+                                    db.SalesDetails.RemoveRange(details);
+                                    db.SaveChanges();
+                                }
 
                                 db.Sales.Remove(obj);
                                 db.SaveChanges();
 
                                 db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Sale, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
-
-                                dbTran.Commit();
                             }
                         }
+
+                        dbTran.Commit();
+
                         return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
                     }
                     catch (DbEntityValidationException ex)
