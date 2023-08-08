@@ -16,7 +16,6 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [DatalistColumn]
         [Required(ErrorMessage = "Nomor harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Nomor")]
@@ -24,7 +23,6 @@ namespace eShop.Models
         [Remote("IsCodeExists", "Purchases", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Tanggal")]
         [Required(ErrorMessage = "Tanggal harus diisi.")]
         [DataType(DataType.Date)]
@@ -45,6 +43,18 @@ namespace eShop.Models
         [Display(Name = "Wilayah")]
         public virtual MasterRegion MasterRegion { get; set; }
 
+        [Display(Name = "Mata Uang")]
+        [Required(ErrorMessage = "Mata Uang harus diisi.")]
+        public int MasterCurrencyId { get; set; }
+
+        [Display(Name = "Mata Uang")]
+        public virtual MasterCurrency MasterCurrency { get; set; }
+
+        [Display(Name = "Rate")]
+        [Required(ErrorMessage = "Rate harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
+        public decimal Rate { get; set; }
+
         [Display(Name = "Purchase Order")]
         public int? PurchaseOrderId { get; set; }
 
@@ -52,12 +62,12 @@ namespace eShop.Models
         public virtual PurchaseOrder PurchaseOrder { get; set; }
 
         [Display(Name = "Gudang")]
+        [Required(ErrorMessage = "Gudang harus diisi.")]
         public int MasterWarehouseId { get; set; }
 
         [Display(Name = "Gudang")]
         public virtual MasterWarehouse MasterWarehouse { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Kode Supplier")]
         [Required(ErrorMessage = "Kode Supplier harus diisi.")]
         public int MasterSupplierId { get; set; }
@@ -69,8 +79,7 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [DatalistColumn]
-        [Display(Name = "Total (Rp)")]
+        [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
 
@@ -129,12 +138,12 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Quantity { get; set; }
 
-        [Display(Name = "Harga (Rp)")]
+        [Display(Name = "Harga")]
         [Required(ErrorMessage = "Harga harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Price { get; set; }
 
-        [Display(Name = "Nilai (Rp)")]
+        [Display(Name = "Nilai")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
 

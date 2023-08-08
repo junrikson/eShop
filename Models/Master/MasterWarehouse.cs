@@ -42,6 +42,7 @@ namespace eShop.Models
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
         public string Location { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -66,21 +67,22 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class MasterWarehouseDatalist : MvcDatalist<MasterWarehouse>
+    public class MasterWarehouseRegionDatalist : MvcDatalist<MasterWarehouse>
     {
         private DbContext Context { get; }
 
-        public MasterWarehouseDatalist(DbContext context)
+        public MasterWarehouseRegionDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.Name;
         }
 
-        public MasterWarehouseDatalist()
+        public MasterWarehouseRegionDatalist()
         {
-            Url = "/DatalistFilters/AllMasterWarehouse";
+            Url = "/DatalistFilters/AllMasterWarehouseRegion";
             Title = "Master Gudang";
+            AdditionalFilters.Add("MasterRegionId");
 
             Filter.Sort = "Name";
             Filter.Order = DatalistSortOrder.Asc;

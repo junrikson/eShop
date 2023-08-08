@@ -64,10 +64,21 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        public JsonResult AllMasterItem(DatalistFilter filter)
+        public JsonResult AllMasterCurrency(DatalistFilter filter)
         {
-            MasterItemDatalist datalist = new MasterItemDatalist(db);
+            MasterCurrencyDatalist datalist = new MasterCurrencyDatalist(db);
             filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterItemSupplier(DatalistFilter filter, int? masterSupplierId = 0)
+        {
+            MasterItemSupplierDatalist datalist = new MasterItemSupplierDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterSupplierId"] = masterSupplierId;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
@@ -84,10 +95,11 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        public JsonResult AllMasterWarehouse(DatalistFilter filter)
+        public JsonResult AllMasterWarehouseRegion(DatalistFilter filter, int? masterRegionId = 0)
         {
-            MasterWarehouseDatalist datalist = new MasterWarehouseDatalist(db);
+            MasterWarehouseRegionDatalist datalist = new MasterWarehouseRegionDatalist(db);
             filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterRegionId"] = masterRegionId;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);

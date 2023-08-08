@@ -179,10 +179,47 @@ namespace eShop.Models
             modelBuilder.Entity<MasterBusinessUnit>().Property(x => x.FCLLoadFee).HasPrecision(18, 2);
             modelBuilder.Entity<MasterBusinessUnit>().Property(x => x.LCLLoadFee).HasPrecision(18, 2);
             modelBuilder.Entity<MasterBusinessUnit>().Property(x => x.EmptyLoadFee).HasPrecision(18, 2);
+            modelBuilder.Entity<MasterCurrency>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<PurchaseRequest>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseRequest>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<PurchaseRequestDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseRequestDetails>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseRequestDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseOrder>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseOrder>().Property(x => x.Rate).HasPrecision(18, 10);
             modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<Purchase>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<Purchase>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<PurchaseDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseDetails>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseReturn>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseReturn>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesRequest>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesRequest>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<SalesRequestDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesRequestDetails>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesRequestDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesOrder>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesOrder>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<SalesOrderDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesOrderDetails>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesOrderDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<Sale>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<Sale>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<SaleDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<SaleDetails>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<SaleDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesReturn>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesReturn>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Total).HasPrecision(18, 2);
         }
     }
 }

@@ -6979,6 +6979,7 @@
     <Content Include="Views\Masters\MasterCurrencies\_Details.cshtml" />
     <Content Include="Views\Masters\MasterCurrencies\_Edit.cshtml" />
     <Content Include="Views\Masters\MasterCurrencies\_IndexGrid.cshtml" />
+    <Content Include="Views\Buying\PurchaseRequests\_ChangeCurrency.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

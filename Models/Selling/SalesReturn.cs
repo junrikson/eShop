@@ -45,6 +45,18 @@ namespace eShop.Models
         [Display(Name = "Wilayah")]
         public virtual MasterRegion MasterRegion { get; set; }
 
+        [Display(Name = "Mata Uang")]
+        [Required(ErrorMessage = "Mata Uang harus diisi.")]
+        public int MasterCurrencyId { get; set; }
+
+        [Display(Name = "Mata Uang")]
+        public virtual MasterCurrency MasterCurrency { get; set; }
+
+        [Display(Name = "Rate")]
+        [Required(ErrorMessage = "Rate harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
+        public decimal Rate { get; set; }
+
         [DatalistColumn]
         [Display(Name = "Kode Sale")]
         [Required(ErrorMessage = "Kode Sale harus diisi.")]
@@ -68,7 +80,7 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Display(Name = "Total (Rp)")]
+        [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
 
@@ -127,12 +139,12 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Quantity { get; set; }
 
-        [Display(Name = "Harga (Rp)")]
+        [Display(Name = "Harga")]
         [Required(ErrorMessage = "Harga harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Price { get; set; }
 
-        [Display(Name = "Nilai (Rp)")]
+        [Display(Name = "Nilai")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
 

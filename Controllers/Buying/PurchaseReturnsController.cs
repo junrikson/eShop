@@ -78,12 +78,16 @@ namespace eShop.Controllers
         [Authorize(Roles = "PurchaseReturnsAdd")]
         public ActionResult Create()
         {
+            MasterCurrency masterCurrency = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault();
+
             PurchaseReturn purchaseReturn = new PurchaseReturn
             {
                 Code = "temp/" + Guid.NewGuid().ToString(),
                 Date = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
+                MasterCurrencyId = masterCurrency.Id,
+                Rate = masterCurrency.Rate,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
                 PurchaseId = db.Purchases.FirstOrDefault().Id,
                 IsPrint = false,

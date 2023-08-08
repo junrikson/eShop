@@ -76,20 +76,21 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class MasterItemDatalist : MvcDatalist<MasterItem>
+    public class MasterItemSupplierDatalist : MvcDatalist<MasterItem>
     {
         private DbContext Context { get; }
 
-        public MasterItemDatalist(DbContext context)
+        public MasterItemSupplierDatalist(DbContext context)
         {
             Context = context;
 
-            GetLabel = (model) => model.Code + model.Name;
+            GetLabel = (model) => model.Code + " " + model.Name;
         }
-        public MasterItemDatalist()
+        public MasterItemSupplierDatalist()
         {
-            Url = "/DatalistFilters/AllMasterItem";
+            Url = "/DatalistFilters/AllMasterItemSupplier";
             Title = "Master Item";
+            AdditionalFilters.Add("MasterSupplierId");
 
             Filter.Sort = "Code";
             Filter.Order = DatalistSortOrder.Asc;

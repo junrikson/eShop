@@ -154,7 +154,7 @@
                 options.contentType = "application/json";
                 options.dataType = "json";
                 options.success = function (msg) {
-                    window.location.href = '@Url.Action("Edit", "MasterItems")' + '?id=' + msg + '&&action=copy';
+                    window.location.href = '@Url.Action("Edit", "MasterItems")' + '?id=' + msg + '&&isCopy=true';
                 };
                 options.error = function () {
                     window.location.href = '@Url.Action("Index", "MasterItems")';

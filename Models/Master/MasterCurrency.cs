@@ -1,7 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Datalist;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace eShop.Models
@@ -12,6 +15,7 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [DatalistColumn]
         [Required(ErrorMessage = "Kode Currency harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Kode Currency")]
@@ -19,6 +23,7 @@ namespace eShop.Models
         [Remote("IsCodeExists", "MasterCurrencies", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
         public string Code { get; set; }
 
+        [DatalistColumn]
         [Required(ErrorMessage = "Nama currency harus diisi.")]
         [Display(Name = "Nama Currency")]
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
@@ -28,11 +33,13 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Rate")]
         [Required(ErrorMessage = "Rate harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Default")]
         public bool Default { get; set; }
 
@@ -54,5 +61,50 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
+    }
+
+    public class MasterCurrencyDatalist : MvcDatalist<MasterCurrency>
+    {
+        private DbContext Context { get; }
+
+        public MasterCurrencyDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code;
+        }
+        public MasterCurrencyDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterCurrency";
+            Title = "Mata Uang";
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterCurrency> GetModels()
+        {
+            return Context.Set<MasterCurrency>();
+        }
+    }
+
+    public class ChangeCurrency
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Display(Name = "Mata Uang")]
+        [Required(ErrorMessage = "Mata Uang harus diisi.")]
+        public int MasterCurrencyId { get; set; }
+
+        [Display(Name = "Mata Uang")]
+        public virtual MasterCurrency MasterCurrency { get; set; }
+
+        [Display(Name = "Rate")]
+        [Required(ErrorMessage = "Rate harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
+        public decimal Rate { get; set; }
     }
 }

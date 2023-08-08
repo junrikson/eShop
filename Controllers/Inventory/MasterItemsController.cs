@@ -227,7 +227,7 @@ namespace eShop.Controllers
 
         // GET: MasterItems/Edit/5
         [Authorize(Roles = "MasterItemsEdit")]
-        public ActionResult Edit(int? id, string action)
+        public ActionResult Edit(int? id, bool isCopy = false)
         {
             if (id == null)
             {
@@ -241,7 +241,7 @@ namespace eShop.Controllers
                 return HttpNotFound();
             }
 
-            if(action == "copy")
+            if(isCopy)
             {
                 masterItem.Code = "";
                 masterItem.Active = true;
