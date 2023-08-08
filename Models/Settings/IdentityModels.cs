@@ -162,6 +162,13 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.SalesReturnDetails> SalesReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Sale> Sales { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleDetails> SalesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.CashBankTransaction> CashBankTransactions { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.CashBankTransactionDetailsHeader> CashBankTransactionDetailsHeaders { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.CashBankTransactionDetails> CashBankTransactionsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.GiroCheque> GiroCheques { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.GiroChequeDatalistViewModel> GiroChequeDatalistViewModels { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterCashBank> MasterCashBanks { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterCashBankDatalistViewModel> MasterCashBankDatalistViewModels { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ChartOfAccount> ChartOfAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SystemLog> SystemLogs { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Authorization> Authorizations { get; set; }

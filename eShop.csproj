@@ -6979,12 +6979,35 @@
     <Content Include="Views\Masters\MasterCurrencies\_Details.cshtml" />
     <Content Include="Views\Masters\MasterCurrencies\_Edit.cshtml" />
     <Content Include="Views\Masters\MasterCurrencies\_IndexGrid.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankTransactions\Index.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankTransactions\Create.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankTransactions\Edit.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankTransactions\_IndexGrid.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankTransactions\_DetailsGrid.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankTransactions\_DetailsEdit.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankTransactions\_DetailsCreate.cshtml" />
+    <Content Include="Views\CashAndBank\GiroCheques\_DetailsCreate.cshtml" />
+    <Content Include="Views\CashAndBank\GiroCheques\_DetailsEdit.cshtml" />
+    <Content Include="Views\CashAndBank\GiroCheques\_DetailsGrid.cshtml" />
+    <Content Include="Views\CashAndBank\GiroCheques\_IndexGrid.cshtml" />
+    <Content Include="Views\CashAndBank\GiroCheques\Create.cshtml" />
+    <Content Include="Views\CashAndBank\GiroCheques\Edit.cshtml" />
+    <Content Include="Views\CashAndBank\GiroCheques\Index.cshtml" />
+    <Content Include="Views\CashAndBank\MasterCashBanks\_DetailsCreate.cshtml" />
+    <Content Include="Views\CashAndBank\MasterCashBanks\_DetailsEdit.cshtml" />
+    <Content Include="Views\CashAndBank\MasterCashBanks\_DetailsGrid.cshtml" />
+    <Content Include="Views\CashAndBank\MasterCashBanks\_IndexGrid.cshtml" />
+    <Content Include="Views\CashAndBank\MasterCashBanks\Create.cshtml" />
+    <Content Include="Views\CashAndBank\MasterCashBanks\Edit.cshtml" />
+    <Content Include="Views\CashAndBank\MasterCashBanks\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CrystalReports\" />
     <Folder Include="Models\AP\" />
     <Folder Include="Models\AR\" />
+    <Folder Include="Views\AP\" />
+    <Folder Include="Views\AR\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
