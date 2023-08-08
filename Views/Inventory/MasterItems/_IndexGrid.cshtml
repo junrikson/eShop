@@ -9,7 +9,8 @@
     {
         columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
         columns.Add(model => ((User.IsInRole("MasterItemsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "MasterItems", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
-        ((User.IsInRole("MasterItemsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "MasterItems", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
+        ((User.IsInRole("MasterItemsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "MasterItems", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
+        ((User.IsInRole("MasterItemsAdd")) ? "&nbsp;<a class=\"btn btn-warning btn-xs copy-data\" href=\"" + model.Id + "\"><i class=\"fa fa-copy\"></i> Copy</a>" : "") + "</div>").Encoded(false);
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
         columns.Add(model => model.Name).Titled(@Html.DisplayNameFor(model => model.Name));
         columns.Add(model => model.MasterCategory.Name).Titled(@Html.DisplayNameFor(model => model.MasterCategory.Name));

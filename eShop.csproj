@@ -303,6 +303,7 @@
     <Compile Include="Controllers\Inventory\MasterItemsController.cs" />
     <Compile Include="Controllers\Inventory\MasterBrandsController.cs" />
     <Compile Include="Controllers\Inventory\StockAdjustmentsController.cs" />
+    <Compile Include="Controllers\Masters\MasterCurrenciesController.cs" />
     <Compile Include="Controllers\Masters\MasterCustomersController.cs" />
     <Compile Include="Controllers\Inventory\MasterCategoriesController.cs" />
     <Compile Include="Controllers\Inventory\MasterUnitsController.cs" />
@@ -341,6 +342,7 @@
     <Compile Include="Models\CashAndBank\GiroCheque.cs" />
     <Compile Include="Models\CashAndBank\MasterCashBank.cs" />
     <Compile Include="Models\Inventory\StockAdjustment.cs" />
+    <Compile Include="Models\Master\MasterCurrency.cs" />
     <Compile Include="Models\Selling\Sale.cs" />
     <Compile Include="Models\Selling\SalesReturn.cs" />
     <Compile Include="Models\Selling\SalesOrder.cs" />
@@ -6972,6 +6974,11 @@
     <Content Include="Views\Inventory\StockAdjustments\Create.cshtml" />
     <Content Include="Views\Inventory\StockAdjustments\Edit.cshtml" />
     <Content Include="Views\Inventory\StockAdjustments\Index.cshtml" />
+    <Content Include="Views\Masters\MasterCurrencies\Index.cshtml" />
+    <Content Include="Views\Masters\MasterCurrencies\_Create.cshtml" />
+    <Content Include="Views\Masters\MasterCurrencies\_Details.cshtml" />
+    <Content Include="Views\Masters\MasterCurrencies\_Edit.cshtml" />
+    <Content Include="Views\Masters\MasterCurrencies\_IndexGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

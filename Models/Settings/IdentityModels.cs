@@ -134,6 +134,7 @@ namespace eShop.Models
         public IEnumerable ApplicationUsers { get; internal set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnit> MasterBusinessUnits { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegion> MasterRegions { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterCurrency> MasterCurrencies{ get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterItem> MasterItems { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterItemUnit> MasterItemUnits { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterCategory> MasterCategories { get; set; }

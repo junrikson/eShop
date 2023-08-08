@@ -23,15 +23,16 @@
             string messages = "";
             if (Request.IsAuthenticated)
             {
-                if (User.IsInRole("MasterBusinessUnitsActive") || User.IsInRole("MasterRegionsActive") || User.IsInRole("MasterCustomersActive") || User.IsInRole("MasterWarehousesActive") || User.IsInRole("MasterSuppliersActive"))
+                if (User.IsInRole("MasterBusinessUnitsActive") || User.IsInRole("MasterRegionsActive") || User.IsInRole("MasterCustomersActive") || User.IsInRole("MasterWarehousesActive") || User.IsInRole("MasterSuppliersActive") || User.IsInRole("MasterCurrenciesActive"))
                 {
-                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "MasterCustomers" || ViewBag.Current == "MasterBusinessUnits" || ViewBag.Current == "MasterRegions" || ViewBag.Current == "MasterWarehouses" || ViewBag.Current == "MasterSuppliers" ) ? " active" : "") + "\">";
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "MasterCustomers" || ViewBag.Current == "MasterBusinessUnits" || ViewBag.Current == "MasterRegions" || ViewBag.Current == "MasterWarehouses" || ViewBag.Current == "MasterSuppliers" || ViewBag.Current == "MasterCurrencies") ? " active" : "") + "\">";
                     messages = messages + "<a href=\"#\"><i class=\"fa fa-database\"></i><span>Master</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
                     if (User.IsInRole("MasterBusinessUnitsActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterBusinessUnits" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterBusinessUnits", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Unit Bisnis</a></li>"; }
                     if (User.IsInRole("MasterRegionsActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterRegions" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterRegions", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Wilayah</a></li>"; }
                     if (User.IsInRole("MasterCustomersActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterCustomers" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterCustomers", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Konsumen</a></li>"; }
                     if (User.IsInRole("MasterSuppliersActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterSuppliers" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterSuppliers", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Supplier</a></li>"; }
                     if (User.IsInRole("MasterWarehousesActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterWarehouses" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterWarehouses", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Gudang</a></li>"; }
+                    if (User.IsInRole("MasterCurrenciesActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterCurrencies" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterCurrencies", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Mata Uang</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
                 if (User.IsInRole("MasterCategoriesActive") || User.IsInRole("MasterItemsActive") || User.IsInRole("MasterUnitsActive") || User.IsInRole("MasterBrandsActive") || User.IsInRole("StockAdjustmentsActive"))

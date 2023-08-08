@@ -163,11 +163,12 @@ namespace eShop.Controllers
 
             if (ModelState.IsValid)
             {
+                db.Entry(masterItem).State = EntityState.Modified;
+
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
                     try
                     {
-                        db.MasterItems.Add(masterItem);
                         db.SaveChanges();
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterItem, MenuId = masterItem.Id, MenuCode = masterItem.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
@@ -226,7 +227,7 @@ namespace eShop.Controllers
 
         // GET: MasterItems/Edit/5
         [Authorize(Roles = "MasterItemsEdit")]
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id, string action)
         {
             if (id == null)
             {
@@ -239,6 +240,13 @@ namespace eShop.Controllers
             {
                 return HttpNotFound();
             }
+
+            if(action == "copy")
+            {
+                masterItem.Code = "";
+                masterItem.Active = true;
+            };
+
             return View("../Inventory/MasterItems/Edit", masterItem);
         }
 
@@ -292,6 +300,84 @@ namespace eShop.Controllers
             }
 
             return View("../Inventory/MasterItems/Edit", masterItem);
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "MasterItemsAdd")]
+        public ActionResult Copy(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            MasterItem obj = db.MasterItems.Find(id);
+
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                MasterItem masterItem = new MasterItem
+                {
+                    Code = "temp/" + Guid.NewGuid().ToString(),
+                    Name = obj.Name,
+                    MasterCategoryId = obj.MasterCategoryId,
+                    MasterBrandId = obj.MasterBrandId,
+                    MasterSupplierId = obj.MasterSupplierId,
+                    Notes = obj.Notes,
+                    Active = false,
+                    Created = DateTime.Now,
+                    Updated = DateTime.Now,
+                    UserId = User.Identity.GetUserId<int>()
+                };
+
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.MasterItems.Add(masterItem);
+                        db.SaveChanges();
+
+                        var masterItemUnits = db.MasterItemUnits.Where(x => x.MasterItemId == obj.Id && x.Active).ToList();
+
+                        if (masterItemUnits != null)
+                        {
+                            foreach (MasterItemUnit temp in masterItemUnits)
+                            {
+                                MasterItemUnit masterItemUnit = new MasterItemUnit
+                                {
+                                    MasterItemId = masterItem.Id,
+                                    MasterUnitId = temp.MasterUnitId,
+                                    Default = temp.Default,
+                                    Active = true,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.MasterItemUnits.Add(masterItemUnit);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        dbTran.Commit();
+
+                        masterItem.Code = "";
+                        masterItem.Active = true;
+
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+
+                return Json(masterItem.Id);
+            }
         }
 
         [HttpPost]

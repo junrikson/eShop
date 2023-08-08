@@ -141,6 +141,30 @@
                 });
             });
 
+            $('#data-table').on("click", ".copy-data", function (event) {
+                event.preventDefault();
+                var Id = $(this).attr("href");
+
+                var data = { id: Id };
+                var options = {};
+                options.url = "/MasterItems/Copy";
+                options.type = "POST";
+                options.headers = headers;
+                options.data = JSON.stringify(data);
+                options.contentType = "application/json";
+                options.dataType = "json";
+                options.success = function (msg) {
+                    window.location.href = '@Url.Action("Edit", "MasterItems")' + '?id=' + msg + '&&action=copy';
+                };
+                options.error = function () {
+                    window.location.href = '@Url.Action("Index", "MasterItems")';
+                };
+                $.ajax(options);
+            });
+
+            $("#cancel").click(function () {
+            });
+
             $('.fix-table').tableHeadFixer({ left: 3 });
         });
     </script>
