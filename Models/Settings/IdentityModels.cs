@@ -145,7 +145,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterSupplier> MasterSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterWarehouse> MasterWarehouses { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustment> StockAdjustments { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.StockAdjustmentDetails> StockAdjustmentsDetails { get; set; }        
+        public System.Data.Entity.DbSet<eShop.Models.StockAdjustmentDetails> StockAdjustmentsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.GiroCheque> GiroCheques { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrder> PurchaseOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrderDetails> PurchaseOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Purchase> Purchases { get; set; }
