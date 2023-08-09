@@ -11,10 +11,14 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Web.Mvc;
+using System.Web.Security;
 
 
 namespace eShop.Controllers
@@ -89,6 +93,7 @@ namespace eShop.Controllers
                 MasterCurrencyId = masterCurrency.Id,
                 Rate = masterCurrency.Rate,
                 MasterSupplierId = db.MasterSuppliers.FirstOrDefault().Id,
+                MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -110,6 +115,7 @@ namespace eShop.Controllers
                     purchaseOrder.MasterBusinessUnitId = 0;
                     purchaseOrder.MasterRegionId = 0;
                     purchaseOrder.MasterSupplierId = 0;
+                    purchaseOrder.MasterWarehouseId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -133,12 +139,13 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseOrdersAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
         {
             purchaseOrder.Created = DateTime.Now;
             purchaseOrder.Updated = DateTime.Now;
             purchaseOrder.UserId = User.Identity.GetUserId<int>();
             purchaseOrder.Total = SharedFunctions.GetTotalPurchaseOrder(db, purchaseOrder.Id);
+            purchaseOrder.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(purchaseOrder.Code)) purchaseOrder.Code = purchaseOrder.Code.ToUpper();
             if (!string.IsNullOrEmpty(purchaseOrder.Notes)) purchaseOrder.Notes = purchaseOrder.Notes.ToUpper();
@@ -148,7 +155,18 @@ namespace eShop.Controllers
                 purchaseOrder = GetModelState(purchaseOrder);
             }
 
-            db.Entry(purchaseOrder).State = EntityState.Modified;
+            db.Entry(purchaseOrder).State = EntityState.Unchanged;
+            db.Entry(purchaseOrder).Property("Code").IsModified = true;
+            db.Entry(purchaseOrder).Property("Date").IsModified = true;
+            db.Entry(purchaseOrder).Property("MasterBusinessUnitId").IsModified = true;
+            db.Entry(purchaseOrder).Property("MasterRegionId").IsModified = true;
+            db.Entry(purchaseOrder).Property("PurchaseRequestId").IsModified = true;
+            db.Entry(purchaseOrder).Property("MasterSupplierId").IsModified = true;
+            db.Entry(purchaseOrder).Property("MasterWarehouseId").IsModified = true;
+            db.Entry(purchaseOrder).Property("Total").IsModified = true;
+            db.Entry(purchaseOrder).Property("Notes").IsModified = true;
+            db.Entry(purchaseOrder).Property("Active").IsModified = true;
+            db.Entry(purchaseOrder).Property("Updated").IsModified = true;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -252,11 +270,12 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseOrdersEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
         {
             purchaseOrder.Updated = DateTime.Now;
             purchaseOrder.UserId = User.Identity.GetUserId<int>();
             purchaseOrder.Total = SharedFunctions.GetTotalPurchaseOrder(db, purchaseOrder.Id);
+            purchaseOrder.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(purchaseOrder.Code)) purchaseOrder.Code = purchaseOrder.Code.ToUpper();
             if (!string.IsNullOrEmpty(purchaseOrder.Notes)) purchaseOrder.Notes = purchaseOrder.Notes.ToUpper();
@@ -271,8 +290,7 @@ namespace eShop.Controllers
             db.Entry(purchaseOrder).Property("Date").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterRegionId").IsModified = true;
-            db.Entry(purchaseOrder).Property("PurchaseRequestId").IsModified = true;
-            db.Entry(purchaseOrder).Property("MasterSupplierId").IsModified = true;
+            db.Entry(purchaseOrder).Property("MasterWarehouseId").IsModified = true;
             db.Entry(purchaseOrder).Property("Total").IsModified = true;
             db.Entry(purchaseOrder).Property("Notes").IsModified = true;
             db.Entry(purchaseOrder).Property("Active").IsModified = true;
@@ -674,6 +692,96 @@ namespace eShop.Controllers
             return Json(masterItemUnitId);
         }
 
+        [Authorize(Roles = "PurchaseOrdersActive")]
+        public ActionResult ChangeCurrency(int? purchaseOrderId)
+        {
+            if (purchaseOrderId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(purchaseOrderId);
+
+            ChangeCurrency obj = new ChangeCurrency
+            {
+                Id = purchaseOrder.Id,
+                MasterCurrencyId = purchaseOrder.MasterCurrencyId,
+                Rate = purchaseOrder.Rate
+            };
+
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+
+            return PartialView("../Buying/PurchaseOrders/_ChangeCurrency", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PurchaseOrdersActive")]
+        public ActionResult ChangeCurrency([Bind(Include = "Id,MasterCurrencyId,Rate")] ChangeCurrency changeCurrency)
+        {
+            MasterCurrency masterCurrency = db.MasterCurrencies.Find(changeCurrency.MasterCurrencyId);
+
+            PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(changeCurrency.Id);
+            purchaseOrder.MasterCurrencyId = changeCurrency.MasterCurrencyId;
+            purchaseOrder.Rate = changeCurrency.Rate;
+
+            if (ModelState.IsValid)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var purchaseOrdersDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrder.Id).ToList();
+
+                        foreach (PurchaseOrderDetails purchaseOrderDetails in purchaseOrdersDetails)
+                        {
+                            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseOrderDetails.MasterItemUnitId);
+
+                            if (masterItemUnit == null)
+                                purchaseOrderDetails.Total = 0;
+                            else
+                                purchaseOrderDetails.Total = purchaseOrderDetails.Quantity * purchaseOrderDetails.Price * masterItemUnit.MasterUnit.Ratio * purchaseOrder.Rate;
+
+                            db.Entry(purchaseOrderDetails).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+
+                        purchaseOrder.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseOrder.Id);
+                        db.Entry(purchaseOrder).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+
+                        var returnObject = new
+                        {
+                            Status = "success",
+                            Message = masterCurrency.Code + " : " + purchaseOrder.Rate.ToString("N2")
+                        };
+
+                        return Json(returnObject, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+
+            return PartialView("../Buying/PurchaseOrders/_ChangeCurrency", changeCurrency);
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "PurchaseOrdersActive")]
+        public JsonResult GetCurrencyRate(int id)
+        {
+            return Json(db.MasterCurrencies.Find(id).Rate);
+        }
+
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "PurchaseOrdersActive")]
@@ -721,6 +829,89 @@ namespace eShop.Controllers
         public JsonResult GetTotal(int purchaseOrderId)
         {
             return Json(SharedFunctions.GetTotalPurchaseOrder(db, purchaseOrderId).ToString("N2"));
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "PurchaseOrdersActive")]
+        public JsonResult PopulateDetails(int purchaseOrderid, int purchaseRequestId)
+        {
+            PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(purchaseOrderid);
+            PurchaseRequest purchaseRequest = db.PurchaseRequests.Find(purchaseRequestId);
+
+            if (purchaseOrder != null && purchaseRequest != null)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var remove = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrder.Id).ToList();
+                        
+                        if(remove != null)
+                        {
+                            db.PurchaseOrdersDetails.RemoveRange(remove);
+                            db.SaveChanges();
+                        }
+
+                        var purchaseRequestsDetails = db.PurchaseRequestsDetails.Where(x => x.PurchaseRequestId == purchaseRequest.Id).ToList();
+
+                        if(purchaseRequestsDetails != null)
+                        {
+                            foreach(PurchaseRequestDetails purchaseRequestDetails in purchaseRequestsDetails)
+                            {
+                                PurchaseOrderDetails purchaseOrderDetails = new PurchaseOrderDetails
+                                {
+                                    PurchaseOrderId = purchaseOrder.Id,
+                                    MasterItemId = purchaseRequestDetails.MasterItemId,
+                                    MasterItemUnitId = purchaseRequestDetails.MasterItemUnitId,
+                                    Quantity = purchaseRequestDetails.Quantity,
+                                    Price = purchaseRequestDetails.Price,
+                                    Total = purchaseRequestDetails.Total,
+                                    Notes = purchaseRequestDetails.Notes,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.PurchaseOrdersDetails.Add(purchaseOrderDetails);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        purchaseOrder.PurchaseRequestId = purchaseRequest.Id;
+                        purchaseOrder.MasterBusinessUnitId = purchaseRequest.MasterBusinessUnitId;
+                        purchaseOrder.MasterRegionId = purchaseRequest.MasterRegionId;
+                        purchaseOrder.MasterCurrencyId = purchaseRequest.MasterCurrencyId;
+                        purchaseOrder.Rate = purchaseRequest.Rate;
+                        purchaseOrder.MasterSupplierId = purchaseRequest.MasterSupplierId;
+                        purchaseOrder.MasterWarehouseId = purchaseRequest.MasterWarehouseId;
+                        purchaseOrder.Notes = purchaseRequest.Notes;
+                        purchaseOrder.Total = purchaseRequest.Total;
+
+                        db.Entry(purchaseOrder).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+
+            return Json(new
+            {
+                purchaseOrder.MasterRegionId,
+                purchaseOrder.MasterBusinessUnitId,
+                purchaseOrder.MasterSupplierId,
+                purchaseOrder.MasterWarehouseId,
+                purchaseOrder.Notes,
+                Total = purchaseOrder.Total.ToString("N2"),
+                purchaseOrder.Date,
+                Currency = purchaseOrder.MasterCurrency.Code + " : " + purchaseOrder.Rate.ToString("N2")
+            });
         }
 
         protected override void Dispose(bool disposing)

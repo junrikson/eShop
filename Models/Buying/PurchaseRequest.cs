@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Web.Mvc;
 
 namespace eShop.Models
@@ -16,7 +17,6 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [DatalistColumn]
         [Required(ErrorMessage = "Kode PR harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Kode PR")]
@@ -24,7 +24,6 @@ namespace eShop.Models
         [Remote("IsCodeExists", "PurchaseRequests", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
         public string Code { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Tanggal")]
         [Required(ErrorMessage = "Tanggal harus diisi.")]
         [DataType(DataType.Date)]
@@ -57,7 +56,6 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Kode Supplier")]
         [Required(ErrorMessage = "Kode Supplier harus diisi.")]
         public int MasterSupplierId { get; set; }
@@ -101,6 +99,110 @@ namespace eShop.Models
 
         [Display(Name = "Print")]
         public bool IsPrint { get; set; }
+    }
+    public class PurchaseRequestViewModel
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [DatalistColumn]
+        [Required(ErrorMessage = "Kode PR harus diisi.")]
+        [Index("IX_Code", Order = 1, IsUnique = true)]
+        [Display(Name = "Kode PR")]
+        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
+        [Remote("IsCodeExists", "PurchaseRequests", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
+        public string Code { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Tanggal")]
+        [Required(ErrorMessage = "Tanggal harus diisi.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Unit Bisnis")]
+        public string MasterBusinessUnitCode { get; set; }
+
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Wilayah")]
+        public string MasterRegionCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Supplier")]
+        public string MasterSupplierCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Gudang")]
+        public string MasterWarehouseCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Total")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Total { get; set; }
+
+        [Display(Name = "Aktif")]
+        public bool Active { get; set; }
+    }
+
+    public class OutstandingPurchaseRequestDatalist : MvcDatalist<PurchaseRequestViewModel>
+    {
+        private DbContext Context { get; }
+
+        public OutstandingPurchaseRequestDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code + " - " + model.MasterSupplierCode;
+        }
+        public OutstandingPurchaseRequestDatalist()
+        {
+            Url = "/DatalistFilters/AllOutstandingPurchaseRequest";
+            Title = "Purchase Request";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<PurchaseRequestViewModel> GetModels()
+        {
+            return Context.Set<PurchaseRequest>()
+                .Where(x => !Context.Set<PurchaseOrder>().Where(p => p.Active == true && p.PurchaseRequestId == x.Id).Any())
+                .Select(x => new PurchaseRequestViewModel
+                {
+                    Id = x.Id,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnit = x.MasterBusinessUnit,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterRegionId = x.MasterRegionId,
+                    MasterRegion = x.MasterRegion,
+                    MasterSupplierCode = x.MasterSupplier.Code,
+                    MasterWarehouseCode = x.MasterWarehouse.Code,
+                    Code = x.Code,
+                    Date = x.Date,
+                    Total = x.Total,
+                    Active = x.Active,
+                }); 
+        }
     }
 
     public class PurchaseRequestDetails

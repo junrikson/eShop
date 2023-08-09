@@ -293,8 +293,7 @@ namespace eShop.Controllers
             db.Entry(purchaseRequest).Property("Active").IsModified = true;
             db.Entry(purchaseRequest).Property("Updated").IsModified = true;
 
-
-                    using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
                 try
                 {

@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <div class="col-md-12">
                             @Html.LabelFor(model => model.MasterItemId)
-                            @Html.DatalistFor(model => model.MasterItemId, new eShop.Models.MasterItemDatalist(), new { @class = "datalist2" })
+                            @Html.DatalistFor(model => model.MasterItemId, new eShop.Models.MasterItemSupplierDatalist(), new { @class = "datalist2" })
                             @Html.ValidationMessageFor(model => model.MasterItemId, "", new { @class = "text-danger" })
                         </div>
                     </div>
