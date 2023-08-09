@@ -296,6 +296,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Accounting\ChartOfAccountsController.cs" />
     <Compile Include="Controllers\Buying\PurchaseReturnsController.cs" />
     <Compile Include="Controllers\Buying\Purchases.cs" />
     <Compile Include="Controllers\Buying\PurchaseRequestsController.cs" />
@@ -6982,6 +6983,12 @@
     <Content Include="Views\Buying\PurchaseRequests\_ChangeCurrency.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_ChangeCurrency.cshtml" />
     <Content Include="Views\Buying\Purchases\_ChangeCurrency.cshtml" />
+    <Content Include="Views\Accounting\ChartOfAccounts\Index.cshtml" />
+    <Content Include="Views\Accounting\ChartOfAccounts\_Create.cshtml" />
+    <Content Include="Views\Accounting\ChartOfAccounts\_Details.cshtml" />
+    <Content Include="Views\Accounting\ChartOfAccounts\_Edit.cshtml" />
+    <Content Include="Views\Accounting\ChartOfAccounts\_IndexGrid.cshtml" />
+    <Content Include="Views\Accounting\ChartOfAccounts\_OtherGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
