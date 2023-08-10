@@ -241,7 +241,6 @@ namespace eShop.Extensions
             return total;
         }
 
-
        public static decimal GetTotalSale(ApplicationDbContext db, int saleId, int? saleDetailsId = null)
              {
             decimal total = 0;
@@ -260,6 +259,40 @@ namespace eShop.Extensions
             {
                 total = saleDetails.Sum(y => y.Total);
             }
+
+            return total;
+        }
+
+        public static decimal GetTotalJournalDebit(ApplicationDbContext db, int journalId, int? journalDetailId = null)
+        {
+            decimal total = 0;
+
+            List<JournalDetails> journalDetails = null;
+
+            if (journalDetailId == null)
+                journalDetails = db.JournalsDetails.Where(x => x.JournalId == journalId).ToList();
+            else
+                journalDetails = db.JournalsDetails.Where(x => x.JournalId == journalId && x.Id != journalDetailId).ToList();
+
+            if (journalDetails != null)
+                total = journalDetails.Sum(y => y.Debit);
+
+            return total;
+        }
+
+        public static decimal GetTotalJournalCredit(ApplicationDbContext db, int journalId, int? journalDetailId = null)
+        {
+            decimal total = 0;
+
+            List<JournalDetails> journalDetails = null;
+
+            if (journalDetailId == null)
+                journalDetails = db.JournalsDetails.Where(x => x.JournalId == journalId).ToList();
+            else
+                journalDetails = db.JournalsDetails.Where(x => x.JournalId == journalId && x.Id != journalDetailId).ToList();
+
+            if (journalDetails != null)
+                total = journalDetails.Sum(y => y.Credit);
 
             return total;
         }

@@ -296,10 +296,15 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Accounting\ChartOfAccountsController.cs" />
+    <Compile Include="Controllers\Accounting\JournalsController.cs" />
+    <Compile Include="Controllers\Accounting\OpeningBallanceController.cs" />
     <Compile Include="Controllers\Buying\PurchaseReturnsController.cs" />
     <Compile Include="Controllers\Buying\Purchases.cs" />
     <Compile Include="Controllers\Buying\PurchaseRequestsController.cs" />
     <Compile Include="Controllers\Buying\PurchaseOrdersController.cs" />
+    <Compile Include="Controllers\CashAndBank\GiroChequeInsController.cs" />
+    <Compile Include="Controllers\CashAndBank\GiroChequeOutsController.cs" />
     <Compile Include="Controllers\Inventory\MasterItemsController.cs" />
     <Compile Include="Controllers\Inventory\MasterBrandsController.cs" />
     <Compile Include="Controllers\Inventory\StockAdjustmentsController.cs" />
@@ -6982,7 +6987,7 @@
     <Content Include="Views\Buying\PurchaseRequests\_ChangeCurrency.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_ChangeCurrency.cshtml" />
     <Content Include="Views\Selling\SalesRequests\_ChangeCurrency.cshtml" />
-    <Content Include="Views\Selling\SalesOrders\_ChangeCurrency.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

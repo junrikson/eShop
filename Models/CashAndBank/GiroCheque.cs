@@ -24,7 +24,6 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [DatalistColumn]
         [Required(ErrorMessage = "Nomor Giro harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Nomor Giro")]
@@ -32,14 +31,12 @@ namespace eShop.Models
         [Remote("IsCodeExists", "GiroChequeIns", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah ada.")]
         public string Code { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Tanggal")]
         [Required(ErrorMessage = "Tanggal Giro harus diisi.")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Jatuh Tempo")]
         [Required(ErrorMessage = "Jatuh Tempo harus diisi.")]
         [DataType(DataType.Date)]
