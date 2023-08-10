@@ -68,12 +68,6 @@ namespace eShop.Models
         [Display(Name = "Unit Bisnis")]
         public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
 
-        [Display(Name = "Giro / Cek")]
-        public int? GiroChequeId { get; set; }
-
-        [Display(Name = "Giro / Cek")]
-        public virtual GiroCheque GiroCheque { get; set; }
-
         [Display(Name = "Jenis Jurnal")]
         [JsonConverter(typeof(StringEnumConverter))]
         public EnumJournalType Type { get; set; }
@@ -87,6 +81,18 @@ namespace eShop.Models
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        [Display(Name = "Pembelian")]
+        public int? PurchaseId { get; set; }
+
+        [Display(Name = "Pembelian")]
+        public virtual Purchase Purchase { get; set; }
+
+        [Display(Name = "Penjualan")]
+        public int? SaleId { get; set; }
+
+        [Display(Name = "Penjualan")]
+        public virtual Sale Sale { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
@@ -144,10 +150,17 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Display(Name = "Tanggal Transaksi")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
-        public DateTime TransactionDate { get; set; }
+        [Display(Name = "Detail Pembelian")]
+        public int? PurchaseDetailsId { get; set; }
+
+        [Display(Name = "Detail Pembelian")]
+        public virtual PurchaseDetails PurchaseDetails { get; set; }
+
+        [Display(Name = "Detail Penjualan")]
+        public int? SaleDetailsId { get; set; }
+
+        [Display(Name = "Detail Penjualan")]
+        public virtual SaleDetails SaleDetails { get; set; }
 
         [Display(Name = "Dibuat")]
         [DataType(DataType.DateTime)]

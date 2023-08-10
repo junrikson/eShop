@@ -1,0 +1,146 @@
+﻿@model eShop.Models.Journal
+
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Detail - Jurnal</h4>
+        </div>
+        <div class="modal-body">
+            <table align="center">
+                <tr>
+                    <td style="font-weight:bold;" width="130px" valign="top">
+                        @Html.DisplayNameFor(model => model.Code)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Code)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.MasterBusinessUnit.Name)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.MasterBusinessUnit.Name)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Date)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Date)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Debit)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Model.Debit.ToString("N0")
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Credit)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Model.Credit.ToString("N0")
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Notes)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Notes)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Created)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Created)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Updated)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Updated)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.UserId)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.UserId)
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <hr />
+                        <table class="table-bordered table-striped table-hover" width="800px">
+                            <tr>
+                                <th style="font-weight: bold;">No. Akun</th>
+                                <th style="font-weight: bold;">Nama Akun</th>
+                                <th style="font-weight: bold;">Tgl. Transaksi</th>
+                                <th style="font-weight: bold;">Debet</th>
+                                <th style="font-weight: bold;">Kredit</th>
+                                <th style="font-weight: bold;">Wilayah</th>
+                                <th style="font-weight: bold;">Kapal</th>
+                                <th style="font-weight: bold;">Voyage</th>
+                                <th style="font-weight: bold;">Keterangan</th>
+                            </tr>
+                            @{
+                                List<ERP.Models.JournalDetails> journalDetails = ViewBag.JournalDetails;
+                                foreach (var obj in journalDetails)
+                                {
+                                    @(Html.Raw("<tr><td>" + obj.ChartOfAccount.Code + "</td><td>" + obj.ChartOfAccount.Name + "</td><td>" + obj.TransactionDate.ToString("dd/MM/yyyy") + "</td><td>" + obj.Debit.ToString("N0") + "</td><td>" + obj.Credit.ToString("N0") + "</td><td>" + obj.MasterRegion.Code + "</td><td>" + (obj.MasterShipId == null ? "" : obj.MasterShip.Name) + "</td><td>" + obj.Voyage + "</td><td>" + obj.Notes + "</td></tr>"))
+
+                                }
+                            }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
