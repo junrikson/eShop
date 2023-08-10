@@ -486,11 +486,12 @@ namespace eShop.Controllers
         public ActionResult DetailsCreate([Bind(Include = "Id,PurchaseOrderId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] PurchaseOrderDetails purchaseOrderDetails)
         {
             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseOrderDetails.MasterItemUnitId);
+            PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(purchaseOrderDetails.PurchaseOrderId);
 
-            if(masterItemUnit == null)
+            if (masterItemUnit == null)
                 purchaseOrderDetails.Total = 0;
             else
-                purchaseOrderDetails.Total = purchaseOrderDetails.Quantity * purchaseOrderDetails.Price * masterItemUnit.MasterUnit.Ratio;
+                purchaseOrderDetails.Total = purchaseOrderDetails.Quantity * purchaseOrderDetails.Price * masterItemUnit.MasterUnit.Ratio * purchaseOrder.Rate;
 
             purchaseOrderDetails.Created = DateTime.Now;
             purchaseOrderDetails.Updated = DateTime.Now;
@@ -507,7 +508,6 @@ namespace eShop.Controllers
                         db.PurchaseOrdersDetails.Add(purchaseOrderDetails);
                         db.SaveChanges();
 
-                        PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(purchaseOrderDetails.PurchaseOrderId);
                         purchaseOrder.Total = SharedFunctions.GetTotalPurchaseOrder(db, purchaseOrder.Id, purchaseOrderDetails.Id) + purchaseOrderDetails.Total;
 
                         db.Entry(purchaseOrder).State = EntityState.Modified;
@@ -554,11 +554,12 @@ namespace eShop.Controllers
         public ActionResult DetailsEdit([Bind(Include = "Id,PurchaseOrderId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] PurchaseOrderDetails purchaseOrderDetails)
         {
             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseOrderDetails.MasterItemUnitId);
+            PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(purchaseOrderDetails.PurchaseOrderId);
 
             if (masterItemUnit == null)
                 purchaseOrderDetails.Total = 0;
             else
-                purchaseOrderDetails.Total = purchaseOrderDetails.Quantity * purchaseOrderDetails.Price * masterItemUnit.MasterUnit.Ratio;
+                purchaseOrderDetails.Total = purchaseOrderDetails.Quantity * purchaseOrderDetails.Price * masterItemUnit.MasterUnit.Ratio * purchaseOrder.Rate;
 
             purchaseOrderDetails.Updated = DateTime.Now;
             purchaseOrderDetails.UserId = User.Identity.GetUserId<int>();
@@ -583,7 +584,6 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(purchaseOrderDetails.PurchaseOrderId);
                         purchaseOrder.Total = SharedFunctions.GetTotalPurchaseOrder(db, purchaseOrder.Id, purchaseOrderDetails.Id) + purchaseOrderDetails.Total;
 
                         db.Entry(purchaseOrder).State = EntityState.Modified;
@@ -749,7 +749,7 @@ namespace eShop.Controllers
                             db.SaveChanges();
                         }
 
-                        purchaseOrder.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseOrder.Id);
+                        purchaseOrder.Total = SharedFunctions.GetTotalPurchaseOrder(db, purchaseOrder.Id);
                         db.Entry(purchaseOrder).State = EntityState.Modified;
                         db.SaveChanges();
 
