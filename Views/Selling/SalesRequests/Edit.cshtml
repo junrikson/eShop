@@ -114,6 +114,9 @@
                             <h3 class="box-title">Details</h3>
                         </div>
                         <div class="text-right col-md-10">
+                            <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "SalesRequests")" ">
+                                @Model.MasterCurrency.Code : @Model.Rate.ToString("N2")
+                            </button>
                             <label style="font-weight: bold">TOTAL :</label>
                             <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
                             <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "SalesRequests")">
@@ -173,10 +176,41 @@
             new MvcGrid(element);
         });
 
+
         Inputmask.extendAliases({
             'myNum': {
                 alias: 'currency',
                 digits: 0,
+                digitsOptional: false,
+                integerDigits: 12,
+                prefix: '',
+                groupSeparator: '.',
+                radixPoint: ',',
+                groupSize: 3,
+                rightAlign: false,
+                autoUnmask: true
+            }
+        });
+
+        Inputmask.extendAliases({
+            'myNum2': {
+                alias: 'currency',
+                digits: 2,
+                digitsOptional: false,
+                integerDigits: 12,
+                prefix: '',
+                groupSeparator: '.',
+                radixPoint: ',',
+                groupSize: 3,
+                rightAlign: false,
+                autoUnmask: true
+            }
+        });
+
+        Inputmask.extendAliases({
+            'myNum10': {
+                alias: 'currency',
+                digits: 10,
                 digitsOptional: false,
                 integerDigits: 12,
                 prefix: '',
@@ -246,6 +280,46 @@
             }
         });
 
+        $('#btnChangeCurrency').click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr("href") + "?salesRequestId=" + $("input#Id").val();
+            $.get(url, function (data) {
+                $('#detailsContainer').html(data);
+                $('#detailsModal').modal('show');
+
+                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                    new MvcDatalist(element);
+                });
+
+                $('form').each(function () {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                });
+
+                $("#MasterCurrencyId").on("change", function () {
+                    var id = $("#MasterCurrencyId").val();
+                    var data = { Id: id };
+                    var options = {};
+
+                    options.url = "/SalesRequests/GetCurrencyRate";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(data);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (rate) {
+                        document.getElementById('Rate').value = rate;
+                    };
+                    options.error = function () {
+                    };
+                    $.ajax(options);
+                }).change();
+
+                Inputmask("myNum10").mask("#Rate");
+            });
+        });
+
         function CreateSuccess(data) {
             if (data !== "success") {
                 $('#detailsContainer').html(data);
@@ -297,6 +371,35 @@
             };
             $.ajax(options);
         }
+
+        function ChangeCurrencySuccess(data) {
+            if (data.Status !== "success") {
+                $('#detailsContainer').html(data);
+                return;
+            }
+            $('#detailsModal').modal('hide');
+            $('#detailsContainer').html("");
+
+            var grid = new MvcGrid(document.querySelector('#detail-table'));
+            grid.reload();
+
+            document.querySelector('#btnChangeCurrency').innerHTML = data.Message;
+
+            var param = { salesRequestId: $("#Id").val() };
+            var options = {};
+
+            options.url = "/SalesRequests/GetTotal";
+            options.type = "POST";
+            options.headers = headers;
+            options.data = JSON.stringify(param);
+            options.contentType = "application/json";
+            options.dataType = "json";
+            options.success = function (msg) {
+                document.getElementById('Total').value = msg;
+            };
+            $.ajax(options);
+        }
+
 
         var token = $('input[name="__RequestVerificationToken"]').val();
         var headers = {};
