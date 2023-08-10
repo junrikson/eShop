@@ -89,6 +89,7 @@ namespace eShop.Controllers
                 MasterCurrencyId = masterCurrency.Id,
                 Rate = masterCurrency.Rate,
                 MasterCustomerId = db.MasterCustomers.FirstOrDefault().Id,
+                MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -110,6 +111,7 @@ namespace eShop.Controllers
                     salesRequest.MasterBusinessUnitId = 0;
                     salesRequest.MasterRegionId = 0;
                     salesRequest.MasterCustomerId = 0;
+                    salesRequest.MasterWarehouseId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -133,12 +135,13 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SalesRequestsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterCustomerId,Notes,Active,Created,Updated,UserId")] SalesRequest salesRequest)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterCustomerId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] SalesRequest salesRequest)
         {
             salesRequest.Created = DateTime.Now;
             salesRequest.Updated = DateTime.Now;
             salesRequest.UserId = User.Identity.GetUserId<int>();
             salesRequest.Total = SharedFunctions.GetTotalSalesRequest(db, salesRequest.Id);
+            salesRequest.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(salesRequest.Code)) salesRequest.Code = salesRequest.Code.ToUpper();
             if (!string.IsNullOrEmpty(salesRequest.Notes)) salesRequest.Notes = salesRequest.Notes.ToUpper();
@@ -148,7 +151,17 @@ namespace eShop.Controllers
                 salesRequest = GetModelState(salesRequest);
             }
 
-            db.Entry(salesRequest).State = EntityState.Modified;
+            db.Entry(salesRequest).State = EntityState.Unchanged;
+            db.Entry(salesRequest).Property("Code").IsModified = true;
+            db.Entry(salesRequest).Property("Date").IsModified = true;
+            db.Entry(salesRequest).Property("MasterBusinessUnitId").IsModified = true;
+            db.Entry(salesRequest).Property("MasterRegionId").IsModified = true;
+            db.Entry(salesRequest).Property("MasterCustomerId").IsModified = true;
+            db.Entry(salesRequest).Property("MasterWarehouseId").IsModified = true;
+            db.Entry(salesRequest).Property("Total").IsModified = true;
+            db.Entry(salesRequest).Property("Notes").IsModified = true;
+            db.Entry(salesRequest).Property("Active").IsModified = true;
+            db.Entry(salesRequest).Property("Updated").IsModified = true;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -257,6 +270,7 @@ namespace eShop.Controllers
             salesRequest.Updated = DateTime.Now;
             salesRequest.UserId = User.Identity.GetUserId<int>();
             salesRequest.Total = SharedFunctions.GetTotalSalesRequest(db, salesRequest.Id);
+            salesRequest.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(salesRequest.Code)) salesRequest.Code = salesRequest.Code.ToUpper();
             if (!string.IsNullOrEmpty(salesRequest.Notes)) salesRequest.Notes = salesRequest.Notes.ToUpper();
@@ -271,8 +285,7 @@ namespace eShop.Controllers
             db.Entry(salesRequest).Property("Date").IsModified = true;
             db.Entry(salesRequest).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(salesRequest).Property("MasterRegionId").IsModified = true;
-            db.Entry(salesRequest).Property("PurchaseRequestId").IsModified = true;
-            db.Entry(salesRequest).Property("MasterSupplierId").IsModified = true;
+            db.Entry(salesRequest).Property("MasterCustomerId").IsModified = true;
             db.Entry(salesRequest).Property("Total").IsModified = true;
             db.Entry(salesRequest).Property("Notes").IsModified = true;
             db.Entry(salesRequest).Property("Active").IsModified = true;
@@ -672,6 +685,96 @@ namespace eShop.Controllers
             }
 
             return Json(masterItemUnitId);
+        }
+
+        [Authorize(Roles = "SalesRequestsActive")]
+        public ActionResult ChangeCurrency(int? salesRequestId)
+        {
+            if (salesRequestId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            SalesRequest salesRequest = db.SalesRequests.Find(salesRequestId);
+
+            ChangeCurrency obj = new ChangeCurrency
+            {
+                Id = salesRequest.Id,
+                MasterCurrencyId = salesRequest.MasterCurrencyId,
+                Rate = salesRequest.Rate
+            };
+
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+
+            return PartialView("../Selling/SalesRequests/_ChangeCurrency", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "SalesRequestsActive")]
+        public ActionResult ChangeCurrency([Bind(Include = "Id,MasterCurrencyId,Rate")] ChangeCurrency changeCurrency)
+        {
+            MasterCurrency masterCurrency = db.MasterCurrencies.Find(changeCurrency.MasterCurrencyId);
+
+            SalesRequest salesRequest = db.SalesRequests.Find(changeCurrency.Id);
+            salesRequest.MasterCurrencyId = changeCurrency.MasterCurrencyId;
+            salesRequest.Rate = changeCurrency.Rate;
+
+            if (ModelState.IsValid)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var salesRequestsDetails = db.SalesRequestsDetails.Where(x => x.SalesRequestId == salesRequest.Id).ToList();
+
+                        foreach (SalesRequestDetails salesRequestDetails in salesRequestsDetails)
+                        {
+                            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(salesRequestDetails.MasterItemUnitId);
+
+                            if (masterItemUnit == null)
+                                salesRequestDetails.Total = 0;
+                            else
+                                salesRequestDetails.Total = salesRequestDetails.Quantity * salesRequestDetails.Price * masterItemUnit.MasterUnit.Ratio * salesRequest.Rate;
+
+                            db.Entry(salesRequestDetails).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+
+                        salesRequest.Total = SharedFunctions.GetTotalSalesRequest(db, salesRequest.Id);
+                        db.Entry(salesRequest).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+
+                        var returnObject = new
+                        {
+                            Status = "success",
+                            Message = masterCurrency.Code + " : " + salesRequest.Rate.ToString("N2")
+                        };
+
+                        return Json(returnObject, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+
+            return PartialView("../Selling/SalesRequests/_ChangeCurrency", changeCurrency);
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "SalesRequestsActive")]
+        public JsonResult GetCurrencyRate(int id)
+        {
+            return Json(db.MasterCurrencies.Find(id).Rate);
         }
 
         [HttpPost]

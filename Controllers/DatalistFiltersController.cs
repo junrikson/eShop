@@ -5,6 +5,7 @@ using eShop.Models;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using static eShop.Models.MasterItemSupplierDatalist;
 
 namespace eShop.Controllers
 {
@@ -79,6 +80,16 @@ namespace eShop.Controllers
             MasterItemSupplierDatalist datalist = new MasterItemSupplierDatalist(db);
             filter.AdditionalFilters["Active"] = true;
             filter.AdditionalFilters["MasterSupplierId"] = masterSupplierId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+                [HttpGet]
+        public JsonResult AllMasterItem(DatalistFilter filter)
+        {
+            AllMasterItemDatalist datalist = new AllMasterItemDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
