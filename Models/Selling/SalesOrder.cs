@@ -57,6 +57,12 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
+        [Display(Name = "Sales Request")]
+        public int? SalesRequestId { get; set; }
+
+        [Display(Name = "Sales Request")]
+        public virtual SalesRequest SalesRequest { get; set; }
+
         [DatalistColumn]
         [Display(Name = "Kode Customer")]
         [Required(ErrorMessage = "Kode Customer harus diisi.")]

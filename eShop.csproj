@@ -6982,6 +6982,7 @@
     <Content Include="Views\Buying\PurchaseRequests\_ChangeCurrency.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_ChangeCurrency.cshtml" />
     <Content Include="Views\Selling\SalesRequests\_ChangeCurrency.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\_ChangeCurrency.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
