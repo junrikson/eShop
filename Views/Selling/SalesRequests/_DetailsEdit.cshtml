@@ -23,13 +23,13 @@
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         @Html.HiddenFor(model => model.Id)
                         @Html.HiddenFor(model => model.SalesRequestId)
-                        <div class="form-group">
+                        @*<div class="form-group">
                             <div class="col-md-12">
                                 @Html.LabelFor(model => model.MasterItemId)
                                 @Html.DatalistFor(model => model.MasterItemId, new eShop.Models.MasterItemDatalist(), new { @class = "datalist2" })
                                 @Html.ValidationMessageFor(model => model.MasterItemId, "", new { @class = "text-danger" })
                             </div>
-                        </div>
+                        </div>*@
                         <div class="form-group">
                             <div class="col-md-6">
                                 @Html.LabelFor(model => model.Quantity)

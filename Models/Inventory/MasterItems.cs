@@ -102,6 +102,34 @@ namespace eShop.Models
             return Context.Set<MasterItem>();
         }
     }
+
+    public class AllMasterItemDatalist : MvcDatalist<MasterItem>
+    {
+        private DbContext Context { get; }
+
+        public AllMasterItemDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code + " " + model.Name;
+        }
+        public AllMasterItemDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterItem";
+            Title = "Master Item";
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterItem> GetModels()
+        {
+            return Context.Set<MasterItem>();
+        }
+    }
+
+
     public class MasterItemUnit
     {
         [Key]

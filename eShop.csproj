@@ -6986,6 +6986,7 @@
     <Content Include="Views\Masters\MasterCurrencies\_IndexGrid.cshtml" />
     <Content Include="Views\Buying\PurchaseRequests\_ChangeCurrency.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_ChangeCurrency.cshtml" />
+    <Content Include="Views\Selling\SalesRequests\_ChangeCurrency.cshtml" />
     <Content Include="Views\Buying\Purchases\_ChangeCurrency.cshtml" />
     <Content Include="Views\Accounting\ChartOfAccounts\Index.cshtml" />
     <Content Include="Views\Accounting\ChartOfAccounts\_Create.cshtml" />
