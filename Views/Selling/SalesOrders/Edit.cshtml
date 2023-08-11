@@ -69,6 +69,7 @@
                             <div class="form-group">
                                 <div class="col-md-10">
                                     @Html.LabelFor(model => model.Code)
+                                    @Html.HiddenFor(model => model.Code)
                                     @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
                                     @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                                 </div>

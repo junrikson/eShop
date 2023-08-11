@@ -285,6 +285,7 @@ namespace eShop.Controllers
             db.Entry(salesOrder).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(salesOrder).Property("MasterRegionId").IsModified = true;
             db.Entry(salesOrder).Property("MasterWarehouseId").IsModified = true;
+            db.Entry(salesOrder).Property("MasterCustomerId").IsModified = true;
             db.Entry(salesOrder).Property("Total").IsModified = true;
             db.Entry(salesOrder).Property("Notes").IsModified = true;
             db.Entry(salesOrder).Property("Active").IsModified = true;

@@ -265,7 +265,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SalesRequestsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterCustomerId,Notes,Active,Created,Updated,UserId")] SalesRequest salesRequest)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterCustomerId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] SalesRequest salesRequest)
         {
             salesRequest.Updated = DateTime.Now;
             salesRequest.UserId = User.Identity.GetUserId<int>();
@@ -286,6 +286,7 @@ namespace eShop.Controllers
             db.Entry(salesRequest).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(salesRequest).Property("MasterRegionId").IsModified = true;
             db.Entry(salesRequest).Property("MasterCustomerId").IsModified = true;
+            db.Entry(salesRequest).Property("MasterWarehouseId").IsModified = true;
             db.Entry(salesRequest).Property("Total").IsModified = true;
             db.Entry(salesRequest).Property("Notes").IsModified = true;
             db.Entry(salesRequest).Property("Active").IsModified = true;
