@@ -94,6 +94,12 @@ namespace eShop.Models
         [Display(Name = "Penjualan")]
         public virtual Sale Sale { get; set; }
 
+        [Display(Name = "Kas/Bank")]
+        public int? CashBankTransactionId { get; set; }
+
+        [Display(Name = "Kas/Bank")]
+        public virtual CashBankTransaction CashBankTransaction { get; set; }
+
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
 
@@ -161,6 +167,18 @@ namespace eShop.Models
 
         [Display(Name = "Detail Penjualan")]
         public virtual SaleDetails SaleDetails { get; set; }
+
+        [Display(Name = "Detail Kas/Bank")]
+        public int? CashBankTransactionDetailsId { get; set; }
+
+        [Display(Name = "Detail Kas/Bank")]
+        public virtual CashBankTransactionDetails CashBankTransactionDetails { get; set; }
+
+        [Display(Name = "Detail Header as/Bank")]
+        public int? CashBankTransactionDetailsHeaderId { get; set; }
+
+        [Display(Name = "Detail Header Kas/Bank")]
+        public virtual CashBankTransactionDetailsHeader CashBankTransactionDetailsHeader { get; set; }
 
         [Display(Name = "Dibuat")]
         [DataType(DataType.DateTime)]

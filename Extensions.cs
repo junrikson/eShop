@@ -297,6 +297,388 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalCashBankTransactionDetails(ApplicationDbContext db, int cashBankTransactionId, int? cashBankTransactionDetailsId = null)
+        {
+            decimal total = 0;
+            List<CashBankTransactionDetails> bankTransactionsDetails = null;
+
+            if (cashBankTransactionDetailsId == null)
+                bankTransactionsDetails = db.CashBankTransactionsDetails.Where(x => x.CashBankTransactionId == cashBankTransactionId).ToList();
+            else
+                bankTransactionsDetails = db.CashBankTransactionsDetails.Where(x => x.CashBankTransactionId == cashBankTransactionId && x.Id != cashBankTransactionDetailsId).ToList();
+
+            if (bankTransactionsDetails != null)
+                total = bankTransactionsDetails.Sum(y => y.Total);
+
+            return total;
+        }
+
+        public static decimal GetTotalCashBankTransactionDetailsHeader(ApplicationDbContext db, int cashBankTransactionId, int? cashBankTransactionDetailsHeaderId = null)
+        {
+            decimal total = 0;
+            List<CashBankTransactionDetailsHeader> bankTransactionsDetailsHeader = null;
+
+            if (cashBankTransactionDetailsHeaderId == null)
+                bankTransactionsDetailsHeader = db.CashBankTransactionsDetailsHeader.Where(x => x.CashBankTransactionId == cashBankTransactionId).ToList();
+            else
+                bankTransactionsDetailsHeader = db.CashBankTransactionsDetailsHeader.Where(x => x.CashBankTransactionId == cashBankTransactionId && x.Id != cashBankTransactionDetailsHeaderId).ToList();
+
+            if (bankTransactionsDetailsHeader != null)
+                total = bankTransactionsDetailsHeader.Sum(y => y.Total);
+
+            return total;
+        }
+        public static Journal CreateCashBankJournal(CashBankTransaction cashBankTransaction, ApplicationDbContext db)
+        {
+            Journal journal = new Journal
+            {
+                Code = cashBankTransaction.Code,
+                Date = cashBankTransaction.Date,
+                MasterBusinessUnitId = cashBankTransaction.MasterBusinessUnitId,
+                Type = EnumJournalType.CashBankTransaction,
+                Debit = 0,
+                Credit = 0,
+                CashBankTransactionId = cashBankTransaction.Id,
+                Active = cashBankTransaction.Active,
+                Created = cashBankTransaction.Created,
+                Updated = cashBankTransaction.Updated,
+                UserId = cashBankTransaction.UserId
+            };
+
+            db.Journals.Add(journal);
+            db.SaveChanges();
+
+            return journal;
+        }
+
+        public static Journal UpdateCashBankJournal(Journal journal, CashBankTransaction cashBankTransaction, EnumCashBankTransactionType enumCashBankTransactionType, ApplicationDbContext db)
+        {
+            db.Entry(journal).State = EntityState.Modified;
+
+            journal.Code = cashBankTransaction.Code;
+            journal.Date = cashBankTransaction.Date;
+            journal.MasterBusinessUnitId = cashBankTransaction.MasterBusinessUnitId;
+            journal.Type = EnumJournalType.CashBankTransaction;
+            journal.Debit = 0;
+            journal.Credit = 0;
+            journal.CashBankTransactionId = cashBankTransaction.Id;
+            journal.Active = cashBankTransaction.Active;
+            journal.Updated = cashBankTransaction.Updated;
+            journal.UserId = cashBankTransaction.UserId;
+            db.SaveChanges();
+
+            List<CashBankTransactionDetails> cashBankTransactionsDetails = db.CashBankTransactionsDetails.Where(x => x.CashBankTransactionId == cashBankTransaction.Id).ToList();
+            if (cashBankTransactionsDetails != null && cashBankTransactionsDetails.Count > 0)
+            {
+                foreach (CashBankTransactionDetails cashBankTransactionDetails in cashBankTransactionsDetails)
+                {
+                    List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.CashBankTransaction && x.CashBankTransactionDetailsId == cashBankTransactionDetails.Id).ToList();
+
+                    if (journalsDetails == null || journalsDetails.Count <= 0)
+                        CreateCashBankJournalDetails(cashBankTransactionDetails, journal, enumCashBankTransactionType, db);
+                    else
+                        UpdateCashBankJournalDetails(cashBankTransactionDetails, enumCashBankTransactionType, db);
+                }
+            }
+
+            List<CashBankTransactionDetailsHeader> cashBankTransactionsDetailsHeader = db.CashBankTransactionsDetailsHeader.Where(x => x.CashBankTransactionId == cashBankTransaction.Id).ToList();
+            if (cashBankTransactionsDetailsHeader != null && cashBankTransactionsDetailsHeader.Count > 0)
+            {
+                foreach (CashBankTransactionDetailsHeader cashBankTransactionDetailsHeader in cashBankTransactionsDetailsHeader)
+                {
+                    List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.CashBankTransaction && x.CashBankTransactionDetailsHeaderId == cashBankTransactionDetailsHeader.Id).ToList();
+
+                    if (journalsDetails == null || journalsDetails.Count <= 0)
+                        CreateCashBankJournalDetailsHeader(cashBankTransactionDetailsHeader, journal, enumCashBankTransactionType, db);
+                    else
+                        UpdateCashBankJournalDetailsHeader(cashBankTransactionDetailsHeader, enumCashBankTransactionType, db);
+                }
+            }
+            return journal;
+        }
+
+        public static void DeleteCashBankJournals(int id, Journal journal, CashBankTransaction bankTransaction, ApplicationDbContext db)
+        {
+            if (journal != null)
+            {
+                var journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
+
+                if (journalsDetails != null && journalsDetails.Count > 0)
+                {
+                    db.JournalsDetails.RemoveRange(journalsDetails);
+                    db.SaveChanges();
+                }
+
+                db.Journals.Remove(journal);
+                db.SaveChanges();
+            }
+
+            db.CashBankTransactionsDetails.RemoveRange(db.CashBankTransactionsDetails.Where(x => x.CashBankTransactionId == id));
+            db.SaveChanges();
+
+            db.CashBankTransactionsDetailsHeader.RemoveRange(db.CashBankTransactionsDetailsHeader.Where(x => x.CashBankTransactionId == id));
+            db.SaveChanges();
+
+            db.CashBankTransactions.Remove(bankTransaction);
+            db.SaveChanges();
+        }
+
+        public static void CreateCashBankJournalDetails(CashBankTransactionDetails cashBankTransactionDetails, Journal journal, EnumCashBankTransactionType enumBankTransactionType, ApplicationDbContext db)
+        {
+            CashBankTransaction cashBankTransaction = db.CashBankTransactions.Find(cashBankTransactionDetails.CashBankTransactionId);
+            JournalDetails journalDetails = new JournalDetails
+            {
+                JournalId = journal.Id,
+                MasterRegionId = cashBankTransaction.MasterRegionId,
+                ChartOfAccountId = cashBankTransactionDetails.ChartOfAccountId,
+                Notes = cashBankTransactionDetails.Notes,
+                CashBankTransactionDetailsId = cashBankTransactionDetails.Id,
+                Created = cashBankTransactionDetails.Created,
+                Updated = cashBankTransactionDetails.Updated,
+                UserId = cashBankTransactionDetails.UserId
+            };
+
+            if (enumBankTransactionType == EnumCashBankTransactionType.In)
+            {
+                if (cashBankTransactionDetails.Total < 0)
+                {
+                    journalDetails.Credit = 0;
+                    journalDetails.Debit = cashBankTransactionDetails.Total * -1;
+                }
+                else
+                {
+                    journalDetails.Debit = 0;
+                    journalDetails.Credit = cashBankTransactionDetails.Total;
+                }
+            }
+            else
+            {
+                if (cashBankTransactionDetails.Total < 0)
+                {
+                    journalDetails.Debit = 0;
+                    journalDetails.Credit = cashBankTransactionDetails.Total * -1;
+                }
+                else
+                {
+                    journalDetails.Credit = 0;
+                    journalDetails.Debit = cashBankTransactionDetails.Total;
+                }
+            }
+
+            db.JournalsDetails.Add(journalDetails);
+            db.SaveChanges();
+
+            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+            journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
+            db.Entry(journal).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
+        public static void UpdateCashBankJournalDetails(CashBankTransactionDetails cashBankTransactionDetails, EnumCashBankTransactionType enumCashBankTransactionType, ApplicationDbContext db)
+        {
+            CashBankTransaction cashBankTransaction = db.CashBankTransactions.Find(cashBankTransactionDetails.CashBankTransactionId);
+            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.CashBankTransaction && x.CashBankTransactionDetailsId == cashBankTransactionDetails.Id).FirstOrDefault();
+
+            if (journalDetails != null)
+            {
+                Journal journal = db.Journals.Find(journalDetails.JournalId);
+
+                db.Entry(journalDetails).State = EntityState.Modified;
+
+                journalDetails.MasterRegionId = cashBankTransaction.MasterRegionId;
+                journalDetails.ChartOfAccountId = cashBankTransactionDetails.ChartOfAccountId;
+                journalDetails.Notes = cashBankTransactionDetails.Notes;
+                journalDetails.Updated = cashBankTransactionDetails.Updated;
+                journalDetails.UserId = cashBankTransactionDetails.UserId;
+
+                if (enumCashBankTransactionType == EnumCashBankTransactionType.In)
+                {
+                    if (cashBankTransactionDetails.Total < 0)
+                    {
+                        journalDetails.Credit = 0;
+                        journalDetails.Debit = cashBankTransactionDetails.Total * -1;
+                    }
+                    else
+                    {
+                        journalDetails.Debit = 0;
+                        journalDetails.Credit = cashBankTransactionDetails.Total;
+                    }
+                }
+                else
+                {
+                    if (cashBankTransactionDetails.Total < 0)
+                    {
+                        journalDetails.Debit = 0;
+                        journalDetails.Credit = cashBankTransactionDetails.Total * -1;
+                    }
+                    else
+                    {
+                        journalDetails.Credit = 0;
+                        journalDetails.Debit = cashBankTransactionDetails.Total;
+                    }
+                }
+
+                db.SaveChanges();
+
+                journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+                journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
+                db.Entry(journal).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
+        public static void RemoveCashBankJournalDetails(CashBankTransactionDetails cashBankTransactionDetails, Journal journal, ApplicationDbContext db)
+        {
+            List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.CashBankTransactionDetailsId == cashBankTransactionDetails.Id).ToList();
+
+            foreach (JournalDetails journalDetails in journalsDetails)
+            {
+                if (journalDetails.Credit == 0)
+                    journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
+                else
+                    journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id);
+            }
+
+            db.Entry(journal).State = EntityState.Modified;
+            db.SaveChanges();
+
+            if (journalsDetails != null)
+            {
+                db.JournalsDetails.RemoveRange(journalsDetails);
+                db.SaveChanges();
+            }
+        }
+
+        public static void CreateCashBankJournalDetailsHeader(CashBankTransactionDetailsHeader cashBankTransactionDetailsHeader, Journal journal, EnumCashBankTransactionType enumCashBankTransactionType, ApplicationDbContext db)
+        {
+            CashBankTransaction cashBankTransaction = db.CashBankTransactions.Find(cashBankTransactionDetailsHeader.CashBankTransactionId);
+            MasterCashBank masterCashBank = db.MasterCashBanks.Find(cashBankTransactionDetailsHeader.MasterCashBankId);
+
+            JournalDetails journalDetails = new JournalDetails
+            {
+                JournalId = journal.Id,
+                MasterRegionId = cashBankTransaction.MasterRegionId,
+                ChartOfAccountId = masterCashBank.ChartOfAccountId,
+                CashBankTransactionDetailsHeaderId = cashBankTransactionDetailsHeader.Id,
+                Created = cashBankTransactionDetailsHeader.Created,
+                Updated = cashBankTransactionDetailsHeader.Updated,
+                UserId = cashBankTransactionDetailsHeader.UserId,
+                Notes = cashBankTransactionDetailsHeader.Notes
+            };
+
+            if (enumCashBankTransactionType == EnumCashBankTransactionType.In)
+            {
+                if (cashBankTransactionDetailsHeader.Total < 0)
+                {
+                    journalDetails.Debit = 0;
+                    journalDetails.Credit = cashBankTransactionDetailsHeader.Total * -1;
+                }
+                else
+                {
+                    journalDetails.Credit = 0;
+                    journalDetails.Debit = cashBankTransactionDetailsHeader.Total;
+                }
+            }
+            else
+            {
+                if (cashBankTransactionDetailsHeader.Total < 0)
+                {
+                    journalDetails.Credit = 0;
+                    journalDetails.Debit = cashBankTransactionDetailsHeader.Total * -1;
+                }
+                else
+                {
+                    journalDetails.Debit = 0;
+                    journalDetails.Credit = cashBankTransactionDetailsHeader.Total;
+                }
+            }
+
+            db.JournalsDetails.Add(journalDetails);
+            db.SaveChanges();
+
+            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+            journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
+            db.Entry(journal).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
+        public static void UpdateCashBankJournalDetailsHeader(CashBankTransactionDetailsHeader cashBankTransactionDetailsHeader, EnumCashBankTransactionType enumBankTransactionType, ApplicationDbContext db)
+        {
+            CashBankTransaction cashBankTransaction = db.CashBankTransactions.Find(cashBankTransactionDetailsHeader.CashBankTransactionId);
+            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.CashBankTransaction && x.CashBankTransactionDetailsHeaderId == cashBankTransactionDetailsHeader.Id).FirstOrDefault();
+            MasterCashBank masterBank = db.MasterCashBanks.Find(cashBankTransactionDetailsHeader.MasterCashBankId);
+
+
+            if (journalDetails != null)
+            {
+                Journal journal = db.Journals.Find(journalDetails.JournalId);
+
+                db.Entry(journalDetails).State = EntityState.Modified;
+
+                journalDetails.MasterRegionId = cashBankTransaction.MasterRegionId;
+                journalDetails.ChartOfAccountId = masterBank.ChartOfAccountId;
+                journalDetails.Updated = cashBankTransactionDetailsHeader.Updated;
+                journalDetails.UserId = cashBankTransactionDetailsHeader.UserId;
+                journalDetails.Notes = cashBankTransactionDetailsHeader.Notes;
+
+                if (enumBankTransactionType == EnumCashBankTransactionType.In)
+                {
+                    if (cashBankTransactionDetailsHeader.Total < 0)
+                    {
+                        journalDetails.Debit = 0;
+                        journalDetails.Credit = cashBankTransactionDetailsHeader.Total * -1;
+                    }
+                    else
+                    {
+                        journalDetails.Credit = 0;
+                        journalDetails.Debit = cashBankTransactionDetailsHeader.Total;
+                    }
+                }
+                else
+                {
+                    if (cashBankTransactionDetailsHeader.Total < 0)
+                    {
+                        journalDetails.Credit = 0;
+                        journalDetails.Debit = cashBankTransactionDetailsHeader.Total * -1;
+                    }
+                    else
+                    {
+                        journalDetails.Debit = 0;
+                        journalDetails.Credit = cashBankTransactionDetailsHeader.Total;
+                    }
+                }
+
+                db.SaveChanges();
+
+                journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+                journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
+                db.Entry(journal).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
+        public static void RemoveCashBankJournalDetailsHeader(CashBankTransactionDetailsHeader cashBankTransactionDetailsHeader, Journal journal, ApplicationDbContext db)
+        {
+            List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.CashBankTransactionDetailsHeaderId == cashBankTransactionDetailsHeader.Id).ToList();
+
+            foreach (JournalDetails journalDetails in journalsDetails)
+            {
+                if (journalDetails.Credit == 0)
+                    journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
+                else
+                    journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id);
+            }
+
+            db.Entry(journal).State = EntityState.Modified;
+            db.SaveChanges();
+
+            if (journalsDetails != null)
+            {
+                db.JournalsDetails.RemoveRange(journalsDetails);
+                db.SaveChanges();
+            }
+        }
+
         public static string EncodeTo64(string m_enc)
         {
             byte[] toEncodeAsBytes =

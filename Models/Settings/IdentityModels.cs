@@ -147,6 +147,10 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustment> StockAdjustments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustmentDetails> StockAdjustmentsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GiroCheque> GiroCheques { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterCashBank> MasterCashBanks { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.CashBankTransaction> CashBankTransactions { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.CashBankTransactionDetailsHeader> CashBankTransactionsDetailsHeader { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.CashBankTransactionDetails> CashBankTransactionsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrder> PurchaseOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrderDetails> PurchaseOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Purchase> Purchases { get; set; }
@@ -168,6 +172,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.Journal> Journals { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.JournalDetails> JournalsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SystemLog> SystemLogs { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.VerificationHistory> VerificationHistories { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Authorization> Authorizations { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Chat> Chats { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ChatUserOnline> ChatUserOnlines { get; set; }
@@ -226,6 +231,9 @@ namespace eShop.Models
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<GiroCheque>().Property(x => x.Ammount).HasPrecision(18, 2);
             modelBuilder.Entity<GiroCheque>().Property(x => x.Allocated).HasPrecision(18, 2);
+            modelBuilder.Entity<CashBankTransaction>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<CashBankTransactionDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<CashBankTransactionDetailsHeader>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<AccountBallance>().Property(x => x.BeginningBallance).HasPrecision(18, 2);
             modelBuilder.Entity<JournalDetails>().Property(x => x.Debit).HasPrecision(18, 2);
             modelBuilder.Entity<JournalDetails>().Property(x => x.Credit).HasPrecision(18, 2);

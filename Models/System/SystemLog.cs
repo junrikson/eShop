@@ -10,7 +10,7 @@ namespace eShop.Models
         [Display(Name = "Master Konsumen")]
         MasterCustomer = 1,
         [Display(Name = "Master Bank")]
-        MasterBank = 2,
+        MasterCashBank = 2,
         [Display(Name = "Master Kapal")]
         MasterShip = 3,
         [Display(Name = "Master Satuan")]

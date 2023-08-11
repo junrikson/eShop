@@ -24,7 +24,6 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [DatalistColumn]
         [Required(ErrorMessage = "Kode kas/bank harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Kode Kas/Bank")]
@@ -159,17 +158,17 @@ namespace eShop.Models
         public bool Active { get; set; }
     }
 
-    public class MasterBankRegionDatalist : MvcDatalist<MasterCashBankDatalistViewModel>
+    public class MasterCashBankRegionDatalist : MvcDatalist<MasterCashBankDatalistViewModel>
     {
         private DbContext Context { get; }
 
-        public MasterBankRegionDatalist(DbContext context)
+        public MasterCashBankRegionDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.Code + " - " + model.Name;
         }
-        public MasterBankRegionDatalist()
+        public MasterCashBankRegionDatalist()
         {
             Url = "/DatalistFilters/AllMasterCashBankRegion";
             Title = "Master Bank";

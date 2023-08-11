@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public enum EnumBankTransactionType
+    public enum EnumCashBankTransactionType
     {
         [Display(Name = "MASUK")]
         In = 1,
@@ -36,7 +36,7 @@ namespace eShop.Models
 
         [Display(Name = "Jenis Transaksi")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public EnumBankTransactionType TransactionType { get; set; }
+        public EnumCashBankTransactionType TransactionType { get; set; }
 
         [Display(Name = "Unit Bisnis")]
         [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
@@ -110,8 +110,10 @@ namespace eShop.Models
         public virtual MasterCashBank MasterBank { get; set; }
 
         [Display(Name = "Giro / Cek")]
-        [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
-        public string GiroCheque { get; set; }
+        public int? GiroChequeId { get; set; }
+
+        [Display(Name = "Giro / Cek")]
+        public virtual GiroCheque GiroCheque { get; set; }
 
         [Display(Name = "Total (Rp)")]
         public decimal Total { get; set; }

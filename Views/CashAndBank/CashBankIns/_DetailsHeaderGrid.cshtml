@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ERP.Models.BankTransactionDetailsHeader>
+@{
+    Layout = null;
+}
+
+@(Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAllHeader"));
+            columns.Add(model => ((User.IsInRole("CashBankInsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success edit-data btn-xs\" href=\"" + @Url.Action("DetailsHeaderEdit", "CashBankIns", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "")).Encoded(false);
+            columns.Add(model => model.Type).Titled(@Html.DisplayNameFor(model => model.Type)).InitialSort(GridSortOrder.Asc);
+            columns.Add(model => model.MasterBank.Name).Titled(@Html.DisplayNameFor(model => model.MasterBank.Name));
+            columns.Add(model => model.Total).Titled(@Html.DisplayNameFor(model => model.Total)).Formatted("{0:N2}");
+            columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
+        })
+        .Empty("Tidak ada data.")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 10;
+        })
+        .UsingFilterMode(GridFilterMode.Row)
+        .Filterable()
+        .Sortable()
+        .AppendCss("tablegrid-hover table-striped fix-table")
+        .Id("header-table")
+)
