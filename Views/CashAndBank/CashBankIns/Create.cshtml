@@ -1,5 +1,4 @@
-﻿@model ERP.Models.BankTransaction
-@using ERP.Models;
+﻿@model eShop.Models.CashBankTransaction
 
 @{
     ViewBag.Title = "Penerimaan Kas & Bank";
@@ -215,7 +214,7 @@
             }
             else
             {
-                var url = $(this).attr("href") + "?bankTransactionId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?cashBankTransactionId=" + $("input#Id").val();
                 $.get(url, function (data)
                 {
                     $('#detailsContainer').html(data);
@@ -247,7 +246,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?bankTransactionId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?cashBankTransactionId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');

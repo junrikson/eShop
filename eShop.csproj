@@ -311,6 +311,7 @@
     <Compile Include="Controllers\Inventory\MasterItemsController.cs" />
     <Compile Include="Controllers\Inventory\MasterBrandsController.cs" />
     <Compile Include="Controllers\Inventory\StockAdjustmentsController.cs" />
+    <Compile Include="Controllers\Masters\MasterCostsController.cs" />
     <Compile Include="Controllers\Masters\MasterCurrenciesController.cs" />
     <Compile Include="Controllers\Masters\MasterCustomersController.cs" />
     <Compile Include="Controllers\Inventory\MasterCategoriesController.cs" />
@@ -345,6 +346,7 @@
     <Compile Include="Models\Accounting\AccountBallance.cs" />
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
     <Compile Include="Models\Accounting\Journal.cs" />
+    <Compile Include="Models\Master\MasterCost.cs" />
     <Compile Include="Models\Buying\PurchaseReturn.cs" />
     <Compile Include="Models\CashAndBank\CashBankTransaction.cs" />
     <Compile Include="Models\CashAndBank\GiroCheque.cs" />
@@ -7026,14 +7028,45 @@
     <Content Include="Views\CashAndBank\MasterCashBanks\_Details.cshtml" />
     <Content Include="Views\CashAndBank\MasterCashBanks\_Edit.cshtml" />
     <Content Include="Views\CashAndBank\MasterCashBanks\_IndexGrid.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\Create.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\Edit.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\EditVerification.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\Index.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\Print.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\_Details.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\_DetailsCreate.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\_DetailsEdit.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\_DetailsGrid.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\_DetailsHeaderCreate.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\_DetailsHeaderEdit.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\_DetailsHeaderGrid.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\_IndexGrid.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankIns\_VerificationCode.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\Create.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\Edit.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\EditVerification.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\Index.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\Print.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\_Details.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\_DetailsCreate.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\_DetailsEdit.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\_DetailsGrid.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\_DetailsHeaderCreate.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\_DetailsHeaderEdit.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\_DetailsHeaderGrid.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\_IndexGrid.cshtml" />
+    <Content Include="Views\CashAndBank\CashBankOuts\_VerificationCode.cshtml" />
+    <Content Include="Views\Masters\MasterCosts\Index.cshtml" />
+    <Content Include="Views\Masters\MasterCosts\_Create.cshtml" />
+    <Content Include="Views\Masters\MasterCosts\_Details.cshtml" />
+    <Content Include="Views\Masters\MasterCosts\_Edit.cshtml" />
+    <Content Include="Views\Masters\MasterCosts\_IndexGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CrystalReports\" />
     <Folder Include="Models\AP\" />
     <Folder Include="Models\AR\" />
-    <Folder Include="Views\CashAndBank\CashBankIns\" />
-    <Folder Include="Views\CashAndBank\CashBankOuts\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
