@@ -594,7 +594,7 @@ namespace eShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                if ((creditNoteDetails.Type == EnumCreditNoteType.Bank || creditNoteDetails.Type == EnumCreditNoteType.Cash) && (creditNoteDetails.MasterCashBankId == 0 || creditNoteDetails.MasterCashBankId == null))
+                if ((creditNoteDetails.Type == EnumCreditNoteType.Bank || creditNoteDetails.Type == EnumCreditNoteType.Cash) && (creditNoteDetails.MasterBankId == 0 || creditNoteDetails.MasterBankId == null))
                 {
                     ModelState.AddModelError(string.Empty, "Master Kas / Bank belum diisi!");
                 }

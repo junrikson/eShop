@@ -13,9 +13,9 @@ namespace eShop.Models
     public enum EnumVerificationType
     {
         [Display(Name = "Print Transaksi Kas/Bank")]
-        PrintCashBankTransaction = 1,
+        PrintBankTransaction = 1,
         [Display(Name = "Edit Transaksi Kas/Bank")]
-        EditCashBankTransaction = 2
+        EditBankTransaction = 2
     }
 
     public class VerificationHistory
@@ -37,10 +37,10 @@ namespace eShop.Models
         public virtual Sale Sale { get; set; }
 
         [Display(Name = "Transaksi Kas/Bank")]
-        public int? CashBankTransactionId { get; set; }
+        public int? BankTransactionId { get; set; }
 
         [Display(Name = "Transaksi Kas/Bank")]
-        public virtual CashBankTransaction CashBankTransaction { get; set; }
+        public virtual BankTransaction BankTransaction { get; set; }
 
         [Display(Name = "Jenis Verifikasi")]
         public EnumVerificationType Type { get; set; }

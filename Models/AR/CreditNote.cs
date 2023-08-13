@@ -107,10 +107,10 @@ namespace eShop.Models
         public EnumCreditNoteType Type { get; set; }
 
         [Display(Name = "Master Kas/Bank")]
-        public int? MasterCashBankId { get; set; }
+        public int? MasterBankId { get; set; }
 
         [Display(Name = "Master Kas/Bank")]
-        public virtual MasterCashBank MasterCashBank { get; set; }
+        public virtual MasterBank MasterBank { get; set; }
 
         [Display(Name = "Master Biaya")]
         public int? MasterCostId { get; set; }

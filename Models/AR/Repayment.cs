@@ -116,11 +116,11 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime TransactionDate { get; set; }
 
-        [Display(Name = "Master Bank")]
-        public int? MasterCashBankId { get; set; }
+        [Display(Name = "Master Kas/Bank")]
+        public int? MasterBankId { get; set; }
 
-        [Display(Name = "Master Bank")]
-        public virtual MasterCashBank MasterBank { get; set; }
+        [Display(Name = "Master Kas/Bank")]
+        public virtual MasterBank MasterBank { get; set; }
 
         [Display(Name = "Master Biaya")]
         public int? MasterCostId { get; set; }
@@ -194,10 +194,10 @@ namespace eShop.Models
         public virtual Sale Sale { get; set; }
 
         [Display(Name = "Kas/Bank")]
-        public int? MasterCashBankId { get; set; }
+        public int? MasterBankId { get; set; }
 
         [Display(Name = "Kas/Bank")]
-        public virtual MasterCashBank MasterCashBank { get; set; }
+        public virtual MasterBank MasterBank { get; set; }
 
         [Display(Name = "Biaya")]
         public int? MasterCostId { get; set; }

@@ -50,9 +50,9 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        public JsonResult AllMasterCashBankRegion(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0, EnumCashBankType? Type = null)
+        public JsonResult AllMasterBankRegion(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0, EnumBankType? Type = null)
         {
-            MasterCashBankRegionDatalist datalist = new MasterCashBankRegionDatalist(db);
+            MasterBankRegionDatalist datalist = new MasterBankRegionDatalist(db);
 
             filter.AdditionalFilters["Active"] = true;
             filter.AdditionalFilters["Type"] = Type;

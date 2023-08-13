@@ -1,0 +1,165 @@
+﻿@model eShop.Models.BankTransaction
+
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Detail - Pengeluaran Kas & Bank</h4>
+        </div>
+        <div class="modal-body">
+            <table align="center">
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Code)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Code)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Date)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Date)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.MasterBusinessUnit.Name)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.MasterBusinessUnit.Name)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.MasterRegion.Notes)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.MasterRegion.Notes)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Total)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Model.Total.ToString("N0")
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Notes)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Notes)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Created)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Created)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Updated)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Updated)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.UserId)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.UserId)
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <br /><br /><b>Kredit</b><br />
+                        <table class="table-bordered table-striped table-hover" width="100%">
+                            <tr>
+                                <th style="font-weight: bold;">Jenis Transaksi</th>
+                                <th style="font-weight: bold;">Kas / Bank</th>
+                                <th style="font-weight: bold;">Total (Rp)</th>
+                                <th style="font-weight: bold;">Keterangan</th>
+                            </tr>
+                            @{
+                                List<ERP.Models.BankTransactionDetailsHeader> bankTransactionDetailsHeader = ViewBag.BankTransactionDetailsHeader;
+                                foreach (var obj in bankTransactionDetailsHeader)
+                                {
+                                    @(Html.Raw("<tr><td>" + obj.Type + "</td><td>" + obj.MasterBank.Name + "</td><td>" + obj.Total.ToString("N0") + "</td><td>" + obj.Notes + "</td></tr>"))
+
+                                }
+                            }
+                        </table>
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td valign="top">
+                        <br /><br /><b>Debet</b><br />
+                        <table class="table-bordered table-striped table-hover" width="100%">
+                            <tr>
+                                <th style="font-weight: bold;">No. Akun</th>
+                                <th style="font-weight: bold;">Nama Akun</th>
+                                <th style="font-weight: bold;">Total (Rp)</th>
+                                <th style="font-weight: bold;">Keterangan</th>
+                                <th style="font-weight: bold;">Kapal</th>
+                                <th style="font-weight: bold;">Voyage</th>
+                            </tr>
+                            @{
+                                List<ERP.Models.BankTransactionDetails> bankTransactionDetails = ViewBag.BankTransactionDetails;
+                                foreach (var obj in bankTransactionDetails)
+                                {
+                                    @(Html.Raw("<tr><td>" + obj.ChartOfAccount.Code + "</td><td>" + obj.ChartOfAccount.Name + "</td><td>" + ((obj.Total == null) ? "0" : ((decimal)obj.Total).ToString("N0")) + "</td><td>" + obj.Notes + "</td><td>" + (obj.MasterShipId == null ? "" : obj.MasterShip.Name) + "</td><td>" + obj.Voyage + "</td></tr>"))
+
+                                }
+                            }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

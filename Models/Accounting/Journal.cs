@@ -20,7 +20,7 @@ namespace eShop.Models
         [Display(Name = "RETUR PEMBELIAN")]
         PurchaseReturn = 5,
         [Display(Name = "KAS / BANK")]
-        CashBankTransaction = 6,
+        BankTransaction = 6,
         [Display(Name = "NOTA KREDIT")]
         CreditNote = 7,
         [Display(Name = "PELUNASAN PIUTANG")]
@@ -101,10 +101,10 @@ namespace eShop.Models
         public virtual CreditNote CreditNote { get; set; }
 
         [Display(Name = "Kas/Bank")]
-        public int? CashBankTransactionId { get; set; }
+        public int? BankTransactionId { get; set; }
 
         [Display(Name = "Kas/Bank")]
-        public virtual CashBankTransaction CashBankTransaction { get; set; }
+        public virtual BankTransaction BankTransaction { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
@@ -184,16 +184,16 @@ namespace eShop.Models
         public virtual CreditNoteDetails CreditNoteDetails { get; set; }
 
         [Display(Name = "Detail Kas/Bank")]
-        public int? CashBankTransactionDetailsId { get; set; }
+        public int? BankTransactionDetailsId { get; set; }
 
         [Display(Name = "Detail Kas/Bank")]
-        public virtual CashBankTransactionDetails CashBankTransactionDetails { get; set; }
+        public virtual BankTransactionDetails BankTransactionDetails { get; set; }
 
         [Display(Name = "Detail Header as/Bank")]
-        public int? CashBankTransactionDetailsHeaderId { get; set; }
+        public int? BankTransactionDetailsHeaderId { get; set; }
 
         [Display(Name = "Detail Header Kas/Bank")]
-        public virtual CashBankTransactionDetailsHeader CashBankTransactionDetailsHeader { get; set; }
+        public virtual BankTransactionDetailsHeader BankTransactionDetailsHeader { get; set; }
 
         [Display(Name = "Dibuat")]
         [DataType(DataType.DateTime)]

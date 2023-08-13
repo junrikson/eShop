@@ -297,15 +297,15 @@ namespace eShop.Extensions
             return total;
         }
 
-        public static decimal GetTotalCashBankTransactionDetails(ApplicationDbContext db, int cashBankTransactionId, int? cashBankTransactionDetailsId = null)
+        public static decimal GetTotalBankTransactionDetails(ApplicationDbContext db, int bankTransactionId, int? bankTransactionDetailsId = null)
         {
             decimal total = 0;
-            List<CashBankTransactionDetails> bankTransactionsDetails = null;
+            List<BankTransactionDetails> bankTransactionsDetails = null;
 
-            if (cashBankTransactionDetailsId == null)
-                bankTransactionsDetails = db.CashBankTransactionsDetails.Where(x => x.CashBankTransactionId == cashBankTransactionId).ToList();
+            if (bankTransactionDetailsId == null)
+                bankTransactionsDetails = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransactionId).ToList();
             else
-                bankTransactionsDetails = db.CashBankTransactionsDetails.Where(x => x.CashBankTransactionId == cashBankTransactionId && x.Id != cashBankTransactionDetailsId).ToList();
+                bankTransactionsDetails = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransactionId && x.Id != bankTransactionDetailsId).ToList();
 
             if (bankTransactionsDetails != null)
                 total = bankTransactionsDetails.Sum(y => y.Total);
@@ -313,36 +313,36 @@ namespace eShop.Extensions
             return total;
         }
 
-        public static decimal GetTotalCashBankTransactionDetailsHeader(ApplicationDbContext db, int cashBankTransactionId, int? cashBankTransactionDetailsHeaderId = null)
+        public static decimal GetTotalBankTransactionDetailsHeader(ApplicationDbContext db, int bankTransactionId, int? bankTransactionDetailsHeaderId = null)
         {
             decimal total = 0;
-            List<CashBankTransactionDetailsHeader> bankTransactionsDetailsHeader = null;
+            List<BankTransactionDetailsHeader> bankTransactionsDetailsHeader = null;
 
-            if (cashBankTransactionDetailsHeaderId == null)
-                bankTransactionsDetailsHeader = db.CashBankTransactionsDetailsHeader.Where(x => x.CashBankTransactionId == cashBankTransactionId).ToList();
+            if (bankTransactionDetailsHeaderId == null)
+                bankTransactionsDetailsHeader = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransactionId).ToList();
             else
-                bankTransactionsDetailsHeader = db.CashBankTransactionsDetailsHeader.Where(x => x.CashBankTransactionId == cashBankTransactionId && x.Id != cashBankTransactionDetailsHeaderId).ToList();
+                bankTransactionsDetailsHeader = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransactionId && x.Id != bankTransactionDetailsHeaderId).ToList();
 
             if (bankTransactionsDetailsHeader != null)
                 total = bankTransactionsDetailsHeader.Sum(y => y.Total);
 
             return total;
         }
-        public static Journal CreateCashBankJournal(CashBankTransaction cashBankTransaction, ApplicationDbContext db)
+        public static Journal CreateBankJournal(BankTransaction bankTransaction, ApplicationDbContext db)
         {
             Journal journal = new Journal
             {
-                Code = cashBankTransaction.Code,
-                Date = cashBankTransaction.Date,
-                MasterBusinessUnitId = cashBankTransaction.MasterBusinessUnitId,
-                Type = EnumJournalType.CashBankTransaction,
+                Code = bankTransaction.Code,
+                Date = bankTransaction.Date,
+                MasterBusinessUnitId = bankTransaction.MasterBusinessUnitId,
+                Type = EnumJournalType.BankTransaction,
                 Debit = 0,
                 Credit = 0,
-                CashBankTransactionId = cashBankTransaction.Id,
-                Active = cashBankTransaction.Active,
-                Created = cashBankTransaction.Created,
-                Updated = cashBankTransaction.Updated,
-                UserId = cashBankTransaction.UserId
+                BankTransactionId = bankTransaction.Id,
+                Active = bankTransaction.Active,
+                Created = bankTransaction.Created,
+                Updated = bankTransaction.Updated,
+                UserId = bankTransaction.UserId
             };
 
             db.Journals.Add(journal);
@@ -351,53 +351,53 @@ namespace eShop.Extensions
             return journal;
         }
 
-        public static Journal UpdateCashBankJournal(Journal journal, CashBankTransaction cashBankTransaction, EnumCashBankTransactionType enumCashBankTransactionType, ApplicationDbContext db)
+        public static Journal UpdateBankJournal(Journal journal, BankTransaction bankTransaction, EnumBankTransactionType enumBankTransactionType, ApplicationDbContext db)
         {
             db.Entry(journal).State = EntityState.Modified;
 
-            journal.Code = cashBankTransaction.Code;
-            journal.Date = cashBankTransaction.Date;
-            journal.MasterBusinessUnitId = cashBankTransaction.MasterBusinessUnitId;
-            journal.Type = EnumJournalType.CashBankTransaction;
+            journal.Code = bankTransaction.Code;
+            journal.Date = bankTransaction.Date;
+            journal.MasterBusinessUnitId = bankTransaction.MasterBusinessUnitId;
+            journal.Type = EnumJournalType.BankTransaction;
             journal.Debit = 0;
             journal.Credit = 0;
-            journal.CashBankTransactionId = cashBankTransaction.Id;
-            journal.Active = cashBankTransaction.Active;
-            journal.Updated = cashBankTransaction.Updated;
-            journal.UserId = cashBankTransaction.UserId;
+            journal.BankTransactionId = bankTransaction.Id;
+            journal.Active = bankTransaction.Active;
+            journal.Updated = bankTransaction.Updated;
+            journal.UserId = bankTransaction.UserId;
             db.SaveChanges();
 
-            List<CashBankTransactionDetails> cashBankTransactionsDetails = db.CashBankTransactionsDetails.Where(x => x.CashBankTransactionId == cashBankTransaction.Id).ToList();
-            if (cashBankTransactionsDetails != null && cashBankTransactionsDetails.Count > 0)
+            List<BankTransactionDetails> bankTransactionsDetails = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
+            if (bankTransactionsDetails != null && bankTransactionsDetails.Count > 0)
             {
-                foreach (CashBankTransactionDetails cashBankTransactionDetails in cashBankTransactionsDetails)
+                foreach (BankTransactionDetails bankTransactionDetails in bankTransactionsDetails)
                 {
-                    List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.CashBankTransaction && x.CashBankTransactionDetailsId == cashBankTransactionDetails.Id).ToList();
+                    List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.BankTransaction && x.BankTransactionDetailsId == bankTransactionDetails.Id).ToList();
 
                     if (journalsDetails == null || journalsDetails.Count <= 0)
-                        CreateCashBankJournalDetails(cashBankTransactionDetails, journal, enumCashBankTransactionType, db);
+                        CreateBankJournalDetails(bankTransactionDetails, journal, enumBankTransactionType, db);
                     else
-                        UpdateCashBankJournalDetails(cashBankTransactionDetails, enumCashBankTransactionType, db);
+                        UpdateBankJournalDetails(bankTransactionDetails, enumBankTransactionType, db);
                 }
             }
 
-            List<CashBankTransactionDetailsHeader> cashBankTransactionsDetailsHeader = db.CashBankTransactionsDetailsHeader.Where(x => x.CashBankTransactionId == cashBankTransaction.Id).ToList();
-            if (cashBankTransactionsDetailsHeader != null && cashBankTransactionsDetailsHeader.Count > 0)
+            List<BankTransactionDetailsHeader> bankTransactionsDetailsHeader = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
+            if (bankTransactionsDetailsHeader != null && bankTransactionsDetailsHeader.Count > 0)
             {
-                foreach (CashBankTransactionDetailsHeader cashBankTransactionDetailsHeader in cashBankTransactionsDetailsHeader)
+                foreach (BankTransactionDetailsHeader bankTransactionDetailsHeader in bankTransactionsDetailsHeader)
                 {
-                    List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.CashBankTransaction && x.CashBankTransactionDetailsHeaderId == cashBankTransactionDetailsHeader.Id).ToList();
+                    List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.BankTransaction && x.BankTransactionDetailsHeaderId == bankTransactionDetailsHeader.Id).ToList();
 
                     if (journalsDetails == null || journalsDetails.Count <= 0)
-                        CreateCashBankJournalDetailsHeader(cashBankTransactionDetailsHeader, journal, enumCashBankTransactionType, db);
+                        CreateBankJournalDetailsHeader(bankTransactionDetailsHeader, journal, enumBankTransactionType, db);
                     else
-                        UpdateCashBankJournalDetailsHeader(cashBankTransactionDetailsHeader, enumCashBankTransactionType, db);
+                        UpdateBankJournalDetailsHeader(bankTransactionDetailsHeader, enumBankTransactionType, db);
                 }
             }
             return journal;
         }
 
-        public static void DeleteCashBankJournals(int id, Journal journal, CashBankTransaction bankTransaction, ApplicationDbContext db)
+        public static void DeleteBankJournals(int id, Journal journal, BankTransaction bankTransaction, ApplicationDbContext db)
         {
             if (journal != null)
             {
@@ -413,55 +413,55 @@ namespace eShop.Extensions
                 db.SaveChanges();
             }
 
-            db.CashBankTransactionsDetails.RemoveRange(db.CashBankTransactionsDetails.Where(x => x.CashBankTransactionId == id));
+            db.BankTransactionsDetails.RemoveRange(db.BankTransactionsDetails.Where(x => x.BankTransactionId == id));
             db.SaveChanges();
 
-            db.CashBankTransactionsDetailsHeader.RemoveRange(db.CashBankTransactionsDetailsHeader.Where(x => x.CashBankTransactionId == id));
+            db.BankTransactionsDetailsHeader.RemoveRange(db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == id));
             db.SaveChanges();
 
-            db.CashBankTransactions.Remove(bankTransaction);
+            db.BankTransactions.Remove(bankTransaction);
             db.SaveChanges();
         }
 
-        public static void CreateCashBankJournalDetails(CashBankTransactionDetails cashBankTransactionDetails, Journal journal, EnumCashBankTransactionType enumBankTransactionType, ApplicationDbContext db)
+        public static void CreateBankJournalDetails(BankTransactionDetails bankTransactionDetails, Journal journal, EnumBankTransactionType enumBankTransactionType, ApplicationDbContext db)
         {
-            CashBankTransaction cashBankTransaction = db.CashBankTransactions.Find(cashBankTransactionDetails.CashBankTransactionId);
+            BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetails.BankTransactionId);
             JournalDetails journalDetails = new JournalDetails
             {
                 JournalId = journal.Id,
-                MasterRegionId = cashBankTransaction.MasterRegionId,
-                ChartOfAccountId = cashBankTransactionDetails.ChartOfAccountId,
-                Notes = cashBankTransactionDetails.Notes,
-                CashBankTransactionDetailsId = cashBankTransactionDetails.Id,
-                Created = cashBankTransactionDetails.Created,
-                Updated = cashBankTransactionDetails.Updated,
-                UserId = cashBankTransactionDetails.UserId
+                MasterRegionId = bankTransaction.MasterRegionId,
+                ChartOfAccountId = bankTransactionDetails.ChartOfAccountId,
+                Notes = bankTransactionDetails.Notes,
+                BankTransactionDetailsId = bankTransactionDetails.Id,
+                Created = bankTransactionDetails.Created,
+                Updated = bankTransactionDetails.Updated,
+                UserId = bankTransactionDetails.UserId
             };
 
-            if (enumBankTransactionType == EnumCashBankTransactionType.In)
+            if (enumBankTransactionType == EnumBankTransactionType.In)
             {
-                if (cashBankTransactionDetails.Total < 0)
+                if (bankTransactionDetails.Total < 0)
                 {
                     journalDetails.Credit = 0;
-                    journalDetails.Debit = cashBankTransactionDetails.Total * -1;
+                    journalDetails.Debit = bankTransactionDetails.Total * -1;
                 }
                 else
                 {
                     journalDetails.Debit = 0;
-                    journalDetails.Credit = cashBankTransactionDetails.Total;
+                    journalDetails.Credit = bankTransactionDetails.Total;
                 }
             }
             else
             {
-                if (cashBankTransactionDetails.Total < 0)
+                if (bankTransactionDetails.Total < 0)
                 {
                     journalDetails.Debit = 0;
-                    journalDetails.Credit = cashBankTransactionDetails.Total * -1;
+                    journalDetails.Credit = bankTransactionDetails.Total * -1;
                 }
                 else
                 {
                     journalDetails.Credit = 0;
-                    journalDetails.Debit = cashBankTransactionDetails.Total;
+                    journalDetails.Debit = bankTransactionDetails.Total;
                 }
             }
 
@@ -474,10 +474,10 @@ namespace eShop.Extensions
             db.SaveChanges();
         }
 
-        public static void UpdateCashBankJournalDetails(CashBankTransactionDetails cashBankTransactionDetails, EnumCashBankTransactionType enumCashBankTransactionType, ApplicationDbContext db)
+        public static void UpdateBankJournalDetails(BankTransactionDetails bankTransactionDetails, EnumBankTransactionType enumBankTransactionType, ApplicationDbContext db)
         {
-            CashBankTransaction cashBankTransaction = db.CashBankTransactions.Find(cashBankTransactionDetails.CashBankTransactionId);
-            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.CashBankTransaction && x.CashBankTransactionDetailsId == cashBankTransactionDetails.Id).FirstOrDefault();
+            BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetails.BankTransactionId);
+            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.BankTransaction && x.BankTransactionDetailsId == bankTransactionDetails.Id).FirstOrDefault();
 
             if (journalDetails != null)
             {
@@ -485,36 +485,36 @@ namespace eShop.Extensions
 
                 db.Entry(journalDetails).State = EntityState.Modified;
 
-                journalDetails.MasterRegionId = cashBankTransaction.MasterRegionId;
-                journalDetails.ChartOfAccountId = cashBankTransactionDetails.ChartOfAccountId;
-                journalDetails.Notes = cashBankTransactionDetails.Notes;
-                journalDetails.Updated = cashBankTransactionDetails.Updated;
-                journalDetails.UserId = cashBankTransactionDetails.UserId;
+                journalDetails.MasterRegionId = bankTransaction.MasterRegionId;
+                journalDetails.ChartOfAccountId = bankTransactionDetails.ChartOfAccountId;
+                journalDetails.Notes = bankTransactionDetails.Notes;
+                journalDetails.Updated = bankTransactionDetails.Updated;
+                journalDetails.UserId = bankTransactionDetails.UserId;
 
-                if (enumCashBankTransactionType == EnumCashBankTransactionType.In)
+                if (enumBankTransactionType == EnumBankTransactionType.In)
                 {
-                    if (cashBankTransactionDetails.Total < 0)
+                    if (bankTransactionDetails.Total < 0)
                     {
                         journalDetails.Credit = 0;
-                        journalDetails.Debit = cashBankTransactionDetails.Total * -1;
+                        journalDetails.Debit = bankTransactionDetails.Total * -1;
                     }
                     else
                     {
                         journalDetails.Debit = 0;
-                        journalDetails.Credit = cashBankTransactionDetails.Total;
+                        journalDetails.Credit = bankTransactionDetails.Total;
                     }
                 }
                 else
                 {
-                    if (cashBankTransactionDetails.Total < 0)
+                    if (bankTransactionDetails.Total < 0)
                     {
                         journalDetails.Debit = 0;
-                        journalDetails.Credit = cashBankTransactionDetails.Total * -1;
+                        journalDetails.Credit = bankTransactionDetails.Total * -1;
                     }
                     else
                     {
                         journalDetails.Credit = 0;
-                        journalDetails.Debit = cashBankTransactionDetails.Total;
+                        journalDetails.Debit = bankTransactionDetails.Total;
                     }
                 }
 
@@ -527,9 +527,9 @@ namespace eShop.Extensions
             }
         }
 
-        public static void RemoveCashBankJournalDetails(CashBankTransactionDetails cashBankTransactionDetails, Journal journal, ApplicationDbContext db)
+        public static void RemoveBankJournalDetails(BankTransactionDetails bankTransactionDetails, Journal journal, ApplicationDbContext db)
         {
-            List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.CashBankTransactionDetailsId == cashBankTransactionDetails.Id).ToList();
+            List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.BankTransactionDetailsId == bankTransactionDetails.Id).ToList();
 
             foreach (JournalDetails journalDetails in journalsDetails)
             {
@@ -549,47 +549,47 @@ namespace eShop.Extensions
             }
         }
 
-        public static void CreateCashBankJournalDetailsHeader(CashBankTransactionDetailsHeader cashBankTransactionDetailsHeader, Journal journal, EnumCashBankTransactionType enumCashBankTransactionType, ApplicationDbContext db)
+        public static void CreateBankJournalDetailsHeader(BankTransactionDetailsHeader bankTransactionDetailsHeader, Journal journal, EnumBankTransactionType enumBankTransactionType, ApplicationDbContext db)
         {
-            CashBankTransaction cashBankTransaction = db.CashBankTransactions.Find(cashBankTransactionDetailsHeader.CashBankTransactionId);
-            MasterCashBank masterCashBank = db.MasterCashBanks.Find(cashBankTransactionDetailsHeader.MasterCashBankId);
+            BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetailsHeader.BankTransactionId);
+            MasterBank masterBank = db.MasterBanks.Find(bankTransactionDetailsHeader.MasterBankId);
 
             JournalDetails journalDetails = new JournalDetails
             {
                 JournalId = journal.Id,
-                MasterRegionId = cashBankTransaction.MasterRegionId,
-                ChartOfAccountId = masterCashBank.ChartOfAccountId,
-                CashBankTransactionDetailsHeaderId = cashBankTransactionDetailsHeader.Id,
-                Created = cashBankTransactionDetailsHeader.Created,
-                Updated = cashBankTransactionDetailsHeader.Updated,
-                UserId = cashBankTransactionDetailsHeader.UserId,
-                Notes = cashBankTransactionDetailsHeader.Notes
+                MasterRegionId = bankTransaction.MasterRegionId,
+                ChartOfAccountId = masterBank.ChartOfAccountId,
+                BankTransactionDetailsHeaderId = bankTransactionDetailsHeader.Id,
+                Created = bankTransactionDetailsHeader.Created,
+                Updated = bankTransactionDetailsHeader.Updated,
+                UserId = bankTransactionDetailsHeader.UserId,
+                Notes = bankTransactionDetailsHeader.Notes
             };
 
-            if (enumCashBankTransactionType == EnumCashBankTransactionType.In)
+            if (enumBankTransactionType == EnumBankTransactionType.In)
             {
-                if (cashBankTransactionDetailsHeader.Total < 0)
+                if (bankTransactionDetailsHeader.Total < 0)
                 {
                     journalDetails.Debit = 0;
-                    journalDetails.Credit = cashBankTransactionDetailsHeader.Total * -1;
+                    journalDetails.Credit = bankTransactionDetailsHeader.Total * -1;
                 }
                 else
                 {
                     journalDetails.Credit = 0;
-                    journalDetails.Debit = cashBankTransactionDetailsHeader.Total;
+                    journalDetails.Debit = bankTransactionDetailsHeader.Total;
                 }
             }
             else
             {
-                if (cashBankTransactionDetailsHeader.Total < 0)
+                if (bankTransactionDetailsHeader.Total < 0)
                 {
                     journalDetails.Credit = 0;
-                    journalDetails.Debit = cashBankTransactionDetailsHeader.Total * -1;
+                    journalDetails.Debit = bankTransactionDetailsHeader.Total * -1;
                 }
                 else
                 {
                     journalDetails.Debit = 0;
-                    journalDetails.Credit = cashBankTransactionDetailsHeader.Total;
+                    journalDetails.Credit = bankTransactionDetailsHeader.Total;
                 }
             }
 
@@ -602,11 +602,11 @@ namespace eShop.Extensions
             db.SaveChanges();
         }
 
-        public static void UpdateCashBankJournalDetailsHeader(CashBankTransactionDetailsHeader cashBankTransactionDetailsHeader, EnumCashBankTransactionType enumBankTransactionType, ApplicationDbContext db)
+        public static void UpdateBankJournalDetailsHeader(BankTransactionDetailsHeader bankTransactionDetailsHeader, EnumBankTransactionType enumBankTransactionType, ApplicationDbContext db)
         {
-            CashBankTransaction cashBankTransaction = db.CashBankTransactions.Find(cashBankTransactionDetailsHeader.CashBankTransactionId);
-            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.CashBankTransaction && x.CashBankTransactionDetailsHeaderId == cashBankTransactionDetailsHeader.Id).FirstOrDefault();
-            MasterCashBank masterBank = db.MasterCashBanks.Find(cashBankTransactionDetailsHeader.MasterCashBankId);
+            BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetailsHeader.BankTransactionId);
+            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.BankTransaction && x.BankTransactionDetailsHeaderId == bankTransactionDetailsHeader.Id).FirstOrDefault();
+            MasterBank masterBank = db.MasterBanks.Find(bankTransactionDetailsHeader.MasterBankId);
 
 
             if (journalDetails != null)
@@ -615,36 +615,36 @@ namespace eShop.Extensions
 
                 db.Entry(journalDetails).State = EntityState.Modified;
 
-                journalDetails.MasterRegionId = cashBankTransaction.MasterRegionId;
+                journalDetails.MasterRegionId = bankTransaction.MasterRegionId;
                 journalDetails.ChartOfAccountId = masterBank.ChartOfAccountId;
-                journalDetails.Updated = cashBankTransactionDetailsHeader.Updated;
-                journalDetails.UserId = cashBankTransactionDetailsHeader.UserId;
-                journalDetails.Notes = cashBankTransactionDetailsHeader.Notes;
+                journalDetails.Updated = bankTransactionDetailsHeader.Updated;
+                journalDetails.UserId = bankTransactionDetailsHeader.UserId;
+                journalDetails.Notes = bankTransactionDetailsHeader.Notes;
 
-                if (enumBankTransactionType == EnumCashBankTransactionType.In)
+                if (enumBankTransactionType == EnumBankTransactionType.In)
                 {
-                    if (cashBankTransactionDetailsHeader.Total < 0)
+                    if (bankTransactionDetailsHeader.Total < 0)
                     {
                         journalDetails.Debit = 0;
-                        journalDetails.Credit = cashBankTransactionDetailsHeader.Total * -1;
+                        journalDetails.Credit = bankTransactionDetailsHeader.Total * -1;
                     }
                     else
                     {
                         journalDetails.Credit = 0;
-                        journalDetails.Debit = cashBankTransactionDetailsHeader.Total;
+                        journalDetails.Debit = bankTransactionDetailsHeader.Total;
                     }
                 }
                 else
                 {
-                    if (cashBankTransactionDetailsHeader.Total < 0)
+                    if (bankTransactionDetailsHeader.Total < 0)
                     {
                         journalDetails.Credit = 0;
-                        journalDetails.Debit = cashBankTransactionDetailsHeader.Total * -1;
+                        journalDetails.Debit = bankTransactionDetailsHeader.Total * -1;
                     }
                     else
                     {
                         journalDetails.Debit = 0;
-                        journalDetails.Credit = cashBankTransactionDetailsHeader.Total;
+                        journalDetails.Credit = bankTransactionDetailsHeader.Total;
                     }
                 }
 
@@ -657,9 +657,9 @@ namespace eShop.Extensions
             }
         }
 
-        public static void RemoveCashBankJournalDetailsHeader(CashBankTransactionDetailsHeader cashBankTransactionDetailsHeader, Journal journal, ApplicationDbContext db)
+        public static void RemoveBankJournalDetailsHeader(BankTransactionDetailsHeader bankTransactionDetailsHeader, Journal journal, ApplicationDbContext db)
         {
-            List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.CashBankTransactionDetailsHeaderId == cashBankTransactionDetailsHeader.Id).ToList();
+            List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.BankTransactionDetailsHeaderId == bankTransactionDetailsHeader.Id).ToList();
 
             foreach (JournalDetails journalDetails in journalsDetails)
             {
@@ -803,7 +803,7 @@ namespace eShop.Extensions
 
             if (creditNoteDetails.Type == EnumCreditNoteType.Bank || creditNoteDetails.Type == EnumCreditNoteType.Cash)
             {
-                MasterCashBank masterBank = db.MasterCashBanks.Find(creditNoteDetails.MasterCashBankId);
+                MasterBank masterBank = db.MasterBanks.Find(creditNoteDetails.MasterBankId);
                 journalDetails.ChartOfAccountId = masterBank.ChartOfAccountId;
             }
             else if (creditNoteDetails.Type == EnumCreditNoteType.Cheque)
@@ -893,8 +893,8 @@ namespace eShop.Extensions
 
                 if (creditNoteDetails.Type == EnumCreditNoteType.Bank || creditNoteDetails.Type == EnumCreditNoteType.Cash)
                 {
-                    MasterCashBank masterCashBank = db.MasterCashBanks.Find(creditNoteDetails.MasterCashBankId);
-                    journalDetails.ChartOfAccountId = masterCashBank.ChartOfAccountId;
+                    MasterBank masterBank = db.MasterBanks.Find(creditNoteDetails.MasterBankId);
+                    journalDetails.ChartOfAccountId = masterBank.ChartOfAccountId;
                 }
                 else if (creditNoteDetails.Type == EnumCreditNoteType.Cheque)
                 {

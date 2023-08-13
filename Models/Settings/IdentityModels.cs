@@ -153,10 +153,10 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.WarehouseTransferDetails> WarehouseTransfersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockCard> StockCards { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Cheque> Cheques { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterCashBank> MasterCashBanks { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.CashBankTransaction> CashBankTransactions { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.CashBankTransactionDetailsHeader> CashBankTransactionsDetailsHeader { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.CashBankTransactionDetails> CashBankTransactionsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBank> MasterBanks { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BankTransaction> BankTransactions { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BankTransactionDetailsHeader> BankTransactionsDetailsHeader { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BankTransactionDetails> BankTransactionsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrder> PurchaseOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrderDetails> PurchaseOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Purchase> Purchases { get; set; }
@@ -247,9 +247,9 @@ namespace eShop.Models
             modelBuilder.Entity<RepaymentDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<Cheque>().Property(x => x.Ammount).HasPrecision(18, 2);
             modelBuilder.Entity<Cheque>().Property(x => x.Allocated).HasPrecision(18, 2);
-            modelBuilder.Entity<CashBankTransaction>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<CashBankTransactionDetails>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<CashBankTransactionDetailsHeader>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<BankTransaction>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<BankTransactionDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<BankTransactionDetailsHeader>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<AccountBallance>().Property(x => x.BeginningBallance).HasPrecision(18, 2);
             modelBuilder.Entity<JournalDetails>().Property(x => x.Debit).HasPrecision(18, 2);
             modelBuilder.Entity<JournalDetails>().Property(x => x.Credit).HasPrecision(18, 2);
