@@ -412,7 +412,7 @@ namespace eShop.Controllers
         private StockAdjustment GetModelState(StockAdjustment stockAdjustment)
         {
             List<StockAdjustmentDetails> stockAdjustmentDetails = db.StockAdjustmentsDetails.Where(x => x.StockAdjustmentId == stockAdjustment.Id).ToList();
-            
+
             if (ModelState.IsValid)
             {
                 if (IsAnyCode(stockAdjustment.Code, stockAdjustment.Id))
@@ -453,7 +453,7 @@ namespace eShop.Controllers
         {
             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(stockAdjustmentDetails.MasterItemUnitId);
 
-            if(masterItemUnit == null)
+            if (masterItemUnit == null)
                 stockAdjustmentDetails.Total = 0;
             else
                 stockAdjustmentDetails.Total = stockAdjustmentDetails.Quantity * stockAdjustmentDetails.Price * masterItemUnit.MasterUnit.Ratio;
@@ -640,7 +640,7 @@ namespace eShop.Controllers
             int masterItemUnitId = 0;
             MasterItem masterItem = db.MasterItems.Find(id);
 
-            if(masterItem != null)
+            if (masterItem != null)
             {
                 MasterItemUnit masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id && x.Default).FirstOrDefault();
 

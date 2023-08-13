@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
 
 namespace eShop.Models
 {
@@ -75,10 +74,10 @@ namespace eShop.Models
         InvoiceOthers = 33,
         [Display(Name = "Detail Invoice Lainnya")]
         InvoiceOthersDetails = 34,
-        [Display(Name = "Nota Kredit")]
-        CreditNote = 35,
-        [Display(Name = "Detail Nota Kredit")]
-        CreditNoteDetails = 36,
+        [Display(Name = "Uang Muka Penjualan")]
+        SalesAdvance = 35,
+        [Display(Name = "Detail Uang Muka Penjualan")]
+        SalesAdvanceDetails = 36,
         [Display(Name = "Bagan Akun")]
         ChartOfAccount = 37,
         [Display(Name = "Master Biaya")]
@@ -214,7 +213,7 @@ namespace eShop.Models
         [Display(Name = "Sale")]
         Sale = 103,
         [Display(Name = "Sale Details")]
-        SaleDetails = 104,       
+        SaleDetails = 104,
         [Display(Name = "Purchase Return")]
         PurchaseReturn = 105,
         [Display(Name = "Purchase Return Details")]

@@ -1,4 +1,4 @@
-﻿@model eShop.Models.CreditNoteDetails
+﻿@model eShop.Models.SalesAdvanceDetails
 @{
     Layout = null;
 }
@@ -14,7 +14,7 @@
         <div class="modal-body">
             @Html.Partial("MvcDatalist/_Dialog")
             <div id="divEmp">
-                @using (Ajax.BeginForm("DetailsEdit", "CreditNotes", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "EditSuccess" }))
+                @using (Ajax.BeginForm("DetailsEdit", "SalesAdvances", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "EditSuccess" }))
                 {
                     @Html.AntiForgeryToken()
 

@@ -1,14 +1,5 @@
-﻿using CrystalDecisions.CrystalReports.Engine;
-using CrystalDecisions.Shared;
-using eShop.Extensions;
-using eShop.Models;
-using System;
-using System.Configuration;
-using System.Data.Entity;
-using System.Data.SqlClient;
+﻿using eShop.Models;
 using System.IO;
-using System.Net.Mail;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace eShop.Controllers

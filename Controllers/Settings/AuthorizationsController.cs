@@ -10,7 +10,6 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.Net;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace eShop.Controllers
 {
@@ -246,21 +245,21 @@ namespace eShop.Controllers
         [Authorize(Roles = "AuthorizationsActive")]
         private void UpdateUserRoles(ApplicationUser user, Models.Authorization authorization)
         {
-                var roles = db.Roles.ToList();
-                var userRoles = user.Roles.ToList();
-                var authorizationRoles = authorization.Roles.ToList();
+            var roles = db.Roles.ToList();
+            var userRoles = user.Roles.ToList();
+            var authorizationRoles = authorization.Roles.ToList();
 
-                foreach (CustomRole role in roles)
-                {
-                    bool isUserHaveRole = userRoles.Any(c => c.RoleId == role.Id);
-                    bool isAuthorization = authorizationRoles.Any(c => c.Id == role.Id);
+            foreach (CustomRole role in roles)
+            {
+                bool isUserHaveRole = userRoles.Any(c => c.RoleId == role.Id);
+                bool isAuthorization = authorizationRoles.Any(c => c.Id == role.Id);
 
-                    if (isUserHaveRole && !isAuthorization)
-                        userManager.RemoveFromRole(user.Id, role.Name);
-                    if (isAuthorization && !isUserHaveRole)
-                        userManager.AddToRole(user.Id, role.Name);
-                }
-                db.SaveChanges();
+                if (isUserHaveRole && !isAuthorization)
+                    userManager.RemoveFromRole(user.Id, role.Name);
+                if (isAuthorization && !isUserHaveRole)
+                    userManager.AddToRole(user.Id, role.Name);
+            }
+            db.SaveChanges();
         }
 
         [HttpPost]

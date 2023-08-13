@@ -5,7 +5,6 @@ using eShop.Models;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using static eShop.Models.MasterItemSupplierDatalist;
 
 namespace eShop.Controllers
 {
@@ -124,7 +123,7 @@ namespace eShop.Controllers
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
         }
 
-                [HttpGet]
+        [HttpGet]
         public JsonResult AllMasterItem(DatalistFilter filter)
         {
             AllMasterItemDatalist datalist = new AllMasterItemDatalist(db);

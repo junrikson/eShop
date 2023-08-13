@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.IO;
@@ -731,8 +730,8 @@ namespace eShop.Controllers
                     try
                     {
                         var purchaseRequestsDetails = db.PurchaseRequestsDetails.Where(x => x.PurchaseRequestId == purchaseRequest.Id).ToList();
-                        
-                        foreach( PurchaseRequestDetails purchaseRequestDetails in  purchaseRequestsDetails)
+
+                        foreach (PurchaseRequestDetails purchaseRequestDetails in purchaseRequestsDetails)
                         {
                             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(purchaseRequestDetails.MasterItemUnitId);
 
@@ -751,7 +750,7 @@ namespace eShop.Controllers
 
                         dbTran.Commit();
 
-                        var returnObject = new 
+                        var returnObject = new
                         {
                             Status = "success",
                             Message = masterCurrency.Code + " : " + purchaseRequest.Rate.ToString("N2")

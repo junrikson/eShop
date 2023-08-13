@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Engineering;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -136,7 +135,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitAccount> MasterBusinessUnitsAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegion> MasterRegions { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegionAccount> MasterRegionAccounts { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterCurrency> MasterCurrencies{ get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterCurrency> MasterCurrencies { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterItem> MasterItems { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterItemUnit> MasterItemUnits { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterCategory> MasterCategories { get; set; }
@@ -173,8 +172,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.SalesReturnDetails> SalesReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Sale> Sales { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleDetails> SalesDetails { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.CreditNote> CreditNotes { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.CreditNoteDetails> CreditNotesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SalesAdvance> SalesAdvances { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SalesAdvanceDetails> SalesAdvancesDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Repayment> Repayments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.RepaymentDetailsHeader> RepaymentsDetailsHeader { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.RepaymentDetails> RepaymentsDetails { get; set; }
@@ -187,7 +186,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.Authorization> Authorizations { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Chat> Chats { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ChatUserOnline> ChatUserOnlines { get; set; }
-        
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -240,8 +239,8 @@ namespace eShop.Models
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<CreditNote>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<CreditNoteDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesAdvance>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesAdvanceDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<Repayment>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<RepaymentDetailsHeader>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<RepaymentDetails>().Property(x => x.Total).HasPrecision(18, 2);

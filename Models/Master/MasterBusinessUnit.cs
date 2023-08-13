@@ -28,12 +28,12 @@ namespace eShop.Models
         COGSAccount = 8,
         [Display(Name = "PIUTANG GIRO (MASUK)")]
         ChequeReceivablesAccount = 9,
-        [Display(Name = "HUTANG IRO (KELUAR)")]
+        [Display(Name = "HUTANG GIRO (KELUAR)")]
         ChequePayableAccount = 10,
-        [Display(Name = "NOTA KREDIT")]
-        CreditNoteAccount = 9,
-        [Display(Name = "NOTA DEBET")]
-        DebitNoteAccount = 10
+        [Display(Name = "UANG MUKA PENJUALAN")]
+        SalesAdvanceAccount = 9,
+        [Display(Name = "UANG MUKA PEMBELIAN")]
+        PurchasesAdvanceAccount = 10
     }
 
     public class MasterBusinessUnit

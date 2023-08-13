@@ -8,11 +8,8 @@
     <Setting Name="WarehouseCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">WH/</Value>
     </Setting>
-    <Setting Name="WarehouseInputCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">WHI/</Value>
-    </Setting>
-    <Setting Name="CreditNoteCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">CN/</Value>
+    <Setting Name="SalesAdvanceCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">UMS/</Value>
     </Setting>
     <Setting Name="BankInCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">BIN/</Value>
@@ -24,10 +21,43 @@
       <Value Profile="(Default)">GL/</Value>
     </Setting>
     <Setting Name="RepaymentCode" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">RP/</Value>
+      <Value Profile="(Default)">RPY/</Value>
     </Setting>
     <Setting Name="PurchaseOrderCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">PO/</Value>
+    </Setting>
+    <Setting Name="PurchasesAdvanceCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">UMP/</Value>
+    </Setting>
+    <Setting Name="StockAdjustmentCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ADJ/</Value>
+    </Setting>
+    <Setting Name="WarehouseTransferCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">TRF/</Value>
+    </Setting>
+    <Setting Name="PaymentCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PAY/</Value>
+    </Setting>
+    <Setting Name="PurchaseRequestCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PR/</Value>
+    </Setting>
+    <Setting Name="SalesPersonCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SLS/</Value>
+    </Setting>
+    <Setting Name="SalesCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">INV/</Value>
+    </Setting>
+    <Setting Name="PurchaseCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PCH/</Value>
+    </Setting>
+    <Setting Name="SalesOrderCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SO/</Value>
+    </Setting>
+    <Setting Name="SalesRequestCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SR/</Value>
+    </Setting>
+    <Setting Name="SalesReturnCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">RES/</Value>
     </Setting>
   </Settings>
 </SettingsFile>

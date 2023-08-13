@@ -441,7 +441,7 @@ namespace eShop.Controllers
         private SalesOrder GetModelState(SalesOrder salesOrder)
         {
             List<SalesOrderDetails> salesOrderDetails = db.SalesOrdersDetails.Where(x => x.SalesOrderId == salesOrder.Id).ToList();
-            
+
             if (ModelState.IsValid)
             {
                 if (IsAnyCode(salesOrder.Code, salesOrder.Id))
@@ -482,7 +482,7 @@ namespace eShop.Controllers
         {
             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(salesOrderDetails.MasterItemUnitId);
 
-            if(masterItemUnit == null)
+            if (masterItemUnit == null)
                 salesOrderDetails.Total = 0;
             else
                 salesOrderDetails.Total = salesOrderDetails.Quantity * salesOrderDetails.Price * masterItemUnit.MasterUnit.Ratio;
@@ -669,7 +669,7 @@ namespace eShop.Controllers
             int masterItemUnitId = 0;
             MasterItem masterItem = db.MasterItems.Find(id);
 
-            if(masterItem != null)
+            if (masterItem != null)
             {
                 MasterItemUnit masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id && x.Default).FirstOrDefault();
 

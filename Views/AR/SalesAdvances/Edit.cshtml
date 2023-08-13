@@ -1,8 +1,8 @@
-﻿@model eShop.Models.CreditNote
+﻿@model eShop.Models.SalesAdvance
 
 @{
-    ViewBag.Title = "Nota Kredit";
-    ViewBag.Current = "CreditNotes";
+    ViewBag.Title = "Uang Muka Penjualan";
+    ViewBag.Current = "SalesAdvances";
 }
 
 @section Styles {
@@ -27,7 +27,7 @@
                     <div class="box-header with-border">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Add - Nota Kredit</h3>
+                        <h3 class="box-title">Edit - Uang Muka Penjualan</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -40,7 +40,8 @@
                             <div class="form-group">
                                 <div class="col-md-10">
                                     @Html.LabelFor(model => model.Code)
-                                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                    @Html.HiddenFor(model => model.Code)
+                                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
                                     @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                                 </div>
                                 <div class="col-md-2 text-center">
@@ -61,7 +62,8 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     @Html.LabelFor(model => model.MasterBusinessUnitId)
-                                    @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
+                                    @Html.HiddenFor(model => model.MasterBusinessUnitId)
+                                    @Html.EditorFor(model => model.MasterBusinessUnit.Name, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
                                     @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -80,7 +82,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="col-md-6 text-left">
-                                        <a href="#" id="cancel" class="btn btn-danger" style="margin-top:10px">
+                                        <a href="@Url.Action("Index")" id="cancel" class="btn btn-danger" style="margin-top:10px">
                                             Cancel
                                         </a>
                                     </div>
@@ -109,7 +111,7 @@
                         <div class="text-right col-md-12">
                             <label style="font-weight: bold">TOTAL :</label>
                             <input type="text" id="Total" value="@Model.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "CreditNotes")">
+                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "SalesAdvances")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
                             <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
@@ -167,6 +169,7 @@
     </script>
 
     <script>
+
         [].forEach.call(document.getElementsByClassName('datalist'), function (element)
         {
             new MvcDatalist(element);
@@ -197,7 +200,7 @@
         $('#btnAdd').click(function (event)
         {
             event.preventDefault();
-            var url = $(this).attr("href") + "?creditNoteId=" + $("input#Id").val();
+            var url = $(this).attr("href") + "?salesAdvanceId=" + $("input#Id").val();
             $.get(url, function (data)
             {
                 $('#addContainer').html(data);
@@ -263,10 +266,10 @@
             var grid = new MvcGrid(document.querySelector('#other-table'));
             grid.reload();
 
-            var param = { CreditNoteId: $("#Id").val() };
+            var param = { SalesAdvanceId: $("#Id").val() };
             var options = {};
 
-            options.url = "/CreditNotes/GetTotal";
+            options.url = "/SalesAdvances/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -292,10 +295,10 @@
             var grid = new MvcGrid(document.querySelector('#other-table'));
             grid.reload();
 
-            var param = { CreditNoteId: $("#Id").val() };
+            var param = { SalesAdvanceId: $("#Id").val() };
             var options = {};
 
-            options.url = "/CreditNotes/GetTotal";
+            options.url = "/SalesAdvances/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -307,7 +310,6 @@
             };
             $.ajax(options);
         }
-
     </script>
 
     <script>
@@ -340,7 +342,7 @@
                         if (result)
                         {
                             var options = {};
-                            options.url = "/CreditNotes/DetailsBatchDelete";
+                            options.url = "/SalesAdvances/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
@@ -355,10 +357,10 @@
                                     new MvcGrid(element).reload();
                                 });
 
-                                var param = { CreditNoteId: $("#Id").val() };
+                                var param = { SalesAdvanceId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/CreditNotes/GetTotal";
+                                options2.url = "/SalesAdvances/GetTotal";
                                 options2.type = "POST";
                                 options2.headers = headers;
                                 options2.data = JSON.stringify(param);
@@ -379,86 +381,6 @@
                     });
                 }
             });
-
-            $("#cancel").click(function () {
-                var data = { id: $("input#Id").val() };
-                var options = {};
-                options.url = "/CreditNotes/Cancel";
-                options.type = "POST";
-                options.headers = headers;
-                options.data = JSON.stringify(data);
-                options.contentType = "application/json";
-                options.dataType = "json";
-                options.success = function (msg) {
-                    window.location.href = '@Url.Action("Index", "CreditNotes")';
-                };
-                options.error = function () {
-                    window.location.href = '@Url.Action("Index", "CreditNotes")';
-                };
-                $.ajax(options);
-            });
-
-            $("#MasterRegionId").on("change", function () {
-                var id = $("#Id").val();
-                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
-                var masterRegionId = $("#MasterRegionId").val();
-                var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
-                var options = {};
-
-                if (masterRegionId !== 0 && masterRegionId !== '') {
-                    if ($("#MasterBusinessUnitId").val() === "") {
-                        bootbox.alert("Unit Bisnis belum dipilih!");
-                        document.getElementById('MasterRegionId').value = "0";
-                    }
-                    else {
-                        options.url = "/CreditNotes/GetCode";
-                        options.type = "POST";
-                        options.headers = headers;
-                        options.data = JSON.stringify(data);
-                        options.contentType = "application/json";
-                        options.dataType = "json";
-                        options.success = function (code) {
-                            document.getElementById('Code').value = code;
-
-                            [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                                new MvcDatalist(element).reload();
-                            });
-                        };
-                        options.error = function () {
-                            document.getElementById('Code').value = "";
-                        };
-                        $.ajax(options);
-                    }
-                }
-            }).change();
-
-            $("#MasterBusinessUnitId").on("change", function () {
-                var id = $("#Id").val();
-                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
-                var masterRegionId = $("#MasterRegionId").val();
-                var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
-                var options = {};
-
-                if (masterRegionId !== 0 && masterRegionId !== '') {
-                    options.url = "/CreditNotes/GetCode";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (code) {
-                        document.getElementById('Code').value = code;
-
-                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                            new MvcDatalist(element).reload();
-                        });
-                    };
-                    options.error = function () {
-                        document.getElementById('Code').value = "";
-                    };
-                    $.ajax(options);
-                }
-            }).change();
         });
 
         document.addEventListener('reloadend', function (e)

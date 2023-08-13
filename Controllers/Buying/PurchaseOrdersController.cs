@@ -11,14 +11,10 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Web.Mvc;
-using System.Web.Security;
 
 
 namespace eShop.Controllers
@@ -446,7 +442,7 @@ namespace eShop.Controllers
         private PurchaseOrder GetModelState(PurchaseOrder purchase)
         {
             List<PurchaseOrderDetails> purchaseOrderDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchase.Id).ToList();
-            
+
             if (ModelState.IsValid)
             {
                 if (IsAnyCode(purchase.Code, purchase.Id))
@@ -674,7 +670,7 @@ namespace eShop.Controllers
             int masterItemUnitId = 0;
             MasterItem masterItem = db.MasterItems.Find(id);
 
-            if(masterItem != null)
+            if (masterItem != null)
             {
                 MasterItemUnit masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id && x.Default).FirstOrDefault();
 
@@ -846,8 +842,8 @@ namespace eShop.Controllers
                     try
                     {
                         var remove = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrder.Id).ToList();
-                        
-                        if(remove != null)
+
+                        if (remove != null)
                         {
                             db.PurchaseOrdersDetails.RemoveRange(remove);
                             db.SaveChanges();
@@ -855,9 +851,9 @@ namespace eShop.Controllers
 
                         var purchaseRequestsDetails = db.PurchaseRequestsDetails.Where(x => x.PurchaseRequestId == purchaseRequest.Id).ToList();
 
-                        if(purchaseRequestsDetails != null)
+                        if (purchaseRequestsDetails != null)
                         {
-                            foreach(PurchaseRequestDetails purchaseRequestDetails in purchaseRequestsDetails)
+                            foreach (PurchaseRequestDetails purchaseRequestDetails in purchaseRequestsDetails)
                             {
                                 PurchaseOrderDetails purchaseOrderDetails = new PurchaseOrderDetails
                                 {

@@ -1,9 +1,4 @@
-﻿using Datalist;
-using eShop.Models;
-using Microsoft.AspNet.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using eShop.Models;
 using System.Web.Mvc;
 
 namespace eShop.Controllers

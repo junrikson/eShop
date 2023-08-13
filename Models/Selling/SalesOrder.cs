@@ -1,11 +1,8 @@
 ﻿using Datalist;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
-using System.Linq;
 using System.Web.Mvc;
 
 namespace eShop.Models

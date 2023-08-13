@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eShop.Models.CreditNote>
+﻿@model IEnumerable<eShop.Models.SalesAdvance>
 @{
     Layout = null;
 }
@@ -8,9 +8,9 @@
     .Build(columns =>
     {
         columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
-        columns.Add(model => ((User.IsInRole("CreditNotesEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs\" href=\"" + @Url.Action("Edit", "CreditNotes", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
-        ((User.IsInRole("CreditNotesView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "CreditNotes", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
-        ((User.IsInRole("CreditNotesPrint")) ? "&nbsp;<a target=\"_blank\" class=\"btn btn-info btn-xs print-data\" href=\"" + @Url.Action("Print", "CreditNotes", new { id = model.Id }) + "\"><i class=\"fa fa-print\"></i> Print</a>" : "")).Encoded(false);
+        columns.Add(model => ((User.IsInRole("SalesAdvancesEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs\" href=\"" + @Url.Action("Edit", "SalesAdvances", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("SalesAdvancesView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "SalesAdvances", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
+        ((User.IsInRole("SalesAdvancesPrint")) ? "&nbsp;<a target=\"_blank\" class=\"btn btn-info btn-xs print-data\" href=\"" + @Url.Action("Print", "SalesAdvances", new { id = model.Id }) + "\"><i class=\"fa fa-print\"></i> Print</a>" : "")).Encoded(false);
         columns.Add(model => model.User.UserName).Titled("User");
         columns.Add(model => model.MasterBusinessUnit.Code).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Code));
         columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));

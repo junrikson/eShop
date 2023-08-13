@@ -145,7 +145,7 @@ namespace eShop.Controllers
             if (!string.IsNullOrEmpty(masterCategory.Code)) masterCategory.Code = masterCategory.Code.ToUpper();
             if (!string.IsNullOrEmpty(masterCategory.Name)) masterCategory.Name = masterCategory.Name.ToUpper();
             if (!string.IsNullOrEmpty(masterCategory.Notes)) masterCategory.Notes = masterCategory.Notes.ToUpper();
-            
+
             db.Entry(masterCategory).State = EntityState.Unchanged;
             db.Entry(masterCategory).Property("Code").IsModified = true;
             db.Entry(masterCategory).Property("Name").IsModified = true;

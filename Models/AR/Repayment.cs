@@ -18,8 +18,8 @@ namespace eShop.Models
         Cash = 2,
         [Display(Name = "GIRO/CEK")]
         GiroCheque = 3,
-        [Display(Name = "NOTA KREDIT")]
-        CreditNote = 4,
+        [Display(Name = "UANG MUKA")]
+        SalesAdvance = 4,
         [Display(Name = "BIAYA")]
         MasterCost = 5
     }
@@ -128,11 +128,11 @@ namespace eShop.Models
         [Display(Name = "Master Biaya")]
         public virtual MasterCost MasterCost { get; set; }
 
-        [Display(Name = "Nota Kredit")]
-        public int? CreditNoteId { get; set; }
+        [Display(Name = "Uang Muka")]
+        public int? SalesAdvanceId { get; set; }
 
-        [Display(Name = "Nota Kredit")]
-        public virtual CreditNote CreditNote { get; set; }
+        [Display(Name = "Uang Muka")]
+        public virtual SalesAdvance SalesAdvance { get; set; }
 
         [Display(Name = "Giro / Cek")]
         public int? ChequeId { get; set; }
@@ -182,40 +182,12 @@ namespace eShop.Models
         [Display(Name = "Pelunasan")]
         public virtual Repayment Repayment { get; set; }
 
-        [Display(Name = "Jenis")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public EnumRepaymentType Type { get; set; }
-
         [Display(Name = "Invoice")]
         [Required(ErrorMessage = "Invoice harus diisi.")]
         public int SaleId { get; set; }
 
         [Display(Name = "Invoice")]
         public virtual Sale Sale { get; set; }
-
-        [Display(Name = "Kas/Bank")]
-        public int? MasterBankId { get; set; }
-
-        [Display(Name = "Kas/Bank")]
-        public virtual MasterBank MasterBank { get; set; }
-
-        [Display(Name = "Biaya")]
-        public int? MasterCostId { get; set; }
-
-        [Display(Name = "Biaya")]
-        public virtual MasterCost MasterCost { get; set; }
-
-        [Display(Name = "Nota Kredit")]
-        public int? CreditNoteId { get; set; }
-
-        [Display(Name = "Nota Kredit")]
-        public virtual CreditNote CreditNote { get; set; }
-
-        [Display(Name = "Giro / Cek")]
-        public int? ChequeId { get; set; }
-
-        [Display(Name = "Giro / Cek")]
-        public virtual Cheque Cheque { get; set; }
 
         [Display(Name = "Referensi")]
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]

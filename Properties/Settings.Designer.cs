@@ -31,18 +31,7 @@ namespace eShop.Properties {
                 return ((string)(this["CustomerCode"]));
             }
         }
-
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SL/")]
-        public string SalesPersonCode
-        {
-            get
-            {
-                return ((string)(this["SalesPersonCode"]));
-            }
-        }
-
+        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("WH/")]
@@ -54,19 +43,10 @@ namespace eShop.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("WHI/")]
-        public string WarehouseInputCode {
+        [global::System.Configuration.DefaultSettingValueAttribute("UMS/")]
+        public string SalesAdvanceCode {
             get {
-                return ((string)(this["WarehouseInputCode"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("CN/")]
-        public string CreditNoteCode {
-            get {
-                return ((string)(this["CreditNoteCode"]));
+                return ((string)(this["SalesAdvanceCode"]));
             }
         }
         
@@ -99,7 +79,7 @@ namespace eShop.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("RP/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("RPY/")]
         public string RepaymentCode {
             get {
                 return ((string)(this["RepaymentCode"]));
@@ -114,103 +94,103 @@ namespace eShop.Properties {
                 return ((string)(this["PurchaseOrderCode"]));
             }
         }
-
+        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PR/")]
-        public string PurchaseRequestCode
-        {
-            get
-            {
-                return ((string)(this["PurchaseRequestCode"]));
+        [global::System.Configuration.DefaultSettingValueAttribute("UMP/")]
+        public string PurchasesAdvanceCode {
+            get {
+                return ((string)(this["PurchasesAdvanceCode"]));
             }
         }
-
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("IN/")]
-        public string PurchaseCode
-        {
-            get
-            {
-                return ((string)(this["PurchaseCode"]));
-            }
-        }
-
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("RIN/")]
-        public string PurchaseReturn
-        {
-            get
-            {
-                return ((string)(this["PurchaseReturnCode"]));
-            }
-        }
-
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SR/")]
-        public string SalesRequestCode
-        {
-            get
-            {
-                return ((string)(this["SalesRequestCode"]));
-            }
-        }
-
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SO/")]
-        public string SalesOrderCode
-        {
-            get
-            {
-                return ((string)(this["SalesOrderCode"]));
-            }
-        }
-
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("INV/")]
-        public string SalesCode
-        {
-            get
-            {
-                return ((string)(this["SalesCode"]));
-            }
-        }
-
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("RF/")]
-        public string SalesReturnCode
-        {
-            get
-            {
-                return ((string)(this["SalesReturnCode"]));
-            }
-        }
-
+        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("ADJ/")]
-        public string StockAdjustmentCode
-        {
-            get
-            {
+        public string StockAdjustmentCode {
+            get {
                 return ((string)(this["StockAdjustmentCode"]));
             }
         }
-
+        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("TG/")]
-        public string WarehouseTransferCode
-        {
-            get
-            {
+        [global::System.Configuration.DefaultSettingValueAttribute("TRF/")]
+        public string WarehouseTransferCode {
+            get {
                 return ((string)(this["WarehouseTransferCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PAY/")]
+        public string PaymentCode {
+            get {
+                return ((string)(this["PaymentCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PR/")]
+        public string PurchaseRequestCode {
+            get {
+                return ((string)(this["PurchaseRequestCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SLS/")]
+        public string SalesPersonCode {
+            get {
+                return ((string)(this["SalesPersonCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("INV/")]
+        public string SalesCode {
+            get {
+                return ((string)(this["SalesCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PCH/")]
+        public string PurchaseCode {
+            get {
+                return ((string)(this["PurchaseCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SO/")]
+        public string SalesOrderCode {
+            get {
+                return ((string)(this["SalesOrderCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SR/")]
+        public string SalesRequestCode {
+            get {
+                return ((string)(this["SalesRequestCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("RES/")]
+        public string SalesReturnCode {
+            get {
+                return ((string)(this["SalesReturnCode"]));
             }
         }
     }

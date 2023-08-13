@@ -1,4 +1,4 @@
-﻿@model eShop.Models.CreditNoteDetails
+﻿@model eShop.Models.SalesAdvanceDetails
 @{
     Layout = null;
 }
@@ -14,13 +14,13 @@
         <div class="modal-body">
             @Html.Partial("MvcDatalist/_Dialog")
             <div id="divEmp">
-                @using (Ajax.BeginForm("DetailsCreate", "CreditNotes", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
+                @using (Ajax.BeginForm("DetailsCreate", "SalesAdvances", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
                 {
                     @Html.AntiForgeryToken()
 
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    @Html.HiddenFor(model => model.CreditNoteId)
+                    @Html.HiddenFor(model => model.SalesAdvanceId)
                     <div class="form-group">
                         <div class="col-md-12">
                             @Html.LabelFor(model => model.Type)

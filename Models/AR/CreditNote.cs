@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public enum EnumCreditNoteType
+    public enum EnumSalesAdvanceType
     {
         [Display(Name = "TRANSFER")]
         Bank = 1,
@@ -21,18 +21,18 @@ namespace eShop.Models
         [Display(Name = "BIAYA")]
         MasterCost = 4
     }
-    public class CreditNote
+    public class SalesAdvance
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Nomor Nota Kredit harus diisi.")]
+        [Required(ErrorMessage = "Nomor Uang Muka Penjualan harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor Nota Kredit")]
+        [Display(Name = "Nomor Uang Muka Penjualan")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "CreditNotes", AdditionalFields = "Id", ErrorMessage = "Nomor Nota Kredit ini sudah dipakai.")]
+        [Remote("IsCodeExists", "SalesAdvances", AdditionalFields = "Id", ErrorMessage = "Nomor Uang Muka Penjualan ini sudah dipakai.")]
         public string Code { get; set; }
 
         [DatalistColumn]
@@ -89,22 +89,22 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class CreditNoteDetails
+    public class SalesAdvanceDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Display(Name = "Nota Kredit")]
+        [Display(Name = "Uang Muka Penjualan")]
         [Required(ErrorMessage = "Invoice harus diisi.")]
-        public int CreditNoteId { get; set; }
+        public int SalesAdvanceId { get; set; }
 
-        [Display(Name = "Nota Kredit")]
-        public virtual CreditNote CreditNote { get; set; }
+        [Display(Name = "Uang Muka Penjualan")]
+        public virtual SalesAdvance SalesAdvance { get; set; }
 
         [Display(Name = "Jenis")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public EnumCreditNoteType Type { get; set; }
+        public EnumSalesAdvanceType Type { get; set; }
 
         [Display(Name = "Master Kas/Bank")]
         public int? MasterBankId { get; set; }
@@ -153,7 +153,7 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class CreditNoteDatalistViewModel
+    public class SalesAdvanceDatalistViewModel
     {
         [Key]
         public int Id { get; set; }
@@ -179,7 +179,7 @@ namespace eShop.Models
         public virtual MasterRegion MasterRegion { get; set; }
 
         [DatalistColumn]
-        [Display(Name = "Nomor Nota Kredit")]
+        [Display(Name = "Nomor Uang Muka Penjualan")]
         public string Code { get; set; }
 
         [DatalistColumn]
@@ -210,20 +210,20 @@ namespace eShop.Models
         public bool Active { get; set; }
     }
 
-    public class CreditNoteDatalist : MvcDatalist<CreditNoteDatalistViewModel>
+    public class SalesAdvanceDatalist : MvcDatalist<SalesAdvanceDatalistViewModel>
     {
         private DbContext Context { get; }
 
-        public CreditNoteDatalist(DbContext context)
+        public SalesAdvanceDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.Code;
         }
-        public CreditNoteDatalist()
+        public SalesAdvanceDatalist()
         {
-            Url = "/DatalistFilters/AllCreditNote";
-            Title = "Nota Kredit";
+            Url = "/DatalistFilters/AllSalesAdvance";
+            Title = "Uang Muka Penjualan";
             AdditionalFilters.Add("MasterBusinessUnitId");
 
             Filter.Sort = "Code";
@@ -231,10 +231,10 @@ namespace eShop.Models
             Filter.Rows = 10;
         }
 
-        public override IQueryable<CreditNoteDatalistViewModel> GetModels()
+        public override IQueryable<SalesAdvanceDatalistViewModel> GetModels()
         {
-            return Context.Set<CreditNote>()
-                .Select(x => new CreditNoteDatalistViewModel
+            return Context.Set<SalesAdvance>()
+                .Select(x => new SalesAdvanceDatalistViewModel
                 {
                     Id = x.Id,
                     Code = x.Code,
@@ -254,20 +254,20 @@ namespace eShop.Models
         }
     }
 
-    public class CreditNoteUnallocatedDatalist : MvcDatalist<CreditNoteDatalistViewModel>
+    public class SalesAdvanceUnallocatedDatalist : MvcDatalist<SalesAdvanceDatalistViewModel>
     {
         private DbContext Context { get; }
 
-        public CreditNoteUnallocatedDatalist(DbContext context)
+        public SalesAdvanceUnallocatedDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.Code;
         }
-        public CreditNoteUnallocatedDatalist()
+        public SalesAdvanceUnallocatedDatalist()
         {
-            Url = "/DatalistFilters/AllCreditNoteUnallocated";
-            Title = "Nota Kredit";
+            Url = "/DatalistFilters/AllSalesAdvanceUnallocated";
+            Title = "Uang Muka Penjualan";
             AdditionalFilters.Add("MasterBusinessUnitId");
             AdditionalFilters.Add("MasterRegionId");
 
@@ -276,10 +276,10 @@ namespace eShop.Models
             Filter.Rows = 10;
         }
 
-        public override IQueryable<CreditNoteDatalistViewModel> GetModels()
+        public override IQueryable<SalesAdvanceDatalistViewModel> GetModels()
         {
-            return Context.Set<CreditNote>().Where(x => x.Total > x.Allocated)
-                .Select(x => new CreditNoteDatalistViewModel
+            return Context.Set<SalesAdvance>().Where(x => x.Total > x.Allocated)
+                .Select(x => new SalesAdvanceDatalistViewModel
                 {
                     Id = x.Id,
                     Code = x.Code,

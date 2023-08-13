@@ -1,7 +1,4 @@
-﻿using Antlr.Runtime.Misc;
-using eShop.Extensions;
-using eShop.Models;
-using eShop.Properties;
+﻿using eShop.Models;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Data;
@@ -10,7 +7,6 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace eShop.Controllers
 {
@@ -104,10 +100,10 @@ namespace eShop.Controllers
                     db.SaveChanges();
 
                     var masterUnits = db.MasterUnits.Where(x => x.Default && x.Active).ToList();
-                    
-                    if(masterUnits != null)
+
+                    if (masterUnits != null)
                     {
-                        foreach(MasterUnit masterUnit in masterUnits)
+                        foreach (MasterUnit masterUnit in masterUnits)
                         {
                             MasterItemUnit masterItemUnit = new MasterItemUnit
                             {
@@ -241,7 +237,7 @@ namespace eShop.Controllers
                 return HttpNotFound();
             }
 
-            if(isCopy)
+            if (isCopy)
             {
                 masterItem.Code = "";
                 masterItem.Active = true;

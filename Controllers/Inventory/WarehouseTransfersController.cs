@@ -133,7 +133,7 @@ namespace eShop.Controllers
             warehouseTransfer.Created = DateTime.Now;
             warehouseTransfer.Updated = DateTime.Now;
             warehouseTransfer.UserId = User.Identity.GetUserId<int>();
-           // warehouseTransfer.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id);
+            // warehouseTransfer.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id);
 
             if (!string.IsNullOrEmpty(warehouseTransfer.Code)) warehouseTransfer.Code = warehouseTransfer.Code.ToUpper();
             if (!string.IsNullOrEmpty(warehouseTransfer.Notes)) warehouseTransfer.Notes = warehouseTransfer.Notes.ToUpper();
@@ -170,7 +170,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", warehouseTransfer.MasterBusinessUnitId);
-              //  ViewBag.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id).ToString("N2");
+                //  ViewBag.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id).ToString("N2");
 
                 return View("../Inventory/WarehouseTransfers/Create", warehouseTransfer);
             }
@@ -229,7 +229,7 @@ namespace eShop.Controllers
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
             ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", warehouseTransfer.MasterBusinessUnitId);
-           // ViewBag.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id).ToString("N2");
+            // ViewBag.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id).ToString("N2");
 
             return View("../Inventory/WarehouseTransfers/Edit", warehouseTransfer);
         }
@@ -244,7 +244,7 @@ namespace eShop.Controllers
         {
             warehouseTransfer.Updated = DateTime.Now;
             warehouseTransfer.UserId = User.Identity.GetUserId<int>();
-           // warehouseTransfer.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id);
+            // warehouseTransfer.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id);
 
             if (!string.IsNullOrEmpty(warehouseTransfer.Code)) warehouseTransfer.Code = warehouseTransfer.Code.ToUpper();
             if (!string.IsNullOrEmpty(warehouseTransfer.Notes)) warehouseTransfer.Notes = warehouseTransfer.Notes.ToUpper();
@@ -290,7 +290,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", warehouseTransfer.MasterBusinessUnitId);
-              //  ViewBag.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id).ToString("N2");
+                //  ViewBag.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id).ToString("N2");
 
                 return View("../Inventory/WarehouseTransfers/Edit", warehouseTransfer);
             }
@@ -361,7 +361,7 @@ namespace eShop.Controllers
                     {
                         rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormWarehouseTransfer.rpt"));
                         rd.SetParameterValue("Code", obj.Code);
-                      //  rd.SetParameterValue("Terbilang", "# " + TerbilangExtension.Terbilang(Math.Floor(obj.Total)).ToUpper() + " RUPIAH #");
+                        //  rd.SetParameterValue("Terbilang", "# " + TerbilangExtension.Terbilang(Math.Floor(obj.Total)).ToUpper() + " RUPIAH #");
 
                         string connString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
@@ -408,7 +408,7 @@ namespace eShop.Controllers
         private WarehouseTransfer GetModelState(WarehouseTransfer warehouseTransfer)
         {
             List<WarehouseTransferDetails> warehouseTransferDetails = db.WarehouseTransfersDetails.Where(x => x.WarehouseTransferId == warehouseTransfer.Id).ToList();
-            
+
             if (ModelState.IsValid)
             {
                 if (IsAnyCode(warehouseTransfer.Code, warehouseTransfer.Id))
@@ -470,7 +470,7 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         WarehouseTransfer warehouseTransfer = db.WarehouseTransfers.Find(warehouseTransferDetails.WarehouseTransferId);
-                      //  warehouseTransfer.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id, warehouseTransferDetails.Id) + warehouseTransferDetails.Total;
+                        //  warehouseTransfer.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id, warehouseTransferDetails.Id) + warehouseTransferDetails.Total;
 
                         db.Entry(warehouseTransfer).State = EntityState.Modified;
                         db.SaveChanges();
@@ -546,7 +546,7 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         WarehouseTransfer warehouseTransfer = db.WarehouseTransfers.Find(warehouseTransferDetails.WarehouseTransferId);
-                       // warehouseTransfer.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id, warehouseTransferDetails.Id) + warehouseTransferDetails.Total;
+                        // warehouseTransfer.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id, warehouseTransferDetails.Id) + warehouseTransferDetails.Total;
 
                         db.Entry(warehouseTransfer).State = EntityState.Modified;
                         db.SaveChanges();
@@ -595,7 +595,7 @@ namespace eShop.Controllers
 
                                     WarehouseTransfer warehouseTransfer = db.WarehouseTransfers.Find(tmp.WarehouseTransferId);
 
-                                   // warehouseTransfer.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id, tmp.Id);
+                                    // warehouseTransfer.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id, tmp.Id);
 
                                     db.Entry(warehouseTransfer).State = EntityState.Modified;
                                     db.SaveChanges();
@@ -636,7 +636,7 @@ namespace eShop.Controllers
             int masterItemUnitId = 0;
             MasterItem masterItem = db.MasterItems.Find(id);
 
-            if(masterItem != null)
+            if (masterItem != null)
             {
                 MasterItemUnit masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id && x.Default).FirstOrDefault();
 
@@ -664,7 +664,7 @@ namespace eShop.Controllers
 
             WarehouseTransfer warehouseTransfer = db.WarehouseTransfers.Find(id);
 
-            if (masterBusinessUnit != null && warehouseTransfer != null )
+            if (masterBusinessUnit != null && warehouseTransfer != null)
             {
                 code = GetCode(masterBusinessUnit);
                 warehouseTransfer.MasterBusinessUnitId = masterBusinessUnitId;
@@ -679,7 +679,7 @@ namespace eShop.Controllers
         private string GetCode(MasterBusinessUnit masterBusinessUnit)
         {
             string romanMonth = SharedFunctions.RomanNumeralFrom((int)DateTime.Now.Month);
-            string code = "/" + Settings.Default.WarehouseTransferCode + masterBusinessUnit.Code +  "/" + SharedFunctions.RomanNumeralFrom(DateTime.Now.Month) + "/" + DateTime.Now.Year.ToString().Substring(2, 2);
+            string code = "/" + Settings.Default.WarehouseTransferCode + masterBusinessUnit.Code + "/" + SharedFunctions.RomanNumeralFrom(DateTime.Now.Month) + "/" + DateTime.Now.Year.ToString().Substring(2, 2);
 
             PurchaseOrder lastData = db.PurchaseOrders
                 .Where(x => (x.Code.Contains(code)))

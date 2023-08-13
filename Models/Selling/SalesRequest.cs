@@ -1,6 +1,5 @@
 ﻿using Datalist;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -243,8 +242,8 @@ namespace eShop.Models
 
 
 
-        public class SalesRequestDetails
-          {
+    public class SalesRequestDetails
+    {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
