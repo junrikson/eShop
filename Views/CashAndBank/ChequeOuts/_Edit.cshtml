@@ -1,4 +1,4 @@
-﻿@model eShop.Models.GiroCheque
+﻿@model eShop.Models.Cheque
 
 @{
     Layout = null;
@@ -10,13 +10,14 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title">Giro & Cek Masuk</h4>
+            <h4 class="modal-title">Giro / Cek Keluar</h4>
         </div>
         <div class="modal-body">
             <div id="divEmp">
-                @using (Ajax.BeginForm("Create", "GiroChequeIns", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
+                @using (Ajax.BeginForm("Edit", "ChequeOuts", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "EditSuccess" }))
                 {
                     @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
                     @Html.HiddenFor(model => model.Active)
                     @Html.HiddenFor(model => model.Type)
 
@@ -85,4 +86,4 @@
             </div>
         </div>
     </div>
-</div>>
+</div>

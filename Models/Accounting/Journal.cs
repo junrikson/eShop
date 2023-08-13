@@ -94,6 +94,12 @@ namespace eShop.Models
         [Display(Name = "Penjualan")]
         public virtual Sale Sale { get; set; }
 
+        [Display(Name = "Nota Kredit")]
+        public int? CreditNoteId { get; set; }
+
+        [Display(Name = "Nota Kredit")]
+        public virtual CreditNote CreditNote { get; set; }
+
         [Display(Name = "Kas/Bank")]
         public int? CashBankTransactionId { get; set; }
 
@@ -156,6 +162,9 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
+        [Display(Name = "Aktif")]
+        public bool isMerged { get; set; }
+
         [Display(Name = "Detail Pembelian")]
         public int? PurchaseDetailsId { get; set; }
 
@@ -167,6 +176,12 @@ namespace eShop.Models
 
         [Display(Name = "Detail Penjualan")]
         public virtual SaleDetails SaleDetails { get; set; }
+
+        [Display(Name = "Detail Nota Kredit")]
+        public int? CreditNoteDetailsId { get; set; }
+
+        [Display(Name = "Detail Nota Kredit")]
+        public virtual CreditNoteDetails CreditNoteDetails { get; set; }
 
         [Display(Name = "Detail Kas/Bank")]
         public int? CashBankTransactionDetailsId { get; set; }

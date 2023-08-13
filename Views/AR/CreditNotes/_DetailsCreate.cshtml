@@ -1,0 +1,81 @@
+﻿@model eShop.Models.CreditNoteDetails
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Add - Detail</h4>
+        </div>
+        <div class="modal-body">
+            @Html.Partial("MvcDatalist/_Dialog")
+            <div id="divEmp">
+                @using (Ajax.BeginForm("DetailsCreate", "CreditNotes", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.CreditNoteId)
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Type)
+                            @Html.EnumDropDownListFor(model => model.Type, "- Pilih Jenis -", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group" id="DivMasterBank">
+                        <div class="col-md-8">
+                            @Html.LabelFor(model => model.MasterCashBankId)
+                            @Html.DatalistFor(model => model.MasterCashBankId, new eShop.Models.MasterCashBankRegionDatalist(), new { @class = "datalist2" })
+                            @Html.ValidationMessageFor(model => model.MasterCashBankId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group" id="DivGiroCheque">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.GiroChequeId)
+                            @Html.DatalistFor(model => model.GiroChequeId, new eShop.Models.GiroChequeUnallocatedDatalist(), new { @class = "datalist2" })
+                            @Html.ValidationMessageFor(model => model.GiroChequeId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group" id="DivMasterCost">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.MasterCostId)
+                            @Html.DatalistFor(model => model.MasterCostId, new eShop.Models.MasterCostDatalist(), new { @class = "datalist2" })
+                            @Html.ValidationMessageFor(model => model.MasterCostId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group" id="DivRefference">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Refference)
+                            @Html.EditorFor(model => model.Refference, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.Refference, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Total)
+                            @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control total2" } })
+                            @Html.ValidationMessageFor(model => model.Total, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Notes)
+                            @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

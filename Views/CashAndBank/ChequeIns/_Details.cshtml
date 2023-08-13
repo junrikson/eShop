@@ -1,0 +1,164 @@
+﻿@model eShop.Models.Cheque
+
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Giro & Cek Masuk</h4>
+        </div>
+        <div class="modal-body">
+            <table align="center">
+                <tr>
+                    <td style="font-weight:bold;" width="130px" valign="top">
+                        @Html.DisplayNameFor(model => model.Code)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Code)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Date)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Date)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.DueDate)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.DueDate)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.MasterBusinessUnit.Name)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.MasterBusinessUnit.Name)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Issued)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Issued)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.OnBehalf)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.OnBehalf)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.AccNumber)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.AccNumber)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Ammount)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Model.Ammount.ToString("N0")
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Notes)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Notes)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Created)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Created)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Updated)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Updated)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        User
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.User.UserName)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;" valign="top">
+                        @Html.DisplayNameFor(model => model.Active)
+                    </td>
+                    <td style="font-weight:bold;" valign="top">
+                        &nbsp;:&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Active)
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

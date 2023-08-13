@@ -138,9 +138,9 @@ namespace eShop.Models
         [Display(Name = "Email")]
         Email = 65,
         [Display(Name = "Giro & Cek Masuk")]
-        GiroChequeIn = 66,
+        ChequeIn = 66,
         [Display(Name = "Giro & Cek Keluar")]
-        GiroChequeOut = 67,
+        ChequeOut = 67,
         [Display(Name = "Pencairan Giro & Cek")]
         GiroChequeCashOut = 68,
         [Display(Name = "Detail Pencairan Giro & Cek")]

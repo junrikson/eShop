@@ -8,6 +8,34 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
+    public enum EnumBusinessUnitAccountType
+    {
+        [Display(Name = "AKUN SEMENTARA")]
+        TemporaryAccount = 1,
+        [Display(Name = "AKUN PIUTANG")]
+        ARAccount = 2,
+        [Display(Name = "AKUN HUTANG")]
+        APAccount = 3,
+        [Display(Name = "AKUN PENJUALAN")]
+        SaleAccount = 4,
+        [Display(Name = "AKUN PEMBELIAN")]
+        PurchaseAccount = 5,
+        [Display(Name = "AKUN RETUR PENJUALAN")]
+        SaleReturnAccount = 6,
+        [Display(Name = "AKUN RETUR PEMBELIAN")]
+        PurchaseReturGnAccount = 7,
+        [Display(Name = "AKUN HPP (HARGA POKOK PENJUALAN)")]
+        COGSAccount = 8,
+        [Display(Name = "PIUTANG GIRO (MASUK)")]
+        ChequeReceivablesAccount = 9,
+        [Display(Name = "HUTANG IRO (KELUAR)")]
+        ChequePayableAccount = 10,
+        [Display(Name = "NOTA KREDIT")]
+        CreditNoteAccount = 9,
+        [Display(Name = "NOTA DEBET")]
+        DebitNoteAccount = 10
+    }
+
     public class MasterBusinessUnit
     {
         [Key]
@@ -95,5 +123,36 @@ namespace eShop.Models
         {
             this.ApplicationUsers = new HashSet<ApplicationUser>();
         }
+    }
+
+    public class MasterBusinessUnitAccount
+    {
+        [Key, Column(Order = 0)]
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Key, Column(Order = 1)]
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Key, Column(Order = 2)]
+        [Display(Name = "Jenis")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public EnumBusinessUnitAccountType Type { get; set; }
+
+        [Display(Name = "Bagan Akun")]
+        [Required(ErrorMessage = "Bagan Akun harus diisi.")]
+        public int ChartOfAccountId { get; set; }
+
+        [Display(Name = "Bagan Akun")]
+        public virtual ChartOfAccount ChartOfAccount { get; set; }
     }
 }

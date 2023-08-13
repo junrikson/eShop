@@ -1,8 +1,8 @@
-﻿@model IEnumerable<eShop.Models.GiroCheque>
+﻿@model IEnumerable<eShop.Models.Cheque>
 
 @{
-    ViewBag.Title = "Giro & Cek Keluar";
-    ViewBag.Current = "GiroChequeOuts";
+    ViewBag.Title = "Giro & Cek Masuk";
+    ViewBag.Current = "ChequeIns";
 }
 
 @section Styles {
@@ -25,16 +25,16 @@
 <div class="content-wrapper">
     <section class="content-header-fixed">
         <h1 class="col-md-6">
-            Giro / Cek Keluar
+            Giro / Cek Masuk
         </h1>
         <div class="col-md-6 text-right">
-            @if (User.IsInRole("GiroChequeOutsAdd"))
+            @if (User.IsInRole("ChequeInsAdd"))
             {
-                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "GiroChequeOuts")">
+                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "ChequeIns")">
                     <i class="fa fa-plus"></i> Add
                 </button>
             }
-            @if (User.IsInRole("GiroChequeOutsDelete"))
+            @if (User.IsInRole("ChequeInsDelete"))
             {
                 <button id="batchDelete" class="btn btn-danger mx-1">
                     <i class="fa fa-trash"></i> Delete
@@ -185,7 +185,7 @@
                     bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/GiroChequeOuts/BatchDelete";
+                            options.url = "/ChequeIns/BatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
@@ -267,7 +267,7 @@
                     bootbox.confirm("Apakah anda yakin akan melakukan proses ini?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/GiroChequeOuts/Decline";
+                            options.url = "/ChequeIns/Decline";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(data);

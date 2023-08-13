@@ -1,0 +1,31 @@
+﻿@model IEnumerable<eShop.Models.MasterBusinessUnitAccount>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.MasterBusinessUnitId.ToString() + "_" + model.MasterRegionId.ToString() + "_" + model.Type.ToString(), new { id = model.MasterBusinessUnitId.ToString() + "_" + model.MasterRegionId.ToString() + "_" + model.Type.ToString(), value = model.MasterBusinessUnitId.ToString() + "_" + model.MasterRegionId.ToString() + "_" + model.Type.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => ((User.IsInRole("MasterBusinessUnitsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-account\" href=\"" + @Url.Action("AccountsEdit", "MasterBusinessUnits", new { masterBusinessUnitId = model.MasterBusinessUnitId, masterRegionId = model.MasterRegionId, type = model.Type }) + "\"><i class=\"fa fa-edit\"></i> Edit</a></div>" : "")).Encoded(false);
+        columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code)).Sortable(true).InitialSort(GridSortOrder.Asc);
+        columns.Add(model => model.Type).Titled(@Html.DisplayNameFor(model => model.Type));
+        columns.Add(model => model.ChartOfAccount.Code).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Code));
+        columns.Add(model => model.ChartOfAccount.Name).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Name));
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("accounts-table")
+)

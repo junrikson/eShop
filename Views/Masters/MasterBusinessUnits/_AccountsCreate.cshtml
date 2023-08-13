@@ -1,0 +1,53 @@
+﻿@model eShop.Models.MasterBusinessUnitAccount
+
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Bagan Akun</h4>
+        </div>
+        <div class="modal-body">
+            <div id="divEmp2">
+                @using (Ajax.BeginForm("AccountsCreate", "MasterBusinessUnits", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp2", OnSuccess = "AccountsCreateSuccess" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.MasterBusinessUnitId)
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.MasterRegionId)
+                            @Html.DropDownList("MasterRegionId", null, "- Pilih Wilayah -", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.Type)
+                            @Html.EnumDropDownListFor(model => model.Type, "- Pilih Jenis -", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.ChartOfAccountId)
+                            @Html.DatalistFor(model => model.ChartOfAccountId, new eShop.Models.MasterRegionAccountDatalist(), new { @class = "datalist2" })
+                            @Html.ValidationMessageFor(model => model.ChartOfAccountId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 text-right">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

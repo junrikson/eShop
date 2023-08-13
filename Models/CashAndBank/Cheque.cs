@@ -10,15 +10,15 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public enum EnumGiroChequeType
+    public enum EnumChequeType
     {
         [Display(Name = "Giro & Cek Masuk")]
-        GiroChequeIn = 1,
+        ChequeIn = 1,
         [Display(Name = "Giro & Cek Keluar")]
-        GiroChequeOut = 2
+        ChequeOut = 2
     }
 
-    public class GiroCheque
+    public class Cheque
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -28,7 +28,7 @@ namespace eShop.Models
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Nomor Giro")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "GiroChequeIns", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah ada.")]
+        [Remote("IsCodeExists", "ChequeIns", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah ada.")]
         public string Code { get; set; }
 
         [Display(Name = "Tanggal")]
@@ -57,7 +57,7 @@ namespace eShop.Models
 
         [Display(Name = "Jenis")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public EnumGiroChequeType Type { get; set; }
+        public EnumChequeType Type { get; set; }
 
         [Display(Name = "Atas Nama")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
@@ -100,7 +100,7 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class GiroChequeDatalistViewModel
+    public class ChequeDatalistViewModel
     {
         [Key]
         public int Id { get; set; }
@@ -108,7 +108,7 @@ namespace eShop.Models
         [DatalistColumn]
         [Display(Name = "Nomor Giro")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "GiroChequeIns", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah ada.")]
+        [Remote("IsCodeExists", "ChequeIns", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah ada.")]
         public string Code { get; set; }
 
         [DatalistColumn]
@@ -139,7 +139,7 @@ namespace eShop.Models
         [DatalistColumn]
         [Display(Name = "Jenis")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public EnumGiroChequeType Type { get; set; }
+        public EnumChequeType Type { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Atas Nama")]
@@ -173,7 +173,7 @@ namespace eShop.Models
         public bool Cashed { get; set; }
     }
 
-    public class ReportListGiroChequesViewModel
+    public class ReportListChequesViewModel
     {
         [Display(Name = "Unit Bisnis")]
         [Required(ErrorMessage = "Unit bisnis harus diisi.")]
@@ -188,7 +188,7 @@ namespace eShop.Models
 
         [Display(Name = "Jenis Giro")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public EnumGiroChequeType GiroType { get; set; }
+        public EnumChequeType GiroType { get; set; }
 
         [Display(Name = "Tanggal Awal")]
         [Required(ErrorMessage = "Tanggal Awal harus diisi.")]
@@ -203,19 +203,19 @@ namespace eShop.Models
         public DateTime EndDate { get; set; }
     }
 
-    public class GiroChequeDatalist : MvcDatalist<GiroChequeDatalistViewModel>
+    public class ChequeDatalist : MvcDatalist<ChequeDatalistViewModel>
     {
         private DbContext Context { get; }
 
-        public GiroChequeDatalist(DbContext context)
+        public ChequeDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.Code;
         }
-        public GiroChequeDatalist()
+        public ChequeDatalist()
         {
-            Url = "/DatalistFilters/AllGiroCheque";
+            Url = "/DatalistFilters/AllCheque";
             Title = "Giro & Cek";
             AdditionalFilters.Add("MasterBusinessUnitId");
 
@@ -224,10 +224,10 @@ namespace eShop.Models
             Filter.Rows = 10;
         }
 
-        public override IQueryable<GiroChequeDatalistViewModel> GetModels()
+        public override IQueryable<ChequeDatalistViewModel> GetModels()
         {
-            return Context.Set<GiroCheque>()
-                .Select(x => new GiroChequeDatalistViewModel
+            return Context.Set<Cheque>()
+                .Select(x => new ChequeDatalistViewModel
                 {
                     Id = x.Id,
                     Code = x.Code,
@@ -249,19 +249,19 @@ namespace eShop.Models
         }
     }
 
-    public class GiroChequeUnallocatedDatalist : MvcDatalist<GiroChequeDatalistViewModel>
+    public class ChequeUnallocatedDatalist : MvcDatalist<ChequeDatalistViewModel>
     {
         private DbContext Context { get; }
 
-        public GiroChequeUnallocatedDatalist(DbContext context)
+        public ChequeUnallocatedDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.Code + " - Sisa = Rp " + (model.Ammount - model.Allocated).ToString("N0");
         }
-        public GiroChequeUnallocatedDatalist()
+        public ChequeUnallocatedDatalist()
         {
-            Url = "/DatalistFilters/AllGiroChequeUnallocated";
+            Url = "/DatalistFilters/AllChequeUnallocated";
             Title = "Giro & Cek";
             AdditionalFilters.Add("MasterBusinessUnitId");
 
@@ -270,10 +270,10 @@ namespace eShop.Models
             Filter.Rows = 10;
         }
 
-        public override IQueryable<GiroChequeDatalistViewModel> GetModels()
+        public override IQueryable<ChequeDatalistViewModel> GetModels()
         {
-            return Context.Set<GiroCheque>().Where(x => x.Ammount > x.Allocated)
-                .Select(x => new GiroChequeDatalistViewModel
+            return Context.Set<Cheque>().Where(x => x.Ammount > x.Allocated)
+                .Select(x => new ChequeDatalistViewModel
                 {
                     Id = x.Id,
                     Code = x.Code,
@@ -295,19 +295,19 @@ namespace eShop.Models
         }
     }
 
-    public class GiroChequeCashedDatalist : MvcDatalist<GiroChequeDatalistViewModel>
+    public class ChequeCashedDatalist : MvcDatalist<ChequeDatalistViewModel>
     {
         private DbContext Context { get; }
 
-        public GiroChequeCashedDatalist(DbContext context)
+        public ChequeCashedDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.Code;
         }
-        public GiroChequeCashedDatalist()
+        public ChequeCashedDatalist()
         {
-            Url = "/DatalistFilters/AllGiroChequeCashed";
+            Url = "/DatalistFilters/AllChequeCashed";
             Title = "Giro & Cek";
             AdditionalFilters.Add("MasterBusinessUnitId");
 
@@ -316,10 +316,10 @@ namespace eShop.Models
             Filter.Rows = 10;
         }
 
-        public override IQueryable<GiroChequeDatalistViewModel> GetModels()
+        public override IQueryable<ChequeDatalistViewModel> GetModels()
         {
-            return Context.Set<GiroCheque>().Where(x => x.Ammount <= x.Allocated && x.Cashed != true)
-                .Select(x => new GiroChequeDatalistViewModel
+            return Context.Set<Cheque>().Where(x => x.Ammount <= x.Allocated && x.Cashed != true)
+                .Select(x => new ChequeDatalistViewModel
                 {
                     Id = x.Id,
                     Code = x.Code,
