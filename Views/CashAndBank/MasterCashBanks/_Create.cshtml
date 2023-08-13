@@ -71,7 +71,7 @@
                             </div>
                             <div class="col-md-6">
                                 @Html.LabelFor(model => model.ChartOfAccountId)
-                                @Html.DatalistFor(model => model.ChartOfAccountId, new MasterRegionAccountDatalist())
+                                @Html.DatalistFor(model => model.ChartOfAccountId, new eShop.Models.MasterRegionAccountDatalist())
                                 @Html.ValidationMessageFor(model => model.ChartOfAccountId, "", new { @class = "text-danger" })
                             </div>
                         </div>

@@ -101,9 +101,9 @@
                         </div>
                         <div class="text-right col-md-10">
                             <label style="font-weight: bold">DEBET :</label>
-                            <input type="text" id="Debit" value="@Model.Debit.ToString("N2")" disabled="disabled" style="text-align:right;" size="8" />
+                            <input type="text" id="Debit" value="@Model.Debit.ToString("N2")" disabled="disabled" style="text-align:right;" size="15" />
                             <label style="font-weight: bold">KREDIT :</label>
-                            <input type="text" id="Credit" value="@Model.Credit.ToString("N2")" disabled="disabled" style="text-align:right;" size="8" />
+                            <input type="text" id="Credit" value="@Model.Credit.ToString("N2")" disabled="disabled" style="text-align:right;" size="15" />
                             <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "Journals")">
                                 <i class="fa fa-plus"></i> Add
                             </button>

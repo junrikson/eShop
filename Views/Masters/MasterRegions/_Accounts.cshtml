@@ -1,5 +1,4 @@
 ﻿@model eShop.Models.MasterRegionAccountViewModel
-@using eShop.Models;
 
 @{
     Layout = null;
@@ -18,13 +17,13 @@
                 <input type="hidden" id="Id" name="Id" value="@Model.Id">
                 <div class="form-group">
                     <div class="col-md-4">
-                        @Html.DatalistFor(model => model.ChartOfAccountStartId, new ChartOfAccountDatalist { Url = "/DatalistFilters/AllChartOfAccount" })
+                        @Html.DatalistFor(model => model.ChartOfAccountStartId, new eShop.Models.ChartOfAccountDatalist())
                     </div>
                     <div class="col-md-1">
                         <label class="text-center" style="margin-top: 5px">s/d</label>
                     </div>
                     <div class="col-md-4">
-                        @Html.DatalistFor(model => model.ChartOfAccountEndId, new ChartOfAccountDatalist { Url = "/DatalistFilters/AllChartOfAccount" })
+                        @Html.DatalistFor(model => model.ChartOfAccountEndId, new eShop.Models.ChartOfAccountDatalist())
                     </div>
                     <div class="col-md-3 text-right">
                         <input type="submit" value="+ Add" class="btn btn-success" />

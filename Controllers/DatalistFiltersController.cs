@@ -39,6 +39,31 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllChartOfAccount(DatalistFilter filter)
+        {
+            ChartOfAccountDatalist datalist = new ChartOfAccountDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterCashBankRegion(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0, EnumCashBankType? Type = null)
+        {
+            MasterCashBankRegionDatalist datalist = new MasterCashBankRegionDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["Type"] = Type;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterSupplier(DatalistFilter filter)
         {
             MasterSupplierDatalist datalist = new MasterSupplierDatalist(db);

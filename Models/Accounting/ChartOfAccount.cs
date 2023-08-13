@@ -134,7 +134,6 @@ namespace eShop.Models
         {
             Url = "/DatalistFilters/AllChartOfAccount";
             Title = "Bagan Akun";
-            AdditionalFilters.Add("MasterBusinessUnitId");
 
             Filter.Sort = "Code";
             Filter.Order = DatalistSortOrder.Asc;

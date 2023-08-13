@@ -96,7 +96,7 @@ namespace eShop.Controllers
             {
                 try
                 {
-                    cashBankTransaction.Code = "Sedang Input/" + Guid.NewGuid().ToString();
+                    cashBankTransaction.Code = "temp/" + Guid.NewGuid().ToString();
                     cashBankTransaction.Date = DateTime.Now;
                     cashBankTransaction.MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id;
                     cashBankTransaction.MasterRegionId = db.MasterRegions.FirstOrDefault().Id;

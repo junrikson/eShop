@@ -25,7 +25,7 @@ namespace eShop.Models
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Kode Transaksi")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "BankIns", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
+        [Remote("IsCodeExists", "CashBankIns", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
         public string Code { get; set; }
 
         [Display(Name = "Tanggal Transaksi")]
