@@ -78,9 +78,11 @@ namespace eShop.Controllers
         [Authorize(Roles = "MasterSalesPersonsAdd")]
         public ActionResult Create()
         {
-            MasterSalesPerson masterSalesPerson = new MasterSalesPerson();
-            masterSalesPerson.Gender = EnumGender.Male;
-            masterSalesPerson.Active = true;
+            MasterSalesPerson masterSalesPerson = new MasterSalesPerson
+            {
+                Gender = EnumGender.Male,
+                Active = true
+            };
 
             string code = Settings.Default.SalesPersonCode + DateTime.Now.Year.ToString().Substring(2, 2) + DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") + "/";
             var lastData = db.MasterSalesPersons.Where(x => x.Code.StartsWith(code)).OrderByDescending(x => x.Code).FirstOrDefault();
