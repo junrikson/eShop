@@ -679,6 +679,317 @@ namespace eShop.Extensions
             }
         }
 
+// NOTA KREDIT
+
+        public static decimal GetTotalCreditNote(ApplicationDbContext db, int creditNoteId, int? creditNoteDetailsId = null)
+        {
+            decimal total = 0;
+            List<CreditNoteDetails> totalCreditNoteDetails = null;
+
+            if (creditNoteDetailsId == null)
+                totalCreditNoteDetails = db.CreditNotesDetails.Where(x => x.CreditNoteId == creditNoteId).ToList();
+            else
+                totalCreditNoteDetails = db.CreditNotesDetails.Where(x => x.CreditNoteId == creditNoteId && x.Id != creditNoteDetailsId).ToList();
+
+            if (totalCreditNoteDetails != null)
+                total = totalCreditNoteDetails.Sum(y => y.Total);
+
+            return total;
+        }
+
+        public static decimal GetTotalCreditNoteAllocated(ApplicationDbContext db, CreditNote creditNote, RepaymentDetailsHeader repaymentDetailsHeader = null)
+        {
+            decimal total = 0;
+
+            var repaymentsDetailsHeader = db.RepaymentsDetailsHeader.Where(x => x.Type == EnumRepaymentType.CreditNote && x.CreditNoteId == creditNote.Id && x.Id != repaymentDetailsHeader.Id).ToList();
+
+            if (repaymentsDetailsHeader != null || repaymentsDetailsHeader.Count > 0)
+                total = repaymentsDetailsHeader.Sum(y => y.Total);
+
+            var repaymentDetails = db.RepaymentsDetails.Where(x => x.Type == EnumRepaymentType.CreditNote && x.CreditNoteId == creditNote.Id).ToList();
+
+            if (repaymentDetails != null || repaymentDetails.Count > 0)
+                total += repaymentDetails.Sum(y => y.Total);
+
+            return total;
+        }
+
+        public static Journal CreateCreditNoteJournal(CreditNote creditNote, ApplicationDbContext db)
+        {
+            Journal journal = new Journal
+            {
+                Code = creditNote.Code,
+                Date = creditNote.Date,
+                MasterBusinessUnitId = creditNote.MasterBusinessUnitId,
+                Type = EnumJournalType.CreditNote,
+                Debit = 0,
+                Credit = 0,
+                CreditNoteId = creditNote.Id,
+                Active = creditNote.Active,
+                Created = creditNote.Created,
+                Updated = creditNote.Updated,
+                UserId = creditNote.UserId
+            };
+
+            db.Journals.Add(journal);
+            db.SaveChanges();
+
+            return journal;
+        }
+
+        public static Journal UpdateCreditNoteJournal(Journal journal, CreditNote creditNote, ApplicationDbContext db)
+        {
+            db.Entry(journal).State = EntityState.Modified;
+
+            journal.Code = creditNote.Code;
+            journal.Date = creditNote.Date;
+            journal.MasterBusinessUnitId = creditNote.MasterBusinessUnitId;
+            journal.Type = EnumJournalType.CreditNote;
+            journal.Debit = 0;
+            journal.Credit = 0;
+            journal.CreditNoteId = creditNote.Id;
+            journal.Notes = creditNote.Notes;
+            journal.Active = creditNote.Active;
+            journal.Updated = creditNote.Updated;
+            journal.UserId = creditNote.UserId;
+            db.SaveChanges();
+
+            var creditNotesDetails = db.CreditNotesDetails.Where(x => x.CreditNoteId == creditNote.Id).ToList();
+            if (creditNotesDetails != null && creditNotesDetails.Count > 0)
+            {
+                foreach (CreditNoteDetails creditNoteDetails in creditNotesDetails)
+                {
+                    var journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.CreditNote && x.CreditNoteDetailsId == creditNoteDetails.Id).ToList();
+
+                    if (journalsDetails == null || journalsDetails.Count <= 0)
+                        CreateCreditNoteJournalDetails(creditNoteDetails, journal, db);
+                    else
+                        UpdateCreditNoteJournalDetails(creditNoteDetails, db);
+                }
+            }
+            return journal;
+        }
+
+        public static void DeleteCreditNoteJournals(int id, Journal journal, ApplicationDbContext db)
+        {
+            if (journal != null)
+            {
+                var journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
+
+                if (journalsDetails != null && journalsDetails.Count > 0)
+                {
+                    db.JournalsDetails.RemoveRange(journalsDetails);
+                    db.SaveChanges();
+                }
+
+                db.Journals.Remove(journal);
+                db.SaveChanges();
+            }
+        }
+
+        public static void CreateCreditNoteJournalDetails(CreditNoteDetails creditNoteDetails, Journal journal, ApplicationDbContext db)
+        {
+            CreditNote creditNote = db.CreditNotes.Find(creditNoteDetails.CreditNoteId);
+            JournalDetails journalDetails = new JournalDetails
+            {
+                JournalId = journal.Id,
+                MasterRegionId = creditNote.MasterRegionId,
+                Notes = creditNoteDetails.Notes,
+                CreditNoteDetailsId = creditNoteDetails.Id,
+                Created = creditNoteDetails.Created,
+                Updated = creditNoteDetails.Updated,
+                UserId = creditNoteDetails.UserId
+            };
+
+            if (creditNoteDetails.Type == EnumCreditNoteType.Bank || creditNoteDetails.Type == EnumCreditNoteType.Cash)
+            {
+                MasterCashBank masterBank = db.MasterCashBanks.Find(creditNoteDetails.MasterCashBankId);
+                journalDetails.ChartOfAccountId = masterBank.ChartOfAccountId;
+            }
+            else if (creditNoteDetails.Type == EnumCreditNoteType.Cheque)
+            {
+                journalDetails.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == creditNote.MasterBusinessUnitId && x.MasterRegionId == creditNote.MasterRegionId && x.Type == EnumBusinessUnitAccountType.ChequeReceivablesAccount).FirstOrDefault().ChartOfAccount.Id;
+            }
+            else if (creditNoteDetails.Type == EnumCreditNoteType.MasterCost)
+            {
+                MasterCost masterCost = db.MasterCosts.Find(creditNoteDetails.MasterCostId);
+
+                journalDetails.ChartOfAccountId = masterCost.ChartOfAccount.Id;
+            }
+
+            if (creditNoteDetails.Total >= 0)
+            {
+                journalDetails.Debit = creditNoteDetails.Total;
+                journalDetails.Credit = 0;
+            }
+            else
+            {
+                journalDetails.Debit = 0;
+                journalDetails.Credit = creditNoteDetails.Total * -1;
+            }
+
+            db.JournalsDetails.Add(journalDetails);
+            db.SaveChanges();
+
+            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+            journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
+            db.Entry(journal).State = EntityState.Modified;
+            db.SaveChanges();
+
+            JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged).FirstOrDefault();
+            if (JournalDetailsCredit != null)
+            {
+                JournalDetailsCredit.Debit = 0;
+                JournalDetailsCredit.Credit = GetTotalCreditNote(db, creditNote.Id, creditNoteDetails.Id) + creditNoteDetails.Total;
+                JournalDetailsCredit.MasterRegionId = creditNote.MasterRegionId;
+                JournalDetailsCredit.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == creditNote.MasterBusinessUnitId && x.MasterRegionId == creditNote.MasterRegionId && x.Type == EnumBusinessUnitAccountType.CreditNoteAccount).FirstOrDefault().ChartOfAccount.Id;
+                JournalDetailsCredit.Notes = "NOTA KREDIT " + creditNote.Code;
+                JournalDetailsCredit.isMerged = true;
+                JournalDetailsCredit.Created = creditNoteDetails.Created;
+                JournalDetailsCredit.Updated = creditNoteDetails.Updated;
+                JournalDetailsCredit.UserId = creditNoteDetails.UserId;
+                db.Entry(JournalDetailsCredit).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            else
+            {
+                JournalDetailsCredit = new JournalDetails
+                {
+                    JournalId = journal.Id,
+                    Debit = 0,
+                    Credit = GetTotalCreditNote(db, creditNote.Id, creditNoteDetails.Id) + creditNoteDetails.Total,
+                    ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == creditNote.MasterBusinessUnitId && x.MasterRegionId == creditNote.MasterRegionId && x.Type == EnumBusinessUnitAccountType.CreditNoteAccount).FirstOrDefault().ChartOfAccount.Id,
+                    MasterRegionId = creditNote.MasterRegionId,
+                    Notes = "NOTA KREDIT " + creditNote.Code,
+                    isMerged = true,
+                    Created = creditNoteDetails.Created,
+                    Updated = creditNoteDetails.Updated,
+                    UserId = creditNoteDetails.UserId
+                };
+
+                db.JournalsDetails.Add(JournalDetailsCredit);
+                db.SaveChanges();
+            }
+
+            journal.Credit = GetTotalJournalCredit(db, journal.Id, JournalDetailsCredit.Id) + JournalDetailsCredit.Credit;
+            db.Entry(journal).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
+        public static void UpdateCreditNoteJournalDetails(CreditNoteDetails creditNoteDetails, ApplicationDbContext db)
+        {
+            CreditNote creditNote = db.CreditNotes.Find(creditNoteDetails.CreditNoteId);
+            var journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.CreditNote && x.CreditNoteDetailsId == creditNoteDetails.Id).FirstOrDefault();
+
+            if (journalDetails != null)
+            {
+                Journal journal = db.Journals.Find(journalDetails.JournalId);
+
+                db.Entry(journalDetails).State = EntityState.Modified;
+                journalDetails.MasterRegionId = creditNote.MasterRegionId;
+                journalDetails.Notes = creditNoteDetails.Notes;
+                journalDetails.Updated = creditNoteDetails.Updated;
+                journalDetails.UserId = creditNoteDetails.UserId;
+
+                if (creditNoteDetails.Type == EnumCreditNoteType.Bank || creditNoteDetails.Type == EnumCreditNoteType.Cash)
+                {
+                    MasterCashBank masterCashBank = db.MasterCashBanks.Find(creditNoteDetails.MasterCashBankId);
+                    journalDetails.ChartOfAccountId = masterCashBank.ChartOfAccountId;
+                }
+                else if (creditNoteDetails.Type == EnumCreditNoteType.Cheque)
+                {
+                    journalDetails.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == creditNote.MasterBusinessUnitId && x.MasterRegionId == creditNote.MasterRegionId && x.Type == EnumBusinessUnitAccountType.ChequeReceivablesAccount).FirstOrDefault().ChartOfAccount.Id;
+                }
+                else if (creditNoteDetails.Type == EnumCreditNoteType.MasterCost)
+                {
+                    MasterCost masterCost = db.MasterCosts.Find(creditNoteDetails.MasterCostId);
+
+                    journalDetails.ChartOfAccountId = masterCost.ChartOfAccount.Id;
+                }
+
+                if (creditNoteDetails.Total >= 0)
+                {
+                    journalDetails.Debit = creditNoteDetails.Total;
+                    journalDetails.Credit = 0;
+                }
+                else
+                {
+                    journalDetails.Debit = 0;
+                    journalDetails.Credit = creditNoteDetails.Total * -1;
+                }
+                db.SaveChanges();
+
+                journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+                journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
+                db.Entry(journal).State = EntityState.Modified;
+                db.SaveChanges();
+
+                JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged).FirstOrDefault();
+                if (JournalDetailsCredit != null)
+                {
+                    JournalDetailsCredit.Debit = 0;
+                    JournalDetailsCredit.Credit = GetTotalCreditNote(db, creditNote.Id, creditNoteDetails.Id) + creditNoteDetails.Total;
+                    JournalDetailsCredit.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == creditNote.MasterBusinessUnitId && x.MasterRegionId == creditNote.MasterRegionId && x.Type == EnumBusinessUnitAccountType.CreditNoteAccount).FirstOrDefault().ChartOfAccount.Id;
+                    JournalDetailsCredit.MasterRegionId = creditNote.MasterRegionId;
+                    JournalDetailsCredit.Notes = "NOTA KREDIT " + creditNote.Code;
+                    JournalDetailsCredit.isMerged = true;
+                    JournalDetailsCredit.Created = creditNoteDetails.Created;
+                    JournalDetailsCredit.Updated = creditNoteDetails.Updated;
+                    JournalDetailsCredit.UserId = creditNoteDetails.UserId;
+                    db.Entry(JournalDetailsCredit).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                else
+                {
+                    JournalDetailsCredit = new JournalDetails
+                    {
+                        JournalId = journal.Id,
+                        Debit = 0,
+                        Credit = GetTotalCreditNote(db, creditNote.Id, creditNoteDetails.Id) + creditNoteDetails.Total,
+                        ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == creditNote.MasterBusinessUnitId && x.MasterRegionId == creditNote.MasterRegionId && x.Type == EnumBusinessUnitAccountType.CreditNoteAccount).FirstOrDefault().ChartOfAccount.Id,
+                        MasterRegionId = creditNote.MasterRegionId,
+                        Notes = "NOTA KREDIT " + creditNote.Code,
+                        isMerged = true,
+                        Created = creditNoteDetails.Created,
+                        Updated = creditNoteDetails.Updated,
+                        UserId = creditNoteDetails.UserId
+                    };
+
+                    db.JournalsDetails.Add(JournalDetailsCredit);
+                    db.SaveChanges();
+                }
+
+                journal.Credit = GetTotalJournalCredit(db, journal.Id, JournalDetailsCredit.Id) + JournalDetailsCredit.Credit;
+                db.Entry(journal).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
+        public static void RemoveCreditNoteJournalDetails(CreditNoteDetails creditNoteDetails, Journal journal, ApplicationDbContext db)
+        {
+            var journalDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.CreditNoteDetailsId == creditNoteDetails.Id).FirstOrDefault();
+
+            if (journalDetails.Credit == 0)
+                journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
+            else
+                journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id);
+
+            db.Entry(journal).State = EntityState.Modified;
+            db.SaveChanges();
+
+            db.JournalsDetails.Remove(journalDetails);
+            db.SaveChanges();
+
+            JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged).FirstOrDefault();
+            if (JournalDetailsCredit != null)
+            {
+                JournalDetailsCredit.Credit = GetTotalCreditNote(db, creditNoteDetails.CreditNoteId, creditNoteDetails.Id);
+
+                db.Entry(JournalDetailsCredit).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
         public static string EncodeTo64(string m_enc)
         {
             byte[] toEncodeAsBytes =

@@ -305,8 +305,8 @@
     <Compile Include="Controllers\Buying\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\CashAndBank\CashBankInsController.cs" />
     <Compile Include="Controllers\CashAndBank\CashBankOutsController.cs" />
-    <Compile Include="Controllers\CashAndBank\GiroChequeInsController.cs" />
-    <Compile Include="Controllers\CashAndBank\GiroChequeOutsController.cs" />
+    <Compile Include="Controllers\CashAndBank\ChequeInsController.cs" />
+    <Compile Include="Controllers\CashAndBank\ChequeOutsController.cs" />
     <Compile Include="Controllers\CashAndBank\MasterCashBanksController.cs" />
     <Compile Include="Controllers\Inventory\MasterItemsController.cs" />
     <Compile Include="Controllers\Inventory\MasterBrandsController.cs" />
@@ -350,10 +350,13 @@
     <Compile Include="Models\Accounting\Journal.cs" />
     <Compile Include="Models\Inventory\StockCard.cs" />
     <Compile Include="Models\Inventory\WarehouseTransfer.cs" />
+    <Compile Include="Models\AR\CreditNote.cs" />
+    <Compile Include="Models\AR\CreditNotesController.cs" />
+    <Compile Include="Models\AR\Repayment.cs" />
     <Compile Include="Models\Master\MasterCost.cs" />
     <Compile Include="Models\Buying\PurchaseReturn.cs" />
     <Compile Include="Models\CashAndBank\CashBankTransaction.cs" />
-    <Compile Include="Models\CashAndBank\GiroCheque.cs" />
+    <Compile Include="Models\CashAndBank\Cheque.cs" />
     <Compile Include="Models\CashAndBank\MasterCashBank.cs" />
     <Compile Include="Models\Inventory\StockAdjustment.cs" />
     <Compile Include="Models\Master\MasterCurrency.cs" />
@@ -7078,12 +7081,23 @@
     <Content Include="Views\Masters\MasterSalesPersons\_Edit.cshtml" />
     <Content Include="Views\Masters\MasterSalesPersons\_IndexGrid.cshtml" />
     <Content Include="Views\Masters\MasterSalesPersons\Index.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\_AccountsCreate.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\_AccountsEdit.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\_AccountsGrid.cshtml" />
+    <Content Include="Views\AR\CreditNotes\Create.cshtml" />
+    <Content Include="Views\AR\CreditNotes\Edit.cshtml" />
+    <Content Include="Views\AR\CreditNotes\Index.cshtml" />
+    <Content Include="Views\AR\CreditNotes\_Details.cshtml" />
+    <Content Include="Views\AR\CreditNotes\_DetailsCreate.cshtml" />
+    <Content Include="Views\AR\CreditNotes\_DetailsEdit.cshtml" />
+    <Content Include="Views\AR\CreditNotes\_IndexGrid.cshtml" />
+    <Content Include="Views\AR\CreditNotes\_OthersGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Controllers\AR\" />
     <Folder Include="CrystalReports\" />
     <Folder Include="Models\AP\" />
-    <Folder Include="Models\AR\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

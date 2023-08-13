@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eShop.Models.GiroCheque>
+﻿@model IEnumerable<eShop.Models.Cheque>
 @{
     Layout = null;
 }
@@ -8,9 +8,9 @@
     .Build(columns =>
     {
         columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
-        columns.Add(model => ((User.IsInRole("GiroChequeInsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "GiroChequeIns", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
-        ((User.IsInRole("GiroChequeInsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "GiroChequeIns", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
-        ((User.IsInRole("GiroChequeInsEdit")) ? "&nbsp;<a class=\"btn " + (model.Active ? " btn-danger" : "btn-warning") + " btn-xs decline-data\" href=\"" + @model.Id + "\"><i class=\"fa fa-ban\"></i>" + (model.Active ? " Ditolak" : " Batal Tolak") + "</a></div>" : "")).Encoded(false);
+        columns.Add(model => ((User.IsInRole("ChequeOutsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "ChequeOuts", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("ChequeOutsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "ChequeOuts", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
+        ((User.IsInRole("ChequeOutsEdit")) ? "&nbsp;<a class=\"btn " + (model.Active ? " btn-danger" : "btn-warning") + " btn-xs decline-data\" href=\"" + @model.Id + "\"><i class=\"fa fa-ban\"></i>" + (model.Active ? " Ditolak" : " Batal Tolak") + "</a></div>" : "")).Encoded(false);
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code)).Sortable(true);
         columns.Add(model => model.MasterBusinessUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Name));
         columns.Add(model => model.OnBehalf).Titled(@Html.DisplayNameFor(model => model.OnBehalf));
@@ -21,7 +21,6 @@
         columns.Add(model => model.DueDate).Titled(@Html.DisplayNameFor(model => model.DueDate));
         columns.Add(model => model.Allocated).Titled(@Html.DisplayNameFor(model => model.Allocated)).Formatted("{0:N0}");
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
-        columns.Add(model => model.Cashed).Titled(@Html.DisplayNameFor(model => model.Cashed)).RenderedAs(model => model.Cashed == true ? "&#x2713;" : "&#x2717;").Encoded(false);
         columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
         columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));
         columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated)).InitialSort(GridSortOrder.Desc);

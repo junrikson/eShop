@@ -133,6 +133,7 @@ namespace eShop.Models
 
         public IEnumerable ApplicationUsers { get; internal set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnit> MasterBusinessUnits { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitAccount> MasterBusinessUnitsAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegion> MasterRegions { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegionAccount> MasterRegionAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterCurrency> MasterCurrencies{ get; set; }
@@ -152,6 +153,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.WarehouseTransferDetails> WarehouseTransfersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockCard> StockCards { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GiroCheque> GiroCheques { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.Cheque> Cheques { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterCashBank> MasterCashBanks { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.CashBankTransaction> CashBankTransactions { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.CashBankTransactionDetailsHeader> CashBankTransactionsDetailsHeader { get; set; }
@@ -172,6 +174,11 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.SalesReturnDetails> SalesReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Sale> Sales { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleDetails> SalesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.CreditNote> CreditNotes { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.CreditNoteDetails> CreditNotesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.Repayment> Repayments { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.RepaymentDetailsHeader> RepaymentsDetailsHeader { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.RepaymentDetails> RepaymentsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ChartOfAccount> ChartOfAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.AccountBallance> AccountBallances { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Journal> Journals { get; set; }
@@ -234,8 +241,13 @@ namespace eShop.Models
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<GiroCheque>().Property(x => x.Ammount).HasPrecision(18, 2);
-            modelBuilder.Entity<GiroCheque>().Property(x => x.Allocated).HasPrecision(18, 2);
+            modelBuilder.Entity<CreditNote>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<CreditNoteDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<Repayment>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<RepaymentDetailsHeader>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<RepaymentDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<Cheque>().Property(x => x.Ammount).HasPrecision(18, 2);
+            modelBuilder.Entity<Cheque>().Property(x => x.Allocated).HasPrecision(18, 2);
             modelBuilder.Entity<CashBankTransaction>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<CashBankTransactionDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<CashBankTransactionDetailsHeader>().Property(x => x.Total).HasPrecision(18, 2);

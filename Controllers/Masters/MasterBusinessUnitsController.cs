@@ -219,6 +219,118 @@ namespace eShop.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public PartialViewResult AccountsGrid(int Id)
+        {
+            return PartialView("../Masters/MasterBusinessUnits/_AccountsGrid", db.MasterBusinessUnitsAccounts
+                .Where(x => x.MasterBusinessUnitId == Id).ToList());
+        }
+
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult AccountsCreate(int masterBusinessUnitId)
+        {
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+            if (masterBusinessUnit == null)
+            {
+                return HttpNotFound();
+            }
+            MasterBusinessUnitAccount masterBusinessUnitAccount = new MasterBusinessUnitAccount
+            {
+                MasterBusinessUnitId = masterBusinessUnitId
+            };
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Code");
+            return PartialView("../Masters/MasterBusinessUnits/_AccountsCreate", masterBusinessUnitAccount);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult AccountsCreate([Bind(Include = "MasterBusinessUnitId,Type,MasterRegionId,ChartOfAccountId")] MasterBusinessUnitAccount masterBusinessUnitAccount)
+        {
+            if (ModelState.IsValid)
+            {
+                db.MasterBusinessUnitsAccounts.Add(masterBusinessUnitAccount);
+                db.SaveChanges();
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+            }
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Code", masterBusinessUnitAccount.MasterRegionId);
+            return PartialView("../Masters/MasterBusinessUnits/_AccountsCreate", masterBusinessUnitAccount);
+        }
+
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult AccountsEdit(int masterBusinessUnitId, int masterRegionId, EnumBusinessUnitAccountType type)
+        {
+            MasterBusinessUnitAccount obj = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId && x.Type == type).FirstOrDefault();
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Code", obj.MasterRegionId);
+            return PartialView("../Masters/MasterBusinessUnits/_AccountsEdit", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult AccountsEdit([Bind(Include = "Id,MasterBusinessUnitId,Type,MasterRegionId,ChartOfAccountId")] MasterBusinessUnitAccount masterBusinessUnitAccount)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(masterBusinessUnitAccount).State = EntityState.Unchanged;
+                db.Entry(masterBusinessUnitAccount).Property("Type").IsModified = true;
+                db.Entry(masterBusinessUnitAccount).Property("MasterRegionId").IsModified = true;
+                db.Entry(masterBusinessUnitAccount).Property("ChartOfAccountId").IsModified = true;
+                db.SaveChanges();
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+            }
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Code", masterBusinessUnitAccount.MasterRegionId);
+            return PartialView("../Masters/MasterBusinessUnits/_AccountsEdit", masterBusinessUnitAccount);
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult AccountsBatchDelete(string[] ids)
+        {
+            if (ids == null || ids.Length <= 0)
+                return Json("Pilih salah satu data yang akan dihapus.");
+            else
+            {
+                using (db)
+                {
+                    int failed = 0;
+                    foreach (string id in ids)
+                    {
+                        string[] vars = id.Split('_');
+                        int masterBusinessUnitId = int.Parse(vars[0]);
+                        int masterRegionId = int.Parse(vars[1]);
+                        Enum.TryParse(vars[2], out EnumBusinessUnitAccountType enumBusinessUnitAccountType);
+
+                        MasterBusinessUnitAccount obj = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId && x.Type == enumBusinessUnitAccountType).FirstOrDefault();
+                        if (obj == null)
+                            failed++;
+                        else
+                        {
+                            db.MasterBusinessUnitsAccounts.Remove(obj);
+                            db.SaveChanges();
+                        }
+                    }
+                    return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
+                }
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

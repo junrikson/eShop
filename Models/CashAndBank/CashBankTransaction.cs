@@ -110,10 +110,10 @@ namespace eShop.Models
         public virtual MasterCashBank MasterBank { get; set; }
 
         [Display(Name = "Giro / Cek")]
-        public int? GiroChequeId { get; set; }
+        public int? ChequeId { get; set; }
 
         [Display(Name = "Giro / Cek")]
-        public virtual GiroCheque GiroCheque { get; set; }
+        public virtual Cheque Cheque { get; set; }
 
         [Display(Name = "Total (Rp)")]
         public decimal Total { get; set; }
