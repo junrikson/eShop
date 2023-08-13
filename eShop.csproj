@@ -310,9 +310,11 @@
     <Compile Include="Controllers\CashAndBank\MasterCashBanksController.cs" />
     <Compile Include="Controllers\Inventory\MasterItemsController.cs" />
     <Compile Include="Controllers\Inventory\MasterBrandsController.cs" />
+    <Compile Include="Controllers\Inventory\WarehouseTransfersController.cs" />
     <Compile Include="Controllers\Inventory\StockAdjustmentsController.cs" />
     <Compile Include="Controllers\Masters\MasterCostsController.cs" />
     <Compile Include="Controllers\Masters\MasterCurrenciesController.cs" />
+    <Compile Include="Controllers\Masters\MasterSalesPersonsController.cs" />
     <Compile Include="Controllers\Masters\MasterCustomersController.cs" />
     <Compile Include="Controllers\Inventory\MasterCategoriesController.cs" />
     <Compile Include="Controllers\Inventory\MasterUnitsController.cs" />
@@ -346,6 +348,8 @@
     <Compile Include="Models\Accounting\AccountBallance.cs" />
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
     <Compile Include="Models\Accounting\Journal.cs" />
+    <Compile Include="Models\Inventory\StockCard.cs" />
+    <Compile Include="Models\Inventory\WarehouseTransfer.cs" />
     <Compile Include="Models\Master\MasterCost.cs" />
     <Compile Include="Models\Buying\PurchaseReturn.cs" />
     <Compile Include="Models\CashAndBank\CashBankTransaction.cs" />
@@ -353,6 +357,7 @@
     <Compile Include="Models\CashAndBank\MasterCashBank.cs" />
     <Compile Include="Models\Inventory\StockAdjustment.cs" />
     <Compile Include="Models\Master\MasterCurrency.cs" />
+    <Compile Include="Models\Master\MasterSalesperson.cs" />
     <Compile Include="Models\Selling\Sale.cs" />
     <Compile Include="Models\Selling\SalesReturn.cs" />
     <Compile Include="Models\Selling\SalesOrder.cs" />
@@ -7061,6 +7066,18 @@
     <Content Include="Views\Masters\MasterCosts\_Details.cshtml" />
     <Content Include="Views\Masters\MasterCosts\_Edit.cshtml" />
     <Content Include="Views\Masters\MasterCosts\_IndexGrid.cshtml" />
+    <Content Include="Views\Inventory\WarehouseTransfers\_DetailsCreate.cshtml" />
+    <Content Include="Views\Inventory\WarehouseTransfers\_DetailsEdit.cshtml" />
+    <Content Include="Views\Inventory\WarehouseTransfers\_DetailsGrid.cshtml" />
+    <Content Include="Views\Inventory\WarehouseTransfers\_IndexGrid.cshtml" />
+    <Content Include="Views\Inventory\WarehouseTransfers\Create.cshtml" />
+    <Content Include="Views\Inventory\WarehouseTransfers\Edit.cshtml" />
+    <Content Include="Views\Inventory\WarehouseTransfers\Index.cshtml" />
+    <Content Include="Views\Masters\MasterSalesPersons\_Create.cshtml" />
+    <Content Include="Views\Masters\MasterSalesPersons\_Details.cshtml" />
+    <Content Include="Views\Masters\MasterSalesPersons\_Edit.cshtml" />
+    <Content Include="Views\Masters\MasterSalesPersons\_IndexGrid.cshtml" />
+    <Content Include="Views\Masters\MasterSalesPersons\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

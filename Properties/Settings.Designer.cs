@@ -31,7 +31,18 @@ namespace eShop.Properties {
                 return ((string)(this["CustomerCode"]));
             }
         }
-        
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SL/")]
+        public string SalesPersonCode
+        {
+            get
+            {
+                return ((string)(this["SalesPersonCode"]));
+            }
+        }
+
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("WH/")]
@@ -189,6 +200,17 @@ namespace eShop.Properties {
             get
             {
                 return ((string)(this["StockAdjustmentCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("TG/")]
+        public string WarehouseTransferCode
+        {
+            get
+            {
+                return ((string)(this["WarehouseTransferCode"]));
             }
         }
     }
