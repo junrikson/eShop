@@ -227,6 +227,12 @@ namespace eShop.Models
         StockAdjustment = 109,
         [Display(Name = "Adjustment Details")]
         StockAdjustmentDetails = 110,
+        [Display(Name = "Transfer Gudang")]
+        WarehouseTransfer = 111,
+        [Display(Name = "Transfer Gudang Details")]
+        WarehouseTransferDetails = 112,
+        [Display(Name = "Master Sales")]
+        MasterSalesPerson = 113,
     }
 
     public enum EnumActions

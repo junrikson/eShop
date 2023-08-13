@@ -156,6 +156,16 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterWarehouse(DatalistFilter filter)
+        {
+            MasterWarehouseDatalist datalist = new MasterWarehouseDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterItemUnit(DatalistFilter filter, int? masterUnitId = 0)
         {
             MasterItemUnitDatalist datalist = new MasterItemUnitDatalist(db);

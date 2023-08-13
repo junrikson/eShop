@@ -94,4 +94,33 @@ namespace eShop.Models
             return Context.Set<MasterWarehouse>();
         }
     }
+
+
+
+    public class MasterWarehouseDatalist : MvcDatalist<MasterWarehouse>
+    {
+        private DbContext Context { get; }
+
+        public MasterWarehouseDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Name;
+        }
+
+        public MasterWarehouseDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterWarehouse";
+            Title = "Master Gudang";
+
+            Filter.Sort = "Name";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterWarehouse> GetModels()
+        {
+            return Context.Set<MasterWarehouse>();
+        }
+    }
 }
