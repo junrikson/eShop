@@ -22,7 +22,7 @@ namespace eShop.Models
         [Display(Name = "KAS / BANK")]
         BankTransaction = 6,
         [Display(Name = "NOTA KREDIT")]
-        SalesAdvance = 7,
+        AdvanceRepayment = 7,
         [Display(Name = "PELUNASAN PIUTANG")]
         Repayment = 8,
         [Display(Name = "NOTA DEBIT")]
@@ -95,10 +95,10 @@ namespace eShop.Models
         public virtual Sale Sale { get; set; }
 
         [Display(Name = "Uang Muka Penjualan")]
-        public int? SalesAdvanceId { get; set; }
+        public int? AdvanceRepaymentId { get; set; }
 
         [Display(Name = "Uang Muka Penjualan")]
-        public virtual SalesAdvance SalesAdvance { get; set; }
+        public virtual AdvanceRepayment AdvanceRepayment { get; set; }
 
         [Display(Name = "Kas/Bank")]
         public int? BankTransactionId { get; set; }
@@ -178,10 +178,10 @@ namespace eShop.Models
         public virtual SaleDetails SaleDetails { get; set; }
 
         [Display(Name = "Detail Uang Muka Penjualan")]
-        public int? SalesAdvanceDetailsId { get; set; }
+        public int? AdvanceRepaymentDetailsId { get; set; }
 
         [Display(Name = "Detail Uang Muka Penjualan")]
-        public virtual SalesAdvanceDetails SalesAdvanceDetails { get; set; }
+        public virtual AdvanceRepaymentDetails AdvanceRepaymentDetails { get; set; }
 
         [Display(Name = "Detail Kas/Bank")]
         public int? BankTransactionDetailsId { get; set; }

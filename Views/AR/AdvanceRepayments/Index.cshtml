@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "Uang Muka Penjualan";
-    ViewBag.Current = "SalesAdvances";
+    ViewBag.Current = "AdvanceRepayments";
 }
 
 @section Styles {
@@ -31,13 +31,13 @@
             Uang Muka Penjualan
         </h1>
         <div class="col-md-6 text-right">
-            @if (User.IsInRole("SalesAdvancesAdd"))
+            @if (User.IsInRole("AdvanceRepaymentsAdd"))
             {
-                <a class="btn btn-success mx-1" href="@Url.Action("Create", "SalesAdvances")">
+                <a class="btn btn-success mx-1" href="@Url.Action("Create", "AdvanceRepayments")">
                     <i class="fa fa-plus"></i> Add
                 </a>
             }
-            @if (User.IsInRole("SalesAdvancesDelete"))
+            @if (User.IsInRole("AdvanceRepaymentsDelete"))
             {
                 <button id="batchDelete" class="btn btn-danger mx-1">
                     <i class="fa fa-trash"></i> Delete
@@ -133,7 +133,7 @@
                     bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/SalesAdvances/BatchDelete";
+                            options.url = "/AdvanceRepayments/BatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);

@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public enum EnumSalesAdvanceType
+    public enum EnumAdvanceRepaymentType
     {
         [Display(Name = "TRANSFER")]
         Bank = 1,
@@ -21,7 +21,7 @@ namespace eShop.Models
         [Display(Name = "BIAYA")]
         MasterCost = 4
     }
-    public class SalesAdvance
+    public class AdvanceRepayment
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -32,7 +32,7 @@ namespace eShop.Models
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Nomor Uang Muka Penjualan")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "SalesAdvances", AdditionalFields = "Id", ErrorMessage = "Nomor Uang Muka Penjualan ini sudah dipakai.")]
+        [Remote("IsCodeExists", "AdvanceRepayments", AdditionalFields = "Id", ErrorMessage = "Nomor Uang Muka Penjualan ini sudah dipakai.")]
         public string Code { get; set; }
 
         [DatalistColumn]
@@ -89,7 +89,7 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class SalesAdvanceDetails
+    public class AdvanceRepaymentDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -97,14 +97,14 @@ namespace eShop.Models
 
         [Display(Name = "Uang Muka Penjualan")]
         [Required(ErrorMessage = "Invoice harus diisi.")]
-        public int SalesAdvanceId { get; set; }
+        public int AdvanceRepaymentId { get; set; }
 
         [Display(Name = "Uang Muka Penjualan")]
-        public virtual SalesAdvance SalesAdvance { get; set; }
+        public virtual AdvanceRepayment AdvanceRepayment { get; set; }
 
         [Display(Name = "Jenis")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public EnumSalesAdvanceType Type { get; set; }
+        public EnumAdvanceRepaymentType Type { get; set; }
 
         [Display(Name = "Master Kas/Bank")]
         public int? MasterBankId { get; set; }
@@ -153,7 +153,7 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class SalesAdvanceDatalistViewModel
+    public class AdvanceRepaymentDatalistViewModel
     {
         [Key]
         public int Id { get; set; }
@@ -210,19 +210,19 @@ namespace eShop.Models
         public bool Active { get; set; }
     }
 
-    public class SalesAdvanceDatalist : MvcDatalist<SalesAdvanceDatalistViewModel>
+    public class AdvanceRepaymentDatalist : MvcDatalist<AdvanceRepaymentDatalistViewModel>
     {
         private DbContext Context { get; }
 
-        public SalesAdvanceDatalist(DbContext context)
+        public AdvanceRepaymentDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.Code;
         }
-        public SalesAdvanceDatalist()
+        public AdvanceRepaymentDatalist()
         {
-            Url = "/DatalistFilters/AllSalesAdvance";
+            Url = "/DatalistFilters/AllAdvanceRepayment";
             Title = "Uang Muka Penjualan";
             AdditionalFilters.Add("MasterBusinessUnitId");
 
@@ -231,10 +231,10 @@ namespace eShop.Models
             Filter.Rows = 10;
         }
 
-        public override IQueryable<SalesAdvanceDatalistViewModel> GetModels()
+        public override IQueryable<AdvanceRepaymentDatalistViewModel> GetModels()
         {
-            return Context.Set<SalesAdvance>()
-                .Select(x => new SalesAdvanceDatalistViewModel
+            return Context.Set<AdvanceRepayment>()
+                .Select(x => new AdvanceRepaymentDatalistViewModel
                 {
                     Id = x.Id,
                     Code = x.Code,
@@ -254,19 +254,19 @@ namespace eShop.Models
         }
     }
 
-    public class SalesAdvanceUnallocatedDatalist : MvcDatalist<SalesAdvanceDatalistViewModel>
+    public class AdvanceRepaymentUnallocatedDatalist : MvcDatalist<AdvanceRepaymentDatalistViewModel>
     {
         private DbContext Context { get; }
 
-        public SalesAdvanceUnallocatedDatalist(DbContext context)
+        public AdvanceRepaymentUnallocatedDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.Code;
         }
-        public SalesAdvanceUnallocatedDatalist()
+        public AdvanceRepaymentUnallocatedDatalist()
         {
-            Url = "/DatalistFilters/AllSalesAdvanceUnallocated";
+            Url = "/DatalistFilters/AllAdvanceRepaymentUnallocated";
             Title = "Uang Muka Penjualan";
             AdditionalFilters.Add("MasterBusinessUnitId");
             AdditionalFilters.Add("MasterRegionId");
@@ -276,10 +276,10 @@ namespace eShop.Models
             Filter.Rows = 10;
         }
 
-        public override IQueryable<SalesAdvanceDatalistViewModel> GetModels()
+        public override IQueryable<AdvanceRepaymentDatalistViewModel> GetModels()
         {
-            return Context.Set<SalesAdvance>().Where(x => x.Total > x.Allocated)
-                .Select(x => new SalesAdvanceDatalistViewModel
+            return Context.Set<AdvanceRepayment>().Where(x => x.Total > x.Allocated)
+                .Select(x => new AdvanceRepaymentDatalistViewModel
                 {
                     Id = x.Id,
                     Code = x.Code,

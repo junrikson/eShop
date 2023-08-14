@@ -19,7 +19,7 @@ namespace eShop.Models
         [Display(Name = "GIRO/CEK")]
         GiroCheque = 3,
         [Display(Name = "UANG MUKA")]
-        SalesAdvance = 4,
+        AdvanceRepayment = 4,
         [Display(Name = "BIAYA")]
         MasterCost = 5
     }
@@ -129,10 +129,10 @@ namespace eShop.Models
         public virtual MasterCost MasterCost { get; set; }
 
         [Display(Name = "Uang Muka")]
-        public int? SalesAdvanceId { get; set; }
+        public int? AdvanceRepaymentId { get; set; }
 
         [Display(Name = "Uang Muka")]
-        public virtual SalesAdvance SalesAdvance { get; set; }
+        public virtual AdvanceRepayment AdvanceRepayment { get; set; }
 
         [Display(Name = "Giro / Cek")]
         public int? ChequeId { get; set; }

@@ -674,27 +674,27 @@ namespace eShop.Extensions
 
         // NOTA KREDIT
 
-        public static decimal GetTotalSalesAdvance(ApplicationDbContext db, int salesAdvanceId, int? salesAdvanceDetailsId = null)
+        public static decimal GetTotalAdvanceRepayment(ApplicationDbContext db, int advanceRepaymentId, int? advanceRepaymentDetailsId = null)
         {
             decimal total = 0;
-            List<SalesAdvanceDetails> totalSalesAdvanceDetails = null;
+            List<AdvanceRepaymentDetails> totalAdvanceRepaymentDetails = null;
 
-            if (salesAdvanceDetailsId == null)
-                totalSalesAdvanceDetails = db.SalesAdvancesDetails.Where(x => x.SalesAdvanceId == salesAdvanceId).ToList();
+            if (advanceRepaymentDetailsId == null)
+                totalAdvanceRepaymentDetails = db.AdvanceRepaymentsDetails.Where(x => x.AdvanceRepaymentId == advanceRepaymentId).ToList();
             else
-                totalSalesAdvanceDetails = db.SalesAdvancesDetails.Where(x => x.SalesAdvanceId == salesAdvanceId && x.Id != salesAdvanceDetailsId).ToList();
+                totalAdvanceRepaymentDetails = db.AdvanceRepaymentsDetails.Where(x => x.AdvanceRepaymentId == advanceRepaymentId && x.Id != advanceRepaymentDetailsId).ToList();
 
-            if (totalSalesAdvanceDetails != null)
-                total = totalSalesAdvanceDetails.Sum(y => y.Total);
+            if (totalAdvanceRepaymentDetails != null)
+                total = totalAdvanceRepaymentDetails.Sum(y => y.Total);
 
             return total;
         }
 
-        public static decimal GetTotalSalesAdvanceAllocated(ApplicationDbContext db, SalesAdvance salesAdvance, RepaymentDetailsHeader repaymentDetailsHeader = null)
+        public static decimal GetTotalAdvanceRepaymentAllocated(ApplicationDbContext db, AdvanceRepayment advanceRepayment, RepaymentDetailsHeader repaymentDetailsHeader = null)
         {
             decimal total = 0;
 
-            var repaymentsDetailsHeader = db.RepaymentsDetailsHeader.Where(x => x.Type == EnumRepaymentType.SalesAdvance && x.SalesAdvanceId == salesAdvance.Id && x.Id != repaymentDetailsHeader.Id).ToList();
+            var repaymentsDetailsHeader = db.RepaymentsDetailsHeader.Where(x => x.Type == EnumRepaymentType.AdvanceRepayment && x.AdvanceRepaymentId == advanceRepayment.Id && x.Id != repaymentDetailsHeader.Id).ToList();
 
             if (repaymentsDetailsHeader != null || repaymentsDetailsHeader.Count > 0)
                 total = repaymentsDetailsHeader.Sum(y => y.Total);
@@ -702,21 +702,21 @@ namespace eShop.Extensions
             return total;
         }
 
-        public static Journal CreateSalesAdvanceJournal(SalesAdvance salesAdvance, ApplicationDbContext db)
+        public static Journal CreateAdvanceRepaymentJournal(AdvanceRepayment advanceRepayment, ApplicationDbContext db)
         {
             Journal journal = new Journal
             {
-                Code = salesAdvance.Code,
-                Date = salesAdvance.Date,
-                MasterBusinessUnitId = salesAdvance.MasterBusinessUnitId,
-                Type = EnumJournalType.SalesAdvance,
+                Code = advanceRepayment.Code,
+                Date = advanceRepayment.Date,
+                MasterBusinessUnitId = advanceRepayment.MasterBusinessUnitId,
+                Type = EnumJournalType.AdvanceRepayment,
                 Debit = 0,
                 Credit = 0,
-                SalesAdvanceId = salesAdvance.Id,
-                Active = salesAdvance.Active,
-                Created = salesAdvance.Created,
-                Updated = salesAdvance.Updated,
-                UserId = salesAdvance.UserId
+                AdvanceRepaymentId = advanceRepayment.Id,
+                Active = advanceRepayment.Active,
+                Created = advanceRepayment.Created,
+                Updated = advanceRepayment.Updated,
+                UserId = advanceRepayment.UserId
             };
 
             db.Journals.Add(journal);
@@ -725,40 +725,40 @@ namespace eShop.Extensions
             return journal;
         }
 
-        public static Journal UpdateSalesAdvanceJournal(Journal journal, SalesAdvance salesAdvance, ApplicationDbContext db)
+        public static Journal UpdateAdvanceRepaymentJournal(Journal journal, AdvanceRepayment advanceRepayment, ApplicationDbContext db)
         {
             db.Entry(journal).State = EntityState.Modified;
 
-            journal.Code = salesAdvance.Code;
-            journal.Date = salesAdvance.Date;
-            journal.MasterBusinessUnitId = salesAdvance.MasterBusinessUnitId;
-            journal.Type = EnumJournalType.SalesAdvance;
+            journal.Code = advanceRepayment.Code;
+            journal.Date = advanceRepayment.Date;
+            journal.MasterBusinessUnitId = advanceRepayment.MasterBusinessUnitId;
+            journal.Type = EnumJournalType.AdvanceRepayment;
             journal.Debit = 0;
             journal.Credit = 0;
-            journal.SalesAdvanceId = salesAdvance.Id;
-            journal.Notes = salesAdvance.Notes;
-            journal.Active = salesAdvance.Active;
-            journal.Updated = salesAdvance.Updated;
-            journal.UserId = salesAdvance.UserId;
+            journal.AdvanceRepaymentId = advanceRepayment.Id;
+            journal.Notes = advanceRepayment.Notes;
+            journal.Active = advanceRepayment.Active;
+            journal.Updated = advanceRepayment.Updated;
+            journal.UserId = advanceRepayment.UserId;
             db.SaveChanges();
 
-            var salesAdvancesDetails = db.SalesAdvancesDetails.Where(x => x.SalesAdvanceId == salesAdvance.Id).ToList();
-            if (salesAdvancesDetails != null && salesAdvancesDetails.Count > 0)
+            var advanceRepaymentsDetails = db.AdvanceRepaymentsDetails.Where(x => x.AdvanceRepaymentId == advanceRepayment.Id).ToList();
+            if (advanceRepaymentsDetails != null && advanceRepaymentsDetails.Count > 0)
             {
-                foreach (SalesAdvanceDetails salesAdvanceDetails in salesAdvancesDetails)
+                foreach (AdvanceRepaymentDetails advanceRepaymentDetails in advanceRepaymentsDetails)
                 {
-                    var journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.SalesAdvance && x.SalesAdvanceDetailsId == salesAdvanceDetails.Id).ToList();
+                    var journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.AdvanceRepayment && x.AdvanceRepaymentDetailsId == advanceRepaymentDetails.Id).ToList();
 
                     if (journalsDetails == null || journalsDetails.Count <= 0)
-                        CreateSalesAdvanceJournalDetails(salesAdvanceDetails, journal, db);
+                        CreateAdvanceRepaymentJournalDetails(advanceRepaymentDetails, journal, db);
                     else
-                        UpdateSalesAdvanceJournalDetails(salesAdvanceDetails, db);
+                        UpdateAdvanceRepaymentJournalDetails(advanceRepaymentDetails, db);
                 }
             }
             return journal;
         }
 
-        public static void DeleteSalesAdvanceJournals(int id, Journal journal, ApplicationDbContext db)
+        public static void DeleteAdvanceRepaymentJournals(int id, Journal journal, ApplicationDbContext db)
         {
             if (journal != null)
             {
@@ -775,45 +775,45 @@ namespace eShop.Extensions
             }
         }
 
-        public static void CreateSalesAdvanceJournalDetails(SalesAdvanceDetails salesAdvanceDetails, Journal journal, ApplicationDbContext db)
+        public static void CreateAdvanceRepaymentJournalDetails(AdvanceRepaymentDetails advanceRepaymentDetails, Journal journal, ApplicationDbContext db)
         {
-            SalesAdvance salesAdvance = db.SalesAdvances.Find(salesAdvanceDetails.SalesAdvanceId);
+            AdvanceRepayment advanceRepayment = db.AdvanceRepayments.Find(advanceRepaymentDetails.AdvanceRepaymentId);
             JournalDetails journalDetails = new JournalDetails
             {
                 JournalId = journal.Id,
-                MasterRegionId = salesAdvance.MasterRegionId,
-                Notes = salesAdvanceDetails.Notes,
-                SalesAdvanceDetailsId = salesAdvanceDetails.Id,
-                Created = salesAdvanceDetails.Created,
-                Updated = salesAdvanceDetails.Updated,
-                UserId = salesAdvanceDetails.UserId
+                MasterRegionId = advanceRepayment.MasterRegionId,
+                Notes = advanceRepaymentDetails.Notes,
+                AdvanceRepaymentDetailsId = advanceRepaymentDetails.Id,
+                Created = advanceRepaymentDetails.Created,
+                Updated = advanceRepaymentDetails.Updated,
+                UserId = advanceRepaymentDetails.UserId
             };
 
-            if (salesAdvanceDetails.Type == EnumSalesAdvanceType.Bank || salesAdvanceDetails.Type == EnumSalesAdvanceType.Cash)
+            if (advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.Bank || advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.Cash)
             {
-                MasterBank masterBank = db.MasterBanks.Find(salesAdvanceDetails.MasterBankId);
+                MasterBank masterBank = db.MasterBanks.Find(advanceRepaymentDetails.MasterBankId);
                 journalDetails.ChartOfAccountId = masterBank.ChartOfAccountId;
             }
-            else if (salesAdvanceDetails.Type == EnumSalesAdvanceType.Cheque)
+            else if (advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.Cheque)
             {
-                journalDetails.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == salesAdvance.MasterBusinessUnitId && x.MasterRegionId == salesAdvance.MasterRegionId && x.Type == EnumBusinessUnitAccountType.ChequeReceivablesAccount).FirstOrDefault().ChartOfAccount.Id;
+                journalDetails.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == advanceRepayment.MasterBusinessUnitId && x.MasterRegionId == advanceRepayment.MasterRegionId && x.Type == EnumBusinessUnitAccountType.ChequeReceivablesAccount).FirstOrDefault().ChartOfAccount.Id;
             }
-            else if (salesAdvanceDetails.Type == EnumSalesAdvanceType.MasterCost)
+            else if (advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.MasterCost)
             {
-                MasterCost masterCost = db.MasterCosts.Find(salesAdvanceDetails.MasterCostId);
+                MasterCost masterCost = db.MasterCosts.Find(advanceRepaymentDetails.MasterCostId);
 
                 journalDetails.ChartOfAccountId = masterCost.ChartOfAccount.Id;
             }
 
-            if (salesAdvanceDetails.Total >= 0)
+            if (advanceRepaymentDetails.Total >= 0)
             {
-                journalDetails.Debit = salesAdvanceDetails.Total;
+                journalDetails.Debit = advanceRepaymentDetails.Total;
                 journalDetails.Credit = 0;
             }
             else
             {
                 journalDetails.Debit = 0;
-                journalDetails.Credit = salesAdvanceDetails.Total * -1;
+                journalDetails.Credit = advanceRepaymentDetails.Total * -1;
             }
 
             db.JournalsDetails.Add(journalDetails);
@@ -828,14 +828,14 @@ namespace eShop.Extensions
             if (JournalDetailsCredit != null)
             {
                 JournalDetailsCredit.Debit = 0;
-                JournalDetailsCredit.Credit = GetTotalSalesAdvance(db, salesAdvance.Id, salesAdvanceDetails.Id) + salesAdvanceDetails.Total;
-                JournalDetailsCredit.MasterRegionId = salesAdvance.MasterRegionId;
-                JournalDetailsCredit.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == salesAdvance.MasterBusinessUnitId && x.MasterRegionId == salesAdvance.MasterRegionId && x.Type == EnumBusinessUnitAccountType.SalesAdvanceAccount).FirstOrDefault().ChartOfAccount.Id;
-                JournalDetailsCredit.Notes = "NOTA KREDIT " + salesAdvance.Code;
+                JournalDetailsCredit.Credit = GetTotalAdvanceRepayment(db, advanceRepayment.Id, advanceRepaymentDetails.Id) + advanceRepaymentDetails.Total;
+                JournalDetailsCredit.MasterRegionId = advanceRepayment.MasterRegionId;
+                JournalDetailsCredit.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == advanceRepayment.MasterBusinessUnitId && x.MasterRegionId == advanceRepayment.MasterRegionId && x.Type == EnumBusinessUnitAccountType.AdvanceRepaymentAccount).FirstOrDefault().ChartOfAccount.Id;
+                JournalDetailsCredit.Notes = "NOTA KREDIT " + advanceRepayment.Code;
                 JournalDetailsCredit.isMerged = true;
-                JournalDetailsCredit.Created = salesAdvanceDetails.Created;
-                JournalDetailsCredit.Updated = salesAdvanceDetails.Updated;
-                JournalDetailsCredit.UserId = salesAdvanceDetails.UserId;
+                JournalDetailsCredit.Created = advanceRepaymentDetails.Created;
+                JournalDetailsCredit.Updated = advanceRepaymentDetails.Updated;
+                JournalDetailsCredit.UserId = advanceRepaymentDetails.UserId;
                 db.Entry(JournalDetailsCredit).State = EntityState.Modified;
                 db.SaveChanges();
             }
@@ -845,14 +845,14 @@ namespace eShop.Extensions
                 {
                     JournalId = journal.Id,
                     Debit = 0,
-                    Credit = GetTotalSalesAdvance(db, salesAdvance.Id, salesAdvanceDetails.Id) + salesAdvanceDetails.Total,
-                    ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == salesAdvance.MasterBusinessUnitId && x.MasterRegionId == salesAdvance.MasterRegionId && x.Type == EnumBusinessUnitAccountType.SalesAdvanceAccount).FirstOrDefault().ChartOfAccount.Id,
-                    MasterRegionId = salesAdvance.MasterRegionId,
-                    Notes = "NOTA KREDIT " + salesAdvance.Code,
+                    Credit = GetTotalAdvanceRepayment(db, advanceRepayment.Id, advanceRepaymentDetails.Id) + advanceRepaymentDetails.Total,
+                    ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == advanceRepayment.MasterBusinessUnitId && x.MasterRegionId == advanceRepayment.MasterRegionId && x.Type == EnumBusinessUnitAccountType.AdvanceRepaymentAccount).FirstOrDefault().ChartOfAccount.Id,
+                    MasterRegionId = advanceRepayment.MasterRegionId,
+                    Notes = "NOTA KREDIT " + advanceRepayment.Code,
                     isMerged = true,
-                    Created = salesAdvanceDetails.Created,
-                    Updated = salesAdvanceDetails.Updated,
-                    UserId = salesAdvanceDetails.UserId
+                    Created = advanceRepaymentDetails.Created,
+                    Updated = advanceRepaymentDetails.Updated,
+                    UserId = advanceRepaymentDetails.UserId
                 };
 
                 db.JournalsDetails.Add(JournalDetailsCredit);
@@ -864,46 +864,46 @@ namespace eShop.Extensions
             db.SaveChanges();
         }
 
-        public static void UpdateSalesAdvanceJournalDetails(SalesAdvanceDetails salesAdvanceDetails, ApplicationDbContext db)
+        public static void UpdateAdvanceRepaymentJournalDetails(AdvanceRepaymentDetails advanceRepaymentDetails, ApplicationDbContext db)
         {
-            SalesAdvance salesAdvance = db.SalesAdvances.Find(salesAdvanceDetails.SalesAdvanceId);
-            var journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.SalesAdvance && x.SalesAdvanceDetailsId == salesAdvanceDetails.Id).FirstOrDefault();
+            AdvanceRepayment advanceRepayment = db.AdvanceRepayments.Find(advanceRepaymentDetails.AdvanceRepaymentId);
+            var journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.AdvanceRepayment && x.AdvanceRepaymentDetailsId == advanceRepaymentDetails.Id).FirstOrDefault();
 
             if (journalDetails != null)
             {
                 Journal journal = db.Journals.Find(journalDetails.JournalId);
 
                 db.Entry(journalDetails).State = EntityState.Modified;
-                journalDetails.MasterRegionId = salesAdvance.MasterRegionId;
-                journalDetails.Notes = salesAdvanceDetails.Notes;
-                journalDetails.Updated = salesAdvanceDetails.Updated;
-                journalDetails.UserId = salesAdvanceDetails.UserId;
+                journalDetails.MasterRegionId = advanceRepayment.MasterRegionId;
+                journalDetails.Notes = advanceRepaymentDetails.Notes;
+                journalDetails.Updated = advanceRepaymentDetails.Updated;
+                journalDetails.UserId = advanceRepaymentDetails.UserId;
 
-                if (salesAdvanceDetails.Type == EnumSalesAdvanceType.Bank || salesAdvanceDetails.Type == EnumSalesAdvanceType.Cash)
+                if (advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.Bank || advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.Cash)
                 {
-                    MasterBank masterBank = db.MasterBanks.Find(salesAdvanceDetails.MasterBankId);
+                    MasterBank masterBank = db.MasterBanks.Find(advanceRepaymentDetails.MasterBankId);
                     journalDetails.ChartOfAccountId = masterBank.ChartOfAccountId;
                 }
-                else if (salesAdvanceDetails.Type == EnumSalesAdvanceType.Cheque)
+                else if (advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.Cheque)
                 {
-                    journalDetails.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == salesAdvance.MasterBusinessUnitId && x.MasterRegionId == salesAdvance.MasterRegionId && x.Type == EnumBusinessUnitAccountType.ChequeReceivablesAccount).FirstOrDefault().ChartOfAccount.Id;
+                    journalDetails.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == advanceRepayment.MasterBusinessUnitId && x.MasterRegionId == advanceRepayment.MasterRegionId && x.Type == EnumBusinessUnitAccountType.ChequeReceivablesAccount).FirstOrDefault().ChartOfAccount.Id;
                 }
-                else if (salesAdvanceDetails.Type == EnumSalesAdvanceType.MasterCost)
+                else if (advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.MasterCost)
                 {
-                    MasterCost masterCost = db.MasterCosts.Find(salesAdvanceDetails.MasterCostId);
+                    MasterCost masterCost = db.MasterCosts.Find(advanceRepaymentDetails.MasterCostId);
 
                     journalDetails.ChartOfAccountId = masterCost.ChartOfAccount.Id;
                 }
 
-                if (salesAdvanceDetails.Total >= 0)
+                if (advanceRepaymentDetails.Total >= 0)
                 {
-                    journalDetails.Debit = salesAdvanceDetails.Total;
+                    journalDetails.Debit = advanceRepaymentDetails.Total;
                     journalDetails.Credit = 0;
                 }
                 else
                 {
                     journalDetails.Debit = 0;
-                    journalDetails.Credit = salesAdvanceDetails.Total * -1;
+                    journalDetails.Credit = advanceRepaymentDetails.Total * -1;
                 }
                 db.SaveChanges();
 
@@ -916,14 +916,14 @@ namespace eShop.Extensions
                 if (JournalDetailsCredit != null)
                 {
                     JournalDetailsCredit.Debit = 0;
-                    JournalDetailsCredit.Credit = GetTotalSalesAdvance(db, salesAdvance.Id, salesAdvanceDetails.Id) + salesAdvanceDetails.Total;
-                    JournalDetailsCredit.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == salesAdvance.MasterBusinessUnitId && x.MasterRegionId == salesAdvance.MasterRegionId && x.Type == EnumBusinessUnitAccountType.SalesAdvanceAccount).FirstOrDefault().ChartOfAccount.Id;
-                    JournalDetailsCredit.MasterRegionId = salesAdvance.MasterRegionId;
-                    JournalDetailsCredit.Notes = "NOTA KREDIT " + salesAdvance.Code;
+                    JournalDetailsCredit.Credit = GetTotalAdvanceRepayment(db, advanceRepayment.Id, advanceRepaymentDetails.Id) + advanceRepaymentDetails.Total;
+                    JournalDetailsCredit.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == advanceRepayment.MasterBusinessUnitId && x.MasterRegionId == advanceRepayment.MasterRegionId && x.Type == EnumBusinessUnitAccountType.AdvanceRepaymentAccount).FirstOrDefault().ChartOfAccount.Id;
+                    JournalDetailsCredit.MasterRegionId = advanceRepayment.MasterRegionId;
+                    JournalDetailsCredit.Notes = "NOTA KREDIT " + advanceRepayment.Code;
                     JournalDetailsCredit.isMerged = true;
-                    JournalDetailsCredit.Created = salesAdvanceDetails.Created;
-                    JournalDetailsCredit.Updated = salesAdvanceDetails.Updated;
-                    JournalDetailsCredit.UserId = salesAdvanceDetails.UserId;
+                    JournalDetailsCredit.Created = advanceRepaymentDetails.Created;
+                    JournalDetailsCredit.Updated = advanceRepaymentDetails.Updated;
+                    JournalDetailsCredit.UserId = advanceRepaymentDetails.UserId;
                     db.Entry(JournalDetailsCredit).State = EntityState.Modified;
                     db.SaveChanges();
                 }
@@ -933,14 +933,14 @@ namespace eShop.Extensions
                     {
                         JournalId = journal.Id,
                         Debit = 0,
-                        Credit = GetTotalSalesAdvance(db, salesAdvance.Id, salesAdvanceDetails.Id) + salesAdvanceDetails.Total,
-                        ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == salesAdvance.MasterBusinessUnitId && x.MasterRegionId == salesAdvance.MasterRegionId && x.Type == EnumBusinessUnitAccountType.SalesAdvanceAccount).FirstOrDefault().ChartOfAccount.Id,
-                        MasterRegionId = salesAdvance.MasterRegionId,
-                        Notes = "NOTA KREDIT " + salesAdvance.Code,
+                        Credit = GetTotalAdvanceRepayment(db, advanceRepayment.Id, advanceRepaymentDetails.Id) + advanceRepaymentDetails.Total,
+                        ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == advanceRepayment.MasterBusinessUnitId && x.MasterRegionId == advanceRepayment.MasterRegionId && x.Type == EnumBusinessUnitAccountType.AdvanceRepaymentAccount).FirstOrDefault().ChartOfAccount.Id,
+                        MasterRegionId = advanceRepayment.MasterRegionId,
+                        Notes = "NOTA KREDIT " + advanceRepayment.Code,
                         isMerged = true,
-                        Created = salesAdvanceDetails.Created,
-                        Updated = salesAdvanceDetails.Updated,
-                        UserId = salesAdvanceDetails.UserId
+                        Created = advanceRepaymentDetails.Created,
+                        Updated = advanceRepaymentDetails.Updated,
+                        UserId = advanceRepaymentDetails.UserId
                     };
 
                     db.JournalsDetails.Add(JournalDetailsCredit);
@@ -953,9 +953,9 @@ namespace eShop.Extensions
             }
         }
 
-        public static void RemoveSalesAdvanceJournalDetails(SalesAdvanceDetails salesAdvanceDetails, Journal journal, ApplicationDbContext db)
+        public static void RemoveAdvanceRepaymentJournalDetails(AdvanceRepaymentDetails advanceRepaymentDetails, Journal journal, ApplicationDbContext db)
         {
-            var journalDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.SalesAdvanceDetailsId == salesAdvanceDetails.Id).FirstOrDefault();
+            var journalDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.AdvanceRepaymentDetailsId == advanceRepaymentDetails.Id).FirstOrDefault();
 
             if (journalDetails.Credit == 0)
                 journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
@@ -971,7 +971,7 @@ namespace eShop.Extensions
             JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged).FirstOrDefault();
             if (JournalDetailsCredit != null)
             {
-                JournalDetailsCredit.Credit = GetTotalSalesAdvance(db, salesAdvanceDetails.SalesAdvanceId, salesAdvanceDetails.Id);
+                JournalDetailsCredit.Credit = GetTotalAdvanceRepayment(db, advanceRepaymentDetails.AdvanceRepaymentId, advanceRepaymentDetails.Id);
 
                 db.Entry(JournalDetailsCredit).State = EntityState.Modified;
                 db.SaveChanges();
