@@ -31,9 +31,9 @@ namespace eShop.Models
         [Display(Name = "HUTANG GIRO (KELUAR)")]
         ChequePayableAccount = 10,
         [Display(Name = "UANG MUKA PENJUALAN")]
-        SalesAdvanceAccount = 9,
+        AdvanceRepaymentAccount = 11,
         [Display(Name = "UANG MUKA PEMBELIAN")]
-        PurchasesAdvanceAccount = 10
+        AdvancePaymentAccount = 12
     }
 
     public class MasterBusinessUnit

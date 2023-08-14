@@ -1,8 +1,8 @@
-﻿@model eShop.Models.SalesAdvance
+﻿@model eShop.Models.AdvanceRepayment
 
 @{
     ViewBag.Title = "Uang Muka Penjualan";
-    ViewBag.Current = "SalesAdvances";
+    ViewBag.Current = "AdvanceRepayments";
 }
 
 @section Styles {
@@ -109,7 +109,7 @@
                         <div class="text-right col-md-12">
                             <label style="font-weight: bold">TOTAL :</label>
                             <input type="text" id="Total" value="@Model.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "SalesAdvances")">
+                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "AdvanceRepayments")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
                             <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
@@ -197,7 +197,7 @@
         $('#btnAdd').click(function (event)
         {
             event.preventDefault();
-            var url = $(this).attr("href") + "?salesAdvanceId=" + $("input#Id").val();
+            var url = $(this).attr("href") + "?advanceRepaymentId=" + $("input#Id").val();
             $.get(url, function (data)
             {
                 $('#addContainer').html(data);
@@ -263,10 +263,10 @@
             var grid = new MvcGrid(document.querySelector('#other-table'));
             grid.reload();
 
-            var param = { SalesAdvanceId: $("#Id").val() };
+            var param = { AdvanceRepaymentId: $("#Id").val() };
             var options = {};
 
-            options.url = "/SalesAdvances/GetTotal";
+            options.url = "/AdvanceRepayments/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -292,10 +292,10 @@
             var grid = new MvcGrid(document.querySelector('#other-table'));
             grid.reload();
 
-            var param = { SalesAdvanceId: $("#Id").val() };
+            var param = { AdvanceRepaymentId: $("#Id").val() };
             var options = {};
 
-            options.url = "/SalesAdvances/GetTotal";
+            options.url = "/AdvanceRepayments/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -340,7 +340,7 @@
                         if (result)
                         {
                             var options = {};
-                            options.url = "/SalesAdvances/DetailsBatchDelete";
+                            options.url = "/AdvanceRepayments/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
@@ -355,10 +355,10 @@
                                     new MvcGrid(element).reload();
                                 });
 
-                                var param = { SalesAdvanceId: $("#Id").val() };
+                                var param = { AdvanceRepaymentId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/SalesAdvances/GetTotal";
+                                options2.url = "/AdvanceRepayments/GetTotal";
                                 options2.type = "POST";
                                 options2.headers = headers;
                                 options2.data = JSON.stringify(param);
@@ -383,17 +383,17 @@
             $("#cancel").click(function () {
                 var data = { id: $("input#Id").val() };
                 var options = {};
-                options.url = "/SalesAdvances/Cancel";
+                options.url = "/AdvanceRepayments/Cancel";
                 options.type = "POST";
                 options.headers = headers;
                 options.data = JSON.stringify(data);
                 options.contentType = "application/json";
                 options.dataType = "json";
                 options.success = function (msg) {
-                    window.location.href = '@Url.Action("Index", "SalesAdvances")';
+                    window.location.href = '@Url.Action("Index", "AdvanceRepayments")';
                 };
                 options.error = function () {
-                    window.location.href = '@Url.Action("Index", "SalesAdvances")';
+                    window.location.href = '@Url.Action("Index", "AdvanceRepayments")';
                 };
                 $.ajax(options);
             });
@@ -411,7 +411,7 @@
                         document.getElementById('MasterRegionId').value = "0";
                     }
                     else {
-                        options.url = "/SalesAdvances/GetCode";
+                        options.url = "/AdvanceRepayments/GetCode";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -440,7 +440,7 @@
                 var options = {};
 
                 if (masterRegionId !== 0 && masterRegionId !== '') {
-                    options.url = "/SalesAdvances/GetCode";
+                    options.url = "/AdvanceRepayments/GetCode";
                     options.type = "POST";
                     options.headers = headers;
                     options.data = JSON.stringify(data);

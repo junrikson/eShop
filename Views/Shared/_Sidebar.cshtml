@@ -78,19 +78,19 @@
                     }
                     messages = messages + "</ul></li>";
                 }
-                if (User.IsInRole("PurchasesAdvancesActive") || User.IsInRole("PaymentsActive"))
+                if (User.IsInRole("AdvancePaymentsActive") || User.IsInRole("PaymentsActive"))
                 {
-                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "PurchasesAdvances" || ViewBag.Current == "Payments") ? " active" : "") + "\">";
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "AdvancePayments" || ViewBag.Current == "Payments") ? " active" : "") + "\">";
                     messages = messages + "<a href=\"#\"><i class=\"fa fa-money\"></i><span>A / P</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
-                    if (User.IsInRole("PurchasesAdvancesActive")) { messages = messages + "<li" + (ViewBag.Current == "PurchasesAdvances" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "PurchasesAdvances", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Uang Muka Pembelian</a></li>"; }
+                    if (User.IsInRole("AdvancePaymentsActive")) { messages = messages + "<li" + (ViewBag.Current == "AdvancePayments" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "AdvancePayments", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Uang Muka Pembelian</a></li>"; }
                     if (User.IsInRole("PaymentsActive")) { messages = messages + "<li" + (ViewBag.Current == "Payments" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Payments", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pembayaran Hutang</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
-                if (User.IsInRole("SalesAdvancesActive") || User.IsInRole("RepaymentsActive"))
+                if (User.IsInRole("AdvanceRepaymentsActive") || User.IsInRole("RepaymentsActive"))
                 {
-                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "SalesAdvances" || ViewBag.Current == "Repayments") ? " active" : "") + "\">";
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "AdvanceRepayments" || ViewBag.Current == "Repayments") ? " active" : "") + "\">";
                     messages = messages + "<a href=\"#\"><i class=\"fa fa-money\"></i><span>A / R</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
-                    if (User.IsInRole("SalesAdvancesActive")) { messages = messages + "<li" + (ViewBag.Current == "SalesAdvances" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "SalesAdvances", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Uang Muka Penjualan</a></li>"; }
+                    if (User.IsInRole("AdvanceRepaymentsActive")) { messages = messages + "<li" + (ViewBag.Current == "AdvanceRepayments" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "AdvanceRepayments", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Uang Muka Penjualan</a></li>"; }
                     if (User.IsInRole("RepaymentsActive")) { messages = messages + "<li" + (ViewBag.Current == "Repayments" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Repayments", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pelunasan Piutang</a></li>"; }
                     messages = messages + "</ul></li>";
                 }

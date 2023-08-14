@@ -44,9 +44,9 @@ namespace eShop.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("UMS/")]
-        public string SalesAdvanceCode {
+        public string AdvanceRepaymentCode {
             get {
-                return ((string)(this["SalesAdvanceCode"]));
+                return ((string)(this["AdvanceRepaymentCode"]));
             }
         }
         

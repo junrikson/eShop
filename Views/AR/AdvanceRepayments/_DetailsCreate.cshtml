@@ -1,4 +1,4 @@
-﻿@model eShop.Models.SalesAdvanceDetails
+﻿@model eShop.Models.AdvanceRepaymentDetails
 @{
     Layout = null;
 }
@@ -14,13 +14,13 @@
         <div class="modal-body">
             @Html.Partial("MvcDatalist/_Dialog")
             <div id="divEmp">
-                @using (Ajax.BeginForm("DetailsCreate", "SalesAdvances", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
+                @using (Ajax.BeginForm("DetailsCreate", "AdvanceRepayments", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
                 {
                     @Html.AntiForgeryToken()
 
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    @Html.HiddenFor(model => model.SalesAdvanceId)
+                    @Html.HiddenFor(model => model.AdvanceRepaymentId)
                     <div class="form-group">
                         <div class="col-md-12">
                             @Html.LabelFor(model => model.Type)
@@ -29,17 +29,17 @@
                         </div>
                     </div>
                     <div class="form-group" id="DivMasterBank">
-                        <div class="col-md-8">
-                            @Html.LabelFor(model => model.MasterCashBankId)
-                            @Html.DatalistFor(model => model.MasterCashBankId, new eShop.Models.MasterCashBankRegionDatalist(), new { @class = "datalist2" })
-                            @Html.ValidationMessageFor(model => model.MasterCashBankId, "", new { @class = "text-danger" })
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.MasterBankId)
+                            @Html.DatalistFor(model => model.MasterBankId, new eShop.Models.MasterBankRegionDatalist(), new { @class = "datalist2" })
+                            @Html.ValidationMessageFor(model => model.MasterBankId, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group" id="DivGiroCheque">
                         <div class="col-md-12">
-                            @Html.LabelFor(model => model.GiroChequeId)
-                            @Html.DatalistFor(model => model.GiroChequeId, new eShop.Models.GiroChequeUnallocatedDatalist(), new { @class = "datalist2" })
-                            @Html.ValidationMessageFor(model => model.GiroChequeId, "", new { @class = "text-danger" })
+                            @Html.LabelFor(model => model.ChequeId)
+                            @Html.DatalistFor(model => model.ChequeId, new eShop.Models.ChequeUnallocatedDatalist(), new { @class = "datalist2" })
+                            @Html.ValidationMessageFor(model => model.ChequeId, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group" id="DivMasterCost">

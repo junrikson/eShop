@@ -75,9 +75,9 @@ namespace eShop.Models
         [Display(Name = "Detail Invoice Lainnya")]
         InvoiceOthersDetails = 34,
         [Display(Name = "Uang Muka Penjualan")]
-        SalesAdvance = 35,
+        AdvanceRepayment = 35,
         [Display(Name = "Detail Uang Muka Penjualan")]
-        SalesAdvanceDetails = 36,
+        AdvanceRepaymentDetails = 36,
         [Display(Name = "Bagan Akun")]
         ChartOfAccount = 37,
         [Display(Name = "Master Biaya")]

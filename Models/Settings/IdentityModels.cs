@@ -172,8 +172,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.SalesReturnDetails> SalesReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Sale> Sales { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleDetails> SalesDetails { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.SalesAdvance> SalesAdvances { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.SalesAdvanceDetails> SalesAdvancesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.AdvanceRepayment> AdvanceRepayments { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.AdvanceRepaymentDetails> AdvanceRepaymentsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Repayment> Repayments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.RepaymentDetailsHeader> RepaymentsDetailsHeader { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.RepaymentDetails> RepaymentsDetails { get; set; }
@@ -239,8 +239,8 @@ namespace eShop.Models
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<SalesAdvance>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<SalesAdvanceDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<AdvanceRepayment>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<AdvanceRepaymentDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<Repayment>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<RepaymentDetailsHeader>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<RepaymentDetails>().Property(x => x.Total).HasPrecision(18, 2);
