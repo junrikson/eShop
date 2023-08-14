@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-4 hideable" id="gender">
+                                    <div class="col-md-4" id="gender">
                                         @Html.LabelFor(model => model.Gender)
                                         @Html.EnumDropDownListFor(model => model.Gender, htmlAttributes: new { @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
