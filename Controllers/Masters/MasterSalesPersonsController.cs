@@ -100,14 +100,13 @@ namespace eShop.Controllers
         [HttpPost]
         [Authorize(Roles = "MasterSalesPersonsAdd")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,Birthday,SalesPersonType,CompanyType,Gender,Address,City,SourceCity,Postal,Phone1,Phone2,Mobile,Fax,TOP,Email,IDCard,TaxID,TaxName,TaxAddress,TaxID2,TaxName2,TaxAddress2,TaxID3,TaxName3,TaxAddress3,Notes,Active,Created,Updated")] MasterSalesPerson masterSalesPerson)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,Birthday,Gender,Address,City,SourceCity,Postal,Phone1,Phone2,Mobile,Fax,TOP,Email,IDCard,TaxID,TaxName,TaxAddress,Notes,Active,Created,Updated")] MasterSalesPerson masterSalesPerson)
         {
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(masterSalesPerson.TaxName)) masterSalesPerson.TaxName = masterSalesPerson.Name;
                 if (string.IsNullOrEmpty(masterSalesPerson.TaxAddress)) masterSalesPerson.TaxAddress = masterSalesPerson.Address;
                 if (string.IsNullOrEmpty(masterSalesPerson.TaxID)) masterSalesPerson.TaxID = "00.000.000.0-000.000";
-
                 if (!string.IsNullOrEmpty(masterSalesPerson.Code)) masterSalesPerson.Code = masterSalesPerson.Code.ToUpper();
                 if (!string.IsNullOrEmpty(masterSalesPerson.Name)) masterSalesPerson.Name = masterSalesPerson.Name.ToUpper();
                 if (!string.IsNullOrEmpty(masterSalesPerson.Address)) masterSalesPerson.Address = masterSalesPerson.Address.ToUpper();
@@ -151,7 +150,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterSalesPersonsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,Birthday,SalesPersonType,CompanyType,Gender,Address,City,SourceCity,Postal,Phone1,Phone2,Mobile,Fax,TOP,Email,IDCard,TaxID,TaxName,TaxAddress,TaxID2,TaxName2,TaxAddress2,TaxID3,TaxName3,TaxAddress3,Notes,Active")] MasterSalesPerson masterSalesPerson)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,Birthday,Gender,Address,City,Postal,Phone1,Phone2,Mobile,Fax,TOP,Email,IDCard,TaxID,TaxName,TaxAddress,Notes,Active")] MasterSalesPerson masterSalesPerson)
         {
             masterSalesPerson.Updated = DateTime.Now;
 
@@ -160,7 +159,6 @@ namespace eShop.Controllers
                 if (string.IsNullOrEmpty(masterSalesPerson.TaxName)) masterSalesPerson.TaxName = masterSalesPerson.Name;
                 if (string.IsNullOrEmpty(masterSalesPerson.TaxAddress)) masterSalesPerson.TaxAddress = masterSalesPerson.Address;
                 if (string.IsNullOrEmpty(masterSalesPerson.TaxID)) masterSalesPerson.TaxID = "00.000.000.0-000.000";
-
                 if (!string.IsNullOrEmpty(masterSalesPerson.Code)) masterSalesPerson.Code = masterSalesPerson.Code.ToUpper();
                 if (!string.IsNullOrEmpty(masterSalesPerson.Name)) masterSalesPerson.Name = masterSalesPerson.Name.ToUpper();
                 if (!string.IsNullOrEmpty(masterSalesPerson.Address)) masterSalesPerson.Address = masterSalesPerson.Address.ToUpper();
@@ -174,20 +172,14 @@ namespace eShop.Controllers
                 db.Entry(masterSalesPerson).Property("Name").IsModified = true;
                 db.Entry(masterSalesPerson).Property("FullName").IsModified = true;
                 db.Entry(masterSalesPerson).Property("Birthday").IsModified = true;
-                db.Entry(masterSalesPerson).Property("SalesPersonType").IsModified = true;
-                db.Entry(masterSalesPerson).Property("ContactPerson").IsModified = true;
-                db.Entry(masterSalesPerson).Property("CompanyType").IsModified = true;
                 db.Entry(masterSalesPerson).Property("Gender").IsModified = true;
                 db.Entry(masterSalesPerson).Property("Address").IsModified = true;
                 db.Entry(masterSalesPerson).Property("City").IsModified = true;
-                db.Entry(masterSalesPerson).Property("SourceCity").IsModified = true;
                 db.Entry(masterSalesPerson).Property("Postal").IsModified = true;
                 db.Entry(masterSalesPerson).Property("Phone1").IsModified = true;
                 db.Entry(masterSalesPerson).Property("Phone2").IsModified = true;
                 db.Entry(masterSalesPerson).Property("Mobile").IsModified = true;
-                db.Entry(masterSalesPerson).Property("Fax").IsModified = true;
                 db.Entry(masterSalesPerson).Property("Email").IsModified = true;
-                db.Entry(masterSalesPerson).Property("TOP").IsModified = true;
                 db.Entry(masterSalesPerson).Property("IDCard").IsModified = true;
                 db.Entry(masterSalesPerson).Property("TaxID").IsModified = true;
                 db.Entry(masterSalesPerson).Property("TaxName").IsModified = true;

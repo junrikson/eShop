@@ -9,6 +9,8 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
+
+
     public class MasterSalesPerson
     {
         [Key]
