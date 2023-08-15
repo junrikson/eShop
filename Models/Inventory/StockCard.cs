@@ -13,14 +13,6 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [DatalistColumn]
-        [Required(ErrorMessage = "Nomor harus diisi.")]
-        [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor")]
-        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "StockAdjustments", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
-        public string Code { get; set; }
-
         [Display(Name = "Unit Bisnis")]
         [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
         public int MasterBusinessUnitId { get; set; }
@@ -61,21 +53,23 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Quantity { get; set; }
 
-        [Display(Name = "Dibuat")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
-        public DateTime Created { get; set; }
+        [Display(Name = "Pembelian")]
+        public int? PurchaseDetailsId { get; set; }
 
-        [Display(Name = "Diubah")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
-        public DateTime Updated { get; set; }
+        [Display(Name = "Pembelian")]
+        public virtual PurchaseDetails PurchaseDetails { get; set; }
 
-        [Display(Name = "User")]
-        public int UserId { get; set; }
+        [Display(Name = "Penjualan")]
+        public int? SaleDetailsId { get; set; }
 
-        [Display(Name = "User")]
-        public virtual ApplicationUser User { get; set; }
+        [Display(Name = "Penjualan")]
+        public virtual SaleDetails SaleDetails { get; set; }
+
+        [Display(Name = "Penyesuaian")]
+        public int? StockAdjustmentDetailsId { get; set; }
+
+        [Display(Name = "Penyesuaian")]
+        public virtual StockAdjustmentDetails StockAdjustmentDetails { get; set; }
     }
 
 }

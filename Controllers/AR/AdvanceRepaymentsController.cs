@@ -77,7 +77,7 @@ namespace eShop.Controllers
         {
             AdvanceRepayment advanceRepayment = new AdvanceRepayment
             {
-                Code = "Sedang Input/" + Guid.NewGuid().ToString(),
+                Code = "temp/" + Guid.NewGuid().ToString(),
                 Date = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
@@ -96,7 +96,8 @@ namespace eShop.Controllers
                     db.AdvanceRepayments.Add(advanceRepayment);
                     db.SaveChanges();
 
-                    Journal journal = SharedFunctions.CreateAdvanceRepaymentJournal(advanceRepayment, db);
+                    SharedFunctions.CreateAdvanceRepaymentJournal(db, advanceRepayment);
+
                     dbTran.Commit();
                 }
                 catch (DbEntityValidationException ex)
@@ -135,31 +136,20 @@ namespace eShop.Controllers
 
             if (ModelState.IsValid)
             {
-                List<AdvanceRepaymentDetails> advanceRepaymentsDetails = db.AdvanceRepaymentsDetails.Where(x => x.AdvanceRepaymentId == advanceRepayment.Id).ToList();
-                Journal journal = db.Journals.Where(x =>
-                                        x.Type == EnumJournalType.AdvanceRepayment &&
-                                        x.AdvanceRepaymentId == advanceRepayment.Id).FirstOrDefault();
-
                 if (!string.IsNullOrEmpty(advanceRepayment.Code)) advanceRepayment.Code = advanceRepayment.Code.ToUpper();
                 if (!string.IsNullOrEmpty(advanceRepayment.Notes)) advanceRepayment.Notes = advanceRepayment.Notes.ToUpper();
+
+                db.Entry(advanceRepayment).State = EntityState.Modified;
 
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
                     try
                     {
-                        db.Entry(advanceRepayment).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        if (journal == null)
-                        {
-                            journal = SharedFunctions.CreateAdvanceRepaymentJournal(advanceRepayment, db);
-                            foreach (AdvanceRepaymentDetails advanceRepaymentDetails in advanceRepaymentsDetails)
-                            {
-                                SharedFunctions.CreateAdvanceRepaymentJournalDetails(advanceRepaymentDetails, journal, db);
-                            }
-                        }
-                        else
-                            journal = SharedFunctions.UpdateAdvanceRepaymentJournal(journal, advanceRepayment, db);
+                        db.Entry(advanceRepayment).Reload();
+
+                        SharedFunctions.UpdateAdvanceRepaymentJournal(db, advanceRepayment);
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.AdvanceRepayment, MenuId = advanceRepayment.Id, MenuCode = advanceRepayment.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
@@ -167,7 +157,6 @@ namespace eShop.Controllers
                         dbTran.Commit();
 
                         return RedirectToAction("Index");
-
                     }
                     catch (DbEntityValidationException ex)
                     {
@@ -222,39 +211,29 @@ namespace eShop.Controllers
 
             if (ModelState.IsValid)
             {
+                if (!string.IsNullOrEmpty(advanceRepayment.Code)) advanceRepayment.Code = advanceRepayment.Code.ToUpper();
+                if (!string.IsNullOrEmpty(advanceRepayment.Notes)) advanceRepayment.Notes = advanceRepayment.Notes.ToUpper();
+
+                db.Entry(advanceRepayment).State = EntityState.Unchanged;
+                db.Entry(advanceRepayment).Property("Code").IsModified = true;
+                db.Entry(advanceRepayment).Property("Date").IsModified = true;
+                db.Entry(advanceRepayment).Property("MasterBusinessUnitId").IsModified = true;
+                db.Entry(advanceRepayment).Property("MasterRegionId").IsModified = true;
+                db.Entry(advanceRepayment).Property("Notes").IsModified = true;
+                db.Entry(advanceRepayment).Property("Total").IsModified = true;
+                db.Entry(advanceRepayment).Property("Active").IsModified = true;
+                db.Entry(advanceRepayment).Property("Updated").IsModified = true;
+                db.Entry(advanceRepayment).Property("UserId").IsModified = true;
+
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
                     try
                     {
-                        List<AdvanceRepaymentDetails> advanceRepaymentsDetails = db.AdvanceRepaymentsDetails.Where(x => x.AdvanceRepaymentId == advanceRepayment.Id).ToList();
-                        Journal journal = db.Journals.Where(x =>
-                                                x.Type == EnumJournalType.AdvanceRepayment &&
-                                                x.AdvanceRepaymentId == advanceRepayment.Id).FirstOrDefault();
-
-                        if (!string.IsNullOrEmpty(advanceRepayment.Notes)) advanceRepayment.Notes = advanceRepayment.Notes.ToUpper();
-
-                        db.Entry(advanceRepayment).State = EntityState.Unchanged;
-                        db.Entry(advanceRepayment).Property("Date").IsModified = true;
-                        db.Entry(advanceRepayment).Property("MasterBusinessUnitId").IsModified = true;
-                        db.Entry(advanceRepayment).Property("MasterRegionId").IsModified = true;
-                        db.Entry(advanceRepayment).Property("Notes").IsModified = true;
-                        db.Entry(advanceRepayment).Property("Total").IsModified = true;
-                        db.Entry(advanceRepayment).Property("Active").IsModified = true;
-                        db.Entry(advanceRepayment).Property("Updated").IsModified = true;
-                        db.Entry(advanceRepayment).Property("UserId").IsModified = true;
                         db.SaveChanges();
 
-                        if (journal == null)
-                        {
-                            journal = SharedFunctions.CreateAdvanceRepaymentJournal(advanceRepayment, db);
-                            foreach (AdvanceRepaymentDetails advanceRepaymentDetails in advanceRepaymentsDetails)
-                            {
-                                SharedFunctions.CreateAdvanceRepaymentJournalDetails(advanceRepaymentDetails, journal, db);
-                            }
-                        }
-                        else
-                            journal = SharedFunctions.UpdateAdvanceRepaymentJournal(journal, advanceRepayment, db);
+                        db.Entry(advanceRepayment).Reload();
 
+                        SharedFunctions.UpdateAdvanceRepaymentJournal(db, advanceRepayment);
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.AdvanceRepayment, MenuId = advanceRepayment.Id, MenuCode = advanceRepayment.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
@@ -305,9 +284,7 @@ namespace eShop.Controllers
                         {
                             try
                             {
-                                Journal journal = db.Journals.Where(y => y.Type == EnumJournalType.AdvanceRepayment && y.AdvanceRepaymentId == obj.Id).FirstOrDefault();
-
-                                SharedFunctions.DeleteAdvanceRepaymentJournals(obj.Id, journal, db);
+                                SharedFunctions.DeleteAdvanceRepaymentJournals(db, obj);
 
                                 db.AdvanceRepaymentsDetails.RemoveRange(db.AdvanceRepaymentsDetails.Where(x => x.AdvanceRepaymentId == id));
                                 db.SaveChanges();
@@ -354,9 +331,7 @@ namespace eShop.Controllers
                             {
                                 try
                                 {
-                                    Journal journal = db.Journals.Where(y => y.Type == EnumJournalType.AdvanceRepayment && y.AdvanceRepaymentId == obj.Id).FirstOrDefault();
-
-                                    SharedFunctions.DeleteAdvanceRepaymentJournals(obj.Id, journal, db);
+                                    SharedFunctions.DeleteAdvanceRepaymentJournals(db, obj);
 
                                     db.AdvanceRepaymentsDetails.RemoveRange(db.AdvanceRepaymentsDetails.Where(x => x.AdvanceRepaymentId == id));
                                     db.SaveChanges();
@@ -427,12 +402,9 @@ namespace eShop.Controllers
                         db.AdvanceRepaymentsDetails.Add(advanceRepaymentDetails);
                         db.SaveChanges();
 
-                        Journal journal = db.Journals.Where(x =>
-                                                x.Type == EnumJournalType.AdvanceRepayment &&
-                                                x.AdvanceRepaymentId == advanceRepaymentDetails.AdvanceRepaymentId).FirstOrDefault();
+                        db.Entry(advanceRepaymentDetails).Reload();
 
-                        if (journal != null)
-                            SharedFunctions.CreateAdvanceRepaymentJournalDetails(advanceRepaymentDetails, journal, db);
+                        SharedFunctions.CreateAdvanceRepaymentJournalDetails(db, advanceRepaymentDetails);
 
                         AdvanceRepayment advanceRepayment = db.AdvanceRepayments.Find(advanceRepaymentDetails.AdvanceRepaymentId);
                         advanceRepayment.Total = SharedFunctions.GetTotalAdvanceRepayment(db, advanceRepayment.Id) + advanceRepaymentDetails.Total;
@@ -488,28 +460,28 @@ namespace eShop.Controllers
 
             if (ModelState.IsValid)
             {
+                if (!string.IsNullOrEmpty(advanceRepaymentDetails.Notes)) advanceRepaymentDetails.Notes = advanceRepaymentDetails.Notes.ToUpper();
+                if (!string.IsNullOrEmpty(advanceRepaymentDetails.Refference)) advanceRepaymentDetails.Refference = advanceRepaymentDetails.Refference.ToUpper();
+
+                db.Entry(advanceRepaymentDetails).State = EntityState.Unchanged;
+                db.Entry(advanceRepaymentDetails).Property("Type").IsModified = true;
+                db.Entry(advanceRepaymentDetails).Property("MasterBankId").IsModified = true;
+                db.Entry(advanceRepaymentDetails).Property("MasterCostId").IsModified = true;
+                db.Entry(advanceRepaymentDetails).Property("ChequeId").IsModified = true;
+                db.Entry(advanceRepaymentDetails).Property("Refference").IsModified = true;
+                db.Entry(advanceRepaymentDetails).Property("Total").IsModified = true;
+                db.Entry(advanceRepaymentDetails).Property("Notes").IsModified = true;
+                db.Entry(advanceRepaymentDetails).Property("Updated").IsModified = true;
+                db.Entry(advanceRepaymentDetails).Property("UserId").IsModified = true;
+
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
                     try
                     {
-                        if (!string.IsNullOrEmpty(advanceRepaymentDetails.Notes)) advanceRepaymentDetails.Notes = advanceRepaymentDetails.Notes.ToUpper();
-                        if (!string.IsNullOrEmpty(advanceRepaymentDetails.Refference)) advanceRepaymentDetails.Refference = advanceRepaymentDetails.Refference.ToUpper();
-
-                        db.Entry(advanceRepaymentDetails).State = EntityState.Unchanged;
-                        db.Entry(advanceRepaymentDetails).Property("Type").IsModified = true;
-                        db.Entry(advanceRepaymentDetails).Property("MasterBankId").IsModified = true;
-                        db.Entry(advanceRepaymentDetails).Property("MasterCostId").IsModified = true;
-                        db.Entry(advanceRepaymentDetails).Property("ChequeId").IsModified = true;
-                        db.Entry(advanceRepaymentDetails).Property("Refference").IsModified = true;
-                        db.Entry(advanceRepaymentDetails).Property("Total").IsModified = true;
-                        db.Entry(advanceRepaymentDetails).Property("Notes").IsModified = true;
-                        db.Entry(advanceRepaymentDetails).Property("Updated").IsModified = true;
-                        db.Entry(advanceRepaymentDetails).Property("UserId").IsModified = true;
                         db.SaveChanges();
-
                         db.Entry(advanceRepaymentDetails).Reload();
 
-                        SharedFunctions.UpdateAdvanceRepaymentJournalDetails(advanceRepaymentDetails, db);
+                        SharedFunctions.UpdateAdvanceRepaymentJournalDetails(db, advanceRepaymentDetails);
 
                         AdvanceRepayment advanceRepayment = db.AdvanceRepayments.Find(advanceRepaymentDetails.AdvanceRepaymentId);
                         advanceRepayment.Total = SharedFunctions.GetTotalAdvanceRepayment(db, advanceRepayment.Id) + advanceRepaymentDetails.Total;
@@ -556,12 +528,7 @@ namespace eShop.Controllers
                                 {
                                     AdvanceRepaymentDetails tmp = obj;
 
-                                    Journal journal = db.Journals.Where(x =>
-                                                            x.Type == EnumJournalType.AdvanceRepayment &&
-                                                            x.AdvanceRepaymentId == obj.AdvanceRepaymentId).FirstOrDefault();
-
-                                    if (journal != null)
-                                        SharedFunctions.RemoveAdvanceRepaymentJournalDetails(obj, journal, db);
+                                    SharedFunctions.RemoveAdvanceRepaymentJournalDetails(db, obj);
 
                                     AdvanceRepayment advanceRepayment = db.AdvanceRepayments.Find(tmp.AdvanceRepaymentId);
 

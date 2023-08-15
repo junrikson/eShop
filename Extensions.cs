@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
+using System.Web.Security;
 
 namespace eShop.Extensions
 {
@@ -290,6 +291,8 @@ namespace eShop.Extensions
             return total;
         }
 
+        // Begin of Bank 
+
         public static decimal GetTotalBankTransactionDetails(ApplicationDbContext db, int bankTransactionId, int? bankTransactionDetailsId = null)
         {
             decimal total = 0;
@@ -321,6 +324,7 @@ namespace eShop.Extensions
 
             return total;
         }
+        
         public static Journal CreateBankJournal(BankTransaction bankTransaction, ApplicationDbContext db)
         {
             Journal journal = new Journal
@@ -672,8 +676,9 @@ namespace eShop.Extensions
             }
         }
 
-        // NOTA KREDIT
+        // End of Bank 
 
+        // Begin of Advance Repayment
         public static decimal GetTotalAdvanceRepayment(ApplicationDbContext db, int advanceRepaymentId, int? advanceRepaymentDetailsId = null)
         {
             decimal total = 0;
@@ -690,19 +695,24 @@ namespace eShop.Extensions
             return total;
         }
 
-        public static decimal GetTotalAdvanceRepaymentAllocated(ApplicationDbContext db, AdvanceRepayment advanceRepayment, RepaymentDetailsHeader repaymentDetailsHeader = null)
+        public static decimal GetTotalAdvanceRepaymentAllocated(ApplicationDbContext db, AdvanceRepayment advanceRepayment, int? repaymentDetailsHeaderId = null)
         {
             decimal total = 0;
 
-            var repaymentsDetailsHeader = db.RepaymentsDetailsHeader.Where(x => x.Type == EnumRepaymentType.AdvanceRepayment && x.AdvanceRepaymentId == advanceRepayment.Id && x.Id != repaymentDetailsHeader.Id).ToList();
+            List<RepaymentDetailsHeader> repaymentsDetailsHeader = null;
 
-            if (repaymentsDetailsHeader != null || repaymentsDetailsHeader.Count > 0)
+            if (repaymentDetailsHeaderId == null)
+                repaymentsDetailsHeader = db.RepaymentsDetailsHeader.Where(x => x.Type == EnumRepaymentType.AdvanceRepayment && x.AdvanceRepaymentId == advanceRepayment.Id).ToList();
+            else
+                repaymentsDetailsHeader = db.RepaymentsDetailsHeader.Where(x => x.Type == EnumRepaymentType.AdvanceRepayment && x.AdvanceRepaymentId == advanceRepayment.Id && x.Id != repaymentDetailsHeaderId).ToList();
+
+            if (repaymentsDetailsHeader != null)
                 total = repaymentsDetailsHeader.Sum(y => y.Total);
 
             return total;
         }
 
-        public static Journal CreateAdvanceRepaymentJournal(AdvanceRepayment advanceRepayment, ApplicationDbContext db)
+        public static void CreateAdvanceRepaymentJournal(ApplicationDbContext db, AdvanceRepayment advanceRepayment)
         {
             Journal journal = new Journal
             {
@@ -712,54 +722,47 @@ namespace eShop.Extensions
                 Type = EnumJournalType.AdvanceRepayment,
                 Debit = 0,
                 Credit = 0,
-                AdvanceRepaymentId = advanceRepayment.Id,
+                AdvanceRepaymentId = advanceRepayment.Id,                
                 Active = advanceRepayment.Active,
                 Created = advanceRepayment.Created,
                 Updated = advanceRepayment.Updated,
                 UserId = advanceRepayment.UserId
             };
 
+            if (string.IsNullOrEmpty(advanceRepayment.Notes))
+                journal.Notes = "UANG MUKA PENJUALAN NO. " + advanceRepayment.Code;
+            else
+                journal.Notes = advanceRepayment.Notes;
+
             db.Journals.Add(journal);
             db.SaveChanges();
-
-            return journal;
         }
 
-        public static Journal UpdateAdvanceRepaymentJournal(Journal journal, AdvanceRepayment advanceRepayment, ApplicationDbContext db)
+        public static void UpdateAdvanceRepaymentJournal(ApplicationDbContext db, AdvanceRepayment advanceRepayment)
         {
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.AdvanceRepayment && x.AdvanceRepaymentId == advanceRepayment.Id).FirstOrDefault();
+
             db.Entry(journal).State = EntityState.Modified;
 
             journal.Code = advanceRepayment.Code;
             journal.Date = advanceRepayment.Date;
             journal.MasterBusinessUnitId = advanceRepayment.MasterBusinessUnitId;
-            journal.Type = EnumJournalType.AdvanceRepayment;
-            journal.Debit = 0;
-            journal.Credit = 0;
-            journal.AdvanceRepaymentId = advanceRepayment.Id;
-            journal.Notes = advanceRepayment.Notes;
             journal.Active = advanceRepayment.Active;
             journal.Updated = advanceRepayment.Updated;
             journal.UserId = advanceRepayment.UserId;
+
+            if (string.IsNullOrEmpty(advanceRepayment.Notes))
+                journal.Notes = "UANG MUKA PENJUALAN NO. " + advanceRepayment.Code;
+            else
+                journal.Notes = advanceRepayment.Notes;
+
             db.SaveChanges();
-
-            var advanceRepaymentsDetails = db.AdvanceRepaymentsDetails.Where(x => x.AdvanceRepaymentId == advanceRepayment.Id).ToList();
-            if (advanceRepaymentsDetails != null && advanceRepaymentsDetails.Count > 0)
-            {
-                foreach (AdvanceRepaymentDetails advanceRepaymentDetails in advanceRepaymentsDetails)
-                {
-                    var journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.AdvanceRepayment && x.AdvanceRepaymentDetailsId == advanceRepaymentDetails.Id).ToList();
-
-                    if (journalsDetails == null || journalsDetails.Count <= 0)
-                        CreateAdvanceRepaymentJournalDetails(advanceRepaymentDetails, journal, db);
-                    else
-                        UpdateAdvanceRepaymentJournalDetails(advanceRepaymentDetails, db);
-                }
-            }
-            return journal;
         }
 
-        public static void DeleteAdvanceRepaymentJournals(int id, Journal journal, ApplicationDbContext db)
+        public static void DeleteAdvanceRepaymentJournals(ApplicationDbContext db, AdvanceRepayment advanceRepayment)
         {
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.AdvanceRepayment && x.AdvanceRepaymentId == advanceRepayment.Id).FirstOrDefault();
+
             if (journal != null)
             {
                 var journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
@@ -775,9 +778,11 @@ namespace eShop.Extensions
             }
         }
 
-        public static void CreateAdvanceRepaymentJournalDetails(AdvanceRepaymentDetails advanceRepaymentDetails, Journal journal, ApplicationDbContext db)
+        public static void CreateAdvanceRepaymentJournalDetails(ApplicationDbContext db, AdvanceRepaymentDetails advanceRepaymentDetails)
         {
             AdvanceRepayment advanceRepayment = db.AdvanceRepayments.Find(advanceRepaymentDetails.AdvanceRepaymentId);
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.AdvanceRepayment && x.AdvanceRepaymentId == advanceRepayment.Id).FirstOrDefault();
+
             JournalDetails journalDetails = new JournalDetails
             {
                 JournalId = journal.Id,
@@ -788,6 +793,11 @@ namespace eShop.Extensions
                 Updated = advanceRepaymentDetails.Updated,
                 UserId = advanceRepaymentDetails.UserId
             };
+
+            if (string.IsNullOrEmpty(advanceRepaymentDetails.Notes))
+                journalDetails.Notes = "UANG MUKA PENJUALAN NO. " + advanceRepayment.Code;
+            else
+                journalDetails.Notes = advanceRepaymentDetails.Notes;
 
             if (advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.Bank || advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.Cash)
             {
@@ -819,11 +829,6 @@ namespace eShop.Extensions
             db.JournalsDetails.Add(journalDetails);
             db.SaveChanges();
 
-            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
-            journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
-            db.Entry(journal).State = EntityState.Modified;
-            db.SaveChanges();
-
             JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged).FirstOrDefault();
             if (JournalDetailsCredit != null)
             {
@@ -831,7 +836,7 @@ namespace eShop.Extensions
                 JournalDetailsCredit.Credit = GetTotalAdvanceRepayment(db, advanceRepayment.Id, advanceRepaymentDetails.Id) + advanceRepaymentDetails.Total;
                 JournalDetailsCredit.MasterRegionId = advanceRepayment.MasterRegionId;
                 JournalDetailsCredit.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == advanceRepayment.MasterBusinessUnitId && x.MasterRegionId == advanceRepayment.MasterRegionId && x.Type == EnumBusinessUnitAccountType.AdvanceRepaymentAccount).FirstOrDefault().ChartOfAccount.Id;
-                JournalDetailsCredit.Notes = "NOTA KREDIT " + advanceRepayment.Code;
+                JournalDetailsCredit.Notes = "UANG MUKA PENJUALAN NO. " + advanceRepayment.Code;
                 JournalDetailsCredit.isMerged = true;
                 JournalDetailsCredit.Created = advanceRepaymentDetails.Created;
                 JournalDetailsCredit.Updated = advanceRepaymentDetails.Updated;
@@ -848,7 +853,7 @@ namespace eShop.Extensions
                     Credit = GetTotalAdvanceRepayment(db, advanceRepayment.Id, advanceRepaymentDetails.Id) + advanceRepaymentDetails.Total,
                     ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == advanceRepayment.MasterBusinessUnitId && x.MasterRegionId == advanceRepayment.MasterRegionId && x.Type == EnumBusinessUnitAccountType.AdvanceRepaymentAccount).FirstOrDefault().ChartOfAccount.Id,
                     MasterRegionId = advanceRepayment.MasterRegionId,
-                    Notes = "NOTA KREDIT " + advanceRepayment.Code,
+                    Notes = "UANG MUKA PENJUALAN NO. " + advanceRepayment.Code,
                     isMerged = true,
                     Created = advanceRepaymentDetails.Created,
                     Updated = advanceRepaymentDetails.Updated,
@@ -859,15 +864,16 @@ namespace eShop.Extensions
                 db.SaveChanges();
             }
 
-            journal.Credit = GetTotalJournalCredit(db, journal.Id, JournalDetailsCredit.Id) + JournalDetailsCredit.Credit;
+            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+            journal.Credit = journal.Debit;
             db.Entry(journal).State = EntityState.Modified;
             db.SaveChanges();
         }
 
-        public static void UpdateAdvanceRepaymentJournalDetails(AdvanceRepaymentDetails advanceRepaymentDetails, ApplicationDbContext db)
+        public static void UpdateAdvanceRepaymentJournalDetails(ApplicationDbContext db, AdvanceRepaymentDetails advanceRepaymentDetails)
         {
             AdvanceRepayment advanceRepayment = db.AdvanceRepayments.Find(advanceRepaymentDetails.AdvanceRepaymentId);
-            var journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.AdvanceRepayment && x.AdvanceRepaymentDetailsId == advanceRepaymentDetails.Id).FirstOrDefault();
+            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.AdvanceRepayment && x.AdvanceRepaymentDetailsId == advanceRepaymentDetails.Id).FirstOrDefault();
 
             if (journalDetails != null)
             {
@@ -875,9 +881,13 @@ namespace eShop.Extensions
 
                 db.Entry(journalDetails).State = EntityState.Modified;
                 journalDetails.MasterRegionId = advanceRepayment.MasterRegionId;
-                journalDetails.Notes = advanceRepaymentDetails.Notes;
                 journalDetails.Updated = advanceRepaymentDetails.Updated;
                 journalDetails.UserId = advanceRepaymentDetails.UserId;
+
+                if (string.IsNullOrEmpty(advanceRepaymentDetails.Notes))
+                    journalDetails.Notes = "UANG MUKA PENJUALAN NO. " + advanceRepayment.Code;
+                else
+                    journalDetails.Notes = advanceRepaymentDetails.Notes;
 
                 if (advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.Bank || advanceRepaymentDetails.Type == EnumAdvanceRepaymentType.Cash)
                 {
@@ -907,11 +917,6 @@ namespace eShop.Extensions
                 }
                 db.SaveChanges();
 
-                journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
-                journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
-                db.Entry(journal).State = EntityState.Modified;
-                db.SaveChanges();
-
                 JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged).FirstOrDefault();
                 if (JournalDetailsCredit != null)
                 {
@@ -919,7 +924,7 @@ namespace eShop.Extensions
                     JournalDetailsCredit.Credit = GetTotalAdvanceRepayment(db, advanceRepayment.Id, advanceRepaymentDetails.Id) + advanceRepaymentDetails.Total;
                     JournalDetailsCredit.ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == advanceRepayment.MasterBusinessUnitId && x.MasterRegionId == advanceRepayment.MasterRegionId && x.Type == EnumBusinessUnitAccountType.AdvanceRepaymentAccount).FirstOrDefault().ChartOfAccount.Id;
                     JournalDetailsCredit.MasterRegionId = advanceRepayment.MasterRegionId;
-                    JournalDetailsCredit.Notes = "NOTA KREDIT " + advanceRepayment.Code;
+                    JournalDetailsCredit.Notes = "UANG MUKA PENJUALAN NO. " + advanceRepayment.Code;
                     JournalDetailsCredit.isMerged = true;
                     JournalDetailsCredit.Created = advanceRepaymentDetails.Created;
                     JournalDetailsCredit.Updated = advanceRepaymentDetails.Updated;
@@ -927,45 +932,22 @@ namespace eShop.Extensions
                     db.Entry(JournalDetailsCredit).State = EntityState.Modified;
                     db.SaveChanges();
                 }
-                else
-                {
-                    JournalDetailsCredit = new JournalDetails
-                    {
-                        JournalId = journal.Id,
-                        Debit = 0,
-                        Credit = GetTotalAdvanceRepayment(db, advanceRepayment.Id, advanceRepaymentDetails.Id) + advanceRepaymentDetails.Total,
-                        ChartOfAccountId = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == advanceRepayment.MasterBusinessUnitId && x.MasterRegionId == advanceRepayment.MasterRegionId && x.Type == EnumBusinessUnitAccountType.AdvanceRepaymentAccount).FirstOrDefault().ChartOfAccount.Id,
-                        MasterRegionId = advanceRepayment.MasterRegionId,
-                        Notes = "NOTA KREDIT " + advanceRepayment.Code,
-                        isMerged = true,
-                        Created = advanceRepaymentDetails.Created,
-                        Updated = advanceRepaymentDetails.Updated,
-                        UserId = advanceRepaymentDetails.UserId
-                    };
 
-                    db.JournalsDetails.Add(JournalDetailsCredit);
-                    db.SaveChanges();
-                }
-
-                journal.Credit = GetTotalJournalCredit(db, journal.Id, JournalDetailsCredit.Id) + JournalDetailsCredit.Credit;
+                journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+                journal.Credit = journal.Debit;
                 db.Entry(journal).State = EntityState.Modified;
                 db.SaveChanges();
             }
         }
 
-        public static void RemoveAdvanceRepaymentJournalDetails(AdvanceRepaymentDetails advanceRepaymentDetails, Journal journal, ApplicationDbContext db)
+        public static void RemoveAdvanceRepaymentJournalDetails(ApplicationDbContext db, AdvanceRepaymentDetails advanceRepaymentDetails)
         {
-            var journalDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.AdvanceRepaymentDetailsId == advanceRepaymentDetails.Id).FirstOrDefault();
+            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.AdvanceRepaymentDetailsId == advanceRepaymentDetails.Id).FirstOrDefault();
+            Journal journal = db.Journals.Find(journalDetails.JournalId);
 
-            if (journalDetails.Credit == 0)
-                journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
-            else
-                journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id);
-
+            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+            journal.Credit = journal.Debit;
             db.Entry(journal).State = EntityState.Modified;
-            db.SaveChanges();
-
-            db.JournalsDetails.Remove(journalDetails);
             db.SaveChanges();
 
             JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged).FirstOrDefault();
@@ -976,7 +958,12 @@ namespace eShop.Extensions
                 db.Entry(JournalDetailsCredit).State = EntityState.Modified;
                 db.SaveChanges();
             }
+
+            db.JournalsDetails.Remove(journalDetails);
+            db.SaveChanges();
         }
+        
+        // End of Advance Repayment
 
         public static string EncodeTo64(string m_enc)
         {

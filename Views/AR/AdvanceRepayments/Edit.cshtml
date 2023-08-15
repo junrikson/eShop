@@ -40,8 +40,7 @@
                             <div class="form-group">
                                 <div class="col-md-10">
                                     @Html.LabelFor(model => model.Code)
-                                    @Html.HiddenFor(model => model.Code)
-                                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
                                     @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                                 </div>
                                 <div class="col-md-2 text-center">
@@ -62,8 +61,7 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     @Html.LabelFor(model => model.MasterBusinessUnitId)
-                                    @Html.HiddenFor(model => model.MasterBusinessUnitId)
-                                    @Html.EditorFor(model => model.MasterBusinessUnit.Name, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -110,7 +108,7 @@
                         </div>
                         <div class="text-right col-md-12">
                             <label style="font-weight: bold">TOTAL :</label>
-                            <input type="text" id="Total" value="@Model.Total" disabled="disabled" style="text-align:right;" />
+                            <input type="text" id="Total" value="@Model.Total.ToString("N2")" disabled="disabled" style="text-align:right;" />
                             <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "AdvanceRepayments")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
