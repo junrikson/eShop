@@ -325,7 +325,7 @@ namespace eShop.Extensions
             return total;
         }
         
-        public static Journal CreateBankJournal(BankTransaction bankTransaction, ApplicationDbContext db)
+        public static void CreateBankJournal(ApplicationDbContext db, BankTransaction bankTransaction)
         {
             Journal journal = new Journal
             {
@@ -342,100 +342,89 @@ namespace eShop.Extensions
                 UserId = bankTransaction.UserId
             };
 
+            if (string.IsNullOrEmpty(bankTransaction.Notes))
+            {
+                if (bankTransaction.TransactionType == EnumBankTransactionType.In)
+                    journal.Notes = "KAS/BANK MASUK NO. " + bankTransaction.Code;
+                else
+                    journal.Notes = "KAS/BANK KELUAR NO. " + bankTransaction.Code;
+            }
+            else
+                journal.Notes = bankTransaction.Notes;
+
             db.Journals.Add(journal);
             db.SaveChanges();
-
-            return journal;
         }
 
-        public static Journal UpdateBankJournal(Journal journal, BankTransaction bankTransaction, EnumBankTransactionType enumBankTransactionType, ApplicationDbContext db)
+        public static void UpdateBankJournal(ApplicationDbContext db, BankTransaction bankTransaction)
         {
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransaction.Id).FirstOrDefault();
             db.Entry(journal).State = EntityState.Modified;
 
             journal.Code = bankTransaction.Code;
             journal.Date = bankTransaction.Date;
             journal.MasterBusinessUnitId = bankTransaction.MasterBusinessUnitId;
-            journal.Type = EnumJournalType.BankTransaction;
-            journal.Debit = 0;
-            journal.Credit = 0;
             journal.BankTransactionId = bankTransaction.Id;
             journal.Active = bankTransaction.Active;
             journal.Updated = bankTransaction.Updated;
             journal.UserId = bankTransaction.UserId;
+
+            if (string.IsNullOrEmpty(bankTransaction.Notes))
+            {
+                if (bankTransaction.TransactionType == EnumBankTransactionType.In)
+                    journal.Notes = "KAS/BANK MASUK NO. " + bankTransaction.Code;
+                else
+                    journal.Notes = "KAS/BANK KELUAR NO. " + bankTransaction.Code;
+            }
+            else
+                journal.Notes = bankTransaction.Notes;
+
             db.SaveChanges();
-
-            List<BankTransactionDetails> bankTransactionsDetails = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
-            if (bankTransactionsDetails != null && bankTransactionsDetails.Count > 0)
-            {
-                foreach (BankTransactionDetails bankTransactionDetails in bankTransactionsDetails)
-                {
-                    List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.BankTransaction && x.BankTransactionDetailsId == bankTransactionDetails.Id).ToList();
-
-                    if (journalsDetails == null || journalsDetails.Count <= 0)
-                        CreateBankJournalDetails(bankTransactionDetails, journal, enumBankTransactionType, db);
-                    else
-                        UpdateBankJournalDetails(bankTransactionDetails, enumBankTransactionType, db);
-                }
-            }
-
-            List<BankTransactionDetailsHeader> bankTransactionsDetailsHeader = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
-            if (bankTransactionsDetailsHeader != null && bankTransactionsDetailsHeader.Count > 0)
-            {
-                foreach (BankTransactionDetailsHeader bankTransactionDetailsHeader in bankTransactionsDetailsHeader)
-                {
-                    List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.BankTransaction && x.BankTransactionDetailsHeaderId == bankTransactionDetailsHeader.Id).ToList();
-
-                    if (journalsDetails == null || journalsDetails.Count <= 0)
-                        CreateBankJournalDetailsHeader(bankTransactionDetailsHeader, journal, enumBankTransactionType, db);
-                    else
-                        UpdateBankJournalDetailsHeader(bankTransactionDetailsHeader, enumBankTransactionType, db);
-                }
-            }
-            return journal;
         }
 
-        public static void DeleteBankJournals(int id, Journal journal, BankTransaction bankTransaction, ApplicationDbContext db)
+        public static void DeleteBankJournals(ApplicationDbContext db, BankTransaction bankTransaction)
         {
-            if (journal != null)
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransaction.Id).FirstOrDefault();
+
+            var journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
+
+            if (journalsDetails != null)
             {
-                var journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
-
-                if (journalsDetails != null && journalsDetails.Count > 0)
-                {
-                    db.JournalsDetails.RemoveRange(journalsDetails);
-                    db.SaveChanges();
-                }
-
-                db.Journals.Remove(journal);
+                db.JournalsDetails.RemoveRange(journalsDetails);
                 db.SaveChanges();
             }
 
-            db.BankTransactionsDetails.RemoveRange(db.BankTransactionsDetails.Where(x => x.BankTransactionId == id));
-            db.SaveChanges();
-
-            db.BankTransactionsDetailsHeader.RemoveRange(db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == id));
-            db.SaveChanges();
-
-            db.BankTransactions.Remove(bankTransaction);
+            db.Journals.Remove(journal);
             db.SaveChanges();
         }
 
-        public static void CreateBankJournalDetails(BankTransactionDetails bankTransactionDetails, Journal journal, EnumBankTransactionType enumBankTransactionType, ApplicationDbContext db)
+        public static void CreateBankJournalDetails(ApplicationDbContext db, BankTransactionDetails bankTransactionDetails)
         {
             BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetails.BankTransactionId);
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransaction.Id).FirstOrDefault();
+            
             JournalDetails journalDetails = new JournalDetails
             {
                 JournalId = journal.Id,
                 MasterRegionId = bankTransaction.MasterRegionId,
                 ChartOfAccountId = bankTransactionDetails.ChartOfAccountId,
-                Notes = bankTransactionDetails.Notes,
                 BankTransactionDetailsId = bankTransactionDetails.Id,
                 Created = bankTransactionDetails.Created,
                 Updated = bankTransactionDetails.Updated,
                 UserId = bankTransactionDetails.UserId
             };
 
-            if (enumBankTransactionType == EnumBankTransactionType.In)
+            if (string.IsNullOrEmpty(bankTransaction.Notes))
+            {
+                if (bankTransaction.TransactionType == EnumBankTransactionType.In)
+                    journalDetails.Notes = "KAS/BANK MASUK NO. " + bankTransaction.Code;
+                else
+                    journalDetails.Notes = "KAS/BANK KELUAR NO. " + bankTransaction.Code;
+            }
+            else
+                journalDetails.Notes = bankTransactionDetails.Notes;
+
+            if (bankTransaction.TransactionType == EnumBankTransactionType.In)
             {
                 if (bankTransactionDetails.Total < 0)
                 {
@@ -471,7 +460,7 @@ namespace eShop.Extensions
             db.SaveChanges();
         }
 
-        public static void UpdateBankJournalDetails(BankTransactionDetails bankTransactionDetails, EnumBankTransactionType enumBankTransactionType, ApplicationDbContext db)
+        public static void UpdateBankJournalDetails(ApplicationDbContext db, BankTransactionDetails bankTransactionDetails)
         {
             BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetails.BankTransactionId);
             JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.BankTransaction && x.BankTransactionDetailsId == bankTransactionDetails.Id).FirstOrDefault();
@@ -484,11 +473,20 @@ namespace eShop.Extensions
 
                 journalDetails.MasterRegionId = bankTransaction.MasterRegionId;
                 journalDetails.ChartOfAccountId = bankTransactionDetails.ChartOfAccountId;
-                journalDetails.Notes = bankTransactionDetails.Notes;
                 journalDetails.Updated = bankTransactionDetails.Updated;
                 journalDetails.UserId = bankTransactionDetails.UserId;
 
-                if (enumBankTransactionType == EnumBankTransactionType.In)
+                if (string.IsNullOrEmpty(bankTransaction.Notes))
+                {
+                    if (bankTransaction.TransactionType == EnumBankTransactionType.In)
+                        journalDetails.Notes = "KAS/BANK MASUK NO. " + bankTransaction.Code;
+                    else
+                        journalDetails.Notes = "KAS/BANK KELUAR NO. " + bankTransaction.Code;
+                }
+                else
+                    journalDetails.Notes = bankTransactionDetails.Notes;
+
+                if (bankTransaction.TransactionType == EnumBankTransactionType.In)
                 {
                     if (bankTransactionDetails.Total < 0)
                     {
@@ -524,8 +522,9 @@ namespace eShop.Extensions
             }
         }
 
-        public static void RemoveBankJournalDetails(BankTransactionDetails bankTransactionDetails, Journal journal, ApplicationDbContext db)
+        public static void RemoveBankJournalDetails(ApplicationDbContext db, BankTransactionDetails bankTransactionDetails)
         {
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransactionDetails.BankTransactionId).FirstOrDefault();            
             List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.BankTransactionDetailsId == bankTransactionDetails.Id).ToList();
 
             foreach (JournalDetails journalDetails in journalsDetails)
@@ -546,10 +545,11 @@ namespace eShop.Extensions
             }
         }
 
-        public static void CreateBankJournalDetailsHeader(BankTransactionDetailsHeader bankTransactionDetailsHeader, Journal journal, EnumBankTransactionType enumBankTransactionType, ApplicationDbContext db)
+        public static void CreateBankJournalDetailsHeader(ApplicationDbContext db, BankTransactionDetailsHeader bankTransactionDetailsHeader)
         {
             BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetailsHeader.BankTransactionId);
             MasterBank masterBank = db.MasterBanks.Find(bankTransactionDetailsHeader.MasterBankId);
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransactionDetailsHeader.BankTransactionId).FirstOrDefault();
 
             JournalDetails journalDetails = new JournalDetails
             {
@@ -560,10 +560,19 @@ namespace eShop.Extensions
                 Created = bankTransactionDetailsHeader.Created,
                 Updated = bankTransactionDetailsHeader.Updated,
                 UserId = bankTransactionDetailsHeader.UserId,
-                Notes = bankTransactionDetailsHeader.Notes
             };
 
-            if (enumBankTransactionType == EnumBankTransactionType.In)
+            if (string.IsNullOrEmpty(bankTransaction.Notes))
+            {
+                if (bankTransaction.TransactionType == EnumBankTransactionType.In)
+                    journalDetails.Notes = "KAS/BANK MASUK NO. " + bankTransaction.Code;
+                else
+                    journalDetails.Notes = "KAS/BANK KELUAR NO. " + bankTransaction.Code;
+            }
+            else
+                journalDetails.Notes = bankTransactionDetailsHeader.Notes;
+
+            if (bankTransaction.TransactionType == EnumBankTransactionType.In)
             {
                 if (bankTransactionDetailsHeader.Total < 0)
                 {
@@ -599,7 +608,7 @@ namespace eShop.Extensions
             db.SaveChanges();
         }
 
-        public static void UpdateBankJournalDetailsHeader(BankTransactionDetailsHeader bankTransactionDetailsHeader, EnumBankTransactionType enumBankTransactionType, ApplicationDbContext db)
+        public static void UpdateBankJournalDetailsHeader(ApplicationDbContext db, BankTransactionDetailsHeader bankTransactionDetailsHeader)
         {
             BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetailsHeader.BankTransactionId);
             JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.BankTransaction && x.BankTransactionDetailsHeaderId == bankTransactionDetailsHeader.Id).FirstOrDefault();
@@ -616,9 +625,18 @@ namespace eShop.Extensions
                 journalDetails.ChartOfAccountId = masterBank.ChartOfAccountId;
                 journalDetails.Updated = bankTransactionDetailsHeader.Updated;
                 journalDetails.UserId = bankTransactionDetailsHeader.UserId;
-                journalDetails.Notes = bankTransactionDetailsHeader.Notes;
 
-                if (enumBankTransactionType == EnumBankTransactionType.In)
+                if (string.IsNullOrEmpty(bankTransaction.Notes))
+                {
+                    if (bankTransaction.TransactionType == EnumBankTransactionType.In)
+                        journalDetails.Notes = "KAS/BANK MASUK NO. " + bankTransaction.Code;
+                    else
+                        journalDetails.Notes = "KAS/BANK KELUAR NO. " + bankTransaction.Code;
+                }
+                else
+                    journalDetails.Notes = bankTransactionDetailsHeader.Notes;
+
+                if (bankTransaction.TransactionType == EnumBankTransactionType.In)
                 {
                     if (bankTransactionDetailsHeader.Total < 0)
                     {
@@ -654,8 +672,9 @@ namespace eShop.Extensions
             }
         }
 
-        public static void RemoveBankJournalDetailsHeader(BankTransactionDetailsHeader bankTransactionDetailsHeader, Journal journal, ApplicationDbContext db)
+        public static void RemoveBankJournalDetailsHeader(ApplicationDbContext db, BankTransactionDetailsHeader bankTransactionDetailsHeader)
         {
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransactionDetailsHeader.BankTransactionId).FirstOrDefault();
             List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.BankTransactionDetailsHeaderId == bankTransactionDetailsHeader.Id).ToList();
 
             foreach (JournalDetails journalDetails in journalsDetails)

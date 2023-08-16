@@ -111,7 +111,7 @@ namespace eShop.Controllers
                     db.BankTransactions.Add(bankTransaction);
                     db.SaveChanges();
 
-                    Journal journal = SharedFunctions.CreateBankJournal(bankTransaction, db);
+                    SharedFunctions.CreateBankJournal(db, bankTransaction);
                     dbTran.Commit();
                 }
                 catch (DbEntityValidationException ex)
@@ -150,42 +150,24 @@ namespace eShop.Controllers
 
             if (ModelState.IsValid)
             {
-                var bankTransactionsDetails = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
-                var bankTransactionsDetailsHeader = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
-                Journal journal = db.Journals.Where(x =>
-                                        x.Type == EnumJournalType.BankTransaction &&
-                                        x.BankTransactionId == bankTransaction.Id).FirstOrDefault();
+                if (!string.IsNullOrEmpty(bankTransaction.Code)) bankTransaction.Code = bankTransaction.Code.ToUpper();
+                if (!string.IsNullOrEmpty(bankTransaction.Notes)) bankTransaction.Notes = bankTransaction.Notes.ToUpper();
+
+                bankTransaction.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id);
+                bankTransaction.Created = DateTime.Now;
+                bankTransaction.Updated = DateTime.Now;
+                bankTransaction.UserId = User.Identity.GetUserId<int>();
 
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
                     try
                     {
-                        if (!string.IsNullOrEmpty(bankTransaction.Code)) bankTransaction.Code = bankTransaction.Code.ToUpper();
-                        if (!string.IsNullOrEmpty(bankTransaction.Notes)) bankTransaction.Notes = bankTransaction.Notes.ToUpper();
-
-                        bankTransaction.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id);
-                        bankTransaction.Created = DateTime.Now;
-                        bankTransaction.Updated = DateTime.Now;
-                        bankTransaction.UserId = User.Identity.GetUserId<int>();
-
                         db.Entry(bankTransaction).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        if (journal == null)
-                        {
-                            journal = SharedFunctions.CreateBankJournal(bankTransaction, db);
-                            foreach (BankTransactionDetails bankTransactionDetails in bankTransactionsDetails)
-                            {
-                                SharedFunctions.CreateBankJournalDetails(bankTransactionDetails, journal, EnumBankTransactionType.In, db);
-                            }
+                        db.Entry(bankTransaction).Reload();
 
-                            foreach (BankTransactionDetailsHeader bankTransactionDetailsHeader in bankTransactionsDetailsHeader)
-                            {
-                                SharedFunctions.CreateBankJournalDetailsHeader(bankTransactionDetailsHeader, journal, EnumBankTransactionType.In, db);
-                            }
-                        }
-                        else
-                            journal = SharedFunctions.UpdateBankJournal(journal, bankTransaction, EnumBankTransactionType.In, db);
+                        SharedFunctions.UpdateBankJournal(db, bankTransaction);
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.BankIns, MenuId = bankTransaction.Id, MenuCode = bankTransaction.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
@@ -240,75 +222,6 @@ namespace eShop.Controllers
             else
             {
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
-                bool isHeaderExist = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransaction.Id).Count() > 0 ? true : false;
-
-                if (!isHeaderExist)
-                {
-                    var banks = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransaction.Id)
-                        .Select(y => y.MasterBank).Distinct().ToList();
-
-                    using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                    {
-                        try
-                        {
-                            foreach (MasterBank masterBank in banks)
-                            {
-                                BankTransactionDetailsHeader obj = new BankTransactionDetailsHeader
-                                {
-                                    BankTransactionId = bankTransaction.Id,
-                                    Type = masterBank.Type,
-                                    MasterBankId = masterBank.Id,
-                                    Total = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransaction.Id && x.MasterBankId == masterBank.Id)
-                                            .Sum(y => y.Total),
-                                    Notes = masterBank.Name,
-                                    Created = DateTime.Now,
-                                    Updated = DateTime.Now,
-                                    UserId = user.Id
-                                };
-
-                                db.BankTransactionsDetailsHeader.Add(obj);
-                                db.SaveChanges();
-                            }
-
-                            Journal journal = db.Journals.Where(y => y.Type == EnumJournalType.BankTransaction && y.BankTransactionId == bankTransaction.Id).FirstOrDefault();
-
-                            if (journal != null)
-                            {
-                                var journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
-
-                                if (journalsDetails != null && journalsDetails.Count > 0)
-                                {
-                                    db.JournalsDetails.RemoveRange(journalsDetails);
-                                    db.SaveChanges();
-                                }
-
-                                db.Journals.Remove(journal);
-                                db.SaveChanges();
-                            }
-
-                            var bankTransactionsDetails = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
-                            var bankTransactionsDetailsHeader = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
-
-                            journal = SharedFunctions.CreateBankJournal(bankTransaction, db);
-                            foreach (BankTransactionDetails bankTransactionDetails in bankTransactionsDetails)
-                            {
-                                SharedFunctions.CreateBankJournalDetails(bankTransactionDetails, journal, EnumBankTransactionType.In, db);
-                            }
-
-                            foreach (BankTransactionDetailsHeader bankTransactionDetailsHeader in bankTransactionsDetailsHeader)
-                            {
-                                SharedFunctions.CreateBankJournalDetailsHeader(bankTransactionDetailsHeader, journal, EnumBankTransactionType.In, db);
-                            }
-
-                            dbTran.Commit();
-                        }
-                        catch (DbEntityValidationException ex)
-                        {
-                            dbTran.Rollback();
-                            throw ex;
-                        }
-                    }
-                }
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", bankTransaction.MasterBusinessUnitId);
                 ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", bankTransaction.MasterRegionId);
@@ -391,46 +304,30 @@ namespace eShop.Controllers
             if (ModelState.IsValid)
             {
                 bankTransaction.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id);
-                var bankTransactionsDetails = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
-                var bankTransactionsDetailsHeader = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
-                Journal journal = db.Journals.Where(x =>
-                                        x.Type == EnumJournalType.BankTransaction &&
-                                        x.BankTransactionId == bankTransaction.Id).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(bankTransaction.Code)) bankTransaction.Code = bankTransaction.Code.ToUpper();
+                if (!string.IsNullOrEmpty(bankTransaction.Notes)) bankTransaction.Notes = bankTransaction.Notes.ToUpper();
+
+                db.Entry(bankTransaction).State = EntityState.Unchanged;
+                db.Entry(bankTransaction).Property("Code").IsModified = true;
+                db.Entry(bankTransaction).Property("Date").IsModified = true;
+                db.Entry(bankTransaction).Property("MasterBusinessUnitId").IsModified = true;
+                db.Entry(bankTransaction).Property("MasterRegionId").IsModified = true;
+                db.Entry(bankTransaction).Property("Notes").IsModified = true;
+                db.Entry(bankTransaction).Property("Total").IsModified = true;
+                db.Entry(bankTransaction).Property("Active").IsModified = true;
+                db.Entry(bankTransaction).Property("Updated").IsModified = true;
+                db.Entry(bankTransaction).Property("UserId").IsModified = true;
 
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
                     try
                     {
-                        if (!string.IsNullOrEmpty(bankTransaction.Code)) bankTransaction.Code = bankTransaction.Code.ToUpper();
-                        if (!string.IsNullOrEmpty(bankTransaction.Notes)) bankTransaction.Notes = bankTransaction.Notes.ToUpper();
-
-                        db.Entry(bankTransaction).State = EntityState.Unchanged;
-                        db.Entry(bankTransaction).Property("Code").IsModified = true;
-                        db.Entry(bankTransaction).Property("Date").IsModified = true;
-                        db.Entry(bankTransaction).Property("MasterBusinessUnitId").IsModified = true;
-                        db.Entry(bankTransaction).Property("MasterRegionId").IsModified = true;
-                        db.Entry(bankTransaction).Property("Notes").IsModified = true;
-                        db.Entry(bankTransaction).Property("Total").IsModified = true;
-                        db.Entry(bankTransaction).Property("Active").IsModified = true;
-                        db.Entry(bankTransaction).Property("Updated").IsModified = true;
-                        db.Entry(bankTransaction).Property("UserId").IsModified = true;
                         db.SaveChanges();
 
-                        if (journal == null)
-                        {
-                            journal = SharedFunctions.CreateBankJournal(bankTransaction, db);
-                            foreach (BankTransactionDetails bankTransactionDetails in bankTransactionsDetails)
-                            {
-                                SharedFunctions.CreateBankJournalDetails(bankTransactionDetails, journal, EnumBankTransactionType.In, db);
-                            }
+                        db.Entry(bankTransaction).Reload();
 
-                            foreach (BankTransactionDetailsHeader bankTransactionDetailsHeader in bankTransactionsDetailsHeader)
-                            {
-                                SharedFunctions.CreateBankJournalDetailsHeader(bankTransactionDetailsHeader, journal, EnumBankTransactionType.In, db);
-                            }
-                        }
-                        else
-                            journal = SharedFunctions.UpdateBankJournal(journal, bankTransaction, EnumBankTransactionType.In, db);
+                        SharedFunctions.UpdateBankJournal(db, bankTransaction);
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.BankIns, MenuId = bankTransaction.Id, MenuCode = bankTransaction.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
@@ -660,9 +557,16 @@ namespace eShop.Controllers
                         {
                             try
                             {
-                                Journal journal = db.Journals.Where(y => y.Type == EnumJournalType.BankTransaction && y.BankTransactionId == obj.Id).FirstOrDefault();
+                                SharedFunctions.DeleteBankJournals(db, obj);
 
-                                SharedFunctions.DeleteBankJournals((int)id, journal, obj, db);
+                                db.BankTransactionsDetails.RemoveRange(db.BankTransactionsDetails.Where(x => x.BankTransactionId == id));
+                                db.SaveChanges();
+
+                                db.BankTransactionsDetailsHeader.RemoveRange(db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == id));
+                                db.SaveChanges();
+
+                                db.BankTransactions.Remove(obj);
+                                db.SaveChanges();
 
                                 dbTran.Commit();
                             }
@@ -702,9 +606,17 @@ namespace eShop.Controllers
                                 else
                                 {
                                     BankTransaction tmp = obj;
-                                    var journal = db.Journals.Where(y => y.Type == EnumJournalType.BankTransaction && y.BankTransactionId == obj.Id).FirstOrDefault();
 
-                                    SharedFunctions.DeleteBankJournals(id, journal, obj, db);
+                                    SharedFunctions.DeleteBankJournals(db, obj);
+
+                                    db.BankTransactionsDetails.RemoveRange(db.BankTransactionsDetails.Where(x => x.BankTransactionId == id));
+                                    db.SaveChanges();
+
+                                    db.BankTransactionsDetailsHeader.RemoveRange(db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == id));
+                                    db.SaveChanges();
+
+                                    db.BankTransactions.Remove(obj);
+                                    db.SaveChanges();
 
                                     db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.BankIns, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                     db.SaveChanges();
@@ -759,13 +671,15 @@ namespace eShop.Controllers
         {
             bankTransactionDetails.Created = DateTime.Now;
             bankTransactionDetails.Updated = DateTime.Now;
-            bankTransactionDetails.DueDate = DateTime.Now;
             bankTransactionDetails.UserId = User.Identity.GetUserId<int>();
             bankTransactionDetails.MasterBankId = db.MasterBanks.Where(x => x.Active == true).FirstOrDefault().Id;
 
             if (ModelState.IsValid)
             {
                 if (!string.IsNullOrEmpty(bankTransactionDetails.Notes)) bankTransactionDetails.Notes = bankTransactionDetails.Notes.ToUpper();
+
+                BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetails.BankTransactionId);
+                bankTransaction.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id) + bankTransactionDetails.Total;
 
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
@@ -774,15 +688,7 @@ namespace eShop.Controllers
                         db.BankTransactionsDetails.Add(bankTransactionDetails);
                         db.SaveChanges();
 
-                        Journal journal = db.Journals.Where(x =>
-                                                x.Type == EnumJournalType.BankTransaction &&
-                                                x.BankTransactionId == bankTransactionDetails.BankTransactionId).FirstOrDefault();
-
-                        if (journal != null)
-                            SharedFunctions.CreateBankJournalDetails(bankTransactionDetails, journal, EnumBankTransactionType.In, db);
-
-                        BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetails.BankTransactionId);
-                        bankTransaction.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id) + bankTransactionDetails.Total;
+                        SharedFunctions.CreateBankJournalDetails(db, bankTransactionDetails);
 
                         db.Entry(bankTransaction).State = EntityState.Modified;
                         db.SaveChanges();
@@ -828,7 +734,6 @@ namespace eShop.Controllers
         public ActionResult DetailsEdit([Bind(Include = "Id,BankTransactionId,Type,MasterBankId,ChartOfAccountId,Total,Notes,Created,Updated,UserId")] BankTransactionDetails bankTransactionDetails)
         {
             bankTransactionDetails.Updated = DateTime.Now;
-            bankTransactionDetails.DueDate = DateTime.Now;
             bankTransactionDetails.UserId = User.Identity.GetUserId<int>();
             bankTransactionDetails.MasterBankId = db.MasterBanks.Where(x => x.Active == true).FirstOrDefault().Id;
 
@@ -836,26 +741,29 @@ namespace eShop.Controllers
             {
                 if (!string.IsNullOrEmpty(bankTransactionDetails.Notes)) bankTransactionDetails.Notes = bankTransactionDetails.Notes.ToUpper();
 
+                BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetails.BankTransactionId);
+                bankTransaction.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id, bankTransactionDetails.Id) + bankTransactionDetails.Total;
+
+                db.Entry(bankTransactionDetails).State = EntityState.Unchanged;
+                db.Entry(bankTransactionDetails).Property("Type").IsModified = true;
+                db.Entry(bankTransactionDetails).Property("MasterBankId").IsModified = true;
+                db.Entry(bankTransactionDetails).Property("ChartOfAccountId").IsModified = true;
+                db.Entry(bankTransactionDetails).Property("Total").IsModified = true;
+                db.Entry(bankTransactionDetails).Property("Notes").IsModified = true;
+                db.Entry(bankTransactionDetails).Property("Updated").IsModified = true;
+                db.Entry(bankTransactionDetails).Property("UserId").IsModified = true;
+
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
                     try
                     {
-                        SharedFunctions.UpdateBankJournalDetails(bankTransactionDetails, EnumBankTransactionType.In, db);
-
-                        BankTransaction bankTransaction = db.BankTransactions.Find(bankTransactionDetails.BankTransactionId);
-                        bankTransaction.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id, bankTransactionDetails.Id) + bankTransactionDetails.Total;
-
-                        db.Entry(bankTransaction).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        db.Entry(bankTransactionDetails).State = EntityState.Unchanged;
-                        db.Entry(bankTransactionDetails).Property("Type").IsModified = true;
-                        db.Entry(bankTransactionDetails).Property("MasterBankId").IsModified = true;
-                        db.Entry(bankTransactionDetails).Property("ChartOfAccountId").IsModified = true;
-                        db.Entry(bankTransactionDetails).Property("Total").IsModified = true;
-                        db.Entry(bankTransactionDetails).Property("Notes").IsModified = true;
-                        db.Entry(bankTransactionDetails).Property("Updated").IsModified = true;
-                        db.Entry(bankTransactionDetails).Property("UserId").IsModified = true;
+                        db.Entry(bankTransaction).Reload();
+
+                        SharedFunctions.UpdateBankJournalDetails(db, bankTransactionDetails);
+
+                        db.Entry(bankTransaction).State = EntityState.Modified;
                         db.SaveChanges();
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.BankInsDetails, MenuId = bankTransactionDetails.Id, MenuCode = bankTransactionDetails.ChartOfAccountId.ToString(), Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
@@ -902,12 +810,7 @@ namespace eShop.Controllers
                                 {
                                     BankTransactionDetails tmp = obj;
 
-                                    Journal journal = db.Journals.Where(x =>
-                                                            x.Type == EnumJournalType.BankTransaction &&
-                                                            x.BankTransactionId == obj.BankTransactionId).FirstOrDefault();
-
-                                    if (journal != null)
-                                        SharedFunctions.RemoveBankJournalDetails(obj, journal, db);
+                                    SharedFunctions.RemoveBankJournalDetails(db, obj);
 
                                     BankTransaction bankTransaction = db.BankTransactions.Find(tmp.BankTransactionId);
                                     bankTransaction.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id, tmp.Id);
@@ -920,6 +823,7 @@ namespace eShop.Controllers
 
                                     db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.BankInsDetails, MenuId = tmp.Id, MenuCode = tmp.ChartOfAccountId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                     db.SaveChanges();
+
                                     dbTran.Commit();
                                 }
                                 catch (DbEntityValidationException ex)
@@ -983,12 +887,7 @@ namespace eShop.Controllers
                         db.BankTransactionsDetailsHeader.Add(bankTransactionDetailsHeader);
                         db.SaveChanges();
 
-                        Journal journal = db.Journals.Where(x =>
-                                                x.Type == EnumJournalType.BankTransaction &&
-                                                x.BankTransactionId == bankTransactionDetailsHeader.BankTransactionId).FirstOrDefault();
-
-                        if (journal != null)
-                            SharedFunctions.CreateBankJournalDetailsHeader(bankTransactionDetailsHeader, journal, EnumBankTransactionType.In, db);
+                        SharedFunctions.CreateBankJournalDetailsHeader(db, bankTransactionDetailsHeader);
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.BankInsDetails, MenuId = bankTransactionDetailsHeader.Id, MenuCode = bankTransactionDetailsHeader.MasterBankId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
@@ -1036,23 +935,26 @@ namespace eShop.Controllers
 
             if (ModelState.IsValid)
             {
+                if (!string.IsNullOrEmpty(bankTransactionDetailsHeader.Notes)) bankTransactionDetailsHeader.Notes = bankTransactionDetailsHeader.Notes.ToUpper();
+
+                db.Entry(bankTransactionDetailsHeader).State = EntityState.Unchanged;
+                db.Entry(bankTransactionDetailsHeader).Property("Type").IsModified = true;
+                db.Entry(bankTransactionDetailsHeader).Property("MasterBankId").IsModified = true;
+                db.Entry(bankTransactionDetailsHeader).Property("GiroChequeId").IsModified = true;
+                db.Entry(bankTransactionDetailsHeader).Property("Total").IsModified = true;
+                db.Entry(bankTransactionDetailsHeader).Property("Notes").IsModified = true;
+                db.Entry(bankTransactionDetailsHeader).Property("Updated").IsModified = true;
+                db.Entry(bankTransactionDetailsHeader).Property("UserId").IsModified = true;
+
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
-                    if (!string.IsNullOrEmpty(bankTransactionDetailsHeader.Notes)) bankTransactionDetailsHeader.Notes = bankTransactionDetailsHeader.Notes.ToUpper();
-
                     try
                     {
-                        SharedFunctions.UpdateBankJournalDetailsHeader(bankTransactionDetailsHeader, EnumBankTransactionType.In, db);
-
-                        db.Entry(bankTransactionDetailsHeader).State = EntityState.Unchanged;
-                        db.Entry(bankTransactionDetailsHeader).Property("Type").IsModified = true;
-                        db.Entry(bankTransactionDetailsHeader).Property("MasterBankId").IsModified = true;
-                        db.Entry(bankTransactionDetailsHeader).Property("GiroChequeId").IsModified = true;
-                        db.Entry(bankTransactionDetailsHeader).Property("Total").IsModified = true;
-                        db.Entry(bankTransactionDetailsHeader).Property("Notes").IsModified = true;
-                        db.Entry(bankTransactionDetailsHeader).Property("Updated").IsModified = true;
-                        db.Entry(bankTransactionDetailsHeader).Property("UserId").IsModified = true;
                         db.SaveChanges();
+
+                        db.Entry(bankTransactionDetailsHeader).Reload();
+
+                        SharedFunctions.UpdateBankJournalDetailsHeader(db, bankTransactionDetailsHeader);
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.BankInsDetails, MenuId = bankTransactionDetailsHeader.Id, MenuCode = bankTransactionDetailsHeader.MasterBankId.ToString(), Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
@@ -1098,18 +1000,14 @@ namespace eShop.Controllers
                                 {
                                     BankTransactionDetailsHeader tmp = obj;
 
-                                    Journal journal = db.Journals.Where(x =>
-                                                            x.Type == EnumJournalType.BankTransaction &&
-                                                            x.BankTransactionId == obj.BankTransactionId).FirstOrDefault();
-
-                                    if (journal != null)
-                                        SharedFunctions.RemoveBankJournalDetailsHeader(obj, journal, db);
+                                    SharedFunctions.RemoveBankJournalDetailsHeader(db, obj);
 
                                     db.BankTransactionsDetailsHeader.Remove(obj);
                                     db.SaveChanges();
 
                                     db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.BankInsDetails, MenuId = tmp.Id, MenuCode = tmp.BankTransactionId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                     db.SaveChanges();
+
                                     dbTran.Commit();
                                 }
                                 catch (DbEntityValidationException ex)

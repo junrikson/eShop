@@ -167,11 +167,6 @@ namespace eShop.Models
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
         public string GiroCheque { get; set; }
 
-        [Display(Name = "Jatuh Tempo")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DueDate { get; set; }
-
         [Display(Name = "Bagan Akun")]
         [Required(ErrorMessage = "Bagan Akun harus diisi.")]
         public int ChartOfAccountId { get; set; }
