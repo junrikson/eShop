@@ -402,8 +402,6 @@ namespace eShop.Controllers
                         db.AdvanceRepaymentsDetails.Add(advanceRepaymentDetails);
                         db.SaveChanges();
 
-                        db.Entry(advanceRepaymentDetails).Reload();
-
                         SharedFunctions.CreateAdvanceRepaymentJournalDetails(db, advanceRepaymentDetails);
 
                         AdvanceRepayment advanceRepayment = db.AdvanceRepayments.Find(advanceRepaymentDetails.AdvanceRepaymentId);
