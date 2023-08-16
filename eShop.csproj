@@ -344,6 +344,7 @@
     <Compile Include="Models\Accounting\AccountBallance.cs" />
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
     <Compile Include="Models\Accounting\Journal.cs" />
+    <Compile Include="Models\Buying\GoodsReceipt.cs" />
     <Compile Include="Models\Inventory\StockCard.cs" />
     <Compile Include="Models\Inventory\WarehouseTransfer.cs" />
     <Compile Include="Models\AR\AdvanceRepayment.cs" />
@@ -357,6 +358,7 @@
     <Compile Include="Models\Inventory\StockAdjustment.cs" />
     <Compile Include="Models\Master\MasterCurrency.cs" />
     <Compile Include="Models\Master\MasterSalesperson.cs" />
+    <Compile Include="Models\Selling\GoodsDelivery.cs" />
     <Compile Include="Models\Selling\Sale.cs" />
     <Compile Include="Models\Selling\SalesReturn.cs" />
     <Compile Include="Models\Selling\SalesOrder.cs" />

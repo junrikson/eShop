@@ -156,22 +156,26 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.BankTransaction> BankTransactions { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.BankTransactionDetailsHeader> BankTransactionsDetailsHeader { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.BankTransactionDetails> BankTransactionsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.PurchaseRequest> PurchaseRequests { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.PurchaseRequestDetails> PurchaseRequestsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrder> PurchaseOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrderDetails> PurchaseOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Purchase> Purchases { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseDetails> PurchasesDetails { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.PurchaseRequest> PurchaseRequests { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.PurchaseRequestDetails> PurchaseRequestsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.GoodsReceipt> GoodsReceipts { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.GoodsReceiptDetails> GoodsReceiptsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseReturn> PurchaseReturns { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseReturnDetails> PurchaseReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesRequest> SalesRequests { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesRequestDetails> SalesRequestsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesOrder> SalesOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesOrderDetails> SalesOrdersDetails { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.SalesReturn> SalesReturns { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.SalesReturnDetails> SalesReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Sale> Sales { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleDetails> SalesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.GoodsDelivery> GoodsDeliveries { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.GoodsDeliveryDetails> GoodsDeliveriesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SalesReturn> SalesReturns { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SalesReturnDetails> SalesReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.AdvanceRepayment> AdvanceRepayments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.AdvanceRepaymentDetails> AdvanceRepaymentsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Repayment> Repayments { get; set; }
@@ -214,6 +218,11 @@ namespace eShop.Models
             modelBuilder.Entity<PurchaseDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsReceipt>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsReceipt>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<GoodsReceiptDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsReceiptDetails>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsReceiptDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseReturn>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseReturn>().Property(x => x.Rate).HasPrecision(18, 10);
             modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
@@ -234,6 +243,11 @@ namespace eShop.Models
             modelBuilder.Entity<SaleDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
             modelBuilder.Entity<SaleDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<SaleDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsDelivery>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsDelivery>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<GoodsDeliveryDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsDeliveryDetails>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsDeliveryDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturn>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturn>().Property(x => x.Rate).HasPrecision(18, 10);
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Quantity).HasPrecision(18, 2);

@@ -94,23 +94,25 @@
                     if (User.IsInRole("RepaymentsActive")) { messages = messages + "<li" + (ViewBag.Current == "Repayments" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Repayments", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pelunasan Piutang</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
-                if (User.IsInRole("PurchaseRequestsActive") || User.IsInRole("PurchaseOrdersActive") || User.IsInRole("PurchasesActive") || User.IsInRole("PurchaseReturnsActive"))
+                if (User.IsInRole("PurchaseRequestsActive") || User.IsInRole("PurchaseOrdersActive") || User.IsInRole("PurchasesActive") || User.IsInRole("GoodsReceiptsActive") || User.IsInRole("PurchaseReturnsActive"))
                 {
-                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "PurchaseRequests" || ViewBag.Current == "PurchaseOrders" || ViewBag.Current == "Purchases" || ViewBag.Current == "PurchaseReturns") ? " active" : "") + "\">";
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "PurchaseRequests" || ViewBag.Current == "PurchaseOrders" || ViewBag.Current == "Purchases" || ViewBag.Current == "GoodsReceipts" || ViewBag.Current == "PurchaseReturns") ? " active" : "") + "\">";
                     messages = messages + "<a href=\"#\"><i class=\"fa fa-shopping-cart\"></i><span>Pembelian</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
                     if (User.IsInRole("PurchaseRequestsActive")) { messages = messages + "<li" + (ViewBag.Current == "PurchaseRequests" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "PurchaseRequests", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Purchase Request</a></li>"; }
                     if (User.IsInRole("PurchaseOrdersActive")) { messages = messages + "<li" + (ViewBag.Current == "PurchaseOrders" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "PurchaseOrders", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Purchase Order</a></li>"; }
                     if (User.IsInRole("PurchasesActive")) { messages = messages + "<li" + (ViewBag.Current == "Purchases" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Purchases", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pembelian</a></li>"; }
+                    if (User.IsInRole("GoodsReceiptsActive")) { messages = messages + "<li" + (ViewBag.Current == "GoodsReceipts" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "GoodsReceipts", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Penerimaan Barang</a></li>"; }
                     if (User.IsInRole("PurchaseReturnsActive")) { messages = messages + "<li" + (ViewBag.Current == "PurchaseReturns" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "PurchaseReturns", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Retur Pembelian</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
-                if (User.IsInRole("SalesRequestsActive") || User.IsInRole("SalesOrdersActive") || User.IsInRole("SalesActive") || User.IsInRole("SalesReturnsActive"))
+                if (User.IsInRole("SalesRequestsActive") || User.IsInRole("SalesOrdersActive") || User.IsInRole("SalesActive") || User.IsInRole("GoodsDeliveriesActive") || User.IsInRole("SalesReturnsActive"))
                 {
-                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "SalesRequests" || ViewBag.Current == "SalesOrders" || ViewBag.Current == "Sales" || ViewBag.Current == "SalesReturns") ? " active" : "") + "\">";
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "SalesRequests" || ViewBag.Current == "SalesOrders" || ViewBag.Current == "Sales" || ViewBag.Current == "GoodsDeliveries" || ViewBag.Current == "SalesReturns") ? " active" : "") + "\">";
                     messages = messages + "<a href=\"#\"><i class=\"fa fa-shopping-cart\"></i><span>Penjualan</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
                     if (User.IsInRole("SalesRequestsActive")) { messages = messages + "<li" + (ViewBag.Current == "SalesRequests" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "SalesRequests", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Sales Request</a></li>"; }
                     if (User.IsInRole("SalesOrdersActive")) { messages = messages + "<li" + (ViewBag.Current == "SalesOrders" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "SalesOrders", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Sales Order</a></li>"; }
                     if (User.IsInRole("SalesActive")) { messages = messages + "<li" + (ViewBag.Current == "Sales" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "Sales", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Penjualan</a></li>"; }
+                    if (User.IsInRole("GoodsDeliveriesActive")) { messages = messages + "<li" + (ViewBag.Current == "GoodsDeliveries" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "GoodsDeliveries", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Pengiriman Barang</a></li>"; }
                     if (User.IsInRole("SalesReturnsActive")) { messages = messages + "<li" + (ViewBag.Current == "SalesReturns" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "SalesReturns", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Retur Penjualan</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
