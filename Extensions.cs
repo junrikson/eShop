@@ -58,29 +58,10 @@ namespace eShop.Extensions
         }
     }
 
+
+
     public static class SharedFunctions
     {
-        public static decimal GetTotalPurchaseOrder(ApplicationDbContext db, int purchaseOrderId, int? purchaseOrderDetailsId = null)
-        {
-            decimal total = 0;
-            List<PurchaseOrderDetails> purchaseOrderDetails = null;
-
-            if (purchaseOrderDetailsId == null)
-            {
-                purchaseOrderDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrderId).ToList();
-            }
-            else
-            {
-                purchaseOrderDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrderId && x.Id != purchaseOrderDetailsId).ToList();
-            }
-
-            if (purchaseOrderDetails != null)
-            {
-                total = purchaseOrderDetails.Sum(y => y.Total);
-            }
-
-            return total;
-        }
 
         public static decimal GetTotalPurchaseRequest(ApplicationDbContext db, int purchaseRequestId, int? purchaseRequestDetailsId = null)
         {
@@ -99,6 +80,27 @@ namespace eShop.Extensions
             if (purchaseRequestDetails != null)
             {
                 total = purchaseRequestDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+        public static decimal GetTotalPurchaseOrder(ApplicationDbContext db, int purchaseOrderId, int? purchaseOrderDetailsId = null)
+        {
+            decimal total = 0;
+            List<PurchaseOrderDetails> purchaseOrderDetails = null;
+
+            if (purchaseOrderDetailsId == null)
+            {
+                purchaseOrderDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrderId).ToList();
+            }
+            else
+            {
+                purchaseOrderDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrderId && x.Id != purchaseOrderDetailsId).ToList();
+            }
+
+            if (purchaseOrderDetails != null)
+            {
+                total = purchaseOrderDetails.Sum(y => y.Total);
             }
 
             return total;
@@ -170,6 +172,7 @@ namespace eShop.Extensions
 
             return total;
         }
+
 
         public static void CreatePurchaseJournal(ApplicationDbContext db, Purchase purchase)
         {
@@ -434,6 +437,28 @@ namespace eShop.Extensions
             if (salesOrderDetails != null)
             {
                 total = salesOrderDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+        public static decimal GetTotalGoodsReceipts(ApplicationDbContext db, int goodsReceiptId, int? goodsReceiptDetailsId = null)
+        {
+            decimal total = 0;
+            List<GoodsReceiptDetails> goodsReceiptDetails = null;
+
+            if (goodsReceiptDetailsId == null)
+            {
+                goodsReceiptDetails = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == goodsReceiptId).ToList();
+            }
+            else
+            {
+                goodsReceiptDetails = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == goodsReceiptId && x.Id != goodsReceiptDetailsId).ToList();
+            }
+
+            if (goodsReceiptDetails != null)
+            {
+                total = goodsReceiptDetails.Sum(y => y.Total);
             }
 
             return total;
