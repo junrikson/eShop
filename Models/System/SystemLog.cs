@@ -232,6 +232,10 @@ namespace eShop.Models
         WarehouseTransferDetails = 112,
         [Display(Name = "Master Sales")]
         MasterSalesPerson = 113,
+        [Display(Name = "Adjustment")]
+        GoodsReceipt = 114,
+        [Display(Name = "Adjustment Details")]
+        GoodsReceiptDetails = 115
     }
 
     public enum EnumActions

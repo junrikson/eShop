@@ -295,6 +295,7 @@
     <Compile Include="Controllers\Accounting\ChartOfAccountsController.cs" />
     <Compile Include="Controllers\Accounting\JournalsController.cs" />
     <Compile Include="Controllers\Accounting\OpeningBallanceController.cs" />
+    <Compile Include="Controllers\Buying\GoodsReceiptsController.cs" />
     <Compile Include="Controllers\Buying\PurchaseReturnsController.cs" />
     <Compile Include="Controllers\Buying\Purchases.cs" />
     <Compile Include="Controllers\Buying\PurchaseRequestsController.cs" />
@@ -7090,6 +7091,14 @@
     <Content Include="Views\AR\AdvanceRepayments\_DetailsEdit.cshtml" />
     <Content Include="Views\AR\AdvanceRepayments\_IndexGrid.cshtml" />
     <Content Include="Views\AR\AdvanceRepayments\_OthersGrid.cshtml" />
+    <Content Include="Views\Buying\GoodsReceipts\_ChangeCurrency.cshtml" />
+    <Content Include="Views\Buying\GoodsReceipts\_DetailsCreate.cshtml" />
+    <Content Include="Views\Buying\GoodsReceipts\_DetailsEdit.cshtml" />
+    <Content Include="Views\Buying\GoodsReceipts\_DetailsGrid.cshtml" />
+    <Content Include="Views\Buying\GoodsReceipts\_IndexGrid.cshtml" />
+    <Content Include="Views\Buying\GoodsReceipts\Create.cshtml" />
+    <Content Include="Views\Buying\GoodsReceipts\Edit.cshtml" />
+    <Content Include="Views\Buying\GoodsReceipts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -166,7 +166,18 @@ namespace eShop.Properties {
                 return ((string)(this["PurchaseCode"]));
             }
         }
-        
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SJ/")]
+        public string GoodsReceiptCode
+        {
+            get
+            {
+                return ((string)(this["GoodsReceiptCode"]));
+            }
+        }
+
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("SO/")]

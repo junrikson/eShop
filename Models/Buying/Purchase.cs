@@ -17,7 +17,7 @@ namespace eShop.Models
 
         [Required(ErrorMessage = "Nomor harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor")]
+        [Display(Name = "Nomor Pembelian")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "Purchases", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
@@ -105,7 +105,132 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class PurchaseDetails
+    public class PurchaseViewModel
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [DatalistColumn]
+        [Required(ErrorMessage = "Nomor harus diisi.")]
+        [Index("IX_Code", Order = 1, IsUnique = true)]
+        [Display(Name = "Nomor")]
+        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
+        [Remote("IsCodeExists", "Purchases", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
+        public string Code { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Tanggal")]
+        [Required(ErrorMessage = "Tanggal harus diisi.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Unit Bisnis")]
+        public string MasterBusinessUnitCode { get; set; }
+
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Wilayah")]
+        public string MasterRegionCode { get; set; }
+
+        [Display(Name = "Mata Uang")]
+        [Required(ErrorMessage = "Mata Uang harus diisi.")]
+        public int MasterCurrencyId { get; set; }
+
+        [Display(Name = "Mata Uang")]
+        public virtual MasterCurrency MasterCurrency { get; set; }
+
+        [Display(Name = "Gudang")]
+        [Required(ErrorMessage = "Gudang harus diisi.")]
+        public int MasterWarehouseId { get; set; }
+
+        [Display(Name = "Gudang")]
+        public virtual MasterWarehouse MasterWarehouse { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Gudang")]
+        public string MasterWarehouseCode { get; set; }
+
+        [Display(Name = "Kode Supplier")]
+        [Required(ErrorMessage = "Kode Supplier harus diisi.")]
+        public int MasterSupplierId { get; set; }
+
+        [Display(Name = "Kode Supplier")]
+        public virtual MasterSupplier MasterSupplier { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Supplier")]
+        public string MasterSupplierCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Total")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Total { get; set; }
+
+        [Display(Name = "Aktif")]
+        public bool Active { get; set; }
+     }
+
+    public class OutstandingPurchaseDatalist : MvcDatalist<PurchaseViewModel>
+    {
+        private DbContext Context { get; }
+
+        public OutstandingPurchaseDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code + " - " + model.MasterSupplierCode;
+        }
+        public OutstandingPurchaseDatalist()
+        {
+            Url = "/DatalistFilters/AllOutstandingPurchase";
+            Title = "Purchase";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<PurchaseViewModel> GetModels()
+        {
+            return Context.Set<Purchase>()
+                .Where(x => !Context.Set<GoodsReceipt>().Where(p => p.Active == true && p.PurchaseId == x.Id).Any())
+                .Select(x => new PurchaseViewModel
+                {
+                    Id = x.Id,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnit = x.MasterBusinessUnit,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterRegionId = x.MasterRegionId,
+                    MasterRegion = x.MasterRegion,
+                    MasterSupplierCode = x.MasterSupplier.Code,
+                    MasterWarehouseCode = x.MasterWarehouse.Code,
+                    Code = x.Code,
+                    Date = x.Date,
+                    Total = x.Total,
+                    Active = x.Active,
+                });
+        }
+    }
+        public class PurchaseDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -167,7 +292,7 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class PurchaseDatalist : MvcDatalist<Purchase>
+        public class PurchaseDatalist : MvcDatalist<Purchase>
     {
         private DbContext Context { get; }
 

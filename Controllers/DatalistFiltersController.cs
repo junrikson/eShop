@@ -200,6 +200,18 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllOutstandingPurchase(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitId = 0)
+        {
+            OutstandingPurchaseDatalist datalist = new OutstandingPurchaseDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterRegionId"] = masterRegionId;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = masterBusinessUnitId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllPurchase(DatalistFilter filter)
         {
             PurchaseDatalist datalist = new PurchaseDatalist(db);
