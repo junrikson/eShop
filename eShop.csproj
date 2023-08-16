@@ -7090,6 +7090,7 @@
     <Content Include="Views\AR\AdvanceRepayments\_DetailsEdit.cshtml" />
     <Content Include="Views\AR\AdvanceRepayments\_IndexGrid.cshtml" />
     <Content Include="Views\AR\AdvanceRepayments\_OthersGrid.cshtml" />
+    <Content Include="Views\Accounting\Journals\_ViewGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

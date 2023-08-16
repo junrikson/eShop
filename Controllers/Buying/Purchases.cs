@@ -104,6 +104,8 @@ namespace eShop.Controllers
                     db.Purchases.Add(purchase);
                     db.SaveChanges();
 
+                    SharedFunctions.CreatePurchaseJournal(db, purchase);
+
                     dbTran.Commit();
 
                     purchase.Code = "";
@@ -172,6 +174,10 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
+                        db.Entry(purchase).Reload();
+
+                        SharedFunctions.UpdatePurchaseJournal(db, purchase);
+
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Purchase, MenuId = purchase.Id, MenuCode = purchase.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
@@ -212,6 +218,8 @@ namespace eShop.Controllers
                         {
                             try
                             {
+                                SharedFunctions.DeletePurchaseJournals(db, obj);
+
                                 var details = db.PurchasesDetails.Where(x => x.PurchaseId == obj.Id).ToList();
 
                                 if (details != null)
@@ -300,6 +308,10 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
+                        db.Entry(purchase).Reload();
+
+                        SharedFunctions.UpdatePurchaseJournal(db, purchase);
+
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Purchase, MenuId = purchase.Id, MenuCode = purchase.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
@@ -333,20 +345,22 @@ namespace eShop.Controllers
                 return Json("Pilih salah satu data yang akan dihapus.");
             else
             {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                int failed = 0;
+                foreach (int id in ids)
                 {
-                    try
-                    {
-                        int failed = 0;
-                        foreach (int id in ids)
-                        {
-                            Purchase obj = db.Purchases.Find(id);
+                    Purchase obj = db.Purchases.Find(id);
 
-                            if (obj == null)
-                                failed++;
-                            else
+                    if (obj == null)
+                        failed++;
+                    else
+                    {
+                        Purchase tmp = obj;
+
+                        using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                        {
+                            try
                             {
-                                Purchase tmp = obj;
+                                SharedFunctions.DeletePurchaseJournals(db, obj);
 
                                 var details = db.PurchasesDetails.Where(x => x.PurchaseId == obj.Id).ToList();
 
@@ -361,19 +375,19 @@ namespace eShop.Controllers
 
                                 db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Purchase, MenuId = tmp.Id, MenuCode = tmp.Code, Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
+
+                                dbTran.Commit();
+                            }
+                            catch (DbEntityValidationException ex)
+                            {
+                                dbTran.Rollback();
+                                throw ex;
                             }
                         }
-
-                        dbTran.Commit();
-
-                        return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
                     }
                 }
+
+                return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
             }
         }
 
@@ -504,6 +518,8 @@ namespace eShop.Controllers
                         db.PurchasesDetails.Add(purchaseDetails);
                         db.SaveChanges();
 
+                        SharedFunctions.CreatePurchaseJournalDetails(db, purchaseDetails);
+
                         purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id, purchaseDetails.Id) + purchaseDetails.Total;
 
                         db.Entry(purchase).State = EntityState.Modified;
@@ -579,6 +595,9 @@ namespace eShop.Controllers
                     try
                     {
                         db.SaveChanges();
+                        db.Entry(purchaseDetails).Reload();
+
+                        SharedFunctions.UpdatePurchaseJournalDetails(db, purchaseDetails);
 
                         purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id, purchaseDetails.Id) + purchaseDetails.Total;
 
@@ -626,6 +645,8 @@ namespace eShop.Controllers
                                 try
                                 {
                                     PurchaseDetails tmp = obj;
+
+                                    SharedFunctions.RemovePurchaseJournalDetails(db, obj);
 
                                     Purchase purchase = db.Purchases.Find(tmp.PurchaseId);
 
@@ -743,11 +764,17 @@ namespace eShop.Controllers
 
                             db.Entry(purchaseDetails).State = EntityState.Modified;
                             db.SaveChanges();
+                            db.Entry(purchaseDetails).Reload();
+
+                            SharedFunctions.UpdatePurchaseJournalDetails(db, purchaseDetails);
                         }
 
                         purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id);
                         db.Entry(purchase).State = EntityState.Modified;
                         db.SaveChanges();
+                        db.Entry(purchase).Reload();
+
+                        SharedFunctions.UpdatePurchaseJournal(db, purchase);
 
                         dbTran.Commit();
 
@@ -845,8 +872,13 @@ namespace eShop.Controllers
 
                         if (remove != null)
                         {
-                            db.PurchasesDetails.RemoveRange(remove);
-                            db.SaveChanges();
+                            foreach(PurchaseDetails temp in remove)
+                            {
+                                SharedFunctions.RemovePurchaseJournalDetails(db, temp);
+
+                                db.PurchasesDetails.Remove(temp);
+                                db.SaveChanges();
+                            }
                         }
 
                         var purchaseOrdersDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrder.Id).ToList();
@@ -871,6 +903,8 @@ namespace eShop.Controllers
 
                                 db.PurchasesDetails.Add(purchaseDetails);
                                 db.SaveChanges();
+
+                                SharedFunctions.CreatePurchaseJournalDetails(db, purchaseDetails);
                             }
                         }
 
@@ -886,6 +920,10 @@ namespace eShop.Controllers
 
                         db.Entry(purchase).State = EntityState.Modified;
                         db.SaveChanges();
+
+                        db.Entry(purchase).Reload();
+
+                        SharedFunctions.UpdatePurchaseJournal(db, purchase);
 
                         dbTran.Commit();
                     }

@@ -82,8 +82,19 @@ namespace eShop.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.JournalDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
+
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", journal.MasterBusinessUnitId);
             return PartialView("../Accounting/Journals/_Details", journal);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "JournalsView")]
+        public PartialViewResult ViewGrid(int Id)
+        {
+            return PartialView("../Accounting/Journals/_ViewGrid", db.JournalsDetails
+                .Where(x => x.JournalId == Id).ToList());
         }
 
         // GET: Journals/Create

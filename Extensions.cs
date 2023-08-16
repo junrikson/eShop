@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
@@ -147,6 +148,7 @@ namespace eShop.Extensions
             return total;
         }
 
+        // Begin of Purchase
         public static decimal GetTotalPurchase(ApplicationDbContext db, int purchaseId, int? purchaseDetailsId = null)
         {
             decimal total = 0;
@@ -168,6 +170,208 @@ namespace eShop.Extensions
 
             return total;
         }
+
+        public static void CreatePurchaseJournal(ApplicationDbContext db, Purchase purchase)
+        {
+            Journal journal = new Journal
+            {
+                Code = purchase.Code,
+                Date = purchase.Date,
+                MasterBusinessUnitId = purchase.MasterBusinessUnitId,
+                Type = EnumJournalType.Purchase,
+                Debit = 0,
+                Credit = 0,
+                PurchaseId = purchase.Id,
+                Active = purchase.Active,
+                Created = purchase.Created,
+                Updated = purchase.Updated,
+                UserId = purchase.UserId
+            };
+
+            if (string.IsNullOrEmpty(purchase.Notes))
+                journal.Notes = "PEMBELIAN NO. " + purchase.Code;
+            else
+                journal.Notes = purchase.Notes;
+
+            db.Journals.Add(journal);
+            db.SaveChanges();
+        }
+
+        public static void UpdatePurchaseJournal(ApplicationDbContext db, Purchase purchase)
+        {
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.Purchase && x.PurchaseId == purchase.Id).FirstOrDefault();
+
+            var purchasesDetails = db.PurchasesDetails.Where(x => x.PurchaseId == purchase.Id).ToList();
+            foreach(PurchaseDetails purchaseDetails in purchasesDetails)
+            {
+                UpdatePurchaseJournalDetails(db, purchaseDetails);
+            }
+
+            db.Entry(journal).State = EntityState.Modified;
+
+            journal.Code = purchase.Code;
+            journal.Date = purchase.Date;
+            journal.MasterBusinessUnitId = purchase.MasterBusinessUnitId;
+            journal.Active = purchase.Active;
+            journal.Updated = purchase.Updated;
+            journal.UserId = purchase.UserId;
+
+            if (string.IsNullOrEmpty(purchase.Notes))
+                journal.Notes = "PEMBELIAN NO. " + purchase.Code;
+            else
+                journal.Notes = purchase.Notes;
+
+            db.SaveChanges();
+        }
+
+        public static void DeletePurchaseJournals(ApplicationDbContext db, Purchase purchase)
+        {
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.Purchase && x.PurchaseId == purchase.Id).FirstOrDefault();
+
+            if (journal != null)
+            {
+                var journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
+
+                if (journalsDetails != null && journalsDetails.Count > 0)
+                {
+                    db.JournalsDetails.RemoveRange(journalsDetails);
+                    db.SaveChanges();
+                }
+
+                db.Journals.Remove(journal);
+                db.SaveChanges();
+            }
+        }
+
+        public static void CreatePurchaseJournalDetails(ApplicationDbContext db, PurchaseDetails purchaseDetails)
+        {
+            Purchase purchase = db.Purchases.Find(purchaseDetails.PurchaseId);
+            MasterItem masterItem = db.MasterItems.Find(purchaseDetails.MasterItemId);
+            Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.Purchase && x.PurchaseId == purchase.Id).FirstOrDefault();
+            ChartOfAccount purchaseAccount = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == purchase.MasterBusinessUnitId && x.MasterRegionId == purchase.MasterRegionId && x.Type == EnumBusinessUnitAccountType.PurchaseAccount).FirstOrDefault().ChartOfAccount;
+            ChartOfAccount APAccount = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == purchase.MasterBusinessUnitId && x.MasterRegionId == purchase.MasterRegionId && x.Type == EnumBusinessUnitAccountType.APAccount).FirstOrDefault().ChartOfAccount;
+
+            JournalDetails journalDetails = new JournalDetails
+            {
+                JournalId = journal.Id,
+                MasterRegionId = purchase.MasterRegionId,
+                PurchaseDetailsId = purchaseDetails.Id,
+                ChartOfAccountId = purchaseAccount.Id,
+                Debit = purchaseDetails.Total,
+                Credit = 0,
+                Created = purchaseDetails.Created,
+                Updated = purchaseDetails.Updated,
+                UserId = purchaseDetails.UserId,
+                Notes = "PEMBELIAN BARANG " + purchaseDetails.Quantity.ToString("N0") + " x " + masterItem.Code
+            };
+
+            db.JournalsDetails.Add(journalDetails);
+            db.SaveChanges();
+
+            JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged && x.ChartOfAccountId == APAccount.Id).FirstOrDefault();
+            if (JournalDetailsCredit != null)
+            {
+                JournalDetailsCredit.Debit = 0;
+                JournalDetailsCredit.Credit = GetTotalPurchase(db, purchase.Id, purchaseDetails.Id) + purchaseDetails.Total;
+                JournalDetailsCredit.MasterRegionId = purchase.MasterRegionId;
+                JournalDetailsCredit.ChartOfAccountId = APAccount.Id;
+                JournalDetailsCredit.Notes = "PEMBELIAN NO. " + purchase.Code;
+                JournalDetailsCredit.isMerged = true;
+                JournalDetailsCredit.Created = purchaseDetails.Created;
+                JournalDetailsCredit.Updated = purchaseDetails.Updated;
+                JournalDetailsCredit.UserId = purchaseDetails.UserId;
+                db.Entry(JournalDetailsCredit).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            else
+            {
+                JournalDetailsCredit = new JournalDetails
+                {
+                    JournalId = journal.Id,
+                    Debit = 0,
+                    Credit = GetTotalPurchase(db, purchase.Id, purchaseDetails.Id) + purchaseDetails.Total,
+                    ChartOfAccountId = APAccount.Id,
+                    MasterRegionId = purchase.MasterRegionId,
+                    Notes = "PEMBELIAN NO. " + purchase.Code,
+                    isMerged = true,
+                    Created = purchaseDetails.Created,
+                    Updated = purchaseDetails.Updated,
+                    UserId = purchaseDetails.UserId
+                };
+
+                db.JournalsDetails.Add(JournalDetailsCredit);
+                db.SaveChanges();
+            }
+
+            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+            journal.Credit = journal.Debit;
+            db.Entry(journal).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
+        public static void UpdatePurchaseJournalDetails(ApplicationDbContext db, PurchaseDetails purchaseDetails)
+        {
+            Purchase purchase = db.Purchases.Find(purchaseDetails.PurchaseId);
+            MasterItem masterItem = db.MasterItems.Find(purchaseDetails.MasterItemId);
+            ChartOfAccount purchaseAccount = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == purchase.MasterBusinessUnitId && x.MasterRegionId == purchase.MasterRegionId && x.Type == EnumBusinessUnitAccountType.PurchaseAccount).FirstOrDefault().ChartOfAccount;
+            ChartOfAccount APAccount = db.MasterBusinessUnitsAccounts.Where(x => x.MasterBusinessUnitId == purchase.MasterBusinessUnitId && x.MasterRegionId == purchase.MasterRegionId && x.Type == EnumBusinessUnitAccountType.APAccount).FirstOrDefault().ChartOfAccount;
+            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.Purchase && x.PurchaseDetailsId == purchaseDetails.Id).FirstOrDefault();
+            Journal journal = db.Journals.Find(journalDetails.JournalId);
+
+            db.Entry(journalDetails).State = EntityState.Modified;
+            journalDetails.MasterRegionId = purchase.MasterRegionId;
+            journalDetails.ChartOfAccountId = purchaseAccount.Id;
+            journalDetails.Debit = purchaseDetails.Total;
+            journalDetails.Credit = 0;
+            journalDetails.Updated = purchaseDetails.Updated;
+            journalDetails.UserId = purchaseDetails.UserId;
+            journalDetails.Notes = "PEMBELIAN BARANG " + purchaseDetails.Quantity.ToString("N0") + " x " + masterItem.Code;
+            db.SaveChanges();
+
+            JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged && x.ChartOfAccountId == APAccount.Id).FirstOrDefault();
+
+            JournalDetailsCredit.Debit = 0;
+            JournalDetailsCredit.Credit = GetTotalPurchase(db, purchase.Id, purchaseDetails.Id) + purchaseDetails.Total;
+            JournalDetailsCredit.MasterRegionId = purchase.MasterRegionId;
+            JournalDetailsCredit.ChartOfAccountId = APAccount.Id;
+            JournalDetailsCredit.Notes = "PEMBELIAN NO. " + purchase.Code;
+            JournalDetailsCredit.isMerged = true;
+            JournalDetailsCredit.Created = purchaseDetails.Created;
+            JournalDetailsCredit.Updated = purchaseDetails.Updated;
+            JournalDetailsCredit.UserId = purchaseDetails.UserId;
+            db.Entry(JournalDetailsCredit).State = EntityState.Modified;
+            db.SaveChanges();
+
+            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+            journal.Credit = journal.Debit;
+            db.Entry(journal).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
+        public static void RemovePurchaseJournalDetails(ApplicationDbContext db, PurchaseDetails purchaseDetails)
+        {
+            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.Purchase && x.PurchaseDetailsId == purchaseDetails.Id).FirstOrDefault();
+            Journal journal = db.Journals.Find(journalDetails.JournalId);
+
+            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
+            journal.Credit = journal.Debit;
+            db.Entry(journal).State = EntityState.Modified;
+            db.SaveChanges();
+
+            JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged).FirstOrDefault();
+            if (JournalDetailsCredit != null)
+            {
+                JournalDetailsCredit.Credit = GetTotalPurchase(db, purchaseDetails.PurchaseId, purchaseDetails.Id);
+
+                db.Entry(JournalDetailsCredit).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            db.JournalsDetails.Remove(journalDetails);
+            db.SaveChanges();
+        }
+
+        // End of Purchase
 
         public static decimal GetTotalSalesRequest(ApplicationDbContext db, int salesRequestId, int? salesRequestDetailsId = null)
         {
@@ -806,7 +1010,6 @@ namespace eShop.Extensions
             {
                 JournalId = journal.Id,
                 MasterRegionId = advanceRepayment.MasterRegionId,
-                Notes = advanceRepaymentDetails.Notes,
                 AdvanceRepaymentDetailsId = advanceRepaymentDetails.Id,
                 Created = advanceRepaymentDetails.Created,
                 Updated = advanceRepaymentDetails.Updated,
@@ -964,7 +1167,7 @@ namespace eShop.Extensions
             JournalDetails journalDetails = db.JournalsDetails.Where(x => x.AdvanceRepaymentDetailsId == advanceRepaymentDetails.Id).FirstOrDefault();
             Journal journal = db.Journals.Find(journalDetails.JournalId);
 
-            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
+            journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
             journal.Credit = journal.Debit;
             db.Entry(journal).State = EntityState.Modified;
             db.SaveChanges();
