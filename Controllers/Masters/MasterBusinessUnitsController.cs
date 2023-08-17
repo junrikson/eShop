@@ -33,6 +33,17 @@ namespace eShop.Controllers
                     .Where(x => x.Code.Contains(search) || x.Name.Contains(search)));
         }
 
+        [HttpGet]
+        [Authorize(Roles = "MasterBusinessUnitsActive")]
+        public PartialViewResult OthersGrid(String search)
+        {
+            if (String.IsNullOrEmpty(search))
+                return PartialView("../Masters/MasterBusinessUnits/_OthersGrid", db.Set<MasterBusinessUnit>().AsQueryable());
+            else
+                return PartialView("../Masters/MasterBusinessUnits/_OthersGrid", db.Set<MasterBusinessUnit>().AsQueryable()
+                    .Where(x => x.Code.Contains(search) || x.Name.Contains(search)));
+        }
+
         [Authorize(Roles = "MasterBusinessUnitsActive")]
         public JsonResult IsCodeExists(string Code, int? Id)
         {

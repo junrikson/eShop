@@ -4,128 +4,113 @@
     Layout = null;
 }
 
+<div class="modal-dialog" style="width: 100%; height: 100%; ">
+        <div class="modal-content">
+            <div class="modal-body">
+                <section class="content">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <i class="fa fa-plus"></i>
 
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="modal-title">Master Item</h4>
-        </div>
-        <div class="modal-body">
-            <table align="center">
-                <tr>
-                    <td style="font-weight:bold;" width="130px" valign="top">
-                        @Html.DisplayNameFor(model => model.Code)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Code)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.Name)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Name)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.MasterBrand.Name)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.MasterBrand.Name)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.MasterCategory.Name)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.MasterCategory.Name)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.MasterSupplier.Name)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.MasterSupplier.Name)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.Notes)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Notes)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.Created)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Created)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.Updated)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Updated)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.User.UserName)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.User.UserName)
-                    </td>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.Active)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Active)
-                    </td>
-                </tr>
-            </table>
+                                    <h3 class="box-title">Details - Barang</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <form>
+                                        <div class="form-horizontal">
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.Code)
+                                                    @Html.TextBoxFor(model => model.Code, new { disabled = "disabled", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterCategory.Name)
+                                                    @Html.TextBoxFor(model => model.MasterCategory.Name, new { disabled = "disabled", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.MasterCategory.Name, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterBrand.Name)
+                                                    @Html.TextBoxFor(model => model.MasterBrand.Name, new { disabled = "disabled", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.MasterBrand.Name, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterSupplier.Name)
+                                                    @Html.TextBoxFor(model => model.MasterSupplier.Name, new { disabled = "disabled", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.MasterSupplier.Name, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-10">
+                                                    @Html.LabelFor(model => model.Name)
+                                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-2 text-center">
+                                                    @Html.LabelFor(model => model.Active)
+                                                    <div class="checkbox text-center">
+                                                        @Html.CheckBoxFor(model => model.Active, new { disabled = "disabled" })
+                                                        @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.Notes)
+                                                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                                                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+
+                        <div class="col-md-9">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <div class="col-md-2">
+                                        <i class="fa fa-info"></i>
+
+                                        <h3 class="box-title">Details</h3>
+                                    </div>
+                                    @*<div class="text-right col-md-10">
+                                            <label style="font-weight: bold">DEBET :</label>
+                                            <input type="text" id="Debit" value="@Model.Debit.ToString("N2")" disabled="disabled" style="text-align:right;" size="15" />
+                                            <label style="font-weight: bold">KREDIT :</label>
+                                            <input type="text" id="Credit" value="@Model.Credit.ToString("N2")" disabled="disabled" style="text-align:right;" size="15" />
+                                        </div>*@
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body" style="overflow:auto; white-space: nowrap" id="DetailsViewGrid">
+                                    @Html.AjaxGrid(Url.Action("ViewGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "view-table" })
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn btn-danger btn-block btn-lg" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
-</div>
 

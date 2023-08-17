@@ -7099,6 +7099,21 @@
     <Content Include="Views\Buying\GoodsReceipts\Edit.cshtml" />
     <Content Include="Views\Buying\GoodsReceipts\Index.cshtml" />
     <Content Include="Views\Accounting\Journals\_ViewGrid.cshtml" />
+    <Content Include="Views\Selling\GoodsDeliverys\_DetailsCreate.cshtml" />
+    <Content Include="Views\Selling\GoodsDeliverys\_DetailsEdit.cshtml" />
+    <Content Include="Views\Selling\GoodsDeliverys\_DetailsGrid.cshtml" />
+    <Content Include="Views\Selling\GoodsDeliverys\_IndexGrid.cshtml" />
+    <Content Include="Views\Selling\GoodsDeliverys\Create.cshtml" />
+    <Content Include="Views\Selling\GoodsDeliverys\Edit.cshtml" />
+    <Content Include="Views\Selling\GoodsDeliverys\Index.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\_ChangeCurrency.cshtml" />
+    <Content Include="Views\Selling\Sales\_ChangeCurrency.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\_ViewGrid.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\_OthersGrid.cshtml" />
+    <Content Include="Views\Masters\MasterCurrencies\_ViewGrid.cshtml" />
+    <Content Include="Views\Masters\MasterCurrencies\_OthersGrid.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\_ViewGrid.cshtml" />
+    <Content Include="Views\Inventory\MasterItems\_OthersGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

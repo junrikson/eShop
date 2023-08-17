@@ -31,6 +31,16 @@ namespace eShop.Controllers
                 return PartialView("../Masters/MasterSuppliers/_IndexGrid", db.Set<MasterSupplier>().AsQueryable().Where(y => y.Code.Contains(search) || y.Name.Contains(search)));
         }
 
+        [HttpGet]
+        [Authorize(Roles = "MasterSuppliersActive")]
+        public PartialViewResult OthersGrid(String search)
+        {
+            if (String.IsNullOrEmpty(search))
+                return PartialView("../Masters/MasterSuppliers/_OthersGrid", db.Set<MasterSupplier>().AsQueryable());
+            else
+                return PartialView("../Masters/MasterSuppliers/_OthersGrid", db.Set<MasterSupplier>().AsQueryable().Where(y => y.Code.Contains(search) || y.Name.Contains(search)));
+        }
+
         [Authorize(Roles = "MasterSuppliersActive")]
         public JsonResult IsCodeExists(string Code, int? Id)
         {
