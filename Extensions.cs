@@ -442,28 +442,6 @@ namespace eShop.Extensions
             return total;
         }
 
-        public static decimal GetTotalGoodsReceipts(ApplicationDbContext db, int goodsReceiptId, int? goodsReceiptDetailsId = null)
-        {
-            decimal total = 0;
-            List<GoodsReceiptDetails> goodsReceiptDetails = null;
-
-            if (goodsReceiptDetailsId == null)
-            {
-                goodsReceiptDetails = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == goodsReceiptId).ToList();
-            }
-            else
-            {
-                goodsReceiptDetails = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == goodsReceiptId && x.Id != goodsReceiptDetailsId).ToList();
-            }
-
-            if (goodsReceiptDetails != null)
-            {
-                total = goodsReceiptDetails.Sum(y => y.Total);
-            }
-
-            return total;
-        }
-
         public static decimal GetTotalSale(ApplicationDbContext db, int saleId, int? saleDetailsId = null)
         {
             decimal total = 0;
@@ -588,8 +566,20 @@ namespace eShop.Extensions
         public static void UpdateBankJournal(ApplicationDbContext db, BankTransaction bankTransaction)
         {
             Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransaction.Id).FirstOrDefault();
-            db.Entry(journal).State = EntityState.Modified;
 
+            var bankTransactionsDetails = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
+            foreach (BankTransactionDetails bankTransactionDetails in bankTransactionsDetails)
+            {
+                UpdateBankJournalDetails(db, bankTransactionDetails);
+            }
+
+            var bankTransactionsDetailsHeader = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
+            foreach (BankTransactionDetailsHeader bankTransactionDetailsHeader in bankTransactionsDetailsHeader)
+            {
+                UpdateBankJournalDetailsHeader(db, bankTransactionDetailsHeader);
+            }
+
+            db.Entry(journal).State = EntityState.Modified;
             journal.Code = bankTransaction.Code;
             journal.Date = bankTransaction.Date;
             journal.MasterBusinessUnitId = bankTransaction.MasterBusinessUnitId;
@@ -989,6 +979,12 @@ namespace eShop.Extensions
         public static void UpdateAdvanceRepaymentJournal(ApplicationDbContext db, AdvanceRepayment advanceRepayment)
         {
             Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.AdvanceRepayment && x.AdvanceRepaymentId == advanceRepayment.Id).FirstOrDefault();
+
+            var advanceRepaymentsDetails = db.AdvanceRepaymentsDetails.Where(x => x.AdvanceRepaymentId == advanceRepayment.Id).ToList();
+            foreach (AdvanceRepaymentDetails advanceRepaymentDetails in advanceRepaymentsDetails)
+            {
+                UpdateAdvanceRepaymentJournalDetails(db, advanceRepaymentDetails);
+            }
 
             db.Entry(journal).State = EntityState.Modified;
 

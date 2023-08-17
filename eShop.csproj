@@ -7091,7 +7091,6 @@
     <Content Include="Views\AR\AdvanceRepayments\_DetailsEdit.cshtml" />
     <Content Include="Views\AR\AdvanceRepayments\_IndexGrid.cshtml" />
     <Content Include="Views\AR\AdvanceRepayments\_OthersGrid.cshtml" />
-    <Content Include="Views\Buying\GoodsReceipts\_ChangeCurrency.cshtml" />
     <Content Include="Views\Buying\GoodsReceipts\_DetailsCreate.cshtml" />
     <Content Include="Views\Buying\GoodsReceipts\_DetailsEdit.cshtml" />
     <Content Include="Views\Buying\GoodsReceipts\_DetailsGrid.cshtml" />

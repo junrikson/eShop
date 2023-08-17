@@ -128,11 +128,6 @@
                             <h3 class="box-title">Details</h3>
                         </div>
                         <div class="text-right col-md-10">
-                            <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "GoodsReceipts")" ">
-                                @Model.MasterCurrency.Code : @Model.Rate.ToString("N2")
-                            </button>
-                            <label style="font-weight: bold">TOTAL :</label>
-                            <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
                             <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "GoodsReceipts")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
@@ -204,36 +199,6 @@
             }
         });
 
-        Inputmask.extendAliases({
-            'myNum2': {
-                alias: 'currency',
-                digits: 2,
-                digitsOptional: false,
-                integerDigits: 12,
-                prefix: '',
-                groupSeparator: '.',
-                radixPoint: ',',
-                groupSize: 3,
-                rightAlign: false,
-                autoUnmask: true
-            }
-        });
-
-        Inputmask.extendAliases({
-            'myNum10': {
-                alias: 'currency',
-                digits: 10,
-                digitsOptional: false,
-                integerDigits: 12,
-                prefix: '',
-                groupSeparator: '.',
-                radixPoint: ',',
-                groupSize: 3,
-                rightAlign: false,
-                autoUnmask: true
-            }
-        });
-
         $('#btnAdd').click(function (event) {
             event.preventDefault();
             if ($("#MasterBusinessUnitId").val() === "") {
@@ -259,7 +224,6 @@
                     });
 
                     Inputmask("myNum").mask("#Quantity");
-                    Inputmask("myNum2").mask("#Price");
 
                     $("#MasterItemId").on("change", function () {
                         var Id = $("#MasterItemId").val();
@@ -292,46 +256,6 @@
             }
         });
 
-        $('#btnChangeCurrency').click(function (event) {
-            event.preventDefault();
-            var url = $(this).attr("href") + "?goodsReceiptId=" + $("input#Id").val();
-            $.get(url, function (data) {
-                $('#detailsContainer').html(data);
-                $('#detailsModal').modal('show');
-
-                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                    new MvcDatalist(element);
-                });
-
-                $('form').each(function () {
-                    var $el = $(this);
-                    $el.data('validator', null);
-                    $.validator.unobtrusive.parse($el);
-                });
-
-                $("#MasterCurrencyId").on("change", function () {
-                    var id = $("#MasterCurrencyId").val();
-                    var data = { Id: id };
-                    var options = {};
-
-                    options.url = "/GoodsReceipts/GetCurrencyRate";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (rate) {
-                        document.getElementById('Rate').value = rate;
-                    };
-                    options.error = function () {
-                    };
-                    $.ajax(options);
-                }).change();
-
-                Inputmask("myNum10").mask("#Rate");
-            });
-        });
-
         function CreateSuccess(data) {
             if (data !== "success") {
                 $('#detailsContainer').html(data);
@@ -342,20 +266,6 @@
 
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
-
-            var param = { goodsReceiptId: $("#Id").val() };
-            var options = {};
-
-            options.url = "/GoodsReceipts/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
         }
 
         function EditSuccess(data) {
@@ -368,48 +278,6 @@
 
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
-
-            var param = { goodsReceiptId: $("#Id").val() };
-            var options = {};
-
-            options.url = "/GoodsReceipts/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
-        }
-
-        function ChangeCurrencySuccess(data) {
-            if (data.Status !== "success") {
-                $('#detailsContainer').html(data);
-                return;
-            }
-            $('#detailsModal').modal('hide');
-            $('#detailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#detail-table'));
-            grid.reload();
-
-            document.querySelector('#btnChangeCurrency').innerHTML = data.Message;
-
-            var param = { goodsReceiptId: $("#Id").val() };
-            var options = {};
-
-            options.url = "/GoodsReceipts/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
         }
 
         var token = $('input[name="__RequestVerificationToken"]').val();
@@ -438,8 +306,6 @@
                         document.getElementById('MasterSupplierId').value = obj.MasterSupplierId;
                         document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
                         document.getElementById('Notes').value = obj.Notes;
-                        document.getElementById('Total').value = obj.Total;
-                        document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
 
                         $(document.getElementById('MasterBusinessUnitId')).trigger("change");
 
@@ -492,21 +358,6 @@
 
                                 var grid = new MvcGrid(document.querySelector('#detail-table'));
                                 grid.reload();
-
-                                var param = { purchaseId: $("#Id").val() };
-                                var options2 = {};
-
-                                options2.url = "/GoodsReceipts/GetTotal";
-                                options2.type = "POST";
-                                options2.headers = headers;
-                                options2.data = JSON.stringify(param);
-                                options2.contentType = "application/json";
-                                options2.dataType = "json";
-                                options2.success = function (msg)
-                                {
-                                    document.getElementById('Total').value = msg;
-                                };
-                                $.ajax(options2);
                             };
                             options.error = function ()
                             {
@@ -627,7 +478,6 @@
                         });
 
                         Inputmask("myNum").mask("#Quantity");
-                        Inputmask("myNum2").mask("#Price");
 
                         $("#MasterItemId").on("change", function () {
                             var Id = $("#MasterItemId").val();

@@ -218,11 +218,7 @@ namespace eShop.Models
             modelBuilder.Entity<PurchaseDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseDetails>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<GoodsReceipt>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<GoodsReceipt>().Property(x => x.Rate).HasPrecision(18, 10);
             modelBuilder.Entity<GoodsReceiptDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
-            modelBuilder.Entity<GoodsReceiptDetails>().Property(x => x.Price).HasPrecision(18, 2);
-            modelBuilder.Entity<GoodsReceiptDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseReturn>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseReturn>().Property(x => x.Rate).HasPrecision(18, 10);
             modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.Quantity).HasPrecision(18, 2);

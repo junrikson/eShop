@@ -86,8 +86,6 @@ namespace eShop.Controllers
                 Date = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
-                MasterCurrencyId = masterCurrency.Id,
-                Rate = masterCurrency.Rate,
                 MasterSupplierId = db.MasterSuppliers.FirstOrDefault().Id,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
                 IsPrint = false,
@@ -140,8 +138,6 @@ namespace eShop.Controllers
             goodsReceipt.Created = DateTime.Now;
             goodsReceipt.Updated = DateTime.Now;
             goodsReceipt.UserId = User.Identity.GetUserId<int>();
-            goodsReceipt.Total = SharedFunctions.GetTotalGoodsReceipts(db, goodsReceipt.Id);
-            goodsReceipt.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(goodsReceipt.Code)) goodsReceipt.Code = goodsReceipt.Code.ToUpper();
             if (!string.IsNullOrEmpty(goodsReceipt.Notes)) goodsReceipt.Notes = goodsReceipt.Notes.ToUpper();
@@ -159,7 +155,6 @@ namespace eShop.Controllers
             db.Entry(goodsReceipt).Property("PurchaseId").IsModified = true;
             db.Entry(goodsReceipt).Property("MasterSupplierId").IsModified = true;
             db.Entry(goodsReceipt).Property("MasterWarehouseId").IsModified = true;
-            db.Entry(goodsReceipt).Property("Total").IsModified = true;
             db.Entry(goodsReceipt).Property("Notes").IsModified = true;
             db.Entry(goodsReceipt).Property("Active").IsModified = true;
             db.Entry(goodsReceipt).Property("Updated").IsModified = true;
@@ -190,8 +185,7 @@ namespace eShop.Controllers
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", goodsReceipt.MasterBusinessUnitId);
                 ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", goodsReceipt.MasterRegionId);
-                ViewBag.Total = SharedFunctions.GetTotalGoodsReceipts(db, goodsReceipt.Id).ToString("N2");
-
+                
                 return View("../Buying/GoodsReceipts/Create", goodsReceipt);
             }
         }
@@ -255,8 +249,7 @@ namespace eShop.Controllers
 
             ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", goodsReceipt.MasterBusinessUnitId);
             ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", goodsReceipt.MasterRegionId);
-            ViewBag.Total = SharedFunctions.GetTotalGoodsReceipts(db, goodsReceipt.Id).ToString("N2");
-
+            
             return View("../Buying/GoodsReceipts/Edit", goodsReceipt);
         }
 
@@ -270,8 +263,6 @@ namespace eShop.Controllers
         {
             goodsReceipt.Updated = DateTime.Now;
             goodsReceipt.UserId = User.Identity.GetUserId<int>();
-            goodsReceipt.Total = SharedFunctions.GetTotalGoodsReceipts(db, goodsReceipt.Id);
-            goodsReceipt.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(goodsReceipt.Code)) goodsReceipt.Code = goodsReceipt.Code.ToUpper();
             if (!string.IsNullOrEmpty(goodsReceipt.Notes)) goodsReceipt.Notes = goodsReceipt.Notes.ToUpper();
@@ -287,7 +278,6 @@ namespace eShop.Controllers
             db.Entry(goodsReceipt).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(goodsReceipt).Property("MasterRegionId").IsModified = true;
             db.Entry(goodsReceipt).Property("MasterWarehouseId").IsModified = true;
-            db.Entry(goodsReceipt).Property("Total").IsModified = true;
             db.Entry(goodsReceipt).Property("Notes").IsModified = true;
             db.Entry(goodsReceipt).Property("Active").IsModified = true;
             db.Entry(goodsReceipt).Property("Updated").IsModified = true;
@@ -318,8 +308,7 @@ namespace eShop.Controllers
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", goodsReceipt.MasterBusinessUnitId);
                 ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", goodsReceipt.MasterRegionId);
-                ViewBag.Total = SharedFunctions.GetTotalGoodsReceipts(db, goodsReceipt.Id).ToString("N2");
-
+                
                 return View("../Buying/GoodsReceipts/Edit", goodsReceipt);
             }
         }
@@ -395,7 +384,6 @@ namespace eShop.Controllers
                     {
                         rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormPurchaseOrder.rpt"));
                         rd.SetParameterValue("Code", obj.Code);
-                        rd.SetParameterValue("Terbilang", "# " + TerbilangExtension.Terbilang(Math.Floor(obj.Total)).ToUpper() + " RUPIAH #");
 
                         string connString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
@@ -479,16 +467,10 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "GoodsReceiptsActive")]
-        public ActionResult DetailsCreate([Bind(Include = "Id,GoodsReceiptId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] GoodsReceiptDetails goodsReceiptDetails)
+        public ActionResult DetailsCreate([Bind(Include = "Id,GoodsReceiptId,MasterItemId,MasterItemUnitId,Quantity,Notes,Created,Updated,UserId")] GoodsReceiptDetails goodsReceiptDetails)
         {
             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(goodsReceiptDetails.MasterItemUnitId);
-            GoodsReceipt goodsReceipt = db.GoodsReceipts.Find(goodsReceiptDetails.GoodsReceiptId);
-
-            if (masterItemUnit == null)
-                goodsReceiptDetails.Total = 0;
-            else
-                goodsReceiptDetails.Total = goodsReceiptDetails.Quantity * goodsReceiptDetails.Price * masterItemUnit.MasterUnit.Ratio * goodsReceipt.Rate;
-
+            
             goodsReceiptDetails.Created = DateTime.Now;
             goodsReceiptDetails.Updated = DateTime.Now;
             goodsReceiptDetails.UserId = User.Identity.GetUserId<int>();
@@ -502,11 +484,6 @@ namespace eShop.Controllers
                     try
                     {
                         db.GoodsReceiptsDetails.Add(goodsReceiptDetails);
-                        db.SaveChanges();
-
-                        goodsReceipt.Total = SharedFunctions.GetTotalGoodsReceipts(db, goodsReceipt.Id, goodsReceiptDetails.Id) + goodsReceiptDetails.Total;
-
-                        db.Entry(goodsReceipt).State = EntityState.Modified;
                         db.SaveChanges();
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.GoodsReceiptDetails, MenuId = goodsReceiptDetails.Id, MenuCode = goodsReceiptDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
@@ -547,16 +524,10 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "GoodsReceiptsActive")]
-        public ActionResult DetailsEdit([Bind(Include = "Id,GoodsReceiptId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] GoodsReceiptDetails goodsReceiptDetails)
+        public ActionResult DetailsEdit([Bind(Include = "Id,GoodsReceiptId,MasterItemId,MasterItemUnitId,Quantity,Notes,Created,Updated,UserId")] GoodsReceiptDetails goodsReceiptDetails)
         {
             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(goodsReceiptDetails.MasterItemUnitId);
-            GoodsReceipt goodsReceipt = db.GoodsReceipts.Find(goodsReceiptDetails.GoodsReceiptId);
-
-            if (masterItemUnit == null)
-                goodsReceiptDetails.Total = 0;
-            else
-                goodsReceiptDetails.Total = goodsReceiptDetails.Quantity * goodsReceiptDetails.Price * masterItemUnit.MasterUnit.Ratio * goodsReceipt.Rate;
-
+            
             goodsReceiptDetails.Updated = DateTime.Now;
             goodsReceiptDetails.UserId = User.Identity.GetUserId<int>();
 
@@ -566,8 +537,6 @@ namespace eShop.Controllers
             db.Entry(goodsReceiptDetails).Property("MasterItemId").IsModified = true;
             db.Entry(goodsReceiptDetails).Property("MasterItemUnitId").IsModified = true;
             db.Entry(goodsReceiptDetails).Property("Quantity").IsModified = true;
-            db.Entry(goodsReceiptDetails).Property("Price").IsModified = true;
-            db.Entry(goodsReceiptDetails).Property("Total").IsModified = true;
             db.Entry(goodsReceiptDetails).Property("Notes").IsModified = true;
             db.Entry(goodsReceiptDetails).Property("Updated").IsModified = true;
             db.Entry(goodsReceiptDetails).Property("UserId").IsModified = true;
@@ -578,11 +547,6 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        db.SaveChanges();
-
-                        goodsReceipt.Total = SharedFunctions.GetTotalGoodsReceipts(db, goodsReceipt.Id, goodsReceiptDetails.Id) + goodsReceiptDetails.Total;
-
-                        db.Entry(goodsReceipt).State = EntityState.Modified;
                         db.SaveChanges();
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.GoodsReceiptDetails, MenuId = goodsReceiptDetails.Id, MenuCode = goodsReceiptDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
@@ -626,13 +590,6 @@ namespace eShop.Controllers
                                 try
                                 {
                                     GoodsReceiptDetails tmp = obj;
-
-                                    GoodsReceipt goodsReceipt = db.GoodsReceipts.Find(tmp.GoodsReceiptId);
-
-                                    goodsReceipt.Total = SharedFunctions.GetTotalGoodsReceipts(db, goodsReceipt.Id, tmp.Id);
-
-                                    db.Entry(goodsReceipt).State = EntityState.Modified;
-                                    db.SaveChanges();
 
                                     db.GoodsReceiptsDetails.Remove(obj);
                                     db.SaveChanges();
@@ -688,96 +645,6 @@ namespace eShop.Controllers
             return Json(masterItemUnitId);
         }
 
-        [Authorize(Roles = "GoodsReceiptsActive")]
-        public ActionResult ChangeCurrency(int? goodsReceiptId)
-        {
-            if (goodsReceiptId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            GoodsReceipt goodsReceipt = db.GoodsReceipts.Find(goodsReceiptId);
-
-            ChangeCurrency obj = new ChangeCurrency
-            {
-                Id = goodsReceipt.Id,
-                MasterCurrencyId = goodsReceipt.MasterCurrencyId,
-                Rate = goodsReceipt.Rate
-            };
-
-            if (obj == null)
-            {
-                return HttpNotFound();
-            }
-
-            return PartialView("../Buying/GoodsReceipts/_ChangeCurrency", obj);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "GoodsReceiptsActive")]
-        public ActionResult ChangeCurrency([Bind(Include = "Id,MasterCurrencyId,Rate")] ChangeCurrency changeCurrency)
-        {
-            MasterCurrency masterCurrency = db.MasterCurrencies.Find(changeCurrency.MasterCurrencyId);
-
-            GoodsReceipt goodsReceipt = db.GoodsReceipts.Find(changeCurrency.Id);
-            goodsReceipt.MasterCurrencyId = changeCurrency.MasterCurrencyId;
-            goodsReceipt.Rate = changeCurrency.Rate;
-
-            if (ModelState.IsValid)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var goodsReceiptsDetails = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == goodsReceipt.Id).ToList();
-
-                        foreach (GoodsReceiptDetails goodsReceiptDetails in goodsReceiptsDetails)
-                        {
-                            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(goodsReceiptDetails.MasterItemUnitId);
-
-                            if (masterItemUnit == null)
-                                goodsReceiptDetails.Total = 0;
-                            else
-                                goodsReceiptDetails.Total = goodsReceiptDetails.Quantity * goodsReceiptDetails.Price * masterItemUnit.MasterUnit.Ratio * goodsReceipt.Rate;
-
-                            db.Entry(goodsReceiptDetails).State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
-
-                        goodsReceipt.Total = SharedFunctions.GetTotalGoodsReceipts(db, goodsReceipt.Id);
-                        db.Entry(goodsReceipt).State = EntityState.Modified;
-                        db.SaveChanges();
-
-                        dbTran.Commit();
-
-                        var returnObject = new
-                        {
-                            Status = "success",
-                            Message = masterCurrency.Code + " : " + goodsReceipt.Rate.ToString("N2")
-                        };
-
-                        return Json(returnObject, JsonRequestBehavior.AllowGet);
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-
-            return PartialView("../Buying/GoodsReceipts/_ChangeCurrency", changeCurrency);
-        }
-
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "GoodsReceiptsActive")]
-        public JsonResult GetCurrencyRate(int id)
-        {
-            return Json(db.MasterCurrencies.Find(id).Rate);
-        }
-
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "GoodsReceiptsActive")]
@@ -822,14 +689,6 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "GoodsReceiptsActive")]
-        public JsonResult GetTotal(int goodsReceiptId)
-        {
-            return Json(SharedFunctions.GetTotalGoodsReceipts(db, goodsReceiptId).ToString("N2"));
-        }
-
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "GoodsReceiptsActive")]
         public JsonResult PopulateDetails(int goodsReceiptid, int purchaseId)
         {
             GoodsReceipt goodsReceipt = db.GoodsReceipts.Find(goodsReceiptid);
@@ -861,8 +720,6 @@ namespace eShop.Controllers
                                     MasterItemId = purchaseDetails.MasterItemId,
                                     MasterItemUnitId = purchaseDetails.MasterItemUnitId,
                                     Quantity = purchaseDetails.Quantity,
-                                    Price = purchaseDetails.Price,
-                                    Total = purchaseDetails.Total,
                                     Notes = purchaseDetails.Notes,
                                     Created = DateTime.Now,
                                     Updated = DateTime.Now,
@@ -877,12 +734,9 @@ namespace eShop.Controllers
                         goodsReceipt.PurchaseId = purchase.Id;
                         goodsReceipt.MasterBusinessUnitId = purchase.MasterBusinessUnitId;
                         goodsReceipt.MasterRegionId = purchase.MasterRegionId;
-                        goodsReceipt.MasterCurrencyId = purchase.MasterCurrencyId;
-                        goodsReceipt.Rate = purchase.Rate;
                         goodsReceipt.MasterSupplierId = purchase.MasterSupplierId;
                         goodsReceipt.MasterWarehouseId = purchase.MasterWarehouseId;
                         goodsReceipt.Notes = purchase.Notes;
-                        goodsReceipt.Total = purchase.Total;
 
                         db.Entry(goodsReceipt).State = EntityState.Modified;
                         db.SaveChanges();
@@ -904,9 +758,7 @@ namespace eShop.Controllers
                 goodsReceipt.MasterSupplierId,
                 goodsReceipt.MasterWarehouseId,
                 goodsReceipt.Notes,
-                Total = goodsReceipt.Total.ToString("N2"),
-                goodsReceipt.Date,
-                Currency = goodsReceipt.MasterCurrency.Code + " : " + goodsReceipt.Rate.ToString("N2")
+                goodsReceipt.Date
             });
         }
 
