@@ -27,52 +27,21 @@ namespace eShop.Controllers
         [Authorize(Roles = "ChartOfAccountsActive")]
         public ActionResult Index()
         {
-            ViewBag.MasterBusinessUnitId = new SelectList(db.MasterBusinessUnits.Where(x => x.Active == true), "Id", "Name");
             return View("../Accounting/ChartOfAccounts/Index");
         }
 
         [HttpGet]
         [Authorize(Roles = "ChartOfAccountsActive")]
-        public PartialViewResult IndexGrid(String search, int? masterBusinessUnitId)
+        public PartialViewResult IndexGrid()
         {
-            if (masterBusinessUnitId == null)
-            {
-                if (String.IsNullOrEmpty(search))
-                    return PartialView("../Accounting/ChartOfAccounts/_IndexGrid", db.Set<ChartOfAccount>().Where(o => o.Active == true).AsQueryable());
-                else
-                    return PartialView("../Accounting/ChartOfAccounts/_IndexGrid", db.Set<ChartOfAccount>().AsQueryable()
-                        .Where(x => x.Code.Contains(search) && x.Active == true));
-            }
-            else
-            {
-                if (String.IsNullOrEmpty(search))
-                    return PartialView("../Accounting/ChartOfAccounts/_IndexGrid", db.Set<ChartOfAccount>().Where(o => o.MasterBusinessUnitId == (int)masterBusinessUnitId && o.Active == true).AsQueryable());
-                else
-                    return PartialView("../Accounting/ChartOfAccounts/_IndexGrid", db.Set<ChartOfAccount>().AsQueryable()
-                        .Where(x => x.Code.Contains(search) && x.Active == true && x.MasterBusinessUnitId == (int)masterBusinessUnitId));
-            }
+            return PartialView("../Accounting/ChartOfAccounts/_IndexGrid", db.Set<ChartOfAccount>().Where(o => o.Active).AsQueryable());
         }
 
         [HttpGet]
         [Authorize(Roles = "ChartOfAccountsActive")]
-        public PartialViewResult OtherGrid(String search, int? masterBusinessUnitId)
+        public PartialViewResult OtherGrid()
         {
-            if (masterBusinessUnitId == null)
-            {
-                if (String.IsNullOrEmpty(search))
-                    return PartialView("../Accounting/ChartOfAccounts/_OtherGrid", db.Set<ChartOfAccount>().Where(o => o.Active == false).AsQueryable());
-                else
-                    return PartialView("../Accounting/ChartOfAccounts/_OtherGrid", db.Set<ChartOfAccount>().AsQueryable()
-                        .Where(x => x.Code.Contains(search) && x.Active == false));
-            }
-            else
-            {
-                if (String.IsNullOrEmpty(search))
-                    return PartialView("../Accounting/ChartOfAccounts/_OtherGrid", db.Set<ChartOfAccount>().Where(o => o.MasterBusinessUnitId == (int)masterBusinessUnitId && o.Active == false).AsQueryable());
-                else
-                    return PartialView("../Accounting/ChartOfAccounts/_OtherGrid", db.Set<ChartOfAccount>().AsQueryable()
-                        .Where(x => x.Code.Contains(search) && x.Active == false && x.MasterBusinessUnitId == (int)masterBusinessUnitId));
-            }
+            return PartialView("../Accounting/ChartOfAccounts/_OtherGrid", db.Set<ChartOfAccount>().Where(o => !o.Active).AsQueryable());
         }
 
         [Authorize(Roles = "ChartOfAccountsActive")]
@@ -106,14 +75,13 @@ namespace eShop.Controllers
 
         // GET: ChartOfAccounts/Create
         [Authorize(Roles = "ChartOfAccountsAdd")]
-        public ActionResult Create(int masterBusinessUnitId)
+        public ActionResult Create()
         {
             ChartOfAccount obj = new ChartOfAccount
             {
                 Active = true,
                 IsHeader = false,
-                Position = EnumDefaultEntry.Debit,
-                MasterBusinessUnitId = masterBusinessUnitId
+                Position = EnumDefaultEntry.Debit
             };
 
             ViewBag.Level = new SelectList(levelList, "Value", "Text", obj.Level);
@@ -126,7 +94,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ChartOfAccountsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,MasterBusinessUnitId,Position,IsHeader,Level,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,Position,IsHeader,Level,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
         {
             if (chartOfAccount.IsHeader == false)
                 chartOfAccount.Level = 6;
@@ -148,7 +116,6 @@ namespace eShop.Controllers
 
                 return Json("success", JsonRequestBehavior.AllowGet);
             }
-            ViewBag.MasterBusinessUnitId = new SelectList(db.MasterBusinessUnits.Where(x => x.Active == true), "Id", "Name", chartOfAccount.MasterBusinessUnitId);
             ViewBag.Level = new SelectList(levelList, "Value", "Text", chartOfAccount.Level);
             return PartialView("../Accounting/ChartOfAccounts/_Create", chartOfAccount);
         }
@@ -166,7 +133,6 @@ namespace eShop.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.MasterBusinessUnitId = new SelectList(db.MasterBusinessUnits.Where(x => x.Active == true), "Id", "Name", chartOfAccount.MasterBusinessUnitId);
             ViewBag.Level = new SelectList(levelList, "Value", "Text", chartOfAccount.Level);
             return PartialView("../Accounting/ChartOfAccounts/_Edit", chartOfAccount);
         }
@@ -177,7 +143,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ChartOfAccountsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,MasterBusinessUnitId,Position,IsHeader,Level,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,Position,IsHeader,Level,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
         {
             chartOfAccount.Updated = DateTime.Now;
             chartOfAccount.UserId = User.Identity.GetUserId<int>();
@@ -208,7 +174,6 @@ namespace eShop.Controllers
 
                 return Json("success", JsonRequestBehavior.AllowGet);
             }
-            ViewBag.MasterBusinessUnitId = new SelectList(db.MasterBusinessUnits.Where(x => x.Active == true), "Id", "Name", chartOfAccount.MasterBusinessUnitId);
             ViewBag.Level = new SelectList(levelList, "Value", "Text", chartOfAccount.Level);
             return PartialView("../Accounting/ChartOfAccounts/_Edit", chartOfAccount);
         }

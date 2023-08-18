@@ -342,6 +342,22 @@ namespace eShop.Controllers
             }
         }
 
+        // GET: MasterBusinessUnits/Details/5
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult DataSelection(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(id);
+            if (masterBusinessUnit == null)
+            {
+                return HttpNotFound();
+            }
+            return View("../Masters/MasterBusinessUnits/DataSelection", masterBusinessUnit);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

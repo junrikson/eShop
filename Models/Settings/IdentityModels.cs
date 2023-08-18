@@ -133,8 +133,16 @@ namespace eShop.Models
         public IEnumerable ApplicationUsers { get; internal set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnit> MasterBusinessUnits { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitAccount> MasterBusinessUnitsAccounts { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitRegion> MasterBusinessUnitRegions { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitSupplier> MasterBusinessUnitSuppliers { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitCustomer> MasterBusinessUnitCustomers { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessSalesPerson> MasterBusinessSalesPersons { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessCategory> MasterBusinessCategories { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessBrand> MasterBusinessBrands { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessItem> MasterBusinessItems { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionWarehouse> MasterBusinessRegionWarehouses { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionAccount> MasterBusinessRegionAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegion> MasterRegions { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterRegionAccount> MasterRegionAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterCurrency> MasterCurrencies { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterItem> MasterItems { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterItemUnit> MasterItemUnits { get; set; }

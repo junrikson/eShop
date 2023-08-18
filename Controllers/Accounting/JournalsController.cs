@@ -342,16 +342,6 @@ namespace eShop.Controllers
                 if (SharedFunctions.GetTotalJournalDebit(db, journal.Id) != SharedFunctions.GetTotalJournalCredit(db, journal.Id))
                     ModelState.AddModelError(string.Empty, "Jurnal tidak ballance!");
             }
-
-            if (ModelState.IsValid)
-            {
-                foreach (JournalDetails obj in journalDetails)
-                {
-                    if (obj.ChartOfAccount.MasterBusinessUnitId != journal.MasterBusinessUnitId)
-                        ModelState.AddModelError(string.Empty, "Akun " + obj.ChartOfAccount.Code + " bukan milik " + masterBusinessName);
-                }
-            }
-
             return journal;
         }
 

@@ -124,35 +124,4 @@ namespace eShop.Models
             this.ApplicationUsers = new HashSet<ApplicationUser>();
         }
     }
-
-    public class MasterBusinessUnitAccount
-    {
-        [Key, Column(Order = 0)]
-        [Display(Name = "Unit Bisnis")]
-        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
-        public int MasterBusinessUnitId { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
-
-        [Key, Column(Order = 1)]
-        [Display(Name = "Wilayah")]
-        [Required(ErrorMessage = "Wilayah harus diisi.")]
-        public int MasterRegionId { get; set; }
-
-        [Display(Name = "Wilayah")]
-        public virtual MasterRegion MasterRegion { get; set; }
-
-        [Key, Column(Order = 2)]
-        [Display(Name = "Jenis")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public EnumBusinessUnitAccountType Type { get; set; }
-
-        [Display(Name = "Bagan Akun")]
-        [Required(ErrorMessage = "Bagan Akun harus diisi.")]
-        public int ChartOfAccountId { get; set; }
-
-        [Display(Name = "Bagan Akun")]
-        public virtual ChartOfAccount ChartOfAccount { get; set; }
-    }
 }

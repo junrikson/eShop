@@ -22,23 +22,6 @@
         <h1 class="col-md-6">
             Bagan Akun
         </h1>
-        <div class="col-md-6 text-right">
-            <div class="col-md-8">
-                @Html.DropDownList("MasterBusinessUnitId", null, htmlAttributes: new { @class = "form-control" })
-            </div>
-            @if (User.IsInRole("ChartOfAccountsAdd"))
-            {
-                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "ChartOfAccounts")">
-                    <i class="fa fa-plus"></i> Add
-                </button>
-            }
-            @if (User.IsInRole("ChartOfAccountsDelete"))
-            {
-                <button id="batchDelete" class="btn btn-danger mx-1">
-                    <i class="fa fa-trash"></i> Delete
-                </button>
-            }
-        </div>
     </section>
 
     <!-- Main content -->
@@ -107,7 +90,7 @@
         
         $('#btnAdd').click(function (event) {
             event.preventDefault();
-            var url = $(this).attr("href") + '?MasterBusinessUnitId=' + $("#MasterBusinessUnitId").val();
+            var url = $(this).attr("href");
             $.get(url, function (data) {
                 $('#addContainer').html(data);
                 $('#addModal').modal('show');
@@ -122,13 +105,6 @@
             });
         });
 
-        $(document).on('keyup', '.mvc-grid-search', function () {
-            var grid = new MvcGrid(document.querySelector('#data-table'));
-            grid.query.set('search', this.value);
-            grid.query.set('MasterBusinessUnitId', $("#MasterBusinessUnitId").val());
-            grid.reload();
-        });
-
         function CreateSuccess(data) {
             if (data !== "success") {
                 $('#addContainer').html(data);
@@ -138,11 +114,9 @@
             $('#addContainer').html("");
 
             var grid = new MvcGrid(document.querySelector('#data-table'));
-            grid.query.set('MasterBusinessUnitId', $("#MasterBusinessUnitId").val());
             grid.reload();
 
             var grid2 = new MvcGrid(document.querySelector('#other-table'));
-            grid2.query.set('MasterBusinessUnitId', $("#MasterBusinessUnitId").val());
             grid2.reload();
         }
 
@@ -155,11 +129,9 @@
             $('#editContainer').html("");
         
             var grid = new MvcGrid(document.querySelector('#data-table'));
-            grid.query.set('MasterBusinessUnitId', $("#MasterBusinessUnitId").val());
             grid.reload();
 
             var grid2 = new MvcGrid(document.querySelector('#other-table'));
-            grid2.query.set('MasterBusinessUnitId', $("#MasterBusinessUnitId").val());
             grid2.reload();
         }
     </script>
@@ -170,19 +142,6 @@
         headers['__RequestVerificationToken'] = token;
 
         $(document).ready(function () {
-
-            $("#MasterBusinessUnitId").on("change", function () {
-                var Id = $("#MasterBusinessUnitId").val();
-
-                var grid = new MvcGrid(document.querySelector('#data-table'));
-                grid.query.set('MasterBusinessUnitId', Id);
-                grid.reload();
-
-                var grid2 = new MvcGrid(document.querySelector('#other-table'));
-                grid2.query.set('MasterBusinessUnitId', Id);
-                grid2.reload();
-            }).change();
-
             $("#batchDelete").click(function () {
                 var selectedIDs = new Array();
                 $('#data-table tbody tr').find('td:first :checkbox').each(function () {
@@ -214,11 +173,9 @@
                                 bootbox.alert(msg);
 
                                 var grid = new MvcGrid(document.querySelector('#data-table'));
-                                grid.query.set('MasterBusinessUnitId', $("#MasterBusinessUnitId").val());
                                 grid.reload();
 
                                 var grid2 = new MvcGrid(document.querySelector('#other-table'));
-                                grid2.query.set('MasterBusinessUnitId', $("#MasterBusinessUnitId").val());
                                 grid2.reload();
                             };
                             options.error = function () {

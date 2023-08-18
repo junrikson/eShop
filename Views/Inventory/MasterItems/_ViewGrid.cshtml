@@ -7,22 +7,14 @@
         .Grid(Model)
         .Build(columns =>
         {
-            //columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
-            //columns.Add(model => ((User.IsInRole("MasterItemsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success edit-data btn-xs\" href=\"" + @Url.Action("DetailsEdit", "MasterItems", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "")).Encoded(false);
-            //columns.Add(model => model.MasterUnit.Code).Titled(@Html.DisplayNameFor(model => model.MasterUnit.Code));
-            //columns.Add(model => model.MasterUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterUnit.Name));
-            //columns.Add(model => model.MasterUnit.Ratio).Titled(@Html.DisplayNameFor(model => model.MasterUnit.Ratio));
-            //columns.Add(model => model.Default).Titled(@Html.DisplayNameFor(model => model.Default)).RenderedAs(model => model.Default == true ? "&#x2713;" : "&#x2717;").Encoded(false);
+            columns.Add(model => model.MasterUnit.Code).Titled(@Html.DisplayNameFor(model => model.MasterUnit.Code));
+            columns.Add(model => model.MasterUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterUnit.Name));
+            columns.Add(model => model.MasterUnit.Ratio).Titled(@Html.DisplayNameFor(model => model.MasterUnit.Ratio));
+            columns.Add(model => model.Default).Titled(@Html.DisplayNameFor(model => model.Default)).RenderedAs(model => model.Default == true ? "&#x2713;" : "&#x2717;").Encoded(false);
             columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
-            //columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated)).InitialSort(GridSortOrder.Desc);
-            //columns.Add(model => model.ChartOfAccount.Code).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Code)).InitialSort(GridSortOrder.Asc);
-            //columns.Add(model => model.ChartOfAccount.Name).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Name));
-            //columns.Add(model => model.Debit).Titled(@Html.DisplayNameFor(model => model.Debit)).Formatted("{0:N0}");
-            //columns.Add(model => model.Credit).Titled(@Html.DisplayNameFor(model => model.Credit)).Formatted("{0:N0}");
-            //columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));
-            //columns.Add(model => model.MasterItem).Titled(@Html.DisplayNameFor(model => model.));
+            columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated)).InitialSort(GridSortOrder.Desc);
         })
-    .Empty("Tidak ada data.")
+        .Empty("Tidak ada data.")
     .Pageable(pager =>
     {
         pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };

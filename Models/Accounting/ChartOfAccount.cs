@@ -37,12 +37,6 @@ namespace eShop.Models
         [Required(ErrorMessage = "Nama Akun harus diisi.")]
         public string Name { get; set; }
 
-        [Display(Name = "Unit Bisnis")]
-        public int MasterBusinessUnitId { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
-
         [DatalistColumn]
         [Display(Name = "Posisi")]
         [Required(ErrorMessage = "Posisi harus diisi.")]
@@ -93,16 +87,6 @@ namespace eShop.Models
         public string Name { get; set; }
 
         [DatalistColumn]
-        [Display(Name = "Unit Bisnis")]
-        public string MasterBusinessUnitName { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public int MasterBusinessUnitId { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
-
-        [DatalistColumn]
         [Display(Name = "Posisi")]
         public EnumDefaultEntry Position { get; set; }
 
@@ -148,9 +132,6 @@ namespace eShop.Models
                     Id = x.Id,
                     Code = x.Code,
                     Name = x.Name,
-                    MasterBusinessUnitName = x.MasterBusinessUnit.Name,
-                    MasterBusinessUnitId = x.MasterBusinessUnitId,
-                    MasterBusinessUnit = x.MasterBusinessUnit,
                     Position = x.Position,
                     IsHeader = x.IsHeader,
                     Level = x.Level,

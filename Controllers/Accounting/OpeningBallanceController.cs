@@ -31,17 +31,9 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "OpeningBallanceActive")]
-        public PartialViewResult IndexGrid(int? id)
+        public PartialViewResult IndexGrid()
         {
-            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(id);
-
-            if (masterBusinessUnit != null)
-                return PartialView("../Accounting/OpeningBallance/_IndexGrid", db.Set<AccountBallance>().Where(o => o.ChartOfAccount.MasterBusinessUnitId == id &&
-                    o.ChartOfAccount.IsHeader == false &&
-                    o.Year == masterBusinessUnit.StartDate.Year &&
-                    o.Month == masterBusinessUnit.StartDate.Month).AsQueryable());
-            else
-                return null;
+                return PartialView("../Accounting/OpeningBallance/_IndexGrid", db.Set<AccountBallance>().AsQueryable());
         }
 
         // GET: OpeningBallance/Edit/5

@@ -527,15 +527,6 @@ namespace eShop.Controllers
                     ModelState.AddModelError(string.Empty, "Jumlah debet dan kredit tidak sama!");
             }
 
-            if (ModelState.IsValid)
-            {
-                foreach (BankTransactionDetails obj in bankTransactionDetails)
-                {
-                    if (obj.ChartOfAccount.MasterBusinessUnitId != bankTransaction.MasterBusinessUnitId)
-                        ModelState.AddModelError(string.Empty, "Akun " + obj.ChartOfAccount.Code + " bukan milik " + masterBusinessName);
-                }
-            }
-
             return bankTransaction;
         }
 

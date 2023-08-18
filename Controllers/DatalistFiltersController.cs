@@ -24,20 +24,6 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        public JsonResult AllMasterRegionAccount(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0, bool isHeader = false)
-        {
-            MasterRegionAccountDatalist datalist = new MasterRegionAccountDatalist(db);
-
-            filter.AdditionalFilters["ChartOfAccount.Active"] = true;
-            filter.AdditionalFilters["ChartOfAccount.IsHeader"] = isHeader;
-            filter.AdditionalFilters["ChartOfAccount.MasterBusinessUnitId"] = MasterBusinessUnitId;
-            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
-            datalist.Filter = filter;
-
-            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
         public JsonResult AllChartOfAccount(DatalistFilter filter)
         {
             ChartOfAccountDatalist datalist = new ChartOfAccountDatalist(db);

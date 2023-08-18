@@ -351,6 +351,7 @@
     <Compile Include="Models\AR\AdvanceRepayment.cs" />
     <Compile Include="Controllers\AR\AdvanceRepaymentsController.cs" />
     <Compile Include="Models\AR\Repayment.cs" />
+    <Compile Include="Models\Master\DataSelection.cs" />
     <Compile Include="Models\Master\MasterCost.cs" />
     <Compile Include="Models\Buying\PurchaseReturn.cs" />
     <Compile Include="Models\Bank\BankTransaction.cs" />
@@ -7109,11 +7110,10 @@
     <Content Include="Views\Selling\SalesOrders\_ChangeCurrency.cshtml" />
     <Content Include="Views\Selling\Sales\_ChangeCurrency.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\_ViewGrid.cshtml" />
-    <Content Include="Views\Masters\MasterBusinessUnits\_OthersGrid.cshtml" />
     <Content Include="Views\Masters\MasterCurrencies\_ViewGrid.cshtml" />
     <Content Include="Views\Masters\MasterCurrencies\_OthersGrid.cshtml" />
     <Content Include="Views\Inventory\MasterItems\_ViewGrid.cshtml" />
-    <Content Include="Views\Inventory\MasterItems\_OthersGrid.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
