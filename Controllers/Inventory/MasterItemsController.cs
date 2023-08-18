@@ -29,7 +29,19 @@ namespace eShop.Controllers
             if (String.IsNullOrEmpty(search))
                 return PartialView("../Inventory/MasterItems/_IndexGrid", db.Set<MasterItem>().AsQueryable());
             else
-                return PartialView("../Inventory/MasterItems/_IndexGrid", db.Set<MasterItem>().AsQueryable().Where(y => y.Code.Contains(search) || y.Name.Contains(search)));
+                return PartialView("../Inventory/MasterItems/_IndexGrid", db.Set<MasterItem>().AsQueryable()
+                    .Where(y => y.Code.Contains(search) || y.Name.Contains(search)));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "MasterItemsActive")]
+        public PartialViewResult OthersGrid(String search)
+        {
+            if (String.IsNullOrEmpty(search))
+                return PartialView("../Inventory/MasterItems/_OthersGrid", db.Set<MasterItem>().AsQueryable());
+            else
+                return PartialView("../Inventory/MasterItems/_OthersGrid", db.Set<MasterItem>().AsQueryable()
+                    .Where(y => y.Code.Contains(search) || y.Name.Contains(search)));
         }
 
         [Authorize(Roles = "MasterItemsActive")]
@@ -72,6 +84,14 @@ namespace eShop.Controllers
                 return HttpNotFound();
             }
             return PartialView("../Inventory/MasterItems/_Details", MasterItem);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "MasterItemsView")]
+        public PartialViewResult ViewGrid(int Id)
+        {
+            return PartialView("../Inventory/MasterItems/_ViewGrid", db.MasterItemUnits
+                .Where(x => x.MasterItemId == Id).ToList());
         }
 
         // GET: MasterItems/Create

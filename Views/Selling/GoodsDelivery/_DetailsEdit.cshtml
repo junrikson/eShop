@@ -1,4 +1,4 @@
-﻿@model eShop.Models.SalesOrderDetails
+﻿@model eShop.Models.GoodsReceiptDetails
 
 @{
     Layout = null;
@@ -10,22 +10,23 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title">Add - Detail</h4>
+            <h4 class="modal-title">Edit - Detail</h4>
         </div>
         <div class="modal-body">
             @Html.Partial("MvcDatalist/_Dialog")
             <div id="divEmp">
-                @using (Ajax.BeginForm("DetailsCreate", "SalesOrders", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
+                @using (Ajax.BeginForm("DetailsEdit", "GoodsReceipts", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "EditSuccess" }))
                 {
                     @Html.AntiForgeryToken()
 
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    @Html.HiddenFor(model => model.SalesOrderId)
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.GoodsReceiptId)
                     <div class="form-group">
                         <div class="col-md-12">
                             @Html.LabelFor(model => model.MasterItemId)
-                            @Html.DatalistFor(model => model.MasterItemId, new eShop.Models.AllMasterItemDatalist(), new { @class = "datalist2" })
+                            @Html.DatalistFor(model => model.MasterItemId, new eShop.Models.MasterItemSupplierDatalist(), new { @class = "datalist2" })
                             @Html.ValidationMessageFor(model => model.MasterItemId, "", new { @class = "text-danger" })
                         </div>
                     </div>

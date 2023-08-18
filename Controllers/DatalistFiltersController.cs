@@ -234,6 +234,18 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllOutstandingSalesOrder(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitId = 0)
+        {
+            OutstandingSalesOrderDatalist datalist = new OutstandingSalesOrderDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterRegionId"] = masterRegionId;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = masterBusinessUnitId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllSale(DatalistFilter filter)
         {
             SaleDatalist datalist = new SaleDatalist(db);

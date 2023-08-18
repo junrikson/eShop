@@ -31,6 +31,17 @@ namespace eShop.Controllers
                     .Where(x => x.Code.Contains(search)));
         }
 
+        [HttpGet]
+        [Authorize(Roles = "MasterCurrenciesActive")]
+        public PartialViewResult OthersGrid(String search)
+        {
+            if (String.IsNullOrEmpty(search))
+                return PartialView("../Masters/MasterCurrencies/_OthersGrid", db.Set<MasterCurrency>().AsQueryable());
+            else
+                return PartialView("../Masters/MasterCurrencies/_OthersGrid", db.Set<MasterCurrency>().AsQueryable()
+                    .Where(x => x.Code.Contains(search)));
+        }
+
         [Authorize(Roles = "MasterCurrenciesActive")]
         public JsonResult IsCodeExists(string Code, int? Id)
         {

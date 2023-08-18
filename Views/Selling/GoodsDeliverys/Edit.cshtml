@@ -1,8 +1,8 @@
-﻿@model eShop.Models.Sale
+﻿@model eShop.Models.GoodsDelivery
 
 @{
-    ViewBag.Title = "Sale";
-    ViewBag.Current = "Sales";
+    ViewBag.Title = "Goods Delivery";
+    ViewBag.Current = "GoodsDeliverys";
 }
 
 @section Styles {
@@ -27,7 +27,7 @@
                     <div class="box-header with-border">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Add - Sale</h3>
+                        <h3 class="box-title">Edit - Goods Receipt</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -53,9 +53,17 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    @Html.LabelFor(model => model.SalesOrderId)
-                                    @Html.DatalistFor(model => model.SalesOrderId, new eShop.Models.OutstandingSalesOrderDatalist())
-                                    @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
+                                    @Html.LabelFor(model => model.Sal)
+                                    @Html.HiddenFor(model => model.PurchaseId)
+                                    @Html.EditorFor(model => model.Purchase.Code, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.PurchaseId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.MasterWarehouseId)
+                                    @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterWarehouseRegionDatalist())
+                                    @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -81,9 +89,10 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    @Html.LabelFor(model => model.MasterCustomerId)
-                                    @Html.DatalistFor(model => model.MasterCustomerId, new eShop.Models.MasterCustomerDatalist())
-                                    @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
+                                    @Html.LabelFor(model => model.MasterSupplierId)
+                                    @Html.HiddenFor(model => model.MasterSupplierId)
+                                    @Html.EditorFor(model => model.MasterSupplier.Code, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.MasterSupplierId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -94,7 +103,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="col-md-6 text-left">
-                                        <a href="#" id="cancel" class="btn btn-danger" style="margin-top:10px">
+                                        <a href="@Url.Action("Index")" id="cancel" class="btn btn-danger" style="margin-top:10px">
                                             Cancel
                                         </a>
                                     </div>
@@ -121,12 +130,7 @@
                             <h3 class="box-title">Details</h3>
                         </div>
                         <div class="text-right col-md-10">
-                            <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "Sales")" ">
-                                @Model.MasterCurrency.Code : @Model.Rate.ToString("N2")
-                            </button>
-                            <label style="font-weight: bold">TOTAL :</label>
-                            <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "Sales")">
+                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "GoodsReceipts")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
                             <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
@@ -172,6 +176,7 @@
     </script>
 
     <script>
+
         [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
             new MvcDatalist(element);
         });
@@ -197,36 +202,6 @@
             }
         });
 
-        Inputmask.extendAliases({
-            'myNum2': {
-                alias: 'currency',
-                digits: 2,
-                digitsOptional: false,
-                integerDigits: 12,
-                prefix: '',
-                groupSeparator: '.',
-                radixPoint: ',',
-                groupSize: 3,
-                rightAlign: false,
-                autoUnmask: true
-            }
-        });
-
-        Inputmask.extendAliases({
-            'myNum10': {
-                alias: 'currency',
-                digits: 10,
-                digitsOptional: false,
-                integerDigits: 12,
-                prefix: '',
-                groupSeparator: '.',
-                radixPoint: ',',
-                groupSize: 3,
-                rightAlign: false,
-                autoUnmask: true
-            }
-        });
-
         $('#btnAdd').click(function (event) {
             event.preventDefault();
             if ($("#MasterBusinessUnitId").val() === "") {
@@ -236,7 +211,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?saleId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?goodsReceiptId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -252,14 +227,13 @@
                     });
 
                     Inputmask("myNum").mask("#Quantity");
-                    Inputmask("myNum").mask("#Price");
 
                     $("#MasterItemId").on("change", function () {
                         var Id = $("#MasterItemId").val();
                         var data = { id: Id };
                         var options = {};
 
-                        options.url = "/Sales/GetMasterUnit";
+                        options.url = "/GoodsReceipts/GetMasterUnit";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -285,47 +259,6 @@
             }
         });
 
-        $('#btnChangeCurrency').click(function (event) {
-            event.preventDefault();
-            var url = $(this).attr("href") + "?saleId=" + $("input#Id").val();
-            $.get(url, function (data) {
-                $('#detailsContainer').html(data);
-                $('#detailsModal').modal('show');
-
-                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                    new MvcDatalist(element);
-                });
-
-                $('form').each(function () {
-                    var $el = $(this);
-                    $el.data('validator', null);
-                    $.validator.unobtrusive.parse($el);
-                });
-
-                $("#MasterCurrencyId").on("change", function () {
-                    var id = $("#MasterCurrencyId").val();
-                    var data = { Id: id };
-                    var options = {};
-
-                    options.url = "/Sales/GetCurrencyRate";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (rate) {
-                        document.getElementById('Rate').value = rate;
-                    };
-                    options.error = function () {
-                    };
-                    $.ajax(options);
-                }).change();
-
-                Inputmask("myNum10").mask("#Rate");
-            });
-        });
-
-
         function CreateSuccess(data) {
             if (data !== "success") {
                 $('#detailsContainer').html(data);
@@ -336,20 +269,6 @@
 
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
-
-            var param = { saleId: $("#Id").val() };
-            var options = {};
-
-            options.url = "/Sales/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
         }
 
         function EditSuccess(data) {
@@ -362,148 +281,41 @@
 
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
-
-            var param = { saleId: $("#Id").val() };
-            var options = {};
-
-            options.url = "/Sales/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
-        }
-
-        function ChangeCurrencySuccess(data) {
-            if (data.Status !== "success") {
-                $('#detailsContainer').html(data);
-                return;
-            }
-            $('#detailsModal').modal('hide');
-            $('#detailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#detail-table'));
-            grid.reload();
-
-            document.querySelector('#btnChangeCurrency').innerHTML = data.Message;
-
-            var param = { salesOrderId: $("#Id").val() };
-            var options = {};
-
-            options.url = "/Sales/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
         }
 
         var token = $('input[name="__RequestVerificationToken"]').val();
         var headers = {};
         headers['__RequestVerificationToken'] = token;
 
-        $(document).ready(function ()
-        {
-            $("#SalesOrderId").on("change", function () {
-                var salesOrderId = $("#SalesOrderId").val();
-                var saleid = $("#Id").val();
-                var data = { Saleid: saleid, SalesOrderId: salesOrderId };
-                var options = {};
-                var grid = new MvcGrid(document.querySelector('#detail-table'));
-
-                if (salesOrderId !== 0 && salesOrderId !== '') {
-                    options.url = "/Sales/PopulateDetails";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (obj) {
-                        document.getElementById('MasterRegionId').value = obj.MasterRegionId;
-                        document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                        document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
-                        document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
-                        document.getElementById('Notes').value = obj.Notes;
-                        document.getElementById('Total').value = obj.Total;
-                        document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
-
-                        $(document.getElementById('MasterBusinessUnitId')).trigger("change");
-
-                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                            new MvcDatalist(element).reload();
-                        });
-
-                        grid.reload();
-                    };
-                    options.error = function () {
-                        document.getElementById('Code').value = "";
-                        document.getElementById('MasterBusinessUnitId').value = "0";
-                        grid.reload();
-                    };
-                    $.ajax(options);
-                }
-            }).change();
-
-            $("#DetailsBatchDelete").click(function ()
-            {
+        $(document).ready(function () {
+            $("#DetailsBatchDelete").click(function () {
                 var selectedIDs = new Array();
-                $('#detail-table tbody tr').find('td:first :checkbox').each(function ()
-                {
-                    if ($(this).prop('checked'))
-                    {
+                $('#detail-table tbody tr').find('td:first :checkbox').each(function () {
+                    if ($(this).prop('checked')) {
                         selectedIDs.push($(this).val());
                     }
                 });
 
-                if (selectedIDs.length <= 0)
-                {
+                if (selectedIDs.length <= 0) {
                     bootbox.alert("Pilih salah satu data yang akan dihapus.");
                 }
-                else
-                {
-                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result)
-                    {
-                        if (result)
-                        {
+                else {
+                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                        if (result) {
                             var options = {};
-                            options.url = "/Sales/DetailsBatchDelete";
+                            options.url = "/GoodsReceipts/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
                             options.contentType = "application/json";
                             options.dataType = "json";
-                            options.success = function (msg)
-                            {
+                            options.success = function (msg) {
                                 bootbox.alert(msg);
 
                                 var grid = new MvcGrid(document.querySelector('#detail-table'));
                                 grid.reload();
-
-                                var param = { saleId: $("#Id").val() };
-                                var options2 = {};
-
-                                options2.url = "/Sales/GetTotal";
-                                options2.type = "POST";
-                                options2.headers = headers;
-                                options2.data = JSON.stringify(param);
-                                options2.contentType = "application/json";
-                                options2.dataType = "json";
-                                options2.success = function (msg)
-                                {
-                                    document.getElementById('Total').value = msg;
-                                };
-                                $.ajax(options2);
                             };
-                            options.error = function ()
-                            {
+                            options.error = function () {
                                 bootbox.alert("Terjadi kesalahan saat menghapus.");
                             };
                             $.ajax(options);
@@ -511,87 +323,6 @@
                     });
                 }
             });
-
-            $("#cancel").click(function () {
-                var data = { id: $("input#Id").val() };
-                var options = {};
-                options.url = "/Sales/Cancel";
-                options.type = "POST";
-                options.headers = headers;
-                options.data = JSON.stringify(data);
-                options.contentType = "application/json";
-                options.dataType = "json";
-                options.success = function (msg) {
-                    window.location.href = '@Url.Action("Index", "Sales")';
-                };
-                options.error = function () {
-                    window.location.href = '@Url.Action("Index", "Sales")';
-                };
-                $.ajax(options);
-            });
-
-            $("#MasterRegionId").on("change", function () {
-                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
-                var masterRegionId = $("#MasterRegionId").val();
-                var id = $("#Id").val();
-                var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
-                var options = {};
-
-                if (masterRegionId !== 0 && masterRegionId !== '') {
-                    if ($("#MasterBusinessUnitId").val() === "") {
-                        bootbox.alert("Unit Bisnis belum dipilih!");
-                        document.getElementById('MasterRegionId').value = "0";
-                    }
-                    else {
-                        options.url = "/Sales/GetCode";
-                        options.type = "POST";
-                        options.headers = headers;
-                        options.data = JSON.stringify(data);
-                        options.contentType = "application/json";
-                        options.dataType = "json";
-                        options.success = function (code) {
-                            document.getElementById('Code').value = code;
-
-                            [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                                new MvcDatalist(element).reload();
-                            });
-                        };
-                        options.error = function () {
-                            document.getElementById('Code').value = "";
-                            grid.reload();
-                        };
-                        $.ajax(options);
-                    }
-                }
-            }).change();
-
-            $("#MasterBusinessUnitId").on("change", function () {
-                var id = $("#Id").val();
-                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
-                var masterRegionId = $("#MasterRegionId").val();
-                var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
-                var options = {};
-
-                if (masterRegionId !== 0 && masterRegionId !== '') {
-                    options.url = "/Sales/GetCode";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (code) {
-                        document.getElementById('Code').value = code;
-
-                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                            new MvcDatalist(element).reload();
-                        });
-                    };
-                    options.error = function () {
-                        document.getElementById('Code').value = "";
-                    };
-                    $.ajax(options);
-                }
-            }).change();
         });
 
         document.addEventListener('reloadend', function (e) {
@@ -621,14 +352,13 @@
                         });
 
                         Inputmask("myNum").mask("#Quantity");
-                        Inputmask("myNum").mask("#Price");
 
                         $("#MasterItemId").on("change", function () {
                             var Id = $("#MasterItemId").val();
                             var data = { id: Id };
                             var options = {};
 
-                            options.url = "/Sales/GetMasterUnit";
+                            options.url = "/GoodsReceipts/GetMasterUnit";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(data);

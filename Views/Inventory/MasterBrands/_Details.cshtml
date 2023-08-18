@@ -1,9 +1,9 @@
 ﻿@model eShop.Models.MasterBrand
+@using eShop.Models;
 
 @{
     Layout = null;
 }
-
 
 <div class="modal-dialog">
     <div class="modal-content">
@@ -11,89 +11,77 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title">View - Merek</h4>
+            <h4 class="modal-title">Create - Merek</h4>
         </div>
         <div class="modal-body">
-            <table align="center">
-                <tr>
-                    <td style="font-weight:bold;" width="130px" valign="top">
-                        @Html.DisplayNameFor(model => model.Code)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Code)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.Name)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Name)
-                    </td>
-                </tr>
+            <div id="divEmp">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
 
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.Notes)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Notes)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.Created)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Created)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.Updated)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Updated)
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.User.UserName)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.User.UserName)
-                    </td>
-                <tr>
-                    <td style="font-weight:bold;" valign="top">
-                        @Html.DisplayNameFor(model => model.Active)
-                    </td>
-                    <td style="font-weight:bold;" valign="top">
-                        &nbsp;:&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => model.Active)
-                    </td>
-                </tr>
-            </table>
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.Code)
+                            @Html.TextBoxFor(model => model.Code, new { disabled = "disabled", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-2 text-center">
+                            @Html.LabelFor(model => model.Active)
+                            <div class="checkbox text-center">
+                                @Html.CheckBoxFor(model => model.Active)
+                                @Html.CheckBoxFor(model => model.Active, new { disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Name)
+                            @Html.TextBoxFor(model => model.Notes, new { disabled = "disabled", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Notes)
+                            @Html.TextBoxFor(model => model.Notes, new { disabled = "disabled", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Notes)
+                            @Html.TextBoxFor(model => model.Notes, new { disabled = "disabled", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.Created)
+                            @Html.EditorFor(model => model.Created, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.Created, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.Updated)
+                            @Html.EditorFor(model => model.Updated, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.Updated, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.User.UserName)
+                            @Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.User.UserName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+                        <div class="form-group">
+                            <div class="text-right">
+                                <button type="button" class="btn btn-danger btn-block btn-lg" data-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+            </div>
         </div>
     </div>
 </div>
-
