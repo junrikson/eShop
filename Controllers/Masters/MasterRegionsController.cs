@@ -77,7 +77,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterRegionsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Notes,IsExport,Active")] MasterRegion masterRegion)
+        public ActionResult Create([Bind(Include = "Id,Code,Notes,Active")] MasterRegion masterRegion)
         {
             if (ModelState.IsValid)
             {
@@ -138,7 +138,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterRegionsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Notes,IsExport,Active")] MasterRegion masterRegion)
+        public ActionResult Edit([Bind(Include = "Id,Code,Notes,Active")] MasterRegion masterRegion)
         {
             if (ModelState.IsValid)
             {
@@ -148,7 +148,6 @@ namespace eShop.Controllers
                 db.Entry(masterRegion).State = EntityState.Unchanged;
                 db.Entry(masterRegion).Property("Code").IsModified = true;
                 db.Entry(masterRegion).Property("Notes").IsModified = true;
-                db.Entry(masterRegion).Property("IsExport").IsModified = true;
                 db.Entry(masterRegion).Property("Active").IsModified = true;
                 db.SaveChanges();
 

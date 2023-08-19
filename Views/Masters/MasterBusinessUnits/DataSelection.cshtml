@@ -43,7 +43,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg btnMasterRegions" data-dismiss="modal">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterRegions" href="@Url.Action("AddMasterRegions", "DataSelection", new { id = Model.Id })">
                                                 Wilayah
                                             </button>
                                         </div>
@@ -52,7 +52,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg btnMasterSuppliers" data-dismiss="modal">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterSuppliers" href="@Url.Action("AddMasterSuppliers", "DataSelection", new { id = Model.Id })">
                                                 Supplier
                                             </button>
                                         </div>
@@ -63,7 +63,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg btnMasterCustomers" data-dismiss="modal">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterCustomers" href="@Url.Action("AddMasterCustomers", "DataSelection", new { id = Model.Id })">
                                                 Konsumen
                                             </button>
                                         </div>
@@ -72,7 +72,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg btnSalesPersons" data-dismiss="modal">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterSalesPersons" href="@Url.Action("AddMasterSalesPersons", "DataSelection", new { id = Model.Id })">
                                                 Sales
                                             </button>
                                         </div>
@@ -83,7 +83,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg btnMasterWarehouses" data-dismiss="modal">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterWarehouses" href="@Url.Action("AddMasterWarehouses", "DataSelection", new { id = Model.Id })">
                                                 Gudang
                                             </button>
                                         </div>
@@ -92,7 +92,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg btnMasterAccounts" data-dismiss="modal">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterAccounts" href="@Url.Action("AddMasterAccounts", "DataSelection", new { id = Model.Id })">
                                                 Akun
                                             </button>
                                         </div>
@@ -122,7 +122,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg btnMasterCategories" data-dismiss="modal">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterCategories" href="@Url.Action("AddMasterCategories", "DataSelection", new { id = Model.Id })">
                                                 Kategori
                                             </button>
                                         </div>
@@ -131,7 +131,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg btnMasterBrands" data-dismiss="modal">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterBrands" href="@Url.Action("AddMasterBrands", "DataSelection", new { id = Model.Id })">
                                                 Merek
                                             </button>
                                         </div>
@@ -142,7 +142,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg btnMasterItems" data-dismiss="modal">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterItems" href="@Url.Action("AddMasterItems", "DataSelection", new { id = Model.Id })">
                                                 Barang
                                             </button>
                                         </div>
@@ -169,7 +169,7 @@
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                             <div class="form-group">
                                 <div class="col-md-6">
-                                    <button type="button" class="btn btn-primary btn-block btn-lg btnAccountsSetting" data-dismiss="modal">
+                                    <button type="button" class="btn btn-primary btn-block btn-lg" id="btnAccountsSetting" href="@Url.Action("AddAccountsSetting", "DataSelection", new { id = Model.Id })">
                                         Setting Akun
                                     </button>
                                 </div>
@@ -197,9 +197,10 @@
 @section Scripts {
     @Scripts.Render("~/bundles/mvcgrid")
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/script/Select2")
     @Scripts.Render("~/bundles/unobtrusive")
-    @Scripts.Render("~/script/tableHeadFixer")
     @Scripts.Render("~/bundles/MvcDatalist")
+    @Scripts.Render("~/script/tableHeadFixer")
     @Scripts.Render("~/script/InputMask")
 
     <script>
@@ -211,14 +212,18 @@
         $.validator.methods.number = function (value, element) {
             return this.optional(element) || /-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
         }
-    </script>
 
-    <script>
-        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
-            new MvcGrid(element);
-        });
+        function AddRegionsSuccess() {
+            $('#detailsContainer').html("");
 
-        $('#btnAdd').click(function (event) {
+            document.getElementById("btnMasterRegions").click();
+        }
+
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        var headers = {};
+        headers['__RequestVerificationToken'] = token;
+
+        $('#btnMasterRegions').click(function (event) {
             event.preventDefault();
             var url = $(this).attr("href");
             $.get(url, function (data) {
@@ -230,310 +235,72 @@
                     $el.data('validator', null);
                     $.validator.unobtrusive.parse($el);
                 });
-            });
-        });
 
-        function CreateSuccess(data) {
-            if (data !== "success") {
-                $('#detailsContainer').html(data);
-                return;
-            }
-            $('#detailsModal').modal('hide');
-            $('#detailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#data-table'));
-            grid.reload();
-        }
-
-        function EditSuccess(data) {
-            if (data !== "success") {
-                $('#detailsContainer').html(data);
-                return;
-            }
-            $('#detailsModal').modal('hide');
-            $('#detailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#data-table'));
-            grid.reload();
-        }
-
-        function CostsCreateSuccess(data) {
-            if (data !== "success") {
-                $('#subdetailsContainer').html(data);
-                return;
-            }
-            $('#subdetailsModal').modal('hide');
-            $('#subdetailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#costs-table'));
-            grid.reload();
-        }
-
-        function CostsEditSuccess(data) {
-            if (data !== "success") {
-                $('#subdetailsContainer').html(data);
-                return;
-            }
-            $('#subdetailsModal').modal('hide');
-            $('#subdetailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#costs-table'));
-            grid.reload();
-        }
-
-        function AccountsCreateSuccess(data) {
-            if (data !== "success") {
-                $('#subdetailsContainer').html(data);
-                return;
-            }
-            $('#subdetailsModal').modal('hide');
-            $('#subdetailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#accounts-table'));
-            grid.reload();
-        }
-
-        function AccountsEditSuccess(data) {
-            if (data !== "success") {
-                $('#subdetailsContainer').html(data);
-                return;
-            }
-            $('#subdetailsModal').modal('hide');
-            $('#subdetailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#accounts-table'));
-            grid.reload();
-        }
-    </script>
-
-    <script>
-        var token = $('input[name="__RequestVerificationToken"]').val();
-        var headers = {};
-        headers['__RequestVerificationToken'] = token;
-
-        $(document).ready(function () {
-            $("#batchDelete").click(function () {
-                var selectedIDs = new Array();
-                $('#data-table tbody tr').find('td:first :checkbox').each(function () {
-                    if ($(this).prop('checked')) {
-                        selectedIDs.push($(this).val());
-                    }
+                [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                    new MvcGrid(element);
                 });
 
-                if (selectedIDs.length <= 0) {
-                    bootbox.alert("Pilih salah satu data yang akan dihapus.");
-                }
-                else {
-                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
-                        if (result) {
-                            var options = {};
-                            options.url = "/MasterBusinessUnits/BatchDelete";
-                            options.type = "POST";
-                            options.headers = headers;
-                            options.data = JSON.stringify(selectedIDs);
-                            options.contentType = "application/json";
-                            options.dataType = "json";
-                            options.success = function (msg) {
-                                bootbox.alert(msg);
+                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                    new MvcDatalist(element);
+                });
 
-                                var grid = new MvcGrid(document.querySelector('#data-table'));
-                                grid.reload();
-                            };
-                            options.error = function () {
-                                bootbox.alert("Terjadi kesalahan saat menghapus.");
-                            };
-                            $.ajax(options);
+                $("#batchDeleteRegions").click(function () {
+                    event.preventDefault();
+                    var selectedIDs = new Array();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+
+                    $('#details-table tbody tr').find('td:first :checkbox').each(function () {
+                        if ($(this).prop('checked')) {
+                            selectedIDs.push($(this).val());
                         }
                     });
-                }
+
+                    if (selectedIDs.length <= 0) {
+                        bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                    }
+                    else {
+                        bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                            if (result) {
+                                var options = {};
+                                options.url = "/DataSelection/BatchDeleteRegions";
+                                options.type = "POST";
+                                options.headers = headers;
+                                options.data = JSON.stringify(data);
+                                options.contentType = "application/json";
+                                options.dataType = "json";
+                                options.success = function (msg) {
+                                    bootbox.alert(msg);
+
+                                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                                    grid.reload();
+                                };
+                                options.error = function () {
+                                    bootbox.alert("Terjadi kesalahan saat menghapus.");
+                                };
+                                $.ajax(options);
+                            }
+                        });
+                    }
+                });
             });
         });
 
         document.addEventListener('reloadend', function (e) {
-            if (e.detail.grid.element.id == 'data-table') {
+            if (e.detail.grid.element.id == 'details-table') {
+                $('.fix-table').tableHeadFixer({ left: 2 });
+
                 $('#CheckAll').click(function () {
                     var checkedStatus = this.checked;
-                    $('#data-table tbody tr').find('td:first :checkbox').each(function () {
+                    $('#details-table tbody tr').find('td:first :checkbox').each(function () {
                         $(this).prop('checked', checkedStatus);
                     });
                 });
-
-                $('#data-table').on("click", ".edit-data", function (event) {
-                    event.preventDefault();
-                    var url = $(this).attr("href");
-                    $.get(url, function (data) {
-                        $('#detailsContainer').html(data);
-                        $('#detailsModal').modal('show');
-
-                        $('form').each(function () {
-                            var $el = $(this);
-                            $el.data('validator', null);
-                            $.validator.unobtrusive.parse($el);
-                        });
-
-                        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
-                            new MvcGrid(element);
-                        });
-
-                        Inputmask("myNum2").mask("#PPNRate");
-                        Inputmask("myNum2").mask("#FCLLoadFee");
-                        Inputmask("myNum2").mask("#LCLLoadFee");
-                        Inputmask("myNum2").mask("#EmptyLoadFee");
-
-                        $('#btnCostsAdd').click(function (event) {
-                            event.preventDefault();
-                            var url = $(this).attr("href");
-                            $.get(url, function (data) {
-                                $('#subdetailsContainer').html(data);
-                                $('#subdetailsModal').modal('show');
-
-                                $('form').each(function () {
-                                    var $el = $(this);
-                                    $el.data('validator', null);
-                                    $.validator.unobtrusive.parse($el);
-                                });
-
-                                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                    new MvcDatalist(element);
-                                });
-                            });
-                        });
-
-                        $('#btnAccountsAdd').click(function (event) {
-                            event.preventDefault();
-                            var url = $(this).attr("href");
-                            $.get(url, function (data) {
-                                $('#subdetailsContainer').html(data);
-                                $('#subdetailsModal').modal('show');
-
-                                $('form').each(function () {
-                                    var $el = $(this);
-                                    $el.data('validator', null);
-                                    $.validator.unobtrusive.parse($el);
-                                });
-
-                                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                    new MvcDatalist(element);
-                                });
-                            });
-                        });
-
-                        var token2 = $('input[name="__RequestVerificationToken"]').val();
-                        var headers2 = {};
-                        headers2['__RequestVerificationToken'] = token2;
-
-                        $("#costsBatchDelete").click(function (event) {
-                            event.preventDefault();
-                            var selectedIDs = new Array();
-                            $('#costs-table tbody tr').find('td:first :checkbox').each(function () {
-                                if ($(this).prop('checked')) {
-                                    selectedIDs.push($(this).val());
-                                }
-                            });
-
-                            if (selectedIDs.length <= 0) {
-                                bootbox.alert("Pilih salah satu data yang akan dihapus.");
-                            }
-                            else {
-                                bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
-                                    if (result) {
-                                        var options = {};
-                                        options.url = "/MasterBusinessUnits/CostsBatchDelete";
-                                        options.type = "POST";
-                                        options.headers = headers2;
-                                        options.data = JSON.stringify(selectedIDs);
-                                        options.contentType = "application/json";
-                                        options.dataType = "json";
-                                        options.success = function (msg) {
-                                            bootbox.alert(msg);
-
-                                            var grid = new MvcGrid(document.querySelector('#costs-table'));
-                                            grid.reload();
-                                        };
-                                        options.error = function () {
-                                            bootbox.alert("Terjadi kesalahan saat menghapus.");
-                                        };
-                                        $.ajax(options);
-                                    }
-                                });
-                            }
-                        });
-
-                        $("#accountsBatchDelete").click(function (event) {
-                            event.preventDefault();
-                            var selectedIDs = new Array();
-                            $('#accounts-table tbody tr').find('td:first :checkbox').each(function () {
-                                if ($(this).prop('checked')) {
-                                    selectedIDs.push($(this).val());
-                                }
-                            });
-
-                            if (selectedIDs.length <= 0) {
-                                bootbox.alert("Pilih salah satu data yang akan dihapus.");
-                            }
-                            else {
-                                bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
-                                    if (result) {
-                                        var options = {};
-                                        options.url = "/MasterBusinessUnits/AccountsBatchDelete";
-                                        options.type = "POST";
-                                        options.headers = headers2;
-                                        options.data = JSON.stringify(selectedIDs);
-                                        options.contentType = "application/json";
-                                        options.dataType = "json";
-                                        options.success = function (msg) {
-                                            bootbox.alert(msg);
-
-                                            var grid = new MvcGrid(document.querySelector('#accounts-table'));
-                                            grid.reload();
-                                        };
-                                        options.error = function () {
-                                            bootbox.alert("Terjadi kesalahan saat menghapus.");
-                                        };
-                                        $.ajax(options);
-                                    }
-                                });
-                            }
-                        });
-                    });
-                });
-
-                $('#data-table').on("click", ".view-data", function (event) {
-                    event.preventDefault();
-                    var url = $(this).attr("href");
-                    $.get(url, function (data) {
-                        $('#detailsContainer').html(data);
-                        $('#detailsModal').modal('show');
-                    });
-                });
-
-                $('.fix-table').tableHeadFixer({ left: 3 });
             }
-            else if (e.detail.grid.element.id == 'accounts-table') {
-                $('#accounts-table').on("click", ".edit-account", function (event) {
-                    event.preventDefault();
-                    var url = $(this).attr("href");
-                    $.get(url, function (data) {
-                        $('#subdetailsContainer').html(data);
-                        $('#subdetailsModal').modal('show');
-
-                        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                            new MvcDatalist(element);
-                        });
-                    });
-                });
-            }
-            else if (e.detail.grid.element.id == 'costs-table') {
-                $('#costs-table').on("click", ".edit-cost", function (event) {
-                    event.preventDefault();
-                    var url = $(this).attr("href");
-                    $.get(url, function (data) {
-                        $('#subdetailsContainer').html(data);
-                        $('#subdetailsModal').modal('show');
-
-                        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                            new MvcDatalist(element);
-                        });
+            else if (e.detail.grid.element.id == 'sub-details-table') {
+                $('#CheckAll').click(function () {
+                    var checkedStatus = this.checked;
+                    $('#sub-details-table tbody tr').find('td:first :checkbox').each(function () {
+                        $(this).prop('checked', checkedStatus);
                     });
                 });
             }

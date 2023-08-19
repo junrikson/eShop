@@ -27,13 +27,6 @@
                             @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-md-2 text-center">
-                            @Html.LabelFor(model => model.IsExport)
-                            <div class="checkbox text-center">
-                                @Html.CheckBoxFor(model => model.IsExport)
-                                @Html.ValidationMessageFor(model => model.IsExport, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="col-md-2 text-center">
                             @Html.LabelFor(model => model.Active)
                             <div class="checkbox text-center">
                                 @Html.CheckBoxFor(model => model.Active)

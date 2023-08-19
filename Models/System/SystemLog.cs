@@ -235,7 +235,27 @@ namespace eShop.Models
         [Display(Name = "Adjustment")]
         GoodsReceipt = 114,
         [Display(Name = "Adjustment Details")]
-        GoodsReceiptDetails = 115
+        GoodsReceiptDetails = 115,
+        [Display(Name = "Setting Akun")]
+        MasterBusinessUnitAccount = 116,
+        [Display(Name = "Unit Wilayah")]
+        MasterBusinessUnitRegion = 117,
+        [Display(Name = "Unit Supplier")]
+        MasterBusinessUnitSupplier = 118,
+        [Display(Name = "Unit Konsumen")]
+        MasterBusinessUnitCustomer = 119,
+        [Display(Name = "Unit Sales")]
+        MasterBusinessSalesPerson = 120,
+        [Display(Name = "Unit Kategori")]
+        MasterBusinessCategory = 121,
+        [Display(Name = "Unit Merek")]
+        MasterBusinessBrand = 122,
+        [Display(Name = "Unit Item")]
+        MasterBusinessItem = 123,
+        [Display(Name = "Unit Gudang")]
+        MasterBusinessRegionWarehouse = 124,
+        [Display(Name = "Unit Akun")]
+        MasterBusinessRegionAccount = 125
     }
 
     public enum EnumActions

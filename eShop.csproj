@@ -309,6 +309,7 @@
     <Compile Include="Controllers\Inventory\MasterBrandsController.cs" />
     <Compile Include="Controllers\Inventory\WarehouseTransfersController.cs" />
     <Compile Include="Controllers\Inventory\StockAdjustmentsController.cs" />
+    <Compile Include="Controllers\Masters\DataSelectionController.cs" />
     <Compile Include="Controllers\Masters\MasterCostsController.cs" />
     <Compile Include="Controllers\Masters\MasterCurrenciesController.cs" />
     <Compile Include="Controllers\Masters\MasterSalesPersonsController.cs" />
@@ -6900,8 +6901,8 @@
     <Content Include="Views\Masters\MasterWarehouses\_Edit.cshtml" />
     <Content Include="Views\Masters\MasterWarehouses\_IndexGrid.cshtml" />
     <Content Include="Views\Masters\MasterRegions\Index.cshtml" />
-    <Content Include="Views\Masters\MasterRegions\_Accounts.cshtml" />
-    <Content Include="Views\Masters\MasterRegions\_AccountsGrid.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterRegionsAdd.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterRegionsGrid.cshtml" />
     <Content Include="Views\Masters\MasterRegions\_Create.cshtml" />
     <Content Include="Views\Masters\MasterRegions\_Details.cshtml" />
     <Content Include="Views\Masters\MasterRegions\_Edit.cshtml" />

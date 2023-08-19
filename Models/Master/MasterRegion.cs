@@ -39,9 +39,6 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Display(Name = "Ekspor")]
-        public bool IsExport { get; set; }
-
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
 
@@ -61,11 +58,11 @@ namespace eShop.Models
         {
             Context = context;
 
-            GetLabel = (model) => model.Code;
+            GetLabel = (model) => model.Code + " - " + model.Notes;
         }
         public MasterRegionDatalist()
         {
-            Url = "AllMasterRegion";
+            Url = "/DatalistFilters/AllMasterRegion";
             Title = "Master Wilayah";
 
             Filter.Sort = "Code";

@@ -135,50 +135,6 @@
             var grid = new MvcGrid(document.querySelector('#data-table'));
             grid.reload();
         }
-        
-        function SaveAccounts()
-        {
-            if (document.forms["form"]["Id"].value === '')
-            {
-                bootbox.alert("Kesalahan system, coba reload kembali halaman ini.");
-            }
-            else if (document.forms["form"]["ChartOfAccountStartId"].value === '')
-            {
-                bootbox.alert("Akun awal belum dipilih.");
-            }
-            else if (document.forms["form"]["ChartOfAccountEndId"].value === '')
-            {
-                bootbox.alert("Akun akhir belum diisi.");
-            }
-            else
-            {
-                var data = { id: document.forms["form"]["Id"].value, chartOfAccountStartId: document.forms["form"]["ChartOfAccountStartId"].value, chartOfAccountEndId: document.forms["form"]["ChartOfAccountEndId"].value };
-                var token = $('input[name="__RequestVerificationToken"]').val();
-                var headers = {};
-                headers['__RequestVerificationToken'] = token;
-
-                var options = {};
-                options.url = "/MasterRegions/SaveAccounts";
-                options.type = "POST";
-                options.headers = headers;
-                options.data = JSON.stringify(data);
-                options.contentType = "application/json";
-                options.dataType = "json";
-                options.success = function (msg)
-                {
-                    var grid = new MvcGrid(document.querySelector('#accounts-table'));
-                    grid.reload();
-
-                    document.getElementById('ChartOfAccountStartId').value = "";
-                    document.getElementById('ChartOfAccountEndId').value = "";
-                };
-                options.error = function ()
-                {
-                    bootbox.alert("Terjadi kesalahan saat menambahkan data.");
-                };
-                $.ajax(options);
-            }
-        }
     </script>
 
     <script>
@@ -250,82 +206,12 @@
                     });
                 });
 
-                $('#data-table').on("click", ".accounts-data", function (event) {
-                    event.preventDefault();
-                    var url = $(this).attr("href");
-                    $.get(url, function (data) {
-                        $('#editContainer').html(data);
-                        $('#editModal').modal('show');
-
-                        $('form').each(function () {
-                            var $el = $(this);
-                            $el.data('validator', null);
-                            $.validator.unobtrusive.parse($el);
-                        });
-
-                        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
-                            new MvcGrid(element);
-                        });
-        
-                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                            new MvcDatalist(element);
-                        });
-        
-                        $("#batchDeleteAccounts").click(function () {
-                            event.preventDefault();
-                            var selectedIDs = new Array();
-                            var data = { ids: selectedIDs, masterRegionId: document.forms["form"]["Id"].value };
-                
-                            $('#accounts-table tbody tr').find('td:first :checkbox').each(function () {
-                                if ($(this).prop('checked')) {
-                                    selectedIDs.push($(this).val());
-                                }
-                            });
-
-                            if (selectedIDs.length <= 0) {
-                                bootbox.alert("Pilih salah satu data yang akan dihapus.");
-                            }
-                            else {
-                                bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
-                                    if (result) {
-                                        var options = {};
-                                        options.url = "/MasterRegions/BatchDeleteAccounts";
-                                        options.type = "POST";
-                                        options.headers = headers;
-                                        options.data = JSON.stringify(data);
-                                        options.contentType = "application/json";
-                                        options.dataType = "json";
-                                        options.success = function (msg) {
-                                            bootbox.alert(msg);
-
-                                            var grid = new MvcGrid(document.querySelector('#accounts-table'));
-                                            grid.reload();
-                                        };
-                                        options.error = function () {
-                                            bootbox.alert("Terjadi kesalahan saat menghapus.");
-                                        };
-                                        $.ajax(options);
-                                    }
-                                });
-                            }
-                        });
-                    });
-                });
-
                 $('#data-table').on("click", ".view-data", function (event) {
                     event.preventDefault();
                     var url = $(this).attr("href");
                     $.get(url, function (data) {
                         $('#viewContainer').html(data);
                         $('#viewModal').modal('show');
-                    });
-                });
-            }
-            else if (e.detail.grid.element.id == 'accounts-table') {
-                $('#CheckAccountsAll').click(function () {
-                    var checkedStatus = this.checked;
-                    $('#accounts-table tbody tr').find('td:first :checkbox').each(function () {
-                        $(this).prop('checked', checkedStatus);
                     });
                 });
             }
