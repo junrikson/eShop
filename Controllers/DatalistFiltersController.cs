@@ -142,17 +142,6 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        public JsonResult AllMasterWarehouseRegion(DatalistFilter filter, int? masterRegionId = 0)
-        {
-            MasterWarehouseRegionDatalist datalist = new MasterWarehouseRegionDatalist(db);
-            filter.AdditionalFilters["Active"] = true;
-            filter.AdditionalFilters["MasterRegionId"] = masterRegionId;
-            datalist.Filter = filter;
-
-            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
         public JsonResult AllMasterWarehouse(DatalistFilter filter)
         {
             MasterWarehouseDatalist datalist = new MasterWarehouseDatalist(db);

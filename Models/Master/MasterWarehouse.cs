@@ -60,36 +60,6 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class MasterWarehouseRegionDatalist : MvcDatalist<MasterWarehouse>
-    {
-        private DbContext Context { get; }
-
-        public MasterWarehouseRegionDatalist(DbContext context)
-        {
-            Context = context;
-
-            GetLabel = (model) => model.Name;
-        }
-
-        public MasterWarehouseRegionDatalist()
-        {
-            Url = "/DatalistFilters/AllMasterWarehouseRegion";
-            Title = "Master Gudang";
-            AdditionalFilters.Add("MasterRegionId");
-
-            Filter.Sort = "Name";
-            Filter.Order = DatalistSortOrder.Asc;
-            Filter.Rows = 10;
-        }
-
-        public override IQueryable<MasterWarehouse> GetModels()
-        {
-            return Context.Set<MasterWarehouse>();
-        }
-    }
-
-
-
     public class MasterWarehouseDatalist : MvcDatalist<MasterWarehouse>
     {
         private DbContext Context { get; }

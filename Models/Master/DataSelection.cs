@@ -420,6 +420,36 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+    public class MasterBusinessRegionWarehouseSelection
+    {
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Display(Name = "Gudang Awal")]
+        [Required(ErrorMessage = "Gudang Awal harus diisi.")]
+        public int MasterWarehouseStartId { get; set; }
+
+        [Display(Name = "Gudang Awal")]
+        public virtual MasterWarehouse MasterWarehouseStart { get; set; }
+
+        [Display(Name = "Gudang Akhir")]
+        public int? MasterWarehouseEndId { get; set; }
+
+        [Display(Name = "Gudang Akhir")]
+        public virtual MasterWarehouse MasterWarehouseEnd { get; set; }
+    }
+
     // End of MasterBusinessRegionWarehouse
 
     // Begin of MasterBusinessRegionAccount

@@ -83,7 +83,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterWarehouses" href="@Url.Action("AddMasterWarehouses", "DataSelection", new { id = Model.Id })">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterWarehouses" @if (!User.IsInRole("MasterWarehousesAdd")) { @Html.Raw("disabled") } href="@Url.Action("AddMasterWarehouses", "DataSelection", new { id = Model.Id })">
                                                 Gudang
                                             </button>
                                         </div>
@@ -186,11 +186,6 @@
 </div>
 <div class="modal fade" id="detailsModal" tabindex="-2" role="dialog" aria-hidden="true" data-backdrop="static">
     <div id="detailsContainer">
-    </div>
-</div>
-
-<div class="modal fade" id="subdetailsModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-    <div id="subdetailsContainer">
     </div>
 </div>
 
@@ -331,6 +326,81 @@
                             if (result) {
                                 var options = {};
                                 options.url = "/DataSelection/BatchDeleteSuppliers";
+                                options.type = "POST";
+                                options.headers = headers;
+                                options.data = JSON.stringify(data);
+                                options.contentType = "application/json";
+                                options.dataType = "json";
+                                options.success = function (msg) {
+                                    bootbox.alert(msg);
+
+                                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                                    grid.reload();
+                                };
+                                options.error = function () {
+                                    bootbox.alert("Terjadi kesalahan saat menghapus.");
+                                };
+                                $.ajax(options);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+        function AddWarehousesSuccess() {
+            $('#detailsContainer').html("");
+
+            document.getElementById("btnMasterWarehouses").click();
+        }
+
+        $('#btnMasterWarehouses').click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data) {
+                $('#detailsContainer').html(data);
+                $('#detailsModal').modal('show');
+
+                $('form').each(function () {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                });
+
+                [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                    new MvcGrid(element);
+                });
+
+                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                    new MvcDatalist(element);
+                });
+
+                $("#MasterRegionId").on("change", function () {
+                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                    grid.query.set('masterRegionId', $("#MasterRegionId").val());
+                    grid.reload();
+                }).change();
+
+                $("#batchDeleteWarehouses").click(function () {
+                    event.preventDefault();
+                    var selectedIDs = new Array();
+                    var regionId = $("#MasterRegionId").val();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id, masterRegionId: regionId };
+
+                    $('#details-table tbody tr').find('td:first :checkbox').each(function () {
+                        if ($(this).prop('checked')) {
+                            selectedIDs.push($(this).val());
+                        }
+                    });
+
+                    if (selectedIDs.length <= 0) {
+                        bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                    }
+                    else {
+                        bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                            if (result) {
+                                var options = {};
+                                options.url = "/DataSelection/BatchDeleteWarehouses";
                                 options.type = "POST";
                                 options.headers = headers;
                                 options.data = JSON.stringify(data);

@@ -368,6 +368,184 @@ namespace eShop.Controllers
 
         // End of MasterBusinessUnitSupplier
 
+        // Begin of MasterBusinessRegionWarehouse
+
+        [HttpGet]
+        [Authorize(Roles = "MasterWarehousesAdd")]
+        public PartialViewResult MasterWarehousesGrid(int masterBusinessUnitId, int masterRegionId)
+        {
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterWarehousesGrid", db.Set<MasterBusinessRegionWarehouse>().AsQueryable()
+                    .Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId));
+        }
+
+        [Authorize(Roles = "MasterWarehousesAdd")]
+        public ActionResult AddMasterWarehouses(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(id);
+
+            if (masterBusinessUnit == null)
+            {
+                return HttpNotFound();
+            }
+
+            MasterBusinessRegionWarehouseSelection obj = new MasterBusinessRegionWarehouseSelection
+            {
+                MasterBusinessUnitId = masterBusinessUnit.Id,
+                MasterBusinessUnit = masterBusinessUnit
+            };
+
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterWarehousesAdd", obj);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "MasterWarehousesAdd")]
+        public ActionResult AddMasterWarehouses([Bind(Include = "MasterBusinessUnitId, MasterRegionId, MasterWarehouseStartId, MasterWarehouseEndId")] MasterBusinessRegionWarehouseSelection obj)
+        {
+            if (ModelState.IsValid)
+            {
+                if (obj.MasterWarehouseEndId == null)
+                {
+                    MasterBusinessRegionWarehouse temp = db.MasterBusinessRegionWarehouses.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.MasterWarehouseId == obj.MasterWarehouseStartId).FirstOrDefault();
+
+                    if (temp == null)
+                    {
+                        using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                MasterBusinessRegionWarehouse masterBusinessRegionWarehouse = new MasterBusinessRegionWarehouse
+                                {
+                                    MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                                    MasterRegionId = obj.MasterRegionId,
+                                    MasterWarehouseId = obj.MasterWarehouseStartId,
+                                    Created = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.MasterBusinessRegionWarehouses.Add(masterBusinessRegionWarehouse);
+                                db.SaveChanges();
+
+                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionWarehouse, MenuId = masterBusinessRegionWarehouse.MasterBusinessUnitId, MenuCode = masterBusinessRegionWarehouse.MasterWarehouseId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                db.SaveChanges();
+
+                                dbTran.Commit();
+                            }
+                            catch (DbEntityValidationException ex)
+                            {
+                                dbTran.Rollback();
+                                throw ex;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    MasterWarehouse masterWarehouseStart = db.MasterWarehouses.Find(obj.MasterWarehouseStartId);
+                    MasterWarehouse masterWarehouseEnd = db.MasterWarehouses.Find(obj.MasterWarehouseEndId);
+
+                    var masterWarehouses = db.MasterWarehouses.Where(x => x.Code.CompareTo(masterWarehouseStart.Code) >= 0 && x.Code.CompareTo(masterWarehouseEnd.Code) <= 0).ToList();
+
+                    foreach (MasterWarehouse masterWarehouse in masterWarehouses)
+                    {
+                        MasterBusinessRegionWarehouse temp = db.MasterBusinessRegionWarehouses.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.MasterWarehouseId == masterWarehouse.Id).FirstOrDefault();
+                        if (temp == null)
+                        {
+                            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                            {
+                                try
+                                {
+                                    MasterBusinessRegionWarehouse masterBusinessRegionWarehouse = new MasterBusinessRegionWarehouse
+                                    {
+                                        MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                                        MasterRegionId = obj.MasterRegionId,
+                                        MasterWarehouseId = masterWarehouse.Id,
+                                        Created = DateTime.Now,
+                                        UserId = User.Identity.GetUserId<int>()
+                                    };
+
+                                    db.MasterBusinessRegionWarehouses.Add(masterBusinessRegionWarehouse);
+                                    db.SaveChanges();
+
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionWarehouse, MenuId = masterBusinessRegionWarehouse.MasterBusinessUnitId, MenuCode = masterBusinessRegionWarehouse.MasterWarehouseId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SaveChanges();
+
+                                    dbTran.Commit();
+                                }
+                                catch (DbEntityValidationException ex)
+                                {
+                                    dbTran.Rollback();
+                                    throw ex;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+            }
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(obj.MasterBusinessUnitId);
+            obj.MasterBusinessUnit = masterBusinessUnit;
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterWarehousesAdd", obj);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "MasterWarehousesDelete")]
+        [ValidateJsonAntiForgeryToken]
+        public ActionResult BatchDeleteWarehouses(int[] ids, int masterBusinessUnitId, int masterRegionId)
+        {
+            if (ids == null || ids.Length <= 0 || masterBusinessUnitId == 0 || masterRegionId == 0)
+                return Json("Pilih salah satu data yang akan dihapus.");
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+
+            if (masterBusinessUnit == null)
+                return Json("Kesalahan system. Mohon reload halaman ini!");
+            else
+            {
+                using (db)
+                {
+                    int failed = 0;
+                    foreach (int id in ids)
+                    {
+                        MasterBusinessRegionWarehouse obj = db.MasterBusinessRegionWarehouses.Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId && x.MasterWarehouseId == id).FirstOrDefault();
+                        if (obj == null)
+                            failed++;
+                        else
+                        {
+                            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                            {
+                                try
+                                {
+                                    MasterBusinessRegionWarehouse tmp = obj;
+                                    db.MasterBusinessRegionWarehouses.Remove(obj);
+                                    db.SaveChanges();
+
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionWarehouse, MenuId = tmp.MasterBusinessUnitId, MenuCode = tmp.MasterWarehouseId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SaveChanges();
+
+                                    dbTran.Commit();
+                                }
+                                catch (DbEntityValidationException ex)
+                                {
+                                    dbTran.Rollback();
+                                    throw ex;
+                                }
+                            }
+                        }
+                    }
+                    return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
+                }
+            }
+        }
+
+        // End of MasterBusinessRegionWarehouse
+
         // Begin of MasterBusinessRegionAccount
 
         [HttpGet]
@@ -452,7 +630,7 @@ namespace eShop.Controllers
 
                     foreach (ChartOfAccount chartOfAccount in chartOfAccounts)
                     {
-                        MasterBusinessUnitRegion temp = db.MasterBusinessUnitRegions.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == chartOfAccount.Id).FirstOrDefault();
+                        MasterBusinessRegionAccount temp = db.MasterBusinessRegionAccounts.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.ChartOfAccountId == chartOfAccount.Id).FirstOrDefault();
                         if (temp == null)
                         {
                             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
