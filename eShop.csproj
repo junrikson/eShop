@@ -7115,6 +7115,8 @@
     <Content Include="Views\Masters\MasterCurrencies\_OthersGrid.cshtml" />
     <Content Include="Views\Inventory\MasterItems\_ViewGrid.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterSuppliersAdd.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterSuppliersGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

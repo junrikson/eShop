@@ -1,0 +1,30 @@
+﻿@model IEnumerable<eShop.Models.MasterBusinessUnitSupplier>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.MasterSupplierId.ToString(), new { id = model.MasterSupplierId.ToString(), value = model.MasterSupplierId.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => model.MasterSupplier.Code).Titled(@Html.DisplayNameFor(model => model.MasterSupplier.Code));
+        columns.Add(model => model.MasterSupplier.FullName).Titled(@Html.DisplayNameFor(model => model.MasterSupplier.FullName));
+        columns.Add(model => model.MasterSupplier.Active).Titled(@Html.DisplayNameFor(model => model.MasterSupplier.Active)).RenderedAs(model => model.MasterSupplier.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
+    })
+    .RowAttributed(model => new { @class = model.MasterSupplier.Active == true ? "" : "grid-column-red" })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("details-table")
+)
