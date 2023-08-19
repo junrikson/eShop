@@ -38,12 +38,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-md-6">
-                            @Html.LabelFor(model => model.MasterRegion.Code)
-                            @Html.TextBoxFor(model => model.MasterRegion.Code, new { disabled = "disabled", @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.MasterRegion.Code, "", new { @class = "text-danger" })
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             @Html.LabelFor(model => model.Location)
                             @Html.TextBoxFor(model => model.Location, new { disabled = "disabled", @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })

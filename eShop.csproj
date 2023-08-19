@@ -7117,6 +7117,8 @@
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterSuppliersAdd.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterSuppliersGrid.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterAccountsAdd.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterAccountsGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

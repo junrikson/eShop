@@ -317,7 +317,7 @@ namespace eShop.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "MasterSuppliersAdd")]
+        [Authorize(Roles = "MasterSuppliersDelete")]
         [ValidateJsonAntiForgeryToken]
         public ActionResult BatchDeleteSuppliers(int[] ids, int masterBusinessUnitId)
         {
@@ -367,6 +367,184 @@ namespace eShop.Controllers
         }
 
         // End of MasterBusinessUnitSupplier
+
+        // Begin of MasterBusinessRegionAccount
+
+        [HttpGet]
+        [Authorize(Roles = "ChartOfAccountsAdd")]
+        public PartialViewResult MasterAccountsGrid(int masterBusinessUnitId, int masterRegionId)
+        {
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterAccountsGrid", db.Set<MasterBusinessRegionAccount>().AsQueryable()
+                    .Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId));
+        }
+
+        [Authorize(Roles = "ChartOfAccountsAdd")]
+        public ActionResult AddMasterAccounts(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(id);
+
+            if (masterBusinessUnit == null)
+            {
+                return HttpNotFound();
+            }
+
+            MasterBusinessRegionAccountSelection obj = new MasterBusinessRegionAccountSelection
+            {
+                MasterBusinessUnitId = masterBusinessUnit.Id,
+                MasterBusinessUnit = masterBusinessUnit
+            };
+
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterAccountsAdd", obj);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ChartOfAccountsAdd")]
+        public ActionResult AddMasterAccounts([Bind(Include = "MasterBusinessUnitId, MasterRegionId, ChartOfAccountStartId, ChartOfAccountEndId")] MasterBusinessRegionAccountSelection obj)
+        {
+            if (ModelState.IsValid)
+            {
+                if (obj.ChartOfAccountEndId == null)
+                {
+                    MasterBusinessRegionAccount temp = db.MasterBusinessRegionAccounts.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.ChartOfAccountId == obj.ChartOfAccountStartId).FirstOrDefault();
+
+                    if (temp == null)
+                    {
+                        using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                MasterBusinessRegionAccount masterBusinessRegionAccount = new MasterBusinessRegionAccount
+                                {
+                                    MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                                    MasterRegionId = obj.MasterRegionId,
+                                    ChartOfAccountId= obj.ChartOfAccountStartId,
+                                    Created = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.MasterBusinessRegionAccounts.Add(masterBusinessRegionAccount);
+                                db.SaveChanges();
+
+                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionAccount, MenuId = masterBusinessRegionAccount.MasterBusinessUnitId, MenuCode = masterBusinessRegionAccount.ChartOfAccountId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                db.SaveChanges();
+
+                                dbTran.Commit();
+                            }
+                            catch (DbEntityValidationException ex)
+                            {
+                                dbTran.Rollback();
+                                throw ex;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    ChartOfAccount chartOfAccountStart = db.ChartOfAccounts.Find(obj.ChartOfAccountStartId);
+                    ChartOfAccount chartOfAccountEnd = db.ChartOfAccounts.Find(obj.ChartOfAccountEndId);
+
+                    var chartOfAccounts = db.ChartOfAccounts.Where(x => x.Code.CompareTo(chartOfAccountStart.Code) >= 0 && x.Code.CompareTo(chartOfAccountEnd.Code) <= 0).ToList();
+
+                    foreach (ChartOfAccount chartOfAccount in chartOfAccounts)
+                    {
+                        MasterBusinessUnitRegion temp = db.MasterBusinessUnitRegions.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == chartOfAccount.Id).FirstOrDefault();
+                        if (temp == null)
+                        {
+                            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                            {
+                                try
+                                {
+                                    MasterBusinessRegionAccount masterBusinessRegionAccount = new MasterBusinessRegionAccount
+                                    {
+                                        MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                                        MasterRegionId = obj.MasterRegionId,
+                                        ChartOfAccountId = chartOfAccount.Id,
+                                        Created = DateTime.Now,
+                                        UserId = User.Identity.GetUserId<int>()
+                                    };
+
+                                    db.MasterBusinessRegionAccounts.Add(masterBusinessRegionAccount);
+                                    db.SaveChanges();
+
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionAccount, MenuId = masterBusinessRegionAccount.MasterBusinessUnitId, MenuCode = masterBusinessRegionAccount.ChartOfAccountId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SaveChanges();
+
+                                    dbTran.Commit();
+                                }
+                                catch (DbEntityValidationException ex)
+                                {
+                                    dbTran.Rollback();
+                                    throw ex;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+            }
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(obj.MasterBusinessUnitId);
+            obj.MasterBusinessUnit = masterBusinessUnit;
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterRegionsAdd", obj);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "ChartOfAccountsDelete")]
+        [ValidateJsonAntiForgeryToken]
+        public ActionResult BatchDeleteAccounts(int[] ids, int masterBusinessUnitId, int masterRegionId)
+        {
+            if (ids == null || ids.Length <= 0 || masterBusinessUnitId == 0 || masterRegionId == 0)
+                return Json("Pilih salah satu data yang akan dihapus.");
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+
+            if (masterBusinessUnit == null)
+                return Json("Kesalahan system. Mohon reload halaman ini!");
+            else
+            {
+                using (db)
+                {
+                    int failed = 0;
+                    foreach (int id in ids)
+                    {
+                        MasterBusinessRegionAccount obj = db.MasterBusinessRegionAccounts.Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId && x.ChartOfAccountId ==id).FirstOrDefault();
+                        if (obj == null)
+                            failed++;
+                        else
+                        {
+                            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                            {
+                                try
+                                {
+                                    MasterBusinessRegionAccount tmp = obj;
+                                    db.MasterBusinessRegionAccounts.Remove(obj);
+                                    db.SaveChanges();
+
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionAccount, MenuId = tmp.MasterBusinessUnitId, MenuCode = tmp.ChartOfAccountId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SaveChanges();
+
+                                    dbTran.Commit();
+                                }
+                                catch (DbEntityValidationException ex)
+                                {
+                                    dbTran.Rollback();
+                                    throw ex;
+                                }
+                            }
+                        }
+                    }
+                    return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
+                }
+            }
+        }
+
+        // End of MasterBusinessRegionAccount
 
         protected override void Dispose(bool disposing)
         {

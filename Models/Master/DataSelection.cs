@@ -1,13 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using Datalist;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace eShop.Models
 {
+
+    // Begin of MasterBusinessUnitAccount
     public class MasterBusinessUnitAccount
     {
         [Key, Column(Order = 0)]
@@ -38,6 +43,10 @@ namespace eShop.Models
         [Display(Name = "Bagan Akun")]
         public virtual ChartOfAccount ChartOfAccount { get; set; }
     }
+
+    // End of MasterBusinessUnitAccount
+
+    // Begin of MasterBusinessUnitRegion
 
     public class MasterBusinessUnitRegion
     {
@@ -91,6 +100,69 @@ namespace eShop.Models
         public virtual MasterRegion MasterRegionEnd { get; set; }
     }
 
+    public class MasterBusinessUnitRegionViewModel
+    {
+        public int Id { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kode Wilayah")]
+        public string MasterRegionCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Keterangan")]
+        public string MasterRegionNotes { get; set; }
+
+        [Display(Name = "Aktif")]
+        public bool MasterRegionActive { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Unit Bisnis")]
+        public string MasterBusinessUnitCode { get; set; }
+    }
+
+    public class MasterBusinessUnitRegionDatalist : MvcDatalist<MasterBusinessUnitRegionViewModel>
+    {
+        private DbContext Context { get; }
+
+        public MasterBusinessUnitRegionDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.MasterRegionCode + " - " + model.MasterRegionNotes;
+        }
+        public MasterBusinessUnitRegionDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterBusinessUnitRegion";
+            Title = "Wilayah";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+
+            Filter.Sort = "MasterRegionCode";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterBusinessUnitRegionViewModel> GetModels()
+        {
+            return Context.Set<MasterBusinessUnitRegion>()
+                .Select(x => new MasterBusinessUnitRegionViewModel
+                {
+                    Id = x.MasterRegionId,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterRegionNotes = x.MasterRegion.Notes,
+                    MasterRegionActive = x.MasterRegion.Active,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code
+                });
+        }
+    }
+
+    // End of MasterBusinessUnitRegion
+
+    // Begin of MasterBusinessUnitSupplier
+
     public class MasterBusinessUnitSupplier
     {
         [Key, Column(Order = 0)]
@@ -143,6 +215,10 @@ namespace eShop.Models
         public virtual MasterSupplier MasterSupplierEnd { get; set; }
     }
 
+    // End of MasterBusinessUnitSupplier
+
+    // Begin of MasterBusinessUnitCustomer
+
     public class MasterBusinessUnitCustomer
     {
         [Key, Column(Order = 0)]
@@ -171,6 +247,10 @@ namespace eShop.Models
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
     }
+
+    // End of MasterBusinessUnitCustomer
+
+    // Begin of MasterBusinessSalesPerson
 
     public class MasterBusinessSalesPerson
     {
@@ -201,6 +281,10 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+    // End of MasterBusinessSalesPerson
+
+    // Begin of MasterBusinessCategory
+
     public class MasterBusinessCategory
     {
         [Key, Column(Order = 0)]
@@ -229,6 +313,10 @@ namespace eShop.Models
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
     }
+
+    // End of MasterBusinessCategory
+
+    // Begin of MasterBusinessBrand
 
     public class MasterBusinessBrand
     {
@@ -259,6 +347,10 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+    // End of MasterBusinessBrand
+
+    // Begin of MasterBusinessItem
+
     public class MasterBusinessItem
     {
         [Key, Column(Order = 0)]
@@ -287,6 +379,10 @@ namespace eShop.Models
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
     }
+
+    // End of MasterBusinessItem
+
+    // Begin of MasterBusinessRegionWarehouse
 
     public class MasterBusinessRegionWarehouse
     {
@@ -324,6 +420,10 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+    // End of MasterBusinessRegionWarehouse
+
+    // Begin of MasterBusinessRegionAccount
+
     public class MasterBusinessRegionAccount
     {
         [Key, Column(Order = 0)]
@@ -360,86 +460,35 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    //public class MasterRegionAccountViewModel
-    //{
-    //    public int Id { get; set; }
+    public class MasterBusinessRegionAccountSelection
+    {
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
 
-    //    [Display(Name = "Kode Wilayah")]
-    //    public string Code { get; set; }
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
 
-    //    [Display(Name = "Akun Awal")]
-    //    public int ChartOfAccountStartId { get; set; }
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
 
-    //    [Display(Name = "Akun Awal")]
-    //    public virtual ChartOfAccount ChartOfAccountStart { get; set; }
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
 
-    //    [Display(Name = "Akun Akhir")]
-    //    public int ChartOfAccountEndId { get; set; }
+        [Display(Name = "Akun Awal")]
+        [Required(ErrorMessage = "Akun Awal harus diisi.")]
+        public int ChartOfAccountStartId { get; set; }
 
-    //    [Display(Name = "Akun Akhir")]
-    //    public virtual ChartOfAccount ChartOfAccountEnd { get; set; }
-    //}
+        [Display(Name = "Akun Awal")]
+        public virtual ChartOfAccount ChartOfAccountStart { get; set; }
 
-    //public class MasterRegionAccountDatalistViewModel
-    //{
-    //    [Display(Name = "Bagan Akun")]
-    //    public int Id { get; set; }
+        [Display(Name = "Akun Akhir")]
+        public int? ChartOfAccountEndId { get; set; }
 
-    //    [Display(Name = "Master Wilayah")]
-    //    public int MasterRegionId { get; set; }
+        [Display(Name = "Akun Akhir")]
+        public virtual ChartOfAccount ChartOfAccountEnd { get; set; }
+    }
 
-    //    [Display(Name = "Master Wilayah")]
-    //    public virtual MasterRegion MasterRegion { get; set; }
-
-    //    [DatalistColumn]
-    //    public string Code { get; set; }
-
-    //    [DatalistColumn]
-    //    [Display(Name = "Nama Akun")]
-    //    public string Name { get; set; }
-
-    //    [Display(Name = "Bagan Akun")]
-    //    public virtual ChartOfAccount ChartOfAccount { get; set; }
-
-    //    [DatalistColumn]
-    //    [Display(Name = "Wilayah")]
-    //    public string MasterRegionCode { get; set; }
-    //}
-
-    //public class MasterRegionAccountDatalist : MvcDatalist<MasterRegionAccountDatalistViewModel>
-    //{
-    //    private DbContext Context { get; }
-
-    //    public MasterRegionAccountDatalist(DbContext context)
-    //    {
-    //        Context = context;
-
-    //        GetLabel = (model) => model.Code + " - " + model.Name;
-    //    }
-    //    public MasterRegionAccountDatalist()
-    //    {
-    //        Url = "/DatalistFilters/AllMasterRegionAccount";
-    //        Title = "Bagan Akun";
-    //        AdditionalFilters.Add("MasterRegionId");
-
-    //        Filter.Sort = "Code";
-    //        Filter.Order = DatalistSortOrder.Asc;
-    //        Filter.Rows = 10;
-    //    }
-
-    //    public override IQueryable<MasterRegionAccountDatalistViewModel> GetModels()
-    //    {
-    //        return Context.Set<MasterRegionAccount>()
-    //            .Select(x => new MasterRegionAccountDatalistViewModel
-    //            {
-    //                Id = x.ChartOfAccountId,
-    //                MasterRegionId = x.MasterRegionId,
-    //                MasterRegion = x.MasterRegion,
-    //                MasterRegionCode = x.MasterRegion.Code,
-    //                Code = x.ChartOfAccount.Code,
-    //                Name = x.ChartOfAccount.Name,
-    //                ChartOfAccount = x.ChartOfAccount
-    //            });
-    //    }
-    //}
+    // End of MasterBusinessRegionAccount
 }

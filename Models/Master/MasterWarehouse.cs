@@ -29,13 +29,6 @@ namespace eShop.Models
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
         public string Name { get; set; }
 
-        [Display(Name = "Wilayah")]
-        [Required(ErrorMessage = "Wilayah harus diisi.")]
-        public int MasterRegionId { get; set; }
-
-        [Display(Name = "Wilayah")]
-        public virtual MasterRegion MasterRegion { get; set; }
-
         [DatalistColumn]
         [Required(ErrorMessage = "Lokasi harus diisi.")]
         [Display(Name = "Lokasi")]
