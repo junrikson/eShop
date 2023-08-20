@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace eShop.Controllers
 {
@@ -74,7 +76,7 @@ namespace eShop.Controllers
             {
                 return HttpNotFound();
             }
-            PopulateAssignedBusinessUnit(user);
+            PopulateAssignedMasterBusinessUnitRegion(user);
             return PartialView("../Settings/SettingUsers/_Details", user);
         }
 
@@ -87,13 +89,11 @@ namespace eShop.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ApplicationUser user = db.Users
-                .Include(i => i.MasterBusinessUnitRegions)
+                .Include(i => i.ApplicationUserMasterBusinessUnitRegions)
                 .Where(i => i.Id == id)
                 .Single();
 
-            PopulateAssignedBusinessUnit(user);
-
-            PopulateAssignedRegion(user);
+            PopulateAssignedMasterBusinessUnitRegion(user);
 
             if (user == null)
             {
@@ -104,39 +104,23 @@ namespace eShop.Controllers
         }
 
         [Authorize(Roles = "SettingUsersActive")]
-        private void PopulateAssignedBusinessUnit(ApplicationUser user)
+        private void PopulateAssignedMasterBusinessUnitRegion(ApplicationUser user)
         {
-            //var allBusinessUnits = db.MasterBusinessUnits;
-            //var userBusinessUnits = new HashSet<int>(user.MasterBusinessUnits.Select(c => c.Id));
-            //var viewModel = new List<AssignedBusinessUnit>();
-            //foreach (var obj in allBusinessUnits)
-            //{
-            //    viewModel.Add(new AssignedBusinessUnit
-            //    {
-            //        Id = obj.Id,
-            //        Title = obj.Code + " - " + obj.Name,
-            //        Assigned = userBusinessUnits.Contains(obj.Id)
-            //    });
-            //}
-            //ViewBag.BusinessUnits = viewModel;
-        }
-
-        [Authorize(Roles = "SettingUsersActive")]
-        private void PopulateAssignedRegion(ApplicationUser user)
-        {
-            //var allRegions = db.MasterRegions;
-            //var userRegions = new HashSet<int>(user.MasterRegions.Select(c => c.Id));
-            //var viewModel = new List<AssignedRegion>();
-            //foreach (var obj in allRegions)
-            //{
-            //    viewModel.Add(new AssignedRegion
-            //    {
-            //        Id = obj.Id,
-            //        Title = obj.Code,
-            //        Assigned = userRegions.Contains(obj.Id)
-            //    });
-            //}
-            //ViewBag.Regions = viewModel;
+            var allBusinessUnitRegion = db.MasterBusinessUnitRegions.ToList().OrderBy(x => x.MasterBusinessUnitId).ThenBy(y => y.MasterRegionId);
+            var userBusinessUnitRegion = user.ApplicationUserMasterBusinessUnitRegions.ToList();
+            var viewModel = new List<AssignedMasterBusinessUnitRegion>();
+            
+            foreach (MasterBusinessUnitRegion obj in allBusinessUnitRegion)
+            {
+                viewModel.Add(new AssignedMasterBusinessUnitRegion
+                {
+                    MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                    MasterRegionId = obj.MasterRegionId,
+                    Title = obj.MasterBusinessUnit.Name + " - " + obj.MasterRegion.Notes,
+                    Assigned = userBusinessUnitRegion.Any(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.UserId == user.Id )
+                });
+            }
+            ViewBag.BusinessUnitRegion = viewModel;
         }
 
         // POST: SettingUsers/Edit/5
@@ -145,48 +129,54 @@ namespace eShop.Controllers
         [HttpPost]
         [Authorize(Roles = "SettingUsersEdit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int? Id, string Email, int? AuthorizationId, int? MasterRegionId, int? MasterCustomerId, int[] selectedBusinessUnits, int[] selectedRegions)
+        public ActionResult Edit(int Id, string Email, int? AuthorizationId, int? MasterCustomerId, string[] selectedBusinessUnitRegions)
         {
-            if (Id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             var userToUpdate = db.Users
-                .Include(i => i.MasterBusinessUnitRegions)
+                .Include(i => i.ApplicationUserMasterBusinessUnitRegions)
                 .Where(i => i.Id == Id)
                 .Single();
 
-            //try
-            //{
-            //    UpdateUserBusinessUnits(selectedBusinessUnits, userToUpdate);
+            try
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        UpdateUserMasterBusinessUnitRegions(selectedBusinessUnitRegions, userToUpdate);
+                        db.SaveChanges();
 
-            //    UpdateUserRegions(selectedRegions, userToUpdate);
+                        Models.Authorization authorization = db.Authorizations.Find(AuthorizationId);
+                        if (authorization != null)
+                        {
+                            UpdateUserRoles(userToUpdate, authorization);
+                        }
 
-            //    Models.Authorization authorization = db.Authorizations.Find(AuthorizationId);
-            //    if (authorization != null)
-            //    {
-            //        UpdateUserRoles(userToUpdate, authorization);
-            //    }
+                        userToUpdate.Email = Email;
+                        userToUpdate.AuthorizationId = AuthorizationId;
+                        userToUpdate.MasterCustomerId = MasterCustomerId;
+                        db.SaveChanges();
 
-            //    userToUpdate.Email = Email;
-            //    userToUpdate.AuthorizationId = AuthorizationId;
-            //    userToUpdate.MasterCustomerId = MasterCustomerId;
-            //    db.SaveChanges();
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterUser, MenuId = userToUpdate.Id, MenuCode = userToUpdate.UserName, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SaveChanges();
 
-            //    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterUser, MenuId = userToUpdate.Id, MenuCode = userToUpdate.UserName, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
-            //    db.SaveChanges();
+                        dbTran.Commit();
 
-            //    return Json("success", JsonRequestBehavior.AllowGet);
-            //}
-            //catch (RetryLimitExceededException /* dex */)
-            //{
-            //    //Log the error (uncomment dex variable name and add a line here to write a log.
-            //    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
-            //}
+                        return Json("success", JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+            }
 
-            //PopulateAssignedBusinessUnit(userToUpdate);
-
-            //PopulateAssignedRegion(userToUpdate);
+            PopulateAssignedMasterBusinessUnitRegion(userToUpdate);
 
             return PartialView("../Settings/SettingUsers/_Edit", userToUpdate);
         }
@@ -212,34 +202,34 @@ namespace eShop.Controllers
         }
 
         [Authorize(Roles = "SettingUsersActive")]
-        private void UpdateUserBusinessUnits(int[] selectedBusinessUnits, ApplicationUser userToUpdate)
+        private void UpdateUserMasterBusinessUnitRegions(string[] selectedMasterBusinessUnitRegions, ApplicationUser userToUpdate)
         {
-            //if (selectedBusinessUnits == null)
-            //{
-            //    userToUpdate.MasterBusinessUnits = new List<MasterBusinessUnit>();
-            //    return;
-            //}
+            if (selectedMasterBusinessUnitRegions == null)
+            {
+                userToUpdate.ApplicationUserMasterBusinessUnitRegions = new List<ApplicationUserMasterBusinessUnitRegion>();
+                return;
+            }
 
-            //var selectedBusinessUnitsHS = new HashSet<int>(selectedBusinessUnits);
-            //var userBusinessUnits = new HashSet<int>
-            //    (userToUpdate.MasterBusinessUnits.Select(c => c.Id));
-            //foreach (var obj in db.MasterBusinessUnits)
-            //{
-            //    if (selectedBusinessUnitsHS.Contains(obj.Id))
-            //    {
-            //        if (!userBusinessUnits.Contains(obj.Id))
-            //        {
-            //            userToUpdate.MasterBusinessUnits.Add(obj);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (userBusinessUnits.Contains(obj.Id))
-            //        {
-            //            userToUpdate.MasterBusinessUnits.Remove(obj);
-            //        }
-            //    }
-            //}
+            var userBusinessUnitRegions = new HashSet<string>
+                (userToUpdate.ApplicationUserMasterBusinessUnitRegions.Select(c => c.MasterBusinessUnitId.ToString() + "&" + c.MasterRegionId.ToString()));
+
+            foreach (var obj in db.MasterBusinessUnitRegions)
+            {
+                if (selectedMasterBusinessUnitRegions.Contains(obj.MasterBusinessUnitId.ToString() + "&" + obj.MasterRegionId.ToString()))
+                {
+                    if (!userBusinessUnitRegions.Contains(obj.MasterBusinessUnitId.ToString() + "&" + obj.MasterRegionId.ToString()))
+                    {
+                        userToUpdate.ApplicationUserMasterBusinessUnitRegions.Add(new ApplicationUserMasterBusinessUnitRegion { MasterBusinessUnitId = obj.MasterBusinessUnitId, MasterRegionId = obj.MasterRegionId, UserId = userToUpdate.Id });
+                    }
+                }
+                else
+                {
+                    if (userBusinessUnitRegions.Contains(obj.MasterBusinessUnitId.ToString() + "&" + obj.MasterRegionId.ToString()))
+                    {
+                        userToUpdate.ApplicationUserMasterBusinessUnitRegions.Remove(new ApplicationUserMasterBusinessUnitRegion { MasterBusinessUnitId = obj.MasterBusinessUnitId, MasterRegionId = obj.MasterRegionId, UserId = userToUpdate.Id });
+                    }
+                }
+            }
         }
 
         [Authorize(Roles = "SettingUsersActive")]

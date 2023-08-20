@@ -45,33 +45,14 @@
                                 <label>Unit Bisnis</label>
                             </div>
                             @{
-                                List<eShop.Models.AssignedBusinessUnit> businessUnits = ViewBag.BusinessUnits;
+                                List<eShop.Models.AssignedMasterBusinessUnitRegion> businessUnits = ViewBag.BusinessUnitRegion;
 
-                                foreach (var obj in businessUnits)
+                                foreach (eShop.Models.AssignedMasterBusinessUnitRegion obj in businessUnits)
                                 {
                                     <div class="col-md-12">
                                         <input type="checkbox"
-                                               name="selectedBusinessUnits"
-                                               value="@obj.Id"
-                                               @(Html.Raw(obj.Assigned ? "checked=\"checked\"" : "")) />
-                                        @obj.Title
-                                    </div>
-                                }
-                            }
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <label>Wilayah</label>
-                            </div>
-                            @{
-                                List<eShop.Models.AssignedRegion> regions = ViewBag.Regions;
-
-                                foreach (var obj in regions)
-                                {
-                                    <div class="col-md-12">
-                                        <input type="checkbox"
-                                               name="selectedRegions"
-                                               value="@obj.Id"
+                                               name="selectedBusinessUnitRegions"
+                                               value="@obj.MasterBusinessUnitId&@obj.MasterRegionId"
                                                @(Html.Raw(obj.Assigned ? "checked=\"checked\"" : "")) />
                                         @obj.Title
                                     </div>

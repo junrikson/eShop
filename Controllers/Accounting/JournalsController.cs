@@ -85,7 +85,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
             return PartialView("../Accounting/Journals/_Details", journal);
         }
 
@@ -124,7 +124,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
             return View("../Accounting/Journals/Create", journal);
         }
 
@@ -177,7 +177,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
             return View("../Accounting/Journals/Create", journal);
         }
 
@@ -203,7 +203,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
             return View("../Accounting/Journals/Edit", journal);
         }
 
@@ -262,7 +262,7 @@ namespace eShop.Controllers
             }
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
             return View("../Accounting/Journals/Edit", journal);
         }
 

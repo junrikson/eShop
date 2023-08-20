@@ -2,9 +2,11 @@
 
 namespace eShop.Models
 {
-    public class AssignedBusinessUnit
+    public class AssignedMasterBusinessUnitRegion
     {
-        public int Id { get; set; }
+        public int MasterBusinessUnitId { get; set; }
+
+        public int MasterRegionId { get; set; }
 
         public string Title { get; set; }
 

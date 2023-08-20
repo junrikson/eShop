@@ -122,7 +122,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
             ViewBag.Total = "0";
 
             return View("../Buying/PurchaseReturns/Create", purchaseReturn);
@@ -175,7 +175,7 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", purchaseReturn.MasterBusinessUnitId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", purchaseReturn.MasterBusinessUnitId);
                 ViewBag.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id).ToString("N2");
 
                 return View("../Buying/PurchaseReturns/Create", purchaseReturn);
@@ -239,7 +239,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", purchaseReturn.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", purchaseReturn.MasterBusinessUnitId);
             ViewBag.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id).ToString("N2");
 
             return View("../Buying/PurchaseReturns/Edit", purchaseReturn);
@@ -301,7 +301,7 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", purchaseReturn.MasterBusinessUnitId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", purchaseReturn.MasterBusinessUnitId);
                 ViewBag.Total = SharedFunctions.GetTotalPurchaseReturn(db, purchaseReturn.Id).ToString("N2");
 
                 return View("../Buying/PurchaseReturns/Edit", purchaseReturn);

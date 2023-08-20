@@ -122,7 +122,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
             ViewBag.Total = "0";
 
             return View("../Selling/SalesOrders/Create", salesOrder);
@@ -186,7 +186,7 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", salesOrder.MasterBusinessUnitId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", salesOrder.MasterBusinessUnitId);
                 ViewBag.Total = SharedFunctions.GetTotalSalesOrder(db, salesOrder.Id).ToString("N2");
 
                 return View("../Selling/SalesOrders/Create", salesOrder);
@@ -250,7 +250,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", salesOrder.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", salesOrder.MasterBusinessUnitId);
             ViewBag.Total = SharedFunctions.GetTotalSalesOrder(db, salesOrder.Id).ToString("N2");
 
             return View("../selling/SalesOrders/Edit", salesOrder);
@@ -312,7 +312,7 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", salesOrder.MasterBusinessUnitId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", salesOrder.MasterBusinessUnitId);
                 ViewBag.Total = SharedFunctions.GetTotalSalesOrder(db, salesOrder.Id).ToString("N2");
 
                 return View("../Selling/SalesOrders/Edit", salesOrder);

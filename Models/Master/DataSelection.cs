@@ -77,6 +77,31 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+    public class ApplicationUserMasterBusinessUnitRegion
+    {
+        [Key, Column(Order = 0)]
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Key, Column(Order = 1)]
+        [Display(Name = "Master Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Master Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Key, Column(Order = 2)]
+        [Display(Name = "Master Wilayah")]
+        public int UserId { get; set; }
+
+        [Display(Name = "Master Wilayah")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
     public class MasterBusinessUnitRegionSelection
     {
         [Display(Name = "Unit Bisnis")]
