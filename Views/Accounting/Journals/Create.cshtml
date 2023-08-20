@@ -217,20 +217,6 @@
             if (data !== "success")
             {
                 $('#addContainer').html(data);
-
-                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                    new MvcDatalist(element).reload();
-                });
-
-                $('form').each(function () {
-                    var $el = $(this);
-                    $el.data('validator', null);
-                    $.validator.unobtrusive.parse($el);
-                });
-
-                Inputmask("myNum2").mask("#Debit");
-                Inputmask("myNum2").mask("#Credit");
-
                 return;
             }
             $('#detailsModal').modal('hide');
@@ -264,20 +250,6 @@
             if (data !== "success")
             {
                 $('#editContainer').html(data);
-
-                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                    new MvcDatalist(element).reload();
-                });
-
-                $('form').each(function () {
-                    var $el = $(this);
-                    $el.data('validator', null);
-                    $.validator.unobtrusive.parse($el);
-                });
-
-                Inputmask("myNum2").mask("#Debit");
-                Inputmask("myNum2").mask("#Credit");
-
                 return;
             }
             $('#detailsModal').modal('hide');

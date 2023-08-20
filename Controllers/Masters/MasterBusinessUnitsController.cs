@@ -252,6 +252,7 @@ namespace eShop.Controllers
             };
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Code");
             return PartialView("../Masters/MasterBusinessUnits/_AccountsCreate", masterBusinessUnitAccount);
         }
 
@@ -269,6 +270,7 @@ namespace eShop.Controllers
             }
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Code", masterBusinessUnitAccount.MasterRegionId);
             return PartialView("../Masters/MasterBusinessUnits/_AccountsCreate", masterBusinessUnitAccount);
         }
 
@@ -282,6 +284,7 @@ namespace eShop.Controllers
             }
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Code", obj.MasterRegionId);
             return PartialView("../Masters/MasterBusinessUnits/_AccountsEdit", obj);
         }
 
@@ -302,6 +305,7 @@ namespace eShop.Controllers
             }
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Code", masterBusinessUnitAccount.MasterRegionId);
             return PartialView("../Masters/MasterBusinessUnits/_AccountsEdit", masterBusinessUnitAccount);
         }
 

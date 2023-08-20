@@ -11,6 +11,7 @@
         columns.Add(model => ((User.IsInRole("MasterWarehousesEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "MasterWarehouses", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
         ((User.IsInRole("MasterWarehousesView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "MasterWarehouses", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code)).Sortable(true).InitialSort(GridSortOrder.Desc);
+        columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));
         columns.Add(model => model.Name).Titled(@Html.DisplayNameFor(model => model.Name));
         columns.Add(model => model.Location).Titled(@Html.DisplayNameFor(model => model.Location));
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));

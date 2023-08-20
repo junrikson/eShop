@@ -7022,6 +7022,7 @@
     <Content Include="Views\Accounting\Journals\Create.cshtml" />
     <Content Include="Views\Accounting\Journals\Edit.cshtml" />
     <Content Include="Views\Accounting\Journals\Index.cshtml" />
+    <Content Include="Views\Accounting\Journals\_DateEdit.cshtml" />
     <Content Include="Views\Accounting\Journals\_Details.cshtml" />
     <Content Include="Views\Accounting\Journals\_DetailsCreate.cshtml" />
     <Content Include="Views\Accounting\Journals\_DetailsEdit.cshtml" />
@@ -7126,10 +7127,6 @@
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterItemsGrid.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterCategoriesAdd.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterCategoriesGrid.cshtml" />
-    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterAccountsAdd.cshtml" />
-    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterAccountsGrid.cshtml" />
-    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterWarehousesAdd.cshtml" />
-    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterWarehousesGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
