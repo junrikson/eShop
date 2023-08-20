@@ -63,7 +63,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterCustomers" href="@Url.Action("AddMasterCustomers", "DataSelection", new { id = Model.Id })">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterCustomers" @if (!User.IsInRole("MasterCustomersAdd")) { @Html.Raw("disabled") } href="@Url.Action("AddMasterCustomers", "DataSelection", new { id = Model.Id })">
                                                 Konsumen
                                             </button>
                                         </div>
@@ -72,7 +72,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterSalesPersons" href="@Url.Action("AddMasterSalesPersons", "DataSelection", new { id = Model.Id })">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterSalesPersons" @if (!User.IsInRole("MasterSalesPersonsAdd")) { @Html.Raw("disabled") } href="@Url.Action("AddMasterSalesPersons", "DataSelection", new { id = Model.Id })">
                                                 Sales
                                             </button>
                                         </div>
@@ -122,16 +122,16 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterCategories" href="@Url.Action("AddMasterCategories", "DataSelection", new { id = Model.Id })">
-                                                Kategori
-                                            </button>
+                                                <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterCategories" @if (!User.IsInRole("MasterCategoriesAdd")) { @Html.Raw("disabled") } href="@Url.Action("AddMasterCategories", "DataSelection", new { id = Model.Id })">
+                                                    Kategori
+                                                </button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterBrands" href="@Url.Action("AddMasterBrands", "DataSelection", new { id = Model.Id })">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterBrands" @if (!User.IsInRole("MasterBrandsAdd")) { @Html.Raw("disabled") } href="@Url.Action("AddMasterBrands", "DataSelection", new { id = Model.Id })">
                                                 Merek
                                             </button>
                                         </div>
@@ -142,7 +142,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterItems" href="@Url.Action("AddMasterItems", "DataSelection", new { id = Model.Id })">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterItems" @if (!User.IsInRole("MasterItemsAdd")) { @Html.Raw("disabled") } href="@Url.Action("AddMasterItems", "DataSelection", new { id = Model.Id })">
                                                 Barang
                                             </button>
                                         </div>
@@ -223,6 +223,39 @@
             $('#detailsContainer').html("");
 
             document.getElementById("btnMasterSuppliers").click();
+        }
+
+        function AddCustomersSuccess() {
+           $('#detailsContainer').html("");
+
+           document.getElementById("btnMasterCustomers").click();
+        }
+
+        function AddSalesPersonsSuccess() {
+           $('#detailsContainer').html("");
+
+            document.getElementById("btnMasterSalesPersons").click();
+        }
+
+        function AddCategoriesSuccess() {
+        $('#detailsContainer').html("");
+
+            document.getElementById("btnMasterCategories").click();
+
+        }
+
+        function AddBrandsSuccess() {
+        $('#detailsContainer').html("");
+
+            document.getElementById("btnMasterBrands").click();
+
+        }
+
+        function AddItemsSuccess() {
+        $('#detailsContainer').html("");
+
+            document.getElementById("btnMasterItems").click();
+
         }
 
         var token = $('input[name="__RequestVerificationToken"]').val();
@@ -331,6 +364,316 @@
                             if (result) {
                                 var options = {};
                                 options.url = "/DataSelection/BatchDeleteSuppliers";
+                                options.type = "POST";
+                                options.headers = headers;
+                                options.data = JSON.stringify(data);
+                                options.contentType = "application/json";
+                                options.dataType = "json";
+                                options.success = function (msg) {
+                                    bootbox.alert(msg);
+
+                                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                                    grid.reload();
+                                };
+                                options.error = function () {
+                                    bootbox.alert("Terjadi kesalahan saat menghapus.");
+                                };
+                                $.ajax(options);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+        $('#btnMasterCustomers').click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data) {
+                $('#detailsContainer').html(data);
+                $('#detailsModal').modal('show');
+
+                $('form').each(function () {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                });
+
+                [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                    new MvcGrid(element);
+                });
+
+                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                    new MvcDatalist(element);
+                });
+
+                $("#batchDeleteCustomers").click(function () {
+                    event.preventDefault();
+                    var selectedIDs = new Array();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+
+                    $('#details-table tbody tr').find('td:first :checkbox').each(function () {
+                        if ($(this).prop('checked')) {
+                            selectedIDs.push($(this).val());
+                        }
+                    });
+
+                    if (selectedIDs.length <= 0) {
+                        bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                    }
+                    else {
+                        bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                            if (result) {
+                                var options = {};
+                                options.url = "/DataSelection/BatchDeleteCustomers";
+                                options.type = "POST";
+                                options.headers = headers;
+                                options.data = JSON.stringify(data);
+                                options.contentType = "application/json";
+                                options.dataType = "json";
+                                options.success = function (msg) {
+                                    bootbox.alert(msg);
+
+                                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                                    grid.reload();
+                                };
+                                options.error = function () {
+                                    bootbox.alert("Terjadi kesalahan saat menghapus.");
+                                };
+                                $.ajax(options);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+         $('#btnMasterSalesPersons').click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data) {
+                $('#detailsContainer').html(data);
+                $('#detailsModal').modal('show');
+
+                $('form').each(function () {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                });
+
+                [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                    new MvcGrid(element);
+                });
+
+                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                    new MvcDatalist(element);
+                });
+
+                $("#batchDeleteSalesPersons").click(function () {
+                    event.preventDefault();
+                    var selectedIDs = new Array();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+
+                    $('#details-table tbody tr').find('td:first :checkbox').each(function () {
+                        if ($(this).prop('checked')) {
+                            selectedIDs.push($(this).val());
+                        }
+                    });
+
+                    if (selectedIDs.length <= 0) {
+                        bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                    }
+                    else {
+                        bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                            if (result) {
+                                var options = {};
+                                options.url = "/DataSelection/BatchDeleteSalesPersons";
+                                options.type = "POST";
+                                options.headers = headers;
+                                options.data = JSON.stringify(data);
+                                options.contentType = "application/json";
+                                options.dataType = "json";
+                                options.success = function (msg) {
+                                    bootbox.alert(msg);
+
+                                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                                    grid.reload();
+                                };
+                                options.error = function () {
+                                    bootbox.alert("Terjadi kesalahan saat menghapus.");
+                                };
+                                $.ajax(options);
+                            }
+                        });
+                    }
+                });
+            });
+         });
+
+                $('#btnMasterCategories').click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data) {
+                $('#detailsContainer').html(data);
+                $('#detailsModal').modal('show');
+
+                $('form').each(function () {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                });
+
+                [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                    new MvcGrid(element);
+                });
+
+                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                    new MvcDatalist(element);
+                });
+
+                $("#batchDeleteCategories").click(function () {
+                    event.preventDefault();
+                    var selectedIDs = new Array();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+
+                    $('#details-table tbody tr').find('td:first :checkbox').each(function () {
+                        if ($(this).prop('checked')) {
+                            selectedIDs.push($(this).val());
+                        }
+                    });
+
+                    if (selectedIDs.length <= 0) {
+                        bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                    }
+                    else {
+                        bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                            if (result) {
+                                var options = {};
+                                options.url = "/DataSelection/BatchDeleteCategories";
+                                options.type = "POST";
+                                options.headers = headers;
+                                options.data = JSON.stringify(data);
+                                options.contentType = "application/json";
+                                options.dataType = "json";
+                                options.success = function (msg) {
+                                    bootbox.alert(msg);
+
+                                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                                    grid.reload();
+                                };
+                                options.error = function () {
+                                    bootbox.alert("Terjadi kesalahan saat menghapus.");
+                                };
+                                $.ajax(options);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+		       $('#btnMasterBrands').click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data) {
+                $('#detailsContainer').html(data);
+                $('#detailsModal').modal('show');
+
+                $('form').each(function () {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                });
+
+                [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                    new MvcGrid(element);
+                });
+
+                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                    new MvcDatalist(element);
+                });
+
+                $("#batchDeleteBrands").click(function () {
+                    event.preventDefault();
+                    var selectedIDs = new Array();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+
+                    $('#details-table tbody tr').find('td:first :checkbox').each(function () {
+                        if ($(this).prop('checked')) {
+                            selectedIDs.push($(this).val());
+                        }
+                    });
+
+                    if (selectedIDs.length <= 0) {
+                        bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                    }
+                    else {
+                        bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                            if (result) {
+                                var options = {};
+                                options.url = "/DataSelection/BatchDeleteBrands";
+                                options.type = "POST";
+                                options.headers = headers;
+                                options.data = JSON.stringify(data);
+                                options.contentType = "application/json";
+                                options.dataType = "json";
+                                options.success = function (msg) {
+                                    bootbox.alert(msg);
+
+                                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                                    grid.reload();
+                                };
+                                options.error = function () {
+                                    bootbox.alert("Terjadi kesalahan saat menghapus.");
+                                };
+                                $.ajax(options);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+		       $('#btnMasterItems').click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr("href");
+            $.get(url, function (data) {
+                $('#detailsContainer').html(data);
+                $('#detailsModal').modal('show');
+
+                $('form').each(function () {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                });
+
+                [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                    new MvcGrid(element);
+                });
+
+                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                    new MvcDatalist(element);
+                });
+
+                $("#batchDeleteItems").click(function () {
+                    event.preventDefault();
+                    var selectedIDs = new Array();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+
+                    $('#details-table tbody tr').find('td:first :checkbox').each(function () {
+                        if ($(this).prop('checked')) {
+                            selectedIDs.push($(this).val());
+                        }
+                    });
+
+                    if (selectedIDs.length <= 0) {
+                        bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                    }
+                    else {
+                        bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                            if (result) {
+                                var options = {};
+                                options.url = "/DataSelection/BatchDeleteItems";
                                 options.type = "POST";
                                 options.headers = headers;
                                 options.data = JSON.stringify(data);
