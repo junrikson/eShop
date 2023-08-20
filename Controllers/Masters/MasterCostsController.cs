@@ -72,8 +72,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name");
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions.Where(x => x.Active == true), "Id", "Notes");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
             return PartialView("../Masters/MasterCosts/_Create", obj);
         }
 
@@ -118,8 +117,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", masterCost.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions.Where(x => x.Active == true), "Id", "Notes", masterCost.MasterRegionId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", masterCost.MasterBusinessUnitId);
             return PartialView("../Masters/MasterCosts/_Create", masterCost);
         }
 
@@ -139,8 +137,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", masterCost.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions.Where(x => x.Active == true), "Id", "Notes", masterCost.MasterRegionId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", masterCost.MasterBusinessUnitId);
             return PartialView("../Masters/MasterCosts/_Edit", masterCost);
         }
 
@@ -194,8 +191,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", masterCost.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions.Where(x => x.Active == true), "Id", "Notes", masterCost.MasterRegionId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", masterCost.MasterBusinessUnitId);
             return PartialView("../Masters/MasterCosts/_Edit", masterCost);
         }
 

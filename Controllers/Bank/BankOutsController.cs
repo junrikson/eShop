@@ -36,8 +36,8 @@ namespace eShop.Controllers
         public PartialViewResult IndexGrid(String search)
         {
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
-            var masterRegions = user.MasterRegions.Select(x => x.Id).ToList();
-            var masterBusinessUnits = user.MasterBusinessUnits.Select(x => x.Id).ToList();
+            var masterRegions = user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+            var masterBusinessUnits = user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
 
             if (String.IsNullOrEmpty(search))
                 return PartialView("../Bank/BankOuts/_IndexGrid", db.Set<BankTransaction>().Where(x => x.TransactionType == EnumBankTransactionType.Out &&
@@ -126,8 +126,7 @@ namespace eShop.Controllers
             bankTransaction.MasterBusinessUnitId = 0;
             bankTransaction.MasterRegionId = 0;
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name");
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
             ViewBag.Total = "0";
             ViewBag.TotalHeader = "0";
             return View("../Bank/BankOuts/Create", bankTransaction);
@@ -185,8 +184,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", bankTransaction.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", bankTransaction.MasterRegionId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", bankTransaction.MasterBusinessUnitId);
             ViewBag.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id).ToString("N2");
             ViewBag.TotalHeader = SharedFunctions.GetTotalBankTransactionDetailsHeader(db, bankTransaction.Id).ToString("N2");
             return View("../Bank/BankOuts/Create", bankTransaction);
@@ -221,8 +219,7 @@ namespace eShop.Controllers
             {
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
                 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", bankTransaction.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", bankTransaction.MasterRegionId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", bankTransaction.MasterBusinessUnitId);
                 ViewBag.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id).ToString("N2");
                 ViewBag.TotalHeader = SharedFunctions.GetTotalBankTransactionDetailsHeader(db, bankTransaction.Id).ToString("N2");
                 return View("../Bank/BankOuts/Edit", bankTransaction);
@@ -344,8 +341,7 @@ namespace eShop.Controllers
             }
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", bankTransaction.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", bankTransaction.MasterRegionId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", bankTransaction.MasterBusinessUnitId);
             ViewBag.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id).ToString("N2");
             ViewBag.TotalHeader = SharedFunctions.GetTotalBankTransactionDetailsHeader(db, bankTransaction.Id).ToString("N2");
             return View("../Bank/BankOuts/Edit", bankTransaction);

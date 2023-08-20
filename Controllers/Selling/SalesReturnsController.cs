@@ -124,8 +124,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name");
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
             ViewBag.Total = "0";
 
             return View("../Selling/SalesReturns/Create", salesReturn);
@@ -178,8 +177,7 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", salesReturn.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", salesReturn.MasterRegionId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", salesReturn.MasterBusinessUnitId);
                 ViewBag.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id).ToString("N2");
 
                 return View("../Selling/SalesReturns/Create", salesReturn);
@@ -243,8 +241,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", salesReturn.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", salesReturn.MasterRegionId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", salesReturn.MasterBusinessUnitId);
             ViewBag.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id).ToString("N2");
 
             return View("../selling/SalesReturns/Edit", salesReturn);
@@ -306,8 +303,7 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", salesReturn.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", salesReturn.MasterRegionId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", salesReturn.MasterBusinessUnitId);
                 ViewBag.Total = SharedFunctions.GetTotalSalesReturn(db, salesReturn.Id).ToString("N2");
 
                 return View("../Selling/SalesReturns/Edit", salesReturn);

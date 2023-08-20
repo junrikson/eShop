@@ -73,8 +73,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits.Where(x => x.Active == true), "Id", "Name");
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions.Where(x => x.Active == true), "Id", "Notes");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
             return PartialView("../Bank/MasterBanks/_Create", obj);
         }
 
@@ -107,8 +106,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits.Where(x => x.Active == true), "Id", "Name", masterBank.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions.Where(x => x.Active == true), "Id", "Notes", masterBank.MasterRegionId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", masterBank.MasterBusinessUnitId);
             return PartialView("../Bank/MasterBanks/_Create", masterBank);
         }
 
@@ -128,8 +126,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits.Where(x => x.Active == true), "Id", "Name", masterBank.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions.Where(x => x.Active == true), "Id", "Notes", masterBank.MasterRegionId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", masterBank.MasterBusinessUnitId);
             return PartialView("../Bank/MasterBanks/_Edit", masterBank);
         }
 
@@ -174,8 +171,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits.Where(x => x.Active == true), "Id", "Name", masterBank.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions.Where(x => x.Active == true), "Id", "Notes", masterBank.MasterRegionId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", masterBank.MasterBusinessUnitId);
             return PartialView("../Bank/MasterBanks/_Edit", masterBank);
         }
 

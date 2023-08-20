@@ -75,16 +75,13 @@ namespace eShop.Models
         [Display(Name = "Konsumen")]
         public Boolean? IsCustomer { get; set; }
 
-        public virtual ICollection<MasterBusinessUnit> MasterBusinessUnits { get; set; }
-
-        public virtual ICollection<MasterRegion> MasterRegions { get; set; }
+        public virtual ICollection<MasterBusinessUnitRegion> MasterBusinessUnitRegions { get; set; }
 
         public virtual ICollection<SystemLog> SystemLogs { get; set; }
 
         public ApplicationUser()
         {
-            this.MasterBusinessUnits = new HashSet<MasterBusinessUnit>();
-            this.MasterRegions = new HashSet<MasterRegion>();
+            this.MasterBusinessUnitRegions = new HashSet<MasterBusinessUnitRegion>();
         }
     }
 

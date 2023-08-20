@@ -122,8 +122,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name");
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
             ViewBag.Total = "0";
 
             return View("../Buying/PurchaseOrders/Create", purchaseOrder);
@@ -188,8 +187,7 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseOrder.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseOrder.MasterRegionId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", purchaseOrder.MasterBusinessUnitId);
                 ViewBag.Total = SharedFunctions.GetTotalPurchaseOrder(db, purchaseOrder.Id).ToString("N2");
 
                 return View("../Buying/PurchaseOrders/Create", purchaseOrder);
@@ -253,8 +251,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseOrder.MasterBusinessUnitId);
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseOrder.MasterRegionId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", purchaseOrder.MasterBusinessUnitId);
             ViewBag.Total = SharedFunctions.GetTotalPurchaseOrder(db, purchaseOrder.Id).ToString("N2");
 
             return View("../Buying/PurchaseOrders/Edit", purchaseOrder);
@@ -316,8 +313,7 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", purchaseOrder.MasterBusinessUnitId);
-                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", purchaseOrder.MasterRegionId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", purchaseOrder.MasterBusinessUnitId);
                 ViewBag.Total = SharedFunctions.GetTotalPurchaseOrder(db, purchaseOrder.Id).ToString("N2");
 
                 return View("../Buying/PurchaseOrders/Edit", purchaseOrder);
