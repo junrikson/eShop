@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Web.Mvc;
 
 namespace eShop.Models
@@ -543,6 +544,86 @@ namespace eShop.Models
 
         [Display(Name = "Akun Akhir")]
         public virtual ChartOfAccount ChartOfAccountEnd { get; set; }
+    }
+
+    public class MasterBusinessRegionAccountViewModel
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [DatalistColumn]
+        [Required(ErrorMessage = "Nomor Akun harus diisi.")]
+        public string Code { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Nama Akun")]
+        public string Name { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Posisi")]
+        public EnumDefaultEntry Position { get; set; }
+
+        [Display(Name = "Header")]
+        public bool IsHeader { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Level")]
+        public int Level { get; set; }
+
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
+        [Display(Name = "Aktif")]
+        public bool Active { get; set; }
+    }
+
+    public class MasterBusinessRegionAccountDatalist : MvcDatalist<MasterBusinessRegionAccountViewModel>
+    {
+        private DbContext Context { get; }
+
+        public MasterBusinessRegionAccountDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code + " - " + model.Name;
+        }
+        public MasterBusinessRegionAccountDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterBusinessRegionAccount";
+            Title = "Akun";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+            AdditionalFilters.Add("IsHeader");
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterBusinessRegionAccountViewModel> GetModels()
+        {
+            return Context.Set<MasterBusinessRegionAccount>()
+                .Select(x => new MasterBusinessRegionAccountViewModel
+                {
+                    Id = x.ChartOfAccountId,
+                    MasterRegionId = x.MasterRegionId,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    Code = x.ChartOfAccount.Code,
+                    Name = x.ChartOfAccount.Name,
+                    Position = x.ChartOfAccount.Position,
+                    IsHeader = x.ChartOfAccount.IsHeader,
+                    Level = x.ChartOfAccount.Level,
+                    Notes = x.ChartOfAccount.Notes,
+                    Active = x.ChartOfAccount.Active
+                });
+        }
     }
 
     // End of MasterBusinessRegionAccount

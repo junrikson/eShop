@@ -7022,7 +7022,6 @@
     <Content Include="Views\Accounting\Journals\Create.cshtml" />
     <Content Include="Views\Accounting\Journals\Edit.cshtml" />
     <Content Include="Views\Accounting\Journals\Index.cshtml" />
-    <Content Include="Views\Accounting\Journals\_DateEdit.cshtml" />
     <Content Include="Views\Accounting\Journals\_Details.cshtml" />
     <Content Include="Views\Accounting\Journals\_DetailsCreate.cshtml" />
     <Content Include="Views\Accounting\Journals\_DetailsEdit.cshtml" />
