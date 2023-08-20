@@ -3,6 +3,7 @@ using CrystalDecisions.Shared;
 using Datalist;
 using eShop.Models;
 using System.IO;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 
@@ -24,11 +25,40 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterBusinessUnitRegion(DatalistFilter filter, int MasterBusinessUnitId = 0)
+        {
+            MasterBusinessUnitRegionDatalist datalist = new MasterBusinessUnitRegionDatalist(db);
+
+            filter.AdditionalFilters["MasterRegionActive"] = true;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllChartOfAccount(DatalistFilter filter)
         {
             ChartOfAccountDatalist datalist = new ChartOfAccountDatalist(db);
 
             filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterBusinessRegionAccount(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0, bool IsHeader = false)
+        {
+            MasterBusinessRegionAccountDatalist datalist = new MasterBusinessRegionAccountDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
+
+            if(!IsHeader)
+                filter.AdditionalFilters["IsHeader"] = false;
+
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);

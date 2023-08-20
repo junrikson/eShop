@@ -32,24 +32,20 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "JournalsActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid()
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Accounting/Journals/_IndexGrid", db.Set<Journal>().Where(o => o.Type == EnumJournalType.General).AsQueryable());
-            else
-                return PartialView("../Accounting/Journals/_IndexGrid", db.Set<Journal>().Where(o => o.Type == EnumJournalType.General).AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            var masterBusinessUnits = db.Users.Find(User.Identity.GetUserId<int>()).ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct();
+
+            return PartialView("../Accounting/Journals/_IndexGrid", db.Set<Journal>().Where(o => o.Type == EnumJournalType.General && masterBusinessUnits.Any(p => p == o.MasterBusinessUnitId)).AsQueryable());
         }
 
         [HttpGet]
         [Authorize(Roles = "JournalsActive")]
-        public PartialViewResult OthersGrid(String search)
+        public PartialViewResult OthersGrid()
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Accounting/Journals/_OthersGrid", db.Set<Journal>().Where(o => o.Type != EnumJournalType.General).AsQueryable());
-            else
-                return PartialView("../Accounting/Journals/_OthersGrid", db.Set<Journal>().Where(o => o.Type != EnumJournalType.General).AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            var masterBusinessUnits = db.Users.Find(User.Identity.GetUserId<int>()).ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct();
+
+            return PartialView("../Accounting/Journals/_OthersGrid", db.Set<Journal>().Where(o => o.Type != EnumJournalType.General && masterBusinessUnits.Any(p => p == o.MasterBusinessUnitId)).AsQueryable());
         }
 
         public JsonResult IsCodeExists(string Code, int? Id)
@@ -85,7 +81,6 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", journal.MasterBusinessUnitId);
             return PartialView("../Accounting/Journals/_Details", journal);
         }
 
@@ -124,7 +119,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", journal.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
             return View("../Accounting/Journals/Create", journal);
         }
 
@@ -177,7 +172,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", journal.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
             return View("../Accounting/Journals/Create", journal);
         }
 
@@ -203,7 +198,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", journal.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
             return View("../Accounting/Journals/Edit", journal);
         }
 
@@ -262,61 +257,8 @@ namespace eShop.Controllers
             }
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", journal.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", journal.MasterBusinessUnitId);
             return View("../Accounting/Journals/Edit", journal);
-        }
-
-        // GET: MasterBusinessUnits/Edit/5
-        [Authorize(Roles = "JournalsEdit")]
-        public ActionResult DateEdit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Journal journal = db.Journals.Find(id);
-            if (journal == null)
-            {
-                return HttpNotFound();
-            }
-            return PartialView("../Accounting/Journals/_DateEdit", journal);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "JournalsEdit")]
-        public ActionResult DateEdit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,Type,Debit,Credit,Notes,Active,Created,Updated,UserId")] Journal journal)
-        {
-            journal.Updated = DateTime.Now;
-            journal.UserId = User.Identity.GetUserId<int>();
-
-            if (ModelState.IsValid)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        db.Entry(journal).State = EntityState.Unchanged;
-                        db.Entry(journal).Property("Date").IsModified = true;
-                        db.Entry(journal).Property("Updated").IsModified = true;
-                        db.Entry(journal).Property("UserId").IsModified = true;
-                        db.SaveChanges();
-
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Journals, MenuId = journal.Id, MenuCode = journal.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
-                        db.SaveChanges();
-
-                        dbTran.Commit();
-
-                        return Json("success", JsonRequestBehavior.AllowGet);
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-            return PartialView("../Accounting/Journals/_DateEdit", journal);
         }
 
         [Authorize(Roles = "JournalsActive")]
@@ -476,10 +418,13 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "JournalsActive")]
-        public PartialViewResult DetailsGrid(int Id)
+        public PartialViewResult DetailsGrid(int id)
         {
+            Journal journal = db.Journals.Find(id);
+            var masterRegions = db.Users.Find(User.Identity.GetUserId<int>()).ApplicationUserMasterBusinessUnitRegions.Where(o => o.MasterBusinessUnitId == journal.MasterBusinessUnitId).Select(x => x.MasterRegionId).Distinct();
+
             return PartialView("../Accounting/Journals/_DetailsGrid", db.JournalsDetails
-                .Where(x => x.JournalId == Id).ToList());
+                .Where(x => x.JournalId == id && masterRegions.Any(y => y == x.MasterRegionId)).ToList());
         }
 
         [Authorize(Roles = "JournalsActive")]
@@ -494,9 +439,7 @@ namespace eShop.Controllers
             {
                 JournalId = JournalId
             };
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes");
             return PartialView("../Accounting/Journals/_DetailsCreate", journalDetails);
         }
 
@@ -508,6 +451,9 @@ namespace eShop.Controllers
             journalDetails.Created = DateTime.Now;
             journalDetails.Updated = DateTime.Now;
             journalDetails.UserId = User.Identity.GetUserId<int>();
+
+            if (ModelState.IsValid)
+                journalDetails = GetDetailModelState(journalDetails);
 
             if (ModelState.IsValid)
             {
@@ -542,9 +488,6 @@ namespace eShop.Controllers
                 }
             }
 
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
-
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", journalDetails.MasterRegionId);
             return PartialView("../Accounting/Journals/_DetailsCreate", journalDetails);
         }
 
@@ -557,9 +500,6 @@ namespace eShop.Controllers
                 return HttpNotFound();
             }
 
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
-
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", journalDetails.MasterRegionId);
             return PartialView("../Accounting/Journals/_DetailsEdit", journalDetails);
         }
 
@@ -570,6 +510,9 @@ namespace eShop.Controllers
         {
             journalDetails.Updated = DateTime.Now;
             journalDetails.UserId = User.Identity.GetUserId<int>();
+
+            if (ModelState.IsValid)
+                journalDetails = GetDetailModelState(journalDetails);
 
             if (ModelState.IsValid)
             {
@@ -611,9 +554,6 @@ namespace eShop.Controllers
                 }
             }
 
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
-
-            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", journalDetails.MasterRegionId);
             return PartialView("../Accounting/Journals/_DetailsEdit", journalDetails);
         }
 
@@ -668,6 +608,18 @@ namespace eShop.Controllers
                     return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
                 }
             }
+        }
+
+        [Authorize(Roles = "JournalsActive")]
+        private JournalDetails GetDetailModelState(JournalDetails journalDetails)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!(journalDetails.Debit == 0 || journalDetails.Credit == 0))
+                    ModelState.AddModelError(string.Empty, "Salah satu nilai Debit atau Kredit harus nol!");
+            }
+
+            return journalDetails;
         }
 
         [HttpPost]

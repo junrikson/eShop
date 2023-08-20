@@ -83,7 +83,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterWarehouses" href="@Url.Action("AddMasterWarehouses", "DataSelection", new { id = Model.Id })">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterWarehouses" @if (!User.IsInRole("MasterWarehousesAdd")) { @Html.Raw("disabled") } href="@Url.Action("AddMasterWarehouses", "DataSelection", new { id = Model.Id })">
                                                 Gudang
                                             </button>
                                         </div>
@@ -92,7 +92,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterAccounts" href="@Url.Action("AddMasterAccounts", "DataSelection", new { id = Model.Id })">
+                                            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMasterAccounts" @if (!User.IsInRole("ChartOfAccountsAdd")) { @Html.Raw("disabled") } href="@Url.Action("AddMasterAccounts", "DataSelection", new { id = Model.Id })">
                                                 Akun
                                             </button>
                                         </div>
@@ -186,11 +186,6 @@
 </div>
 <div class="modal fade" id="detailsModal" tabindex="-2" role="dialog" aria-hidden="true" data-backdrop="static">
     <div id="detailsContainer">
-    </div>
-</div>
-
-<div class="modal fade" id="subdetailsModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-    <div id="subdetailsContainer">
     </div>
 </div>
 
@@ -324,6 +319,12 @@
             });
         });
 
+        function AddSuppliersSuccess() {
+            $('#detailsContainer').html("");
+
+            document.getElementById("btnMasterSuppliers").click();
+        }
+
         $('#btnMasterSuppliers').click(function (event) {
             event.preventDefault();
             var url = $(this).attr("href");
@@ -387,6 +388,13 @@
         });
 
         $('#btnMasterCustomers').click(function (event) {
+        function AddWarehousesSuccess() {
+            $('#detailsContainer').html("");
+
+            document.getElementById("btnMasterWarehouses").click();
+        }
+
+        $('#btnMasterWarehouses').click(function (event) {
             event.preventDefault();
             var url = $(this).attr("href");
             $.get(url, function (data) {
@@ -411,6 +419,17 @@
                     event.preventDefault();
                     var selectedIDs = new Array();
                     var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+                $("#MasterRegionId").on("change", function () {
+                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                    grid.query.set('masterRegionId', $("#MasterRegionId").val());
+                    grid.reload();
+                }).change();
+
+                $("#batchDeleteWarehouses").click(function () {
+                    event.preventDefault();
+                    var selectedIDs = new Array();
+                    var regionId = $("#MasterRegionId").val();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id, masterRegionId: regionId };
 
                     $('#details-table tbody tr').find('td:first :checkbox').each(function () {
                         if ($(this).prop('checked')) {
@@ -426,6 +445,7 @@
                             if (result) {
                                 var options = {};
                                 options.url = "/DataSelection/BatchDeleteCustomers";
+                                options.url = "/DataSelection/BatchDeleteWarehouses";
                                 options.type = "POST";
                                 options.headers = headers;
                                 options.data = JSON.stringify(data);
@@ -449,6 +469,13 @@
         });
 
          $('#btnMasterSalesPersons').click(function (event) {
+        function AddAccountsSuccess() {
+            $('#detailsContainer').html("");
+
+            document.getElementById("btnMasterAccounts").click();
+        }
+
+        $('#btnMasterAccounts').click(function (event) {
             event.preventDefault();
             var url = $(this).attr("href");
             $.get(url, function (data) {
@@ -473,6 +500,17 @@
                     event.preventDefault();
                     var selectedIDs = new Array();
                     var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+                $("#MasterRegionId").on("change", function () {
+                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                    grid.query.set('masterRegionId', $("#MasterRegionId").val());
+                    grid.reload();
+                }).change();
+
+                $("#batchDeleteAccounts").click(function () {
+                    event.preventDefault();
+                    var selectedIDs = new Array();
+                    var regionId = $("#MasterRegionId").val();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id, masterRegionId: regionId };
 
                     $('#details-table tbody tr').find('td:first :checkbox').each(function () {
                         if ($(this).prop('checked')) {
@@ -674,6 +712,7 @@
                             if (result) {
                                 var options = {};
                                 options.url = "/DataSelection/BatchDeleteItems";
+                                options.url = "/DataSelection/BatchDeleteAccounts";
                                 options.type = "POST";
                                 options.headers = headers;
                                 options.data = JSON.stringify(data);

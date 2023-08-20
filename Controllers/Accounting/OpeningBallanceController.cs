@@ -22,10 +22,10 @@ namespace eShop.Controllers
 
             OpeningBallanceViewModel openingBallanceViewModel = new OpeningBallanceViewModel
             {
-                MasterBusinessUnitId = user.MasterBusinessUnits.FirstOrDefault().Id
+                MasterBusinessUnitId = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().FirstOrDefault()
             };
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", openingBallanceViewModel.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct(), "Id", "Name", openingBallanceViewModel.MasterBusinessUnitId);
             return View("../Accounting/OpeningBallance/Index");
         }
 
