@@ -136,10 +136,10 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitRegion> MasterBusinessUnitRegions { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitSupplier> MasterBusinessUnitSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitCustomer> MasterBusinessUnitCustomers { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitSalesPerson> MasterBusinessUnitSalesPersons { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitCategory> MasterBusinessUnitCategories { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitBrand> MasterBusinessUnitBrands { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitItem> MasterBusinessUnitItems { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessSalesPerson> MasterBusinessSalesPersons { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessCategory> MasterBusinessCategories { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessBrand> MasterBusinessBrands { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessItem> MasterBusinessItems { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionWarehouse> MasterBusinessRegionWarehouses { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionAccount> MasterBusinessRegionAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegion> MasterRegions { get; set; }

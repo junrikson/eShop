@@ -245,13 +245,13 @@ namespace eShop.Models
         [Display(Name = "Unit Konsumen")]
         MasterBusinessUnitCustomer = 119,
         [Display(Name = "Unit Sales")]
-        MasterBusinessUnitSalesPerson = 120,
+        MasterBusinessSalesPerson = 120,
         [Display(Name = "Unit Kategori")]
-        MasterBusinessUnitCategory = 121,
+        MasterBusinessCategory = 121,
         [Display(Name = "Unit Merek")]
-        MasterBusinessUnitBrand = 122,
+        MasterBusinessBrand = 122,
         [Display(Name = "Unit Item")]
-        MasterBusinessUnitItem = 123,
+        MasterBusinessItem = 123,
         [Display(Name = "Unit Gudang")]
         MasterBusinessRegionWarehouse = 124,
         [Display(Name = "Unit Akun")]

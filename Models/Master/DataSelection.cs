@@ -133,7 +133,7 @@ namespace eShop.Models
         [Required(ErrorMessage = "Supplier Awal harus diisi.")]
         public int MasterSupplierStartId { get; set; }
 
-        [Display(Name = "Supplier Awal")]
+        [Display(Name = "Supplier Akhir")]
         public virtual MasterSupplier MasterSupplierStart { get; set; }
 
         [Display(Name = "Supplier Akhir")]
@@ -172,30 +172,7 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class MasterBusinessUnitCustomerSelection
-    {
-        [Display(Name = "Unit Bisnis")]
-        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
-        public int MasterBusinessUnitId { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
-
-        [Display(Name = "Konsumen Awal")]
-        [Required(ErrorMessage = "Konsumen Awal harus diisi.")]
-        public int MasterCustomerStartId { get; set; }
-
-        [Display(Name = "Konsumen Awal")]
-        public virtual MasterCustomer MasterCustomerStart { get; set; }
-
-        [Display(Name = "Konsumen Akhir")]
-        public int? MasterCustomerEndId { get; set; }
-
-        [Display(Name = "Konsumen Akhir")]
-        public virtual MasterCustomer MasterCustomerEnd { get; set; }
-    }
-
-    public class MasterBusinessUnitSalesPerson
+    public class MasterBusinessSalesPerson
     {
         [Key, Column(Order = 0)]
         [Display(Name = "Unit Bisnis")]
@@ -224,29 +201,7 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class MasterBusinessUnitSalesPersonSelection
-    {
-        [Display(Name = "Unit Bisnis")]
-        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
-        public int MasterBusinessUnitId { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
-
-        [Display(Name = "Sales Awal")]
-        [Required(ErrorMessage = "Sales Awal harus diisi.")]
-        public int MasterSalesPersonStartId { get; set; }
-
-        [Display(Name = "Sales Awal")]
-        public virtual MasterSalesPerson MasterSalesPersonStart { get; set; }
-
-        [Display(Name = "Sales Akhir")]
-        public int? MasterSalesPersonEndId { get; set; }
-
-        [Display(Name = "Sales Akhir")]
-        public virtual MasterSalesPerson MasterSalesPersonEnd { get; set; }
-    }
-    public class MasterBusinessUnitCategory
+    public class MasterBusinessCategory
     {
         [Key, Column(Order = 0)]
         [Display(Name = "Unit Bisnis")]
@@ -275,30 +230,7 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class MasterBusinessUnitCategorySelection
-    {
-        [Display(Name = "Unit Bisnis")]
-        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
-        public int MasterBusinessUnitId { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
-
-        [Display(Name = "Kategori Awal")]
-        [Required(ErrorMessage = "Kategori Awal harus diisi.")]
-        public int MasterCategoryStartId { get; set; }
-
-        [Display(Name = "Kategori Awal")]
-        public virtual MasterCategory MasterCategoryStart { get; set; }
-
-        [Display(Name = "Kategori Akhir")]
-        public int? MasterCategoryEndId { get; set; }
-
-        [Display(Name = "Kategori Akhir")]
-        public virtual MasterCategory MasterCategoryEnd { get; set; }
-    }
-
-    public class MasterBusinessUnitBrand
+    public class MasterBusinessBrand
     {
         [Key, Column(Order = 0)]
         [Display(Name = "Unit Bisnis")]
@@ -327,30 +259,7 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class MasterBusinessUnitBrandSelection
-    {
-        [Display(Name = "Unit Bisnis")]
-        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
-        public int MasterBusinessUnitId { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
-
-        [Display(Name = "Merek Awal")]
-        [Required(ErrorMessage = "Merek Awal harus diisi.")]
-        public int MasterBrandStartId { get; set; }
-
-        [Display(Name = "Merek Awal")]
-        public virtual MasterBrand MasterBrandStart { get; set; }
-
-        [Display(Name = "Merek Akhir")]
-        public int? MasterBrandEndId { get; set; }
-
-        [Display(Name = "Merek Akhir")]
-        public virtual MasterBrand MasterBrandEnd { get; set; }
-    }
-
-    public class MasterBusinessUnitItem
+    public class MasterBusinessItem
     {
         [Key, Column(Order = 0)]
         [Display(Name = "Unit Bisnis")]
@@ -377,29 +286,6 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
-    }
-
-    public class MasterBusinessUnitItemSelection
-    {
-        [Display(Name = "Unit Bisnis")]
-        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
-        public int MasterBusinessUnitId { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
-
-        [Display(Name = "Item Awal")]
-        [Required(ErrorMessage = "Item Awal harus diisi.")]
-        public int MasterItemStartId { get; set; }
-
-        [Display(Name = "Item Awal")]
-        public virtual MasterItem MasterItemStart { get; set; }
-
-        [Display(Name = "Item Akhir")]
-        public int? MasterItemEndId { get; set; }
-
-        [Display(Name = "Item Akhir")]
-        public virtual MasterItem MasterItemEnd { get; set; }
     }
 
     public class MasterBusinessRegionWarehouse
