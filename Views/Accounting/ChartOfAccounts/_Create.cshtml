@@ -17,6 +17,7 @@
                 @using (Ajax.BeginForm("Create", "ChartOfAccounts", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
                 {
                     @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.MasterBusinessUnitId)
 
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })

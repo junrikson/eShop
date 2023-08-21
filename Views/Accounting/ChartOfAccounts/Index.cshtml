@@ -22,20 +22,6 @@
         <h1 class="col-md-6">
             Bagan Akun
         </h1>
-        <div class="col-md-6 text-right">
-            @if (User.IsInRole("ChartOfAccountsAdd"))
-            {
-                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "ChartOfAccounts")">
-                    <i class="fa fa-plus"></i> Add
-                </button>
-            }
-            @if (User.IsInRole("ChartOfAccountsDelete"))
-            {
-                <button id="batchDelete" class="btn btn-danger mx-1">
-                    <i class="fa fa-trash"></i> Delete
-                </button>
-            }
-        </div>
     </section>
 
     <!-- Main content -->
