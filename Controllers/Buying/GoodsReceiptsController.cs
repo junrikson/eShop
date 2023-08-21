@@ -120,7 +120,8 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name");
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes");
             ViewBag.Total = "0";
 
             return View("../Buying/GoodsReceipts/Create", goodsReceipt);
@@ -182,7 +183,8 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", goodsReceipt.MasterBusinessUnitId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", goodsReceipt.MasterBusinessUnitId);
+                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", goodsReceipt.MasterRegionId);
                 
                 return View("../Buying/GoodsReceipts/Create", goodsReceipt);
             }
@@ -245,7 +247,8 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", goodsReceipt.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", goodsReceipt.MasterBusinessUnitId);
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", goodsReceipt.MasterRegionId);
             
             return View("../Buying/GoodsReceipts/Edit", goodsReceipt);
         }
@@ -303,7 +306,8 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", goodsReceipt.MasterBusinessUnitId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", goodsReceipt.MasterBusinessUnitId);
+                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", goodsReceipt.MasterRegionId);
                 
                 return View("../Buying/GoodsReceipts/Edit", goodsReceipt);
             }

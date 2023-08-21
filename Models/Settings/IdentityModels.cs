@@ -75,13 +75,16 @@ namespace eShop.Models
         [Display(Name = "Konsumen")]
         public Boolean? IsCustomer { get; set; }
 
-        public virtual ICollection<ApplicationUserMasterBusinessUnitRegion> ApplicationUserMasterBusinessUnitRegions { get; set; }
+        public virtual ICollection<MasterBusinessUnit> MasterBusinessUnits { get; set; }
+
+        public virtual ICollection<MasterRegion> MasterRegions { get; set; }
 
         public virtual ICollection<SystemLog> SystemLogs { get; set; }
 
         public ApplicationUser()
         {
-            this.ApplicationUserMasterBusinessUnitRegions = new HashSet<ApplicationUserMasterBusinessUnitRegion>();
+            this.MasterBusinessUnits = new HashSet<MasterBusinessUnit>();
+            this.MasterRegions = new HashSet<MasterRegion>();
         }
     }
 
@@ -133,10 +136,10 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitRegion> MasterBusinessUnitRegions { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitSupplier> MasterBusinessUnitSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitCustomer> MasterBusinessUnitCustomers { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessSalesPerson> MasterBusinessSalesPersons { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessCategory> MasterBusinessCategories { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessBrand> MasterBusinessBrands { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessItem> MasterBusinessItems { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitSalesPerson> MasterBusinessUnitSalesPersons { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitCategory> MasterBusinessUnitCategories { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitBrand> MasterBusinessUnitBrands { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitItem> MasterBusinessUnitItems { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionWarehouse> MasterBusinessRegionWarehouses { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionAccount> MasterBusinessRegionAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegion> MasterRegions { get; set; }

@@ -29,6 +29,13 @@ namespace eShop.Models
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
         public string Name { get; set; }
 
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
         [DatalistColumn]
         [Required(ErrorMessage = "Lokasi harus diisi.")]
         [Display(Name = "Lokasi")]
@@ -59,6 +66,36 @@ namespace eShop.Models
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
     }
+
+    public class MasterWarehouseRegionDatalist : MvcDatalist<MasterWarehouse>
+    {
+        private DbContext Context { get; }
+
+        public MasterWarehouseRegionDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Name;
+        }
+
+        public MasterWarehouseRegionDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterWarehouseRegion";
+            Title = "Master Gudang";
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "Name";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterWarehouse> GetModels()
+        {
+            return Context.Set<MasterWarehouse>();
+        }
+    }
+
+
 
     public class MasterWarehouseDatalist : MvcDatalist<MasterWarehouse>
     {

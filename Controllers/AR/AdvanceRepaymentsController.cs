@@ -113,7 +113,8 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name");
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes");
             return View("../AR/AdvanceRepayments/Create", advanceRepayment);
         }
 
@@ -167,7 +168,8 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", advanceRepayment.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", advanceRepayment.MasterBusinessUnitId);
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", advanceRepayment.MasterRegionId);
             return View("../AR/AdvanceRepayments/Create", advanceRepayment);
         }
 
@@ -187,7 +189,8 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", advanceRepayment.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", advanceRepayment.MasterBusinessUnitId);
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", advanceRepayment.MasterRegionId);
             return View("../AR/AdvanceRepayments/Edit", advanceRepayment);
         }
 
@@ -250,7 +253,8 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", advanceRepayment.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", advanceRepayment.MasterBusinessUnitId);
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", advanceRepayment.MasterRegionId);
             return View("../AR/AdvanceRepayments/Edit", advanceRepayment);
         }
 

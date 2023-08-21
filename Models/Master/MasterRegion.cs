@@ -11,6 +11,15 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
+    public class AssignedRegion
+    {
+        public int Id { get; set; }
+
+        public string Title { get; set; }
+
+        public bool Assigned { get; set; }
+    }
+
     public class MasterRegion
     {
         [Key]

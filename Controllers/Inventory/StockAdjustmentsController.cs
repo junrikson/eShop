@@ -116,7 +116,8 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name");
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes");
             ViewBag.Total = "0";
 
             return View("../Inventory/StockAdjustments/Create", stockAdjustment);
@@ -169,7 +170,8 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", stockAdjustment.MasterBusinessUnitId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", stockAdjustment.MasterBusinessUnitId);
+                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", stockAdjustment.MasterRegionId);
                 ViewBag.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id).ToString("N2");
 
                 return View("../Inventory/StockAdjustments/Create", stockAdjustment);
@@ -228,7 +230,8 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", stockAdjustment.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", stockAdjustment.MasterBusinessUnitId);
+            ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", stockAdjustment.MasterRegionId);
             ViewBag.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id).ToString("N2");
 
             return View("../Inventory/StockAdjustments/Edit", stockAdjustment);
@@ -289,7 +292,8 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", stockAdjustment.MasterBusinessUnitId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", stockAdjustment.MasterBusinessUnitId);
+                ViewBag.MasterRegionId = new SelectList(user.MasterRegions, "Id", "Notes", stockAdjustment.MasterRegionId);
                 ViewBag.Total = SharedFunctions.GetTotalStockAdjustment(db, stockAdjustment.Id).ToString("N2");
 
                 return View("../Inventory/StockAdjustments/Edit", stockAdjustment);

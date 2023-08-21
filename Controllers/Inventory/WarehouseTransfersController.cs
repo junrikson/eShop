@@ -116,7 +116,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name");
             ViewBag.Total = "0";
 
             return View("../Inventory/WarehouseTransfers/Create", warehouseTransfer);
@@ -169,7 +169,9 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", warehouseTransfer.MasterBusinessUnitId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", warehouseTransfer.MasterBusinessUnitId);
+                //  ViewBag.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id).ToString("N2");
+
                 return View("../Inventory/WarehouseTransfers/Create", warehouseTransfer);
             }
         }
@@ -226,7 +228,8 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", warehouseTransfer.MasterBusinessUnitId);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", warehouseTransfer.MasterBusinessUnitId);
+            // ViewBag.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id).ToString("N2");
 
             return View("../Inventory/WarehouseTransfers/Edit", warehouseTransfer);
         }
@@ -286,7 +289,9 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", warehouseTransfer.MasterBusinessUnitId);
+                ViewBag.MasterBusinessUnitId = new SelectList(user.MasterBusinessUnits, "Id", "Name", warehouseTransfer.MasterBusinessUnitId);
+                //  ViewBag.Total = SharedFunctions.GetTotalWarehouseTransfer(db, warehouseTransfer.Id).ToString("N2");
+
                 return View("../Inventory/WarehouseTransfers/Edit", warehouseTransfer);
             }
         }

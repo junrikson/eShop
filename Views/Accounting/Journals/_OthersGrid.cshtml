@@ -7,7 +7,8 @@
     .Grid(Model)
     .Build(columns =>
     {
-        columns.Add(model => ((User.IsInRole("JournalsView")) ? "<div class=\"text-center\"><a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "Journals", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") + "</div>").Encoded(false);
+        columns.Add(model => ((User.IsInRole("JournalsView")) ? "<div class=\"text-center\"><a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "Journals", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
+        ((User.IsInRole("JournalsEdit")) ? "&nbsp;<a class=\"btn btn-success btn-xs dateedit-data\" href=\"" + @Url.Action("DateEdit", "Journals", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Ubah Tanggal</a></div>" : "")).Encoded(false);
         columns.Add(model => model.User.UserName).Titled("User");
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
         columns.Add(model => model.Date).Titled(@Html.DisplayNameFor(model => model.Date)).Formatted("{0:d}").InitialSort(GridSortOrder.Desc);
