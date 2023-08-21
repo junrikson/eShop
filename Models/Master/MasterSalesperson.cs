@@ -121,7 +121,7 @@ namespace eShop.Models
         }
         public MasterSalesPersonDatalist()
         {
-            Url = "/DatalistFilters/AllMasterSalesPerson";
+            Url = "/DatalistFilters/AllMasterSales";
             Title = "Master Sales";
 
             Filter.Sort = "FullName";

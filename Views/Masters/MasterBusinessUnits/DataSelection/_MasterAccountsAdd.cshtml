@@ -1,0 +1,66 @@
+﻿@model eShop.Models.MasterBusinessRegionAccountSelection
+
+@{
+    Layout = null;
+}
+
+<div id="divEmp">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title col-md-10">Akun - @Model.MasterBusinessUnit.Name</h4>
+                    </div>
+                    <div class="modal-body">
+                        @using (Ajax.BeginForm("AddMasterAccounts", "DataSelection", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "AddAccountsSuccess" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <input type="hidden" id="MasterBusinessUnitId" name="MasterBusinessUnitId" value="@Model.MasterBusinessUnitId">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.MasterRegionId)
+                                    @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist())
+                                    @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.LabelFor(model => model.ChartOfAccountStartId)
+                                    @Html.DatalistFor(model => model.ChartOfAccountStartId, new eShop.Models.ChartOfAccountDatalist())
+                                    @Html.ValidationMessageFor(model => model.ChartOfAccountStartId, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="text-center">s/d</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.LabelFor(model => model.ChartOfAccountEndId)
+                                    @Html.DatalistFor(model => model.ChartOfAccountEndId, new eShop.Models.ChartOfAccountDatalist())
+                                    @Html.ValidationMessageFor(model => model.ChartOfAccountEndId, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3 text-right" style="margin-top: 20px">
+                                    <input type="submit" value="+ Add" class="btn btn-success" />
+                                    <a id="batchDeleteAccounts" class="btn btn-danger mx-1" href="#">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="box-body" style="overflow:auto; white-space: nowrap">
+                            @Html.AjaxGrid(Url.Action("MasterAccountsGrid", "DataSelection", new { masterBusinessUnitId = Model.MasterBusinessUnitId, masterRegionId = Model.MasterRegionId }), new { id = "details-table" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
