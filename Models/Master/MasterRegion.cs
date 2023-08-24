@@ -33,6 +33,22 @@ namespace eShop.Models
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
 
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+
         public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
 
         public MasterRegion()

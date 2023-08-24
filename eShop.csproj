@@ -7120,6 +7120,16 @@
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterAccountsGrid.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterWarehousesAdd.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterWarehousesGrid.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterCustomersAdd.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterCustomersGrid.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterSalesPersonsAdd.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterSalesPersonsGrid.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterBrandsGrid.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterBrandsAdd.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterItemsAdd.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterItemsGrid.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterCategoriesAdd.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterCategoriesGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

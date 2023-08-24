@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-md-6">
                                 @Html.LabelFor(model => model.MasterRegionId)
-                                @Html.DropDownList("MasterRegionId", null, "- Pilih Wilayah -", htmlAttributes: new { @class = "form-control" })
+                                @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist(), new { @class = "datalist2" })
                                 @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                             </div>
                             <div class="col-md-6">
                                 @Html.LabelFor(model => model.ChartOfAccountId)
-                                @Html.DatalistFor(model => model.ChartOfAccountId, new eShop.Models.MasterRegionAccountDatalist())
+                                @Html.DatalistFor(model => model.ChartOfAccountId, new eShop.Models.MasterBusinessRegionAccountDatalist(), new { @class = "datalist2" })
                                 @Html.ValidationMessageFor(model => model.ChartOfAccountId, "", new { @class = "text-danger" })
                             </div>
                         </div>

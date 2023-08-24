@@ -160,10 +160,32 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterSalesPerson(DatalistFilter filter)
+        {
+            MasterSalesPersonDatalist datalist = new MasterSalesPersonDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterWarehouse(DatalistFilter filter)
         {
             MasterWarehouseDatalist datalist = new MasterWarehouseDatalist(db);
             filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterBusinessRegionWarehouse(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0)
+        {
+            MasterBusinessRegionWarehouseDatalist datalist = new MasterBusinessRegionWarehouseDatalist(db);
+
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
