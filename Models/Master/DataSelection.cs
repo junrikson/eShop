@@ -591,6 +591,74 @@ namespace eShop.Models
         public virtual MasterWarehouse MasterWarehouseEnd { get; set; }
     }
 
+    public class MasterBusinessRegionWarehouseViewModel
+    {
+        public int Id { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kode Wilayah")]
+        public string MasterWarehouseCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Keterangan")]
+        public string MasterWarehouseNotes { get; set; }
+
+        [Display(Name = "Aktif")]
+        public bool MasterRegionActive { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Unit Bisnis")]
+        public string MasterBusinessUnitCode { get; set; }
+
+        [Display(Name = "Master Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Master Wilayah")]
+        public string MasterRegionCode { get; set; }
+    }
+
+    public class MasterBusinessRegionWarehouseDatalist : MvcDatalist<MasterBusinessRegionWarehouseViewModel>
+    {
+        private DbContext Context { get; }
+
+        public MasterBusinessRegionWarehouseDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.MasterWarehouseCode;
+        }
+        public MasterBusinessRegionWarehouseDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterBusinessRegionWarehouse";
+            Title = "Gudang";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+ //           Filter.Sort = "MasterWarehouseCode";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterBusinessRegionWarehouseViewModel> GetModels()
+        {
+            return Context.Set<MasterBusinessRegionWarehouse>()
+                .Select(x => new MasterBusinessRegionWarehouseViewModel
+                {
+                    Id = x.MasterWarehouseId,
+                    MasterWarehouseCode = x.MasterWarehouse.Code,
+                    MasterRegionId = x.MasterRegionId,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+
+                });
+        }
+    }
+
     // End of MasterBusinessRegionWarehouse
 
     // Begin of MasterBusinessRegionAccount

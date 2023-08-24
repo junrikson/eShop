@@ -36,11 +36,28 @@
                             @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                        <div class="text-right">
-                            <button type="button" class="btn btn-danger btn-block btn-lg" data-dismiss="modal">
-                                Close
-                            </button>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.Created)
+                            @Html.EditorFor(model => model.Created, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.Created, "", new { @class = "text-danger" })
                         </div>
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.Updated)
+                            @Html.EditorFor(model => model.Updated, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.Updated, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.User.UserName)
+                            @Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.User.UserName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <button type="button" class="btn btn-danger btn-block btn-lg" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
                 </div>
                
             </div>
