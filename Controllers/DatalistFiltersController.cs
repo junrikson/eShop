@@ -182,7 +182,7 @@ namespace eShop.Controllers
         [HttpGet]
         public JsonResult AllMasterBusinessRegionWarehouse(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0)
         {
-            MasterBusinessRegionWarehouseDatalist datalist = new MasterBusinessRegionWarehouseDatalist(db);
+            MasterBusinessWarehouseDatalist datalist = new MasterBusinessWarehouseDatalist(db);
 
             filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
             filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;

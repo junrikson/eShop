@@ -93,6 +93,14 @@ namespace eShop.Controllers
                 .Where(x => x.BankTransactionId == Id).ToList());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "BankInsView")]
+        public PartialViewResult OtherGrid(int Id)
+        {
+            return PartialView("../Bank/BankIns/_ViewHeaderGrid", db.BankTransactionsDetailsHeader
+                .Where(x => x.BankTransactionId == Id).ToList());
+        }
+
         // GET: Invoices/Create
         [Authorize(Roles = "BankInsAdd")]
         public ActionResult Create()

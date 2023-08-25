@@ -591,7 +591,7 @@ namespace eShop.Models
         public virtual MasterWarehouse MasterWarehouseEnd { get; set; }
     }
 
-    public class MasterBusinessRegionWarehouseViewModel
+    public class MasterBusinessWarehouseViewModel
     {
         public int Id { get; set; }
 
@@ -621,17 +621,17 @@ namespace eShop.Models
         public string MasterRegionCode { get; set; }
     }
 
-    public class MasterBusinessRegionWarehouseDatalist : MvcDatalist<MasterBusinessRegionWarehouseViewModel>
+    public class MasterBusinessWarehouseDatalist : MvcDatalist<MasterBusinessWarehouseViewModel>
     {
         private DbContext Context { get; }
 
-        public MasterBusinessRegionWarehouseDatalist(DbContext context)
+        public MasterBusinessWarehouseDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.MasterWarehouseCode + " - " + model.MasterWarehouseNotes;
         }
-        public MasterBusinessRegionWarehouseDatalist()
+        public MasterBusinessWarehouseDatalist()
         {
             Url = "/DatalistFilters/AllMasterBusinessRegionWarehouse";
             Title = "Gudang";
@@ -643,17 +643,16 @@ namespace eShop.Models
             Filter.Rows = 10;
         }
 
-        public override IQueryable<MasterBusinessRegionWarehouseViewModel> GetModels()
+        public override IQueryable<MasterBusinessWarehouseViewModel> GetModels()
         {
             return Context.Set<MasterBusinessRegionWarehouse>()
-                .Select(x => new MasterBusinessRegionWarehouseViewModel
+                .Select(x => new MasterBusinessWarehouseViewModel
                 {
                     Id = x.MasterWarehouseId,
-                    MasterWarehouseCode = x.MasterWarehouse.Code,
-   //                 MasterRegionId = x.MasterRegionId,
-    //                MasterRegionCode = x.MasterRegion.Code,
-                    MasterBusinessUnitId = x.MasterBusinessUnitId,
-                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    //MasterRegionCode = x.MasterRegion.Code,
+                    //MasterRegionActive = x.MasterRegion.Active,
+                    //MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    //MasterBusinessUnitCode = x.MasterBusinessUnit.Code
 
                 });
         }

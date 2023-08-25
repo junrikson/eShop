@@ -24,6 +24,11 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <i class="fa fa-plus"></i>
+
+                        <h3 class="box-title">Create - Pengeluaran Kas & Bank</h3>
+                    </div>
                     <!-- /.box-header -->
                     <div class="box-body">
                         @using (Html.BeginForm())
@@ -57,7 +62,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         @Html.LabelFor(model => model.MasterRegionId)
-                                        @Html.DropDownList("MasterRegionId", null, "- Pilih Wilayah -", htmlAttributes: new { @class = "form-control" })
+                                        @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist(), new { @class = "datalist2" })
                                         @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
@@ -271,6 +276,17 @@
             if (data !== "success")
             {
                 $('#detailsContainer').html(data);
+
+                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                    new MvcDatalist(element).reload();
+                });
+
+                $('form').each(function () {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                });
+
                 return;
             }
             $('#detailsModal').modal('hide');

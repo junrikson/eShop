@@ -177,14 +177,29 @@
                 });
             });
 
-            $('#data-table').on("click", ".view-data", function (event)
-            {
+            $('#data-table').on("click", ".view-data", function (event) {
                 event.preventDefault();
                 var url = $(this).attr("href");
-                $.get(url, function (data)
-                {
+                $.get(url, function (data) {
                     $('#viewContainer').html(data);
                     $('#viewModal').modal('show');
+
+                    [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                        new MvcGrid(element);
+                    });
+                });
+            });
+
+            $('#Other-table').on("click", ".Other-data", function (event) {
+                event.preventDefault();
+                var url = $(this).attr("href");
+                $.get(url, function (data) {
+                    $('#viewContainer').html(data);
+                    $('#viewModal').modal('show');
+
+                    [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                        new MvcGrid(element);
+                    });
                 });
             });
 
