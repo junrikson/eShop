@@ -7027,7 +7027,7 @@
     <Content Include="Views\Accounting\Journals\_DetailsEdit.cshtml" />
     <Content Include="Views\Accounting\Journals\_DetailsGrid.cshtml" />
     <Content Include="Views\Accounting\Journals\_IndexGrid.cshtml" />
-    <Content Include="Views\Accounting\Journals\_OthersGrid.cshtml" />
+    <Content Include="Views\Accounting\Journals\_1OthersGrid.cshtml" />
     <Content Include="Views\Accounting\OpeningBallance\Index.cshtml" />
     <Content Include="Views\Accounting\OpeningBallance\_Edit.cshtml" />
     <Content Include="Views\Accounting\OpeningBallance\_IndexGrid.cshtml" />
@@ -7130,6 +7130,7 @@
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterItemsGrid.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterCategoriesAdd.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterCategoriesGrid.cshtml" />
+    <Content Include="Views\Bank\BankIns\_ViewGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

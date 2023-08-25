@@ -629,7 +629,7 @@ namespace eShop.Models
         {
             Context = context;
 
-            GetLabel = (model) => model.MasterWarehouseCode;
+            GetLabel = (model) => model.MasterWarehouseCode + " - " + model.MasterWarehouseNotes;
         }
         public MasterBusinessRegionWarehouseDatalist()
         {
@@ -638,7 +638,7 @@ namespace eShop.Models
             AdditionalFilters.Add("MasterBusinessUnitId");
             AdditionalFilters.Add("MasterRegionId");
 
- //           Filter.Sort = "MasterWarehouseCode";
+            Filter.Sort = "MasterWarehouseCode";
             Filter.Order = DatalistSortOrder.Asc;
             Filter.Rows = 10;
         }
@@ -650,8 +650,8 @@ namespace eShop.Models
                 {
                     Id = x.MasterWarehouseId,
                     MasterWarehouseCode = x.MasterWarehouse.Code,
-                    MasterRegionId = x.MasterRegionId,
-                    MasterRegionCode = x.MasterRegion.Code,
+   //                 MasterRegionId = x.MasterRegionId,
+    //                MasterRegionCode = x.MasterRegion.Code,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,
                     MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
 
