@@ -85,6 +85,14 @@ namespace eShop.Controllers
             return PartialView("../Bank/BankIns/_Details", bankTransaction);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "BankInsView")]
+        public PartialViewResult ViewGrid(int Id)
+        {
+            return PartialView("../Bank/BankIns/_ViewGrid", db.BankTransactionsDetails
+                .Where(x => x.BankTransactionId == Id).ToList());
+        }
+
         // GET: Invoices/Create
         [Authorize(Roles = "BankInsAdd")]
         public ActionResult Create()
@@ -856,7 +864,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "BankInsActive")]
-        public ActionResult DetailsHeaderCreate([Bind(Include = "Id,BankTransactionId,Type,GiroChequeId,MasterBankId,Total,Notes,Created,Updated,UserId")] BankTransactionDetailsHeader bankTransactionDetailsHeader)
+        public ActionResult DetailsHeaderCreate([Bind(Include = "Id,BankTransactionId,Type,MasterBankId,Total,Notes,Created,Updated,UserId")] BankTransactionDetailsHeader bankTransactionDetailsHeader)
         {
             bankTransactionDetailsHeader.Created = DateTime.Now;
             bankTransactionDetailsHeader.Updated = DateTime.Now;
@@ -914,7 +922,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "BankInsActive")]
-        public ActionResult DetailsHeaderEdit([Bind(Include = "Id,BankTransactionId,Type,MasterBankId,GiroChequeId,Total,Notes,Created,Updated,UserId")] BankTransactionDetailsHeader bankTransactionDetailsHeader)
+        public ActionResult DetailsHeaderEdit([Bind(Include = "Id,BankTransactionId,Type,MasterBankId,Total,Notes,Created,Updated,UserId")] BankTransactionDetailsHeader bankTransactionDetailsHeader)
         {
             bankTransactionDetailsHeader.Updated = DateTime.Now;
             bankTransactionDetailsHeader.UserId = User.Identity.GetUserId<int>();
@@ -926,7 +934,6 @@ namespace eShop.Controllers
                 db.Entry(bankTransactionDetailsHeader).State = EntityState.Unchanged;
                 db.Entry(bankTransactionDetailsHeader).Property("Type").IsModified = true;
                 db.Entry(bankTransactionDetailsHeader).Property("MasterBankId").IsModified = true;
-                db.Entry(bankTransactionDetailsHeader).Property("GiroChequeId").IsModified = true;
                 db.Entry(bankTransactionDetailsHeader).Property("Total").IsModified = true;
                 db.Entry(bankTransactionDetailsHeader).Property("Notes").IsModified = true;
                 db.Entry(bankTransactionDetailsHeader).Property("Updated").IsModified = true;

@@ -1,5 +1,6 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
+using DataTables.Mvc;
 using eShop.Extensions;
 using eShop.Models;
 using eShop.Properties;
@@ -38,6 +39,17 @@ namespace eShop.Controllers
                 return PartialView("../Buying/PurchaseRequests/_IndexGrid", db.Set<PurchaseRequest>().AsQueryable());
             else
                 return PartialView("../Buying/PurchaseRequests/_IndexGrid", db.Set<PurchaseRequest>().AsQueryable()
+                    .Where(x => x.Code.Contains(search)));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "PurchaseRequestsActive")]
+        public PartialViewResult OthersGrid(String search)
+        {
+            if (String.IsNullOrEmpty(search))
+                return PartialView("../Buying/PurchaseRequests/_OthersGrid", db.Set<PurchaseRequest>().AsQueryable());
+            else
+                return PartialView("../Buying/PurchaseRequests/_OthersGrid", db.Set<PurchaseRequest>().AsQueryable()
                     .Where(x => x.Code.Contains(search)));
         }
 
