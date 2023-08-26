@@ -7135,6 +7135,10 @@
     <Content Include="Views\Bank\BankOuts\_ViewGrid.cshtml" />
     <Content Include="Views\Bank\BankOuts\_ViewHeaderGrid.cshtml" />
     <Content Include="Views\Inventory\MasterBrands\_Details.cshtml" />
+    <Content Include="Views\Buying\PurchaseRequests\_Details.cshtml" />
+    <Content Include="Views\Buying\PurchaseRequests\_ViewGrid.cshtml" />
+    <Content Include="Views\Buying\PurchaseOrders\_ViewGrid.cshtml" />
+    <Content Include="Views\Buying\PurchaseOrders\_Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

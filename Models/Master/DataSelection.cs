@@ -591,13 +591,17 @@ namespace eShop.Models
         public virtual MasterWarehouse MasterWarehouseEnd { get; set; }
     }
 
-    public class MasterBusinessWarehouseViewModel
+    public class MasterBusinessRegionWarehouseViewModel
     {
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Display(Name = "Kode Wilayah")]
+        [Display(Name = "Kode Gudang")]
         public string MasterWarehouseCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Name")]
+        public string MasterWarehouseName { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Keterangan")]
@@ -621,17 +625,17 @@ namespace eShop.Models
         public string MasterRegionCode { get; set; }
     }
 
-    public class MasterBusinessWarehouseDatalist : MvcDatalist<MasterBusinessWarehouseViewModel>
+    public class MasterBusinessRegionWarehouseDatalist : MvcDatalist<MasterBusinessRegionWarehouseViewModel>
     {
         private DbContext Context { get; }
 
-        public MasterBusinessWarehouseDatalist(DbContext context)
+        public MasterBusinessRegionWarehouseDatalist(DbContext context)
         {
             Context = context;
 
-            GetLabel = (model) => model.MasterWarehouseCode + " - " + model.MasterWarehouseNotes;
+            GetLabel = (model) => model.MasterWarehouseCode + " - " + model.MasterWarehouseName;
         }
-        public MasterBusinessWarehouseDatalist()
+        public MasterBusinessRegionWarehouseDatalist()
         {
             Url = "/DatalistFilters/AllMasterBusinessRegionWarehouse";
             Title = "Gudang";
@@ -643,16 +647,18 @@ namespace eShop.Models
             Filter.Rows = 10;
         }
 
-        public override IQueryable<MasterBusinessWarehouseViewModel> GetModels()
+        public override IQueryable<MasterBusinessRegionWarehouseViewModel> GetModels()
         {
             return Context.Set<MasterBusinessRegionWarehouse>()
-                .Select(x => new MasterBusinessWarehouseViewModel
+                .Select(x => new MasterBusinessRegionWarehouseViewModel
                 {
                     Id = x.MasterWarehouseId,
-                    //MasterRegionCode = x.MasterRegion.Code,
-                    //MasterRegionActive = x.MasterRegion.Active,
-                    //MasterBusinessUnitId = x.MasterBusinessUnitId,
-                    //MasterBusinessUnitCode = x.MasterBusinessUnit.Code
+                    MasterWarehouseCode = x.MasterWarehouse.Code,
+                    MasterWarehouseName = x.MasterWarehouse.Name,
+                    MasterRegionId = x.MasterRegion.Id,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code
 
                 });
         }

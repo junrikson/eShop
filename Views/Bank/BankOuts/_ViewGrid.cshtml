@@ -7,8 +7,6 @@
         .Grid(Model)
         .Build(columns =>
         {
-            columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAllHeader"));
-            columns.Add(model => ((User.IsInRole("BankOutsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success edit-data btn-xs\" href=\"" + @Url.Action("DetailsHeaderEdit", "BankOuts", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "")).Encoded(false);
             columns.Add(model => model.ChartOfAccount.Code).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Code)).InitialSort(GridSortOrder.Asc);
             columns.Add(model => model.ChartOfAccount.Name).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Name));
             columns.Add(model => model.Total).Titled(@Html.DisplayNameFor(model => model.Total)).Formatted("{0:N2}");
