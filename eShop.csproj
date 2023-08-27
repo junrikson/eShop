@@ -6921,7 +6921,7 @@
     <Content Include="Views\Inventory\MasterCategories\_IndexGrid.cshtml" />
     <Content Include="Views\Inventory\MasterCategories\Index.cshtml" />
     <Content Include="Views\Inventory\MasterBrands\_Create.cshtml" />
-    <Content Include="Views\Inventory\MasterBrands\_Details.cshtml" />
+    <Content Include="Views\Inventory\MasterBrands\_Details1.cshtml" />
     <Content Include="Views\Inventory\MasterBrands\_Edit.cshtml" />
     <Content Include="Views\Inventory\MasterBrands\_IndexGrid.cshtml" />
     <Content Include="Views\Inventory\MasterBrands\Index.cshtml" />
@@ -7027,7 +7027,7 @@
     <Content Include="Views\Accounting\Journals\_DetailsEdit.cshtml" />
     <Content Include="Views\Accounting\Journals\_DetailsGrid.cshtml" />
     <Content Include="Views\Accounting\Journals\_IndexGrid.cshtml" />
-    <Content Include="Views\Accounting\Journals\_1OthersGrid.cshtml" />
+    <Content Include="Views\Accounting\Journals\_OthersGrid.cshtml" />
     <Content Include="Views\Accounting\OpeningBallance\Index.cshtml" />
     <Content Include="Views\Accounting\OpeningBallance\_Edit.cshtml" />
     <Content Include="Views\Accounting\OpeningBallance\_IndexGrid.cshtml" />
@@ -7131,6 +7131,14 @@
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterCategoriesAdd.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\DataSelection\_MasterCategoriesGrid.cshtml" />
     <Content Include="Views\Bank\BankIns\_ViewGrid.cshtml" />
+    <Content Include="Views\Bank\BankIns\_ViewHeaderGrid.cshtml" />
+    <Content Include="Views\Bank\BankOuts\_ViewGrid.cshtml" />
+    <Content Include="Views\Bank\BankOuts\_ViewHeaderGrid.cshtml" />
+    <Content Include="Views\Inventory\MasterBrands\_Details.cshtml" />
+    <Content Include="Views\Buying\PurchaseRequests\_Details.cshtml" />
+    <Content Include="Views\Buying\PurchaseRequests\_ViewGrid.cshtml" />
+    <Content Include="Views\Buying\PurchaseOrders\_ViewGrid.cshtml" />
+    <Content Include="Views\Buying\PurchaseOrders\_Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

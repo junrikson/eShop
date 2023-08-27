@@ -596,8 +596,12 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Display(Name = "Kode Wilayah")]
+        [Display(Name = "Kode Gudang")]
         public string MasterWarehouseCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Name")]
+        public string MasterWarehouseName { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Keterangan")]
@@ -629,7 +633,7 @@ namespace eShop.Models
         {
             Context = context;
 
-            GetLabel = (model) => model.MasterWarehouseCode + " - " + model.MasterWarehouseNotes;
+            GetLabel = (model) => model.MasterWarehouseCode + " - " + model.MasterWarehouseName;
         }
         public MasterBusinessRegionWarehouseDatalist()
         {
@@ -650,10 +654,11 @@ namespace eShop.Models
                 {
                     Id = x.MasterWarehouseId,
                     MasterWarehouseCode = x.MasterWarehouse.Code,
-   //                 MasterRegionId = x.MasterRegionId,
-    //                MasterRegionCode = x.MasterRegion.Code,
+                    MasterWarehouseName = x.MasterWarehouse.Name,
+                    MasterRegionId = x.MasterRegion.Id,
+                    MasterRegionCode = x.MasterRegion.Code,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,
-                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code
 
                 });
         }

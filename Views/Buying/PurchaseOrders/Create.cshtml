@@ -47,7 +47,7 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     @Html.LabelFor(model => model.MasterRegionId)
-                                    @Html.DropDownList("MasterRegionId", null, "- Pilih Wilayah -", htmlAttributes: new { @class = "form-control" })
+                                    @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist(), new { @class = "datalist2" })
                                     @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -61,7 +61,7 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     @Html.LabelFor(model => model.MasterWarehouseId)
-                                    @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterWarehouseRegionDatalist())
+                                    @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterBusinessRegionWarehouseDatalist(), new { @class = "datalist2" })
                                     @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -241,6 +241,9 @@
             }
             else if ($("#MasterRegionId").val() === "") {
                 bootbox.alert("Wilayah belum dipilih!");
+            }
+            else if ($("#PurchaseRequestId").val() === "") {
+                bootbox.alert("Purchase Request belum dipilih!");
             }
             else {
                 var url = $(this).attr("href") + "?purchaseOrderId=" + $("input#Id").val();

@@ -21,7 +21,7 @@
                             <div class="form-horizontal">
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                 <div class="form-group">
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         @Html.LabelFor(model => model.Code)
                                         @Html.TextBoxFor(model => model.Code, new { disabled = "disabled", @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
@@ -33,7 +33,7 @@
                                             @Html.CheckBoxFor(model => model.Active, new { disabled = "disabled" })
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         @Html.LabelFor(model => model.Date)
                                         @Html.EditorFor(model => model.Date, new { htmlAttributes = new { disabled = "disabled", @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
@@ -55,16 +55,6 @@
                                         @Html.TextBoxFor(model => model.Notes, new { disabled = "disabled", @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
                                     </div>
-                                    @*<div class="col-md-3">
-                                <div class="col-md-6 text-left">
-                                    <a href="#" id="cancel" class="btn btn-danger" style="margin-top: 20px">
-                                        Cancel
-                                    </a>
-                                </div>
-                                <div class="col-md-6 text-right">
-                                    <input type="submit" value="Save" class="btn btn-primary" style="margin-top: 20px" />
-                                </div>
-                            </div>*@
                                 </div>
                             </div>
                         </div>
@@ -84,18 +74,12 @@
                             </div>
                             <div class="text-right col-md-10">
                                 <label style="font-weight: bold">TOTAL :</label>
-                                <input type="text" id="TotalHeader" value="@ViewBag.TotalHeader" disabled="disabled" style="text-align:right;" />
-                                @*<button id="btnAddHeader" class="btn btn-success mx-1" href="@Url.Action("DetailsHeaderCreate", "BankIns")">
-                            <i class="fa fa-plus"></i> Add
-                        </button>
-                        <button id="DetailsHeaderBatchDelete" class="btn btn-danger mx-1">
-                            <i class="fa fa-trash"></i> Delete
-                        </button>*@
+                                <input type="text" id="Total" value="@Model.Total.ToString("N2")" disabled="disabled" style="text-align:right;" />
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body" style="overflow:auto; white-space: nowrap">
-                            @Html.AjaxGrid(Url.Action("ViewGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "view-table" })
+                            @Html.AjaxGrid(Url.Action("OtherGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "Other-table" })
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -112,13 +96,7 @@
                             </div>
                             <div class="text-right col-md-10">
                                 <label style="font-weight: bold">TOTAL :</label>
-                                <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                                @*<button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "BankIns")">
-                            <i class="fa fa-plus"></i> Add
-                        </button>
-                        <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
-                            <i class="fa fa-trash"></i> Delete
-                        </button>*@
+                                <input type="text" id="Total" value="@Model.Total.ToString("N2")"  disabled="disabled" style="text-align:right;" />
                             </div>
                         </div>
                         <!-- /.box-header -->
