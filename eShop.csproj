@@ -7139,6 +7139,10 @@
     <Content Include="Views\Buying\PurchaseRequests\_ViewGrid.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_ViewGrid.cshtml" />
     <Content Include="Views\Buying\PurchaseOrders\_Details.cshtml" />
+    <Content Include="Views\Buying\Purchases\_Details.cshtml" />
+    <Content Include="Views\Buying\Purchases\_ViewGrid.cshtml" />
+    <Content Include="Views\Buying\GoodsReceipts\_Details.cshtml" />
+    <Content Include="Views\Buying\GoodsReceipts\_ViewGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

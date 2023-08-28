@@ -1,0 +1,28 @@
+﻿@model IEnumerable<eShop.Models.GoodsReceiptDetails>
+@{
+    Layout = null;
+}
+
+@(Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.MasterItem.Code).Titled(@Html.DisplayNameFor(model => model.MasterItem.Code));
+            columns.Add(model => model.MasterItem.Name).Titled(@Html.DisplayNameFor(model => model.MasterItem.Name));
+            columns.Add(model => model.MasterItemUnit.MasterUnit.Code).Titled(@Html.DisplayNameFor(model => model.MasterItemUnit.MasterUnit.Code));
+            columns.Add(model => model.Quantity).Titled(@Html.DisplayNameFor(model => model.Quantity)).Formatted("{0:N0}");
+            columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
+        })
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+        .Empty("Tidak ada data.")
+        .Sortable()
+        .AppendCss("tablegrid-hover table-striped fix-table")
+        .Id("view-table")
+)

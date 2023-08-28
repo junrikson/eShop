@@ -9,13 +9,13 @@
     {
         columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
         columns.Add(model => ((User.IsInRole("GoodsReceiptsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "GoodsReceipts", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
-        ((User.IsInRole("GoodsReceiptsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "PurchaseOrders", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
-        ((User.IsInRole("GoodsReceiptsPrint")) ? "&nbsp;<a class=\"btn btn-info btn-xs print-data\" target=\"_blank\" href=\"" + @Url.Action("Print", "PurchaseOrders", new { id = model.Id }) + "\"><i class=\"fa fa-print\"></i> Print</a>" : "") + "</div>").Encoded(false);
+        ((User.IsInRole("GoodsReceiptsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "GoodsReceipts", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
+        ((User.IsInRole("GoodsReceiptsPrint")) ? "&nbsp;<a class=\"btn btn-info btn-xs print-data\" target=\"_blank\" href=\"" + @Url.Action("Print", "GoodsReceipts", new { id = model.Id }) + "\"><i class=\"fa fa-print\"></i> Print</a>" : "") + "</div>").Encoded(false);
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
         columns.Add(model => model.Date).Titled(@Html.DisplayNameFor(model => model.Date)).Formatted("{0:d}");
+        columns.Add(model => model.Purchase.Code).Titled(@Html.DisplayNameFor(model => model.Purchase.Code));
         columns.Add(model => model.MasterBusinessUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Name));
         columns.Add(model => model.MasterSupplier.Name).Titled(@Html.DisplayNameFor(model => model.MasterSupplier.Name));
-        columns.Add(model => model.Purchase.Code).Titled(@Html.DisplayNameFor(model => model.Purchase.Code));
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
         columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
         columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));

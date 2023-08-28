@@ -537,9 +537,9 @@
             });
 
             $("#MasterRegionId").on("change", function () {
+                var id = $("#Id").val();
                 var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
                 var masterRegionId = $("#MasterRegionId").val();
-                var id = $("#Id").val();
                 var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
                 var options = {};
 
