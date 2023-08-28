@@ -307,10 +307,17 @@
                     new MvcDatalist(element);
                 });
 
+                $("#MasterRegionId").on("change", function () {
+                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                    grid.query.set('masterRegionId', $("#MasterRegionId").val());
+                    grid.reload();
+                }).change();
+
                 $("#batchDeleteSuppliers").click(function () {
                     event.preventDefault();
                     var selectedIDs = new Array();
-                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+                    var regionId = $("#MasterRegionId").val();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id, masterRegionId: regionId };
 
                     $('#details-table tbody tr').find('td:first :checkbox').each(function () {
                         if ($(this).prop('checked')) {
@@ -375,10 +382,17 @@
                     new MvcDatalist(element);
                 });
 
+                $("#MasterRegionId").on("change", function () {
+                    var grid = new MvcGrid(document.querySelector('#details-table'));
+                    grid.query.set('masterRegionId', $("#MasterRegionId").val());
+                    grid.reload();
+                }).change();
+
                 $("#batchDeleteCustomers").click(function () {
                     event.preventDefault();
                     var selectedIDs = new Array();
-                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+                    var regionId = $("#MasterRegionId").val();
+                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id, masterRegionId: regionId };
 
                     $('#details-table tbody tr').find('td:first :checkbox').each(function () {
                         if ($(this).prop('checked')) {

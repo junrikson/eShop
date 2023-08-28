@@ -1,4 +1,4 @@
-﻿@model eShop.Models.MasterBusinessUnitSupplierSelection
+﻿@model eShop.Models.MasterBusinessRegionSupplierSelection
 
 @{
     Layout = null;
@@ -23,6 +23,13 @@
 
                             <input type="hidden" id="MasterBusinessUnitId" name="MasterBusinessUnitId" value="@Model.MasterBusinessUnitId">
                             <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.MasterRegionId)
+                                    @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist())
+                                    @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div class="col-md-4">
                                     @Html.LabelFor(model => model.MasterSupplierStartId)
                                     @Html.DatalistFor(model => model.MasterSupplierStartId, new eShop.Models.MasterSupplierDatalist())
@@ -36,7 +43,7 @@
                                     @Html.DatalistFor(model => model.MasterSupplierEndId, new eShop.Models.MasterSupplierDatalist())
                                     @Html.ValidationMessageFor(model => model.MasterSupplierEndId, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="col-md-3 text-right">
+                                <div class="col-md-3 text-right" style="margin-top: 20px">
                                     <input type="submit" value="+ Add" class="btn btn-success" />
                                     <a id="batchDeleteSuppliers" class="btn btn-danger mx-1" href="#">
                                         <i class="fa fa-trash"></i> Delete
@@ -49,7 +56,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <div class="box-body" style="overflow:auto; white-space: nowrap">
-                            @Html.AjaxGrid(Url.Action("MasterSuppliersGrid", "DataSelection", new { masterBusinessUnitId = Model.MasterBusinessUnitId }), new { id = "details-table" })
+                            @Html.AjaxGrid(Url.Action("MasterSuppliersGrid", "DataSelection", new { masterBusinessUnitId = Model.MasterBusinessUnitId, masterRegionId = Model.MasterRegionId }), new { id = "details-table" })
                         </div>
                     </div>
                 </div>

@@ -85,7 +85,7 @@ namespace eShop.Controllers
         [HttpPost]
         [Authorize(Roles = "MasterWarehousesAdd")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,Location,MasterPortId,Notes,Active,Created,Updated,UserId")] MasterWarehouse masterWarehouse)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,Location,Notes,Active,Created,Updated,UserId")] MasterWarehouse masterWarehouse)
         {
             if (ModelState.IsValid)
             {
@@ -131,7 +131,7 @@ namespace eShop.Controllers
         [HttpPost]
         [Authorize(Roles = "MasterWarehousesEdit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,Location,MasterPortId,Notes,Active,Created,Updated,UserId")] MasterWarehouse masterWarehouse)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,Location,Notes,Active,Created,Updated,UserId")] MasterWarehouse masterWarehouse)
         {
             masterWarehouse.Updated = DateTime.Now;
             masterWarehouse.UserId = User.Identity.GetUserId<int>();
@@ -147,7 +147,7 @@ namespace eShop.Controllers
                 db.Entry(masterWarehouse).Property("Code").IsModified = true;
                 db.Entry(masterWarehouse).Property("Name").IsModified = true;
                 db.Entry(masterWarehouse).Property("Location").IsModified = true;
-                db.Entry(masterWarehouse).Property("MasterPortId").IsModified = true;
+                //db.Entry(masterWarehouse).Property("MasterPortId").IsModified = true;
                 db.Entry(masterWarehouse).Property("Notes").IsModified = true;
                 db.Entry(masterWarehouse).Property("Active").IsModified = true;
                 db.Entry(masterWarehouse).Property("Updated").IsModified = true;

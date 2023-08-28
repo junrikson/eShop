@@ -82,7 +82,7 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     @Html.LabelFor(model => model.MasterSupplierId)
-                                    @Html.DatalistFor(model => model.MasterSupplierId, new eShop.Models.MasterSupplierDatalist())
+                                    @Html.DatalistFor(model => model.MasterSupplierId, new eShop.Models.MasterBusinessRegionSupplierDatalist())
                                     @Html.ValidationMessageFor(model => model.MasterSupplierId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
