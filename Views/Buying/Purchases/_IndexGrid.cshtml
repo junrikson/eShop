@@ -13,6 +13,7 @@
         ((User.IsInRole("PurchasesPrint")) ? "&nbsp;<a class=\"btn btn-info btn-xs print-data\" target=\"_blank\" href=\"" + @Url.Action("Print", "Purchases", new { id = model.Id }) + "\"><i class=\"fa fa-print\"></i> Print</a>" : "") + "</div>").Encoded(false);
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
         columns.Add(model => model.Date).Titled(@Html.DisplayNameFor(model => model.Date));
+        columns.Add(model => model.PurchaseOrder.Code).Titled(@Html.DisplayNameFor(model => model.PurchaseOrder.Code));
         columns.Add(model => model.MasterBusinessUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Name));
         columns.Add(model => model.MasterSupplier.Name).Titled(@Html.DisplayNameFor(model => model.MasterSupplier.Name));
         columns.Add(model => model.MasterWarehouse.Name).Titled(@Html.DisplayNameFor(model => model.MasterWarehouse.Name));

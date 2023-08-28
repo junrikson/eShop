@@ -74,6 +74,14 @@ namespace eShop.Controllers
             return PartialView("../Buying/GoodsReceipts/_Details", GoodsReceipt);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "GoodsReceiptsView")]
+        public PartialViewResult ViewGrid(int Id)
+        {
+            return PartialView("../Buying/GoodsReceipts/_ViewGrid", db.GoodsReceiptsDetails
+                .Where(x => x.GoodsReceiptId == Id).ToList());
+        }
+
         // GET: GoodsReceipts/Create
         [Authorize(Roles = "GoodsReceiptsAdd")]
         public ActionResult Create()

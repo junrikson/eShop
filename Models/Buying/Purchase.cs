@@ -17,7 +17,7 @@ namespace eShop.Models
 
         [Required(ErrorMessage = "Nomor harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor Pembelian")]
+        [Display(Name = "Kode PUR")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "Purchases", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }

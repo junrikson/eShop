@@ -160,7 +160,7 @@ namespace eShop.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PCH/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("PUR/")]
         public string PurchaseCode {
             get {
                 return ((string)(this["PurchaseCode"]));
@@ -169,7 +169,7 @@ namespace eShop.Properties {
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SJ/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("GR/")]
         public string GoodsReceiptCode
         {
             get
