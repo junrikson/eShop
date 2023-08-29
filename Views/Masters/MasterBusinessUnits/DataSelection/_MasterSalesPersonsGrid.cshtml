@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eShop.Models.MasterBusinessUnitSalesPerson>
+﻿@model IEnumerable<eShop.Models.MasterBusinessRegionSalesPerson>
 @{
     Layout = null;
 }
@@ -9,7 +9,7 @@
     {
         columns.Add(model => Html.CheckBox(model.MasterSalesPersonId.ToString(), new { id = model.MasterSalesPersonId.ToString(), value = model.MasterSalesPersonId.ToString() })).Titled(Html.CheckBox("CheckAll"));
         columns.Add(model => model.MasterSalesPerson.Code).Titled(@Html.DisplayNameFor(model => model.MasterSalesPerson.Code));
-        columns.Add(model => model.MasterSalesPerson.FullName).Titled(@Html.DisplayNameFor(model => model.MasterSalesPerson.FullName));
+        columns.Add(model => model.MasterSalesPerson.Name).Titled(@Html.DisplayNameFor(model => model.MasterSalesPerson.Name));
         columns.Add(model => model.MasterSalesPerson.Active).Titled(@Html.DisplayNameFor(model => model.MasterSalesPerson.Active)).RenderedAs(model => model.MasterSalesPerson.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
     })
     .RowAttributed(model => new { @class = model.MasterSalesPerson.Active == true ? "" : "grid-column-red" })

@@ -113,10 +113,36 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterBusinessRegionBrand(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0)
+        {
+            MasterBusinessRegionBrandDatalist datalist = new MasterBusinessRegionBrandDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterCategory(DatalistFilter filter)
         {
             MasterCategoryDatalist datalist = new MasterCategoryDatalist(db);
             filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterBusinessRegionCategory(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0)
+        {
+            MasterBusinessRegionCategoryDatalist datalist = new MasterBusinessRegionCategoryDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
@@ -158,6 +184,19 @@ namespace eShop.Controllers
         {
             AllMasterItemDatalist datalist = new AllMasterItemDatalist(db);
             filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterBusinessRegionItem(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0)
+        {
+            MasterBusinessRegionItemDatalist datalist = new MasterBusinessRegionItemDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);

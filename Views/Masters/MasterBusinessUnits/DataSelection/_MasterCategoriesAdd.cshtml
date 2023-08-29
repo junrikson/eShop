@@ -1,4 +1,4 @@
-﻿@model eShop.Models.MasterBusinessUnitCategorySelection
+﻿@model eShop.Models.MasterBusinessRegionCategorySelection
 
 @{
     Layout = null;
@@ -13,7 +13,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title col-md-10">Merek - @Model.MasterBusinessUnit.Name</h4>
+                        <h4 class="modal-title col-md-10">Kategori - @Model.MasterBusinessUnit.Name</h4>
                     </div>
                     <div class="modal-body">
                         @using (Ajax.BeginForm("AddMasterCategories", "DataSelection", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "AddCategoriesSuccess" }))
@@ -22,6 +22,13 @@
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                             <input type="hidden" id="MasterBusinessUnitId" name="MasterBusinessUnitId" value="@Model.MasterBusinessUnitId">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.MasterRegionId)
+                                    @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist())
+                                    @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="col-md-4">
                                     @Html.LabelFor(model => model.MasterCategoryStartId)
@@ -36,7 +43,7 @@
                                     @Html.DatalistFor(model => model.MasterCategoryEndId, new eShop.Models.MasterCategoryDatalist())
                                     @Html.ValidationMessageFor(model => model.MasterCategoryEndId, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="col-md-3 text-right">
+                                <div class="col-md-3 text-right" style="margin-top: 20px">
                                     <input type="submit" value="+ Add" class="btn btn-success" />
                                     <a id="batchDeleteCategories" class="btn btn-danger mx-1" href="#">
                                         <i class="fa fa-trash"></i> Delete
