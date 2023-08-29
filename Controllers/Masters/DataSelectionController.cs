@@ -192,14 +192,14 @@ namespace eShop.Controllers
 
         // End of MasterBusinessUnitRegion
 
-        // Begin of MasterBusinessUnitSupplier
+        // Begin of MasterBusinessRegionSupplier
 
         [HttpGet]
         [Authorize(Roles = "MasterSuppliersAdd")]
-        public PartialViewResult MasterSuppliersGrid(int masterBusinessUnitId)
+        public PartialViewResult MasterSuppliersGrid(int masterBusinessUnitId, int masterRegionId)
         {
-            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterSuppliersGrid", db.Set<MasterBusinessUnitSupplier>().AsQueryable()
-                    .Where(x => x.MasterBusinessUnitId == masterBusinessUnitId));
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterSuppliersGrid", db.Set<MasterBusinessRegionSupplier>().AsQueryable()
+                    .Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId));
         }
 
         [Authorize(Roles = "MasterSuppliersAdd")]
@@ -217,7 +217,7 @@ namespace eShop.Controllers
                 return HttpNotFound();
             }
 
-            MasterBusinessUnitSupplierSelection obj = new MasterBusinessUnitSupplierSelection
+            MasterBusinessRegionSupplierSelection obj = new MasterBusinessRegionSupplierSelection
             {
                 MasterBusinessUnitId = masterBusinessUnit.Id,
                 MasterBusinessUnit = masterBusinessUnit
@@ -228,13 +228,13 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterSuppliersAdd")]
-        public ActionResult AddMasterSuppliers([Bind(Include = "MasterBusinessUnitId, MasterSupplierStartId, MasterSupplierEndId")] MasterBusinessUnitSupplierSelection obj)
+        public ActionResult AddMasterSuppliers([Bind(Include = "MasterBusinessUnitId, MasterRegionId, MasterSupplierStartId, MasterSupplierEndId")] MasterBusinessRegionSupplierSelection obj)
         {
             if (ModelState.IsValid)
             {
                 if (obj.MasterSupplierEndId == null)
                 {
-                    MasterBusinessUnitSupplier temp = db.MasterBusinessUnitSuppliers.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterSupplierId == obj.MasterSupplierStartId).FirstOrDefault();
+                    MasterBusinessRegionSupplier temp = db.MasterBusinessRegionSuppliers.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.MasterSupplierId == obj.MasterSupplierStartId).FirstOrDefault();
 
                     if (temp == null)
                     {
@@ -242,18 +242,19 @@ namespace eShop.Controllers
                         {
                             try
                             {
-                                MasterBusinessUnitSupplier masterBusinessUnitSupplier = new MasterBusinessUnitSupplier
+                                MasterBusinessRegionSupplier masterBusinessRegionSupplier = new MasterBusinessRegionSupplier
                                 {
                                     MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                                    MasterRegionId = obj.MasterRegionId,
                                     MasterSupplierId = obj.MasterSupplierStartId,
                                     Created = DateTime.Now,
                                     UserId = User.Identity.GetUserId<int>()
                                 };
 
-                                db.MasterBusinessUnitSuppliers.Add(masterBusinessUnitSupplier);
+                                db.MasterBusinessRegionSuppliers.Add(masterBusinessRegionSupplier);
                                 db.SaveChanges();
 
-                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessUnitSupplier, MenuId = masterBusinessUnitSupplier.MasterBusinessUnitId, MenuCode = masterBusinessUnitSupplier.MasterSupplierId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionSupplier, MenuId = masterBusinessRegionSupplier.MasterBusinessUnitId, MenuCode = masterBusinessRegionSupplier.MasterSupplierId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
 
                                 dbTran.Commit();
@@ -275,25 +276,26 @@ namespace eShop.Controllers
 
                     foreach (MasterSupplier masterSupplier in masterSuppliers)
                     {
-                        MasterBusinessUnitSupplier temp = db.MasterBusinessUnitSuppliers.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterSupplierId == masterSupplier.Id).FirstOrDefault();
+                        MasterBusinessRegionSupplier temp = db.MasterBusinessRegionSuppliers.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.MasterSupplierId == masterSupplier.Id).FirstOrDefault();
                         if (temp == null)
                         {
                             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                             {
                                 try
                                 {
-                                    MasterBusinessUnitSupplier masterBusinessUnitSupplier = new MasterBusinessUnitSupplier
+                                    MasterBusinessRegionSupplier masterBusinessRegionSupplier = new MasterBusinessRegionSupplier
                                     {
                                         MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                                        MasterRegionId = obj.MasterRegionId,
                                         MasterSupplierId = masterSupplier.Id,
                                         Created = DateTime.Now,
                                         UserId = User.Identity.GetUserId<int>()
                                     };
 
-                                    db.MasterBusinessUnitSuppliers.Add(masterBusinessUnitSupplier);
+                                    db.MasterBusinessRegionSuppliers.Add(masterBusinessRegionSupplier);
                                     db.SaveChanges();
 
-                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessUnitSupplier, MenuId = masterBusinessUnitSupplier.MasterBusinessUnitId, MenuCode = masterBusinessUnitSupplier.MasterSupplierId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionSupplier, MenuId = masterBusinessRegionSupplier.MasterBusinessUnitId, MenuCode = masterBusinessRegionSupplier.MasterSupplierId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                                     db.SaveChanges();
 
                                     dbTran.Commit();
@@ -319,9 +321,9 @@ namespace eShop.Controllers
         [HttpPost]
         [Authorize(Roles = "MasterSuppliersDelete")]
         [ValidateJsonAntiForgeryToken]
-        public ActionResult BatchDeleteSuppliers(int[] ids, int masterBusinessUnitId)
+        public ActionResult BatchDeleteSuppliers(int[] ids, int masterBusinessUnitId, int masterRegionId)
         {
-            if (ids == null || ids.Length <= 0 || masterBusinessUnitId == 0)
+            if (ids == null || ids.Length <= 0 || masterBusinessUnitId == 0 || masterRegionId == 0)
                 return Json("Pilih salah satu data yang akan dihapus.");
 
             MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
@@ -335,7 +337,7 @@ namespace eShop.Controllers
                     int failed = 0;
                     foreach (int id in ids)
                     {
-                        MasterBusinessUnitSupplier obj = db.MasterBusinessUnitSuppliers.Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterSupplierId == id).FirstOrDefault();
+                        MasterBusinessRegionSupplier obj = db.MasterBusinessRegionSuppliers.Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId && x.MasterSupplierId == id).FirstOrDefault();
                         if (obj == null)
                             failed++;
                         else
@@ -344,11 +346,11 @@ namespace eShop.Controllers
                             {
                                 try
                                 {
-                                    MasterBusinessUnitSupplier tmp = obj;
-                                    db.MasterBusinessUnitSuppliers.Remove(obj);
+                                    MasterBusinessRegionSupplier tmp = obj;
+                                    db.MasterBusinessRegionSuppliers.Remove(obj);
                                     db.SaveChanges();
 
-                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessUnitSupplier, MenuId = tmp.MasterBusinessUnitId, MenuCode = tmp.MasterSupplierId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionSupplier, MenuId = tmp.MasterBusinessUnitId, MenuCode = tmp.MasterSupplierId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                     db.SaveChanges();
 
                                     dbTran.Commit();
@@ -366,183 +368,7 @@ namespace eShop.Controllers
             }
         }
 
-        // End of MasterBusinessUnitSupplier
-
-        // Begin of MasterBusinessUnitCustomer
-
-        [HttpGet]
-        [Authorize(Roles = "MasterCustomersAdd")]
-        public PartialViewResult MasterCustomersGrid(int masterBusinessUnitId)
-        {
-            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterCustomersGrid", db.Set<MasterBusinessUnitCustomer>().AsQueryable()
-                    .Where(x => x.MasterBusinessUnitId == masterBusinessUnitId));
-        }
-
-        [Authorize(Roles = "MasterCustomersAdd")]
-        public ActionResult AddMasterCustomers(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(id);
-
-            if (masterBusinessUnit == null)
-            {
-                return HttpNotFound();
-            }
-
-            MasterBusinessUnitCustomerSelection obj = new MasterBusinessUnitCustomerSelection
-            {
-                MasterBusinessUnitId = masterBusinessUnit.Id,
-                MasterBusinessUnit = masterBusinessUnit
-            };
-
-            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterCustomersAdd", obj);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "MasterCustomersAdd")]
-        public ActionResult AddMasterCustomers([Bind(Include = "MasterBusinessUnitId, MasterCustomerStartId, MasterCustomerEndId")] MasterBusinessUnitCustomerSelection obj)
-        {
-            if (ModelState.IsValid)
-            {
-                if (obj.MasterCustomerEndId == null)
-                {
-                    MasterBusinessUnitCustomer temp = db.MasterBusinessUnitCustomers.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterCustomerId == obj.MasterCustomerStartId).FirstOrDefault();
-
-                    if (temp == null)
-                    {
-                        using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                        {
-                            try
-                            {
-                                MasterBusinessUnitCustomer masterBusinessUnitCustomer = new MasterBusinessUnitCustomer
-                                {
-                                    MasterBusinessUnitId = obj.MasterBusinessUnitId,
-                                    MasterCustomerId = obj.MasterCustomerStartId,
-                                    Created = DateTime.Now,
-                                    UserId = User.Identity.GetUserId<int>()
-                                };
-
-                                db.MasterBusinessUnitCustomers.Add(masterBusinessUnitCustomer);
-                                db.SaveChanges();
-
-                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessUnitCustomer, MenuId = masterBusinessUnitCustomer.MasterBusinessUnitId, MenuCode = masterBusinessUnitCustomer.MasterCustomerId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
-                                db.SaveChanges();
-
-                                dbTran.Commit();
-                            }
-                            catch (DbEntityValidationException ex)
-                            {
-                                dbTran.Rollback();
-                                throw ex;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    MasterCustomer masterCustomerStart = db.MasterCustomers.Find(obj.MasterCustomerStartId);
-                    MasterCustomer masterCustomerEnd = db.MasterCustomers.Find(obj.MasterCustomerEndId);
-
-                    var masterCustomers = db.MasterCustomers.Where(x => x.Code.CompareTo(masterCustomerStart.Code) >= 0 && x.Code.CompareTo(masterCustomerEnd.Code) <= 0).ToList();
-
-                    foreach (MasterCustomer masterCustomer in masterCustomers)
-                    {
-                        MasterBusinessUnitCustomer temp = db.MasterBusinessUnitCustomers.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterCustomerId == masterCustomer.Id).FirstOrDefault();
-                        if (temp == null)
-                        {
-                            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                            {
-                                try
-                                {
-                                    MasterBusinessUnitCustomer masterBusinessUnitCustomer = new MasterBusinessUnitCustomer
-                                    {
-                                        MasterBusinessUnitId = obj.MasterBusinessUnitId,
-                                        MasterCustomerId = masterCustomer.Id,
-                                        Created = DateTime.Now,
-                                        UserId = User.Identity.GetUserId<int>()
-                                    };
-
-                                    db.MasterBusinessUnitCustomers.Add(masterBusinessUnitCustomer);
-                                    db.SaveChanges();
-
-                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessUnitCustomer, MenuId = masterBusinessUnitCustomer.MasterBusinessUnitId, MenuCode = masterBusinessUnitCustomer.MasterCustomerId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
-                                    db.SaveChanges();
-
-                                    dbTran.Commit();
-                                }
-                                catch (DbEntityValidationException ex)
-                                {
-                                    dbTran.Rollback();
-                                    throw ex;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return Json("success", JsonRequestBehavior.AllowGet);
-            }
-
-            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(obj.MasterBusinessUnitId);
-            obj.MasterBusinessUnit = masterBusinessUnit;
-            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterCustomersAdd", obj);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "MasterCustomersDelete")]
-        [ValidateJsonAntiForgeryToken]
-        public ActionResult BatchDeleteCustomers(int[] ids, int masterBusinessUnitId)
-        {
-            if (ids == null || ids.Length <= 0 || masterBusinessUnitId == 0)
-                return Json("Pilih salah satu data yang akan dihapus.");
-
-            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
-
-            if (masterBusinessUnit == null)
-                return Json("Kesalahan system. Mohon reload halaman ini!");
-            else
-            {
-                using (db)
-                {
-                    int failed = 0;
-                    foreach (int id in ids)
-                    {
-                        MasterBusinessUnitCustomer obj = db.MasterBusinessUnitCustomers.Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterCustomerId == id).FirstOrDefault();
-                        if (obj == null)
-                            failed++;
-                        else
-                        {
-                            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                            {
-                                try
-                                {
-                                    MasterBusinessUnitCustomer tmp = obj;
-                                    db.MasterBusinessUnitCustomers.Remove(obj);
-                                    db.SaveChanges();
-
-                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessUnitCustomer, MenuId = tmp.MasterBusinessUnitId, MenuCode = tmp.MasterCustomerId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
-                                    db.SaveChanges();
-
-                                    dbTran.Commit();
-                                }
-                                catch (DbEntityValidationException ex)
-                                {
-                                    dbTran.Rollback();
-                                    throw ex;
-                                }
-                            }
-                        }
-                    }
-                    return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
-                }
-            }
-        }
-
-        // End of MasterBusinessUnitCustomer
+        // End of MasterBusinessRegionSupplier 
 
         // Begin of MasterBusinessUnitSalesPerson
 
@@ -1603,6 +1429,184 @@ namespace eShop.Controllers
         }
 
         // End of MasterBusinessRegionAccount
+
+        // Begin of MasterBusinessRegionCustomer
+
+        [HttpGet]
+        [Authorize(Roles = "MasterCustomersAdd")]
+        public PartialViewResult MasterCustomersGrid(int masterBusinessUnitId, int masterRegionId)
+        {
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterCustomersGrid", db.Set<MasterBusinessRegionCustomer>().AsQueryable()
+                    .Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId));
+        }
+
+        [Authorize(Roles = "MasterCustomersAdd")]
+        public ActionResult AddMasterCustomers(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(id);
+
+            if (masterBusinessUnit == null)
+            {
+                return HttpNotFound();
+            }
+
+            MasterBusinessRegionCustomerSelection obj = new MasterBusinessRegionCustomerSelection
+            {
+                MasterBusinessUnitId = masterBusinessUnit.Id,
+                MasterBusinessUnit = masterBusinessUnit
+            };
+
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterCustomersAdd", obj);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "MasterCustomersAdd")]
+        public ActionResult AddMasterCustomers([Bind(Include = "MasterBusinessUnitId, MasterRegionId, MasterCustomerStartId, MasterCustomerEndId")] MasterBusinessRegionCustomerSelection obj)
+        {
+            if (ModelState.IsValid)
+            {
+                if (obj.MasterCustomerEndId == null)
+                {
+                    MasterBusinessRegionCustomer temp = db.MasterBusinessRegionCustomers.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.MasterCustomerId == obj.MasterCustomerStartId).FirstOrDefault();
+
+                    if (temp == null)
+                    {
+                        using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                MasterBusinessRegionCustomer masterBusinessRegionCustomer = new MasterBusinessRegionCustomer
+                                {
+                                    MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                                    MasterRegionId = obj.MasterRegionId,
+                                    MasterCustomerId = obj.MasterCustomerStartId,
+                                    Created = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.MasterBusinessRegionCustomers.Add(masterBusinessRegionCustomer);
+                                db.SaveChanges();
+
+                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionCustomer, MenuId = masterBusinessRegionCustomer.MasterBusinessUnitId, MenuCode = masterBusinessRegionCustomer.MasterCustomerId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                db.SaveChanges();
+
+                                dbTran.Commit();
+                            }
+                            catch (DbEntityValidationException ex)
+                            {
+                                dbTran.Rollback();
+                                throw ex;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    MasterCustomer masterCustomerStart = db.MasterCustomers.Find(obj.MasterCustomerStartId);
+                    MasterCustomer masterCustomerEnd = db.MasterCustomers.Find(obj.MasterCustomerEndId);
+
+                    var masterCustomers = db.MasterCustomers.Where(x => x.Code.CompareTo(masterCustomerStart.Code) >= 0 && x.Code.CompareTo(masterCustomerEnd.Code) <= 0).ToList();
+
+                    foreach (MasterCustomer masterCustomer in masterCustomers)
+                    {
+                        MasterBusinessRegionCustomer temp = db.MasterBusinessRegionCustomers.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.MasterCustomerId == masterCustomer.Id).FirstOrDefault();
+                        if (temp == null)
+                        {
+                            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                            {
+                                try
+                                {
+                                    MasterBusinessRegionCustomer masterBusinessRegionCustomer = new MasterBusinessRegionCustomer
+                                    {
+                                        MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                                        MasterRegionId = obj.MasterRegionId,
+                                        MasterCustomerId = masterCustomer.Id,
+                                        Created = DateTime.Now,
+                                        UserId = User.Identity.GetUserId<int>()
+                                    };
+
+                                    db.MasterBusinessRegionCustomers.Add(masterBusinessRegionCustomer);
+                                    db.SaveChanges();
+
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionCustomer, MenuId = masterBusinessRegionCustomer.MasterBusinessUnitId, MenuCode = masterBusinessRegionCustomer.MasterCustomerId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SaveChanges();
+
+                                    dbTran.Commit();
+                                }
+                                catch (DbEntityValidationException ex)
+                                {
+                                    dbTran.Rollback();
+                                    throw ex;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+            }
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(obj.MasterBusinessUnitId);
+            obj.MasterBusinessUnit = masterBusinessUnit;
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterCustomersAdd", obj);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "MasterCustomersDelete")]
+        [ValidateJsonAntiForgeryToken]
+        public ActionResult BatchDeleteCustomers(int[] ids, int masterBusinessUnitId, int masterRegionId)
+        {
+            if (ids == null || ids.Length <= 0 || masterBusinessUnitId == 0 || masterRegionId == 0)
+                return Json("Pilih salah satu data yang akan dihapus.");
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+
+            if (masterBusinessUnit == null)
+                return Json("Kesalahan system. Mohon reload halaman ini!");
+            else
+            {
+                using (db)
+                {
+                    int failed = 0;
+                    foreach (int id in ids)
+                    {
+                        MasterBusinessRegionCustomer obj = db.MasterBusinessRegionCustomers.Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId && x.MasterCustomerId == id).FirstOrDefault();
+                        if (obj == null)
+                            failed++;
+                        else
+                        {
+                            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                            {
+                                try
+                                {
+                                    MasterBusinessRegionCustomer tmp = obj;
+                                    db.MasterBusinessRegionCustomers.Remove(obj);
+                                    db.SaveChanges();
+
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionCustomer, MenuId = tmp.MasterBusinessUnitId, MenuCode = tmp.MasterCustomerId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SaveChanges();
+
+                                    dbTran.Commit();
+                                }
+                                catch (DbEntityValidationException ex)
+                                {
+                                    dbTran.Rollback();
+                                    throw ex;
+                                }
+                            }
+                        }
+                    }
+                    return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
+                }
+            }
+        }
+
+        // End of MasterBusinessRegionCustomer
 
         protected override void Dispose(bool disposing)
         {

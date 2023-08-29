@@ -255,7 +255,11 @@ namespace eShop.Models
         [Display(Name = "Unit Gudang")]
         MasterBusinessRegionWarehouse = 124,
         [Display(Name = "Unit Akun")]
-        MasterBusinessRegionAccount = 125
+        MasterBusinessRegionAccount = 125,
+        [Display(Name = "Unit Konsumen")]
+        MasterBusinessRegionCustomer = 126,
+        [Display(Name = "Unit Supplier")]
+        MasterBusinessRegionSupplier = 127
     }
 
     public enum EnumActions
