@@ -141,6 +141,9 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionCustomer> MasterBusinessRegionCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionSupplier> MasterBusinessRegionSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionSalesPerson> MasterBusinessRegionSalesPersons { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionCategory> MasterBusinessRegionCategories { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionBrand> MasterBusinessRegionBrands { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionItem> MasterBusinessRegionItems { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessRegionAccount> MasterBusinessRegionAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterRegion> MasterRegions { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterCurrency> MasterCurrencies { get; set; }

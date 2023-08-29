@@ -400,7 +400,7 @@ namespace eShop.Models
         [Required(ErrorMessage = "Kategori Awal harus diisi.")]
         public int MasterCategoryStartId { get; set; }
 
-        [Display(Name = "Kategori Akhir")]
+        [Display(Name = "Kategori Awal")]
         public virtual MasterCategory MasterCategoryStart { get; set; }
 
         [Display(Name = "Kategori Akhir")]
@@ -1250,5 +1250,440 @@ namespace eShop.Models
     }
 
     // End of MasterBusinessRegionSalesPerson
+
+    // Begin of MasterBusinessRegionCategory
+    public class MasterBusinessRegionCategory
+    {
+        [Key, Column(Order = 0)]
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Key, Column(Order = 1)]
+        [Display(Name = "Master Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Master Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Key, Column(Order = 2)]
+        [Display(Name = "Master Kategori")]
+        public int MasterCategoryId { get; set; }
+
+        [Display(Name = "Master Kategori")]
+        public virtual MasterCategory MasterCategory { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
+    public class MasterBusinessRegionCategorySelection
+    {
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Display(Name = "Kategori Awal")]
+        [Required(ErrorMessage = "Category Awal harus diisi.")]
+        public int MasterCategoryStartId { get; set; }
+
+        [Display(Name = "Kategori Awal")]
+        public virtual MasterCategory MasterCategoryStart { get; set; }
+
+        [Display(Name = "Kategori Akhir")]
+        public int? MasterCategoryEndId { get; set; }
+
+        [Display(Name = "Kategori Akhir")]
+        public virtual MasterCategory MasterCategoryEnd { get; set; }
+    }
+
+    public class MasterBusinessRegionCategoryViewModel
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Unit Bisnis")]
+        public string MasterBusinessUnitCode { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Master Wilayah")]
+        public string MasterRegionCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kode Kategori")]
+        public string MasterCategoryCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Name")]
+        public string MasterCategoryName { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Keterangan")]
+        public string MasterCategoryNotes { get; set; }
+
+        [Display(Name = "Aktif")]
+        public bool Active { get; set; }
+    }
+
+    public class MasterBusinessRegionCategoryDatalist : MvcDatalist<MasterBusinessRegionCategoryViewModel>
+    {
+        private DbContext Context { get; }
+
+        public MasterBusinessRegionCategoryDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.MasterCategoryCode + " - " + model.MasterCategoryName;
+        }
+        public MasterBusinessRegionCategoryDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterBusinessRegionCategory";
+            Title = "Category";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "MasterCategoryCode";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterBusinessRegionCategoryViewModel> GetModels()
+        {
+            return Context.Set<MasterBusinessRegionCategory>()
+                .Select(x => new MasterBusinessRegionCategoryViewModel
+                {
+                    Id = x.MasterCategoryId,
+                    MasterCategoryCode = x.MasterCategory.Code,
+                    MasterCategoryName = x.MasterCategory.Name,
+                    MasterCategoryNotes = x.MasterCategory.Notes,
+                    MasterRegionId = x.MasterRegion.Id,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    Active = x.MasterCategory.Active
+
+                });
+        }
+    }
+
+    // End of MasterBusinessRegionCategory
+
+    // Begin of MasterBusinessRegionBrand
+    public class MasterBusinessRegionBrand
+    {
+        [Key, Column(Order = 0)]
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Key, Column(Order = 1)]
+        [Display(Name = "Master Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Master Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Key, Column(Order = 2)]
+        [Display(Name = "Master Merek")]
+        public int MasterBrandId { get; set; }
+
+        [Display(Name = "Master Merek")]
+        public virtual MasterBrand MasterBrand { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
+    public class MasterBusinessRegionBrandSelection
+    {
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Display(Name = "Merek Awal")]
+        [Required(ErrorMessage = "Brand Awal harus diisi.")]
+        public int MasterBrandStartId { get; set; }
+
+        [Display(Name = "Merek Awal")]
+        public virtual MasterBrand MasterBrandStart { get; set; }
+
+        [Display(Name = "Merek Akhir")]
+        public int? MasterBrandEndId { get; set; }
+
+        [Display(Name = "Merek Akhir")]
+        public virtual MasterBrand MasterBrandEnd { get; set; }
+    }
+
+    public class MasterBusinessRegionBrandViewModel
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Unit Bisnis")]
+        public string MasterBusinessUnitCode { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Master Wilayah")]
+        public string MasterRegionCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kode Merek")]
+        public string MasterBrandCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Name")]
+        public string MasterBrandName { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Keterangan")]
+        public string MasterBrandNotes { get; set; }
+
+        [Display(Name = "Aktif")]
+        public bool Active { get; set; }
+    }
+
+    public class MasterBusinessRegionBrandDatalist : MvcDatalist<MasterBusinessRegionBrandViewModel>
+    {
+        private DbContext Context { get; }
+
+        public MasterBusinessRegionBrandDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.MasterBrandCode + " - " + model.MasterBrandName;
+        }
+        public MasterBusinessRegionBrandDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterBusinessRegionBrand";
+            Title = "Merek";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "MasterBrandCode";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterBusinessRegionBrandViewModel> GetModels()
+        {
+            return Context.Set<MasterBusinessRegionBrand>()
+                .Select(x => new MasterBusinessRegionBrandViewModel
+                {
+                    Id = x.MasterBrandId,
+                    MasterBrandCode = x.MasterBrand.Code,
+                    MasterBrandName = x.MasterBrand.Name,
+                    MasterBrandNotes = x.MasterBrand.Notes,
+                    MasterRegionId = x.MasterRegion.Id,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    Active = x.MasterBrand.Active
+
+                });
+        }
+    }
+
+    // End of MasterBusinessRegionBrand
+
+    // Begin of MasterBusinessRegionItem
+    public class MasterBusinessRegionItem
+    {
+        [Key, Column(Order = 0)]
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Key, Column(Order = 1)]
+        [Display(Name = "Master Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Master Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Key, Column(Order = 2)]
+        [Display(Name = "Master Barang")]
+        public int MasterItemId { get; set; }
+
+        [Display(Name = "Master Barang")]
+        public virtual MasterItem MasterItem { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
+    public class MasterBusinessRegionItemSelection
+    {
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Display(Name = "Barang Awal")]
+        [Required(ErrorMessage = "Item Awal harus diisi.")]
+        public int MasterItemStartId { get; set; }
+
+        [Display(Name = "Barang Awal")]
+        public virtual MasterItem MasterItemStart { get; set; }
+
+        [Display(Name = "Barang Akhir")]
+        public int? MasterItemEndId { get; set; }
+
+        [Display(Name = "Barang Akhir")]
+        public virtual MasterItem MasterItemEnd { get; set; }
+    }
+
+    public class MasterBusinessRegionItemViewModel
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Unit Bisnis")]
+        public string MasterBusinessUnitCode { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Master Wilayah")]
+        public string MasterRegionCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kode Barang")]
+        public string MasterItemCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Name")]
+        public string MasterItemName { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Keterangan")]
+        public string MasterItemNotes { get; set; }
+
+        [Display(Name = "Aktif")]
+        public bool Active { get; set; }
+    }
+
+    public class MasterBusinessRegionItemDatalist : MvcDatalist<MasterBusinessRegionItemViewModel>
+    {
+        private DbContext Context { get; }
+
+        public MasterBusinessRegionItemDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.MasterItemCode + " - " + model.MasterItemName;
+        }
+        public MasterBusinessRegionItemDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterBusinessRegionItem";
+            Title = "Item";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "MasterItemCode";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterBusinessRegionItemViewModel> GetModels()
+        {
+            return Context.Set<MasterBusinessRegionItem>()
+                .Select(x => new MasterBusinessRegionItemViewModel
+                {
+                    Id = x.MasterItemId,
+                    MasterItemCode = x.MasterItem.Code,
+                    MasterItemName = x.MasterItem.Name,
+                    MasterItemNotes = x.MasterItem.Notes,
+                    MasterRegionId = x.MasterRegion.Id,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    Active = x.MasterItem.Active
+
+                });
+        }
+    }
+
+    // End of MasterBusinessRegionItem
 }
 
