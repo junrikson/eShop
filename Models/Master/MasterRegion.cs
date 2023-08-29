@@ -48,13 +48,6 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
-
-        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
-
-        public MasterRegion()
-        {
-            this.ApplicationUsers = new HashSet<ApplicationUser>();
-        }
     }
 
     public class MasterRegionDatalist : MvcDatalist<MasterRegion>
