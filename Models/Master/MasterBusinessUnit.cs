@@ -116,12 +116,5 @@ namespace eShop.Models
         [Display(Name = "Tarif Kontainer Kosong (Rp)")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal EmptyLoadFee { get; set; }
-
-        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
-
-        public MasterBusinessUnit()
-        {
-            this.ApplicationUsers = new HashSet<ApplicationUser>();
-        }
     }
 }

@@ -1101,9 +1101,154 @@ namespace eShop.Models
                         Active = x.MasterSupplier.Active
 
                     });
-            }
-
-            // End of MasterBusinessRegionSupplier
+            }       
         }
+
+    // End of MasterBusinessRegionSupplier
+
+    // Begin of MasterBusinessRegionSalesPerson
+    public class MasterBusinessRegionSalesPerson
+    {
+        [Key, Column(Order = 0)]
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Key, Column(Order = 1)]
+        [Display(Name = "Master Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Master Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Key, Column(Order = 2)]
+        [Display(Name = "Master SalesPerson")]
+        public int MasterSalesPersonId { get; set; }
+
+        [Display(Name = "Master SalesPerson")]
+        public virtual MasterSalesPerson MasterSalesPerson { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
+    public class MasterBusinessRegionSalesPersonSelection
+    {
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [Display(Name = "Sales Awal")]
+        [Required(ErrorMessage = "Sales Awal harus diisi.")]
+        public int MasterSalesPersonStartId { get; set; }
+
+        [Display(Name = "Sales Awal")]
+        public virtual MasterSalesPerson MasterSalesPersonStart { get; set; }
+
+        [Display(Name = "Sales Akhir")]
+        public int? MasterSalesPersonEndId { get; set; }
+
+        [Display(Name = "Sales Akhir")]
+        public virtual MasterSalesPerson MasterSalesPersonEnd { get; set; }
+    }
+
+    public class MasterBusinessRegionSalesPersonViewModel
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Unit Bisnis")]
+        public string MasterBusinessUnitCode { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public int MasterRegionId { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Master Wilayah")]
+        public string MasterRegionCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kode Sales")]
+        public string MasterSalesPersonCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Name")]
+        public string MasterSalesPersonName { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Keterangan")]
+        public string MasterSalesPersonNotes { get; set; }
+
+        [Display(Name = "Aktif")]
+        public bool Active { get; set; }
+    }
+
+    public class MasterBusinessRegionSalesPersonDatalist : MvcDatalist<MasterBusinessRegionSalesPersonViewModel>
+    {
+        private DbContext Context { get; }
+
+        public MasterBusinessRegionSalesPersonDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.MasterSalesPersonCode + " - " + model.MasterSalesPersonName;
+        }
+        public MasterBusinessRegionSalesPersonDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterBusinessRegionSalesPerson";
+            Title = "Sales";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "MasterSalesPersonCode";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterBusinessRegionSalesPersonViewModel> GetModels()
+        {
+            return Context.Set<MasterBusinessRegionSalesPerson>()
+                .Select(x => new MasterBusinessRegionSalesPersonViewModel
+                {
+                    Id = x.MasterSalesPersonId,
+                    MasterSalesPersonCode = x.MasterSalesPerson.Code,
+                    MasterSalesPersonName = x.MasterSalesPerson.Name,
+                    MasterSalesPersonNotes = x.MasterSalesPerson.Notes,
+                    MasterRegionId = x.MasterRegion.Id,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    Active = x.MasterSalesPerson.Active
+
+                });
+        }
+    }
+
+    // End of MasterBusinessRegionSalesPerson
 }
 
