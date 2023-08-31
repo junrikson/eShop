@@ -7143,6 +7143,15 @@
     <Content Include="Views\Buying\Purchases\_ViewGrid.cshtml" />
     <Content Include="Views\Buying\GoodsReceipts\_Details.cshtml" />
     <Content Include="Views\Buying\GoodsReceipts\_ViewGrid.cshtml" />
+    <Content Include="Views\Buying\PurchaseReturns\_ChangeCurrency.cshtml" />
+    <Content Include="Views\Buying\PurchaseReturns\_ViewGrid.cshtml" />
+    <Content Include="Views\Buying\PurchaseReturns\_Details.cshtml" />
+    <Content Include="Views\Selling\SalesRequests\_Details.cshtml" />
+    <Content Include="Views\Selling\SalesRequests\_ViewGrid.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\_Details.cshtml" />
+    <Content Include="Views\Selling\SalesOrders\_ViewGrid.cshtml" />
+    <Content Include="Views\Selling\Sales\_Details.cshtml" />
+    <Content Include="Views\Selling\Sales\_ViewGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

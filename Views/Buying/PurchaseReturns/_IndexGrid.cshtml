@@ -13,9 +13,9 @@
         ((User.IsInRole("PurchaseReturnsPrint")) ? "&nbsp;<a class=\"btn btn-info btn-xs print-data\" target=\"_blank\" href=\"" + @Url.Action("Print", "PurchaseReturns", new { id = model.Id }) + "\"><i class=\"fa fa-print\"></i> Print</a>" : "") + "</div>").Encoded(false);
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
         columns.Add(model => model.Date).Titled(@Html.DisplayNameFor(model => model.Date));
+        columns.Add(model => model.Purchase.Code).Titled(@Html.DisplayNameFor(model => model.Purchase.Code));
         columns.Add(model => model.MasterBusinessUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Name));
         columns.Add(model => model.MasterWarehouse.Name).Titled(@Html.DisplayNameFor(model => model.MasterWarehouse.Name));
-        columns.Add(model => model.Purchase.Code).Titled(@Html.DisplayNameFor(model => model.Purchase.Code));
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
         columns.Add(model => model.Total).Titled(@Html.DisplayNameFor(model => model.Total)).Formatted("{0:N0}");
         columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);

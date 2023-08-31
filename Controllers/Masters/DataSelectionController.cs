@@ -49,6 +49,7 @@ namespace eShop.Controllers
 
             return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterRegionsAdd", obj);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterRegionsAdd")]
@@ -225,6 +226,7 @@ namespace eShop.Controllers
 
             return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterSuppliersAdd", obj);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterSuppliersAdd")]
@@ -403,6 +405,7 @@ namespace eShop.Controllers
 
             return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterSalesPersonsAdd", obj);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterSalesPersonsAdd")]
@@ -581,6 +584,7 @@ namespace eShop.Controllers
 
             return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterBrandsAdd", obj);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterBrandsAdd")]
@@ -759,6 +763,7 @@ namespace eShop.Controllers
 
             return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterItemsAdd", obj);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterItemsAdd")]
@@ -935,6 +940,7 @@ namespace eShop.Controllers
 
             return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterCategoriesAdd", obj);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterCategoriesAdd")]
@@ -1113,6 +1119,7 @@ namespace eShop.Controllers
 
             return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterWarehousesAdd", obj);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterWarehousesAdd")]
@@ -1291,6 +1298,7 @@ namespace eShop.Controllers
 
             return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterAccountsAdd", obj);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ChartOfAccountsAdd")]
@@ -1469,6 +1477,7 @@ namespace eShop.Controllers
 
             return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterCustomersAdd", obj);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterCustomersAdd")]

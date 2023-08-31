@@ -180,6 +180,17 @@ namespace eShop.Properties {
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("RTN/")]
+        public string PurchaseReturnCode
+        {
+            get
+            {
+                return ((string)(this["PurchaseReturnCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("SO/")]
         public string SalesOrderCode {
             get {

@@ -60,8 +60,15 @@ namespace eShop.Models
         [Display(Name = "Gudang")]
         public virtual MasterWarehouse MasterWarehouse { get; set; }
 
+        [Display(Name = "Kode Supplier")]
+        [Required(ErrorMessage = "Kode Supplier harus diisi.")]
+        public int MasterSupplierId { get; set; }
+
+        [Display(Name = "Kode Supplier")]
+        public virtual MasterSupplier MasterSupplier { get; set; }
+
         [Display(Name = "Kode Pembelian")]
-        public int PurchaseId { get; set; }
+        public int? PurchaseId { get; set; }
 
         [Display(Name = "Kode Pembelian")]
         public virtual Purchase Purchase { get; set; }

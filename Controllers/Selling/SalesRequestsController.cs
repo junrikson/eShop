@@ -74,6 +74,14 @@ namespace eShop.Controllers
             return PartialView("../Selling/SalesRequests/_Details", SalesRequest);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "SalesRequestsView")]
+        public PartialViewResult ViewGrid(int Id)
+        {
+            return PartialView("../Selling/SalesRequests/_ViewGrid", db.SalesRequestsDetails
+                .Where(x => x.SalesRequestId == Id).ToList());
+        }
+
         // GET: SalesRequests/Create
         [Authorize(Roles = "SalesRequestsAdd")]
         public ActionResult Create()

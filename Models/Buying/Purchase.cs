@@ -17,7 +17,7 @@ namespace eShop.Models
 
         [Required(ErrorMessage = "Nomor harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode PUR")]
+        [Display(Name = "Kode PCH")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "Purchases", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
@@ -230,7 +230,53 @@ namespace eShop.Models
                 });
         }
     }
-        public class PurchaseDetails
+
+    public class AllPurchaseRegionDatalist : MvcDatalist<PurchaseViewModel>
+    {
+        private DbContext Context { get; }
+
+        public AllPurchaseRegionDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code + " - " + model.MasterSupplierCode;
+        }
+        public AllPurchaseRegionDatalist()
+        {
+            Url = "/DatalistFilters/AllPurchaseRegion";
+            Title = "Purchase";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<PurchaseViewModel> GetModels()
+        {
+            return Context.Set<Purchase>()
+                .Where(x => !Context.Set<PurchaseReturn>().Where(p => p.Active == true && p.PurchaseId == x.Id).Any())
+                .Select(x => new PurchaseViewModel
+                {
+                    Id = x.Id,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnit = x.MasterBusinessUnit,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterRegionId = x.MasterRegionId,
+                    MasterRegion = x.MasterRegion,
+                    MasterSupplierCode = x.MasterSupplier.Code,
+                    MasterWarehouseCode = x.MasterWarehouse.Code,
+                    Code = x.Code,
+                    Date = x.Date,
+                    Total = x.Total,
+                    Active = x.Active,
+
+                });
+        }
+    }
+    public class PurchaseDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

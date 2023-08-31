@@ -18,7 +18,7 @@ namespace eShop.Models
         [DatalistColumn]
         [Required(ErrorMessage = "Nomor harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor")]
+        [Display(Name = "Nomor Sales Request")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "SalesRequests", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
@@ -208,7 +208,7 @@ namespace eShop.Models
         public OutstandingSalesRequestDatalist()
         {
             Url = "/DatalistFilters/AllOutstandingSalesRequest";
-            Title = "Purchase Request";
+            Title = "Sales Request";
             AdditionalFilters.Add("MasterBusinessUnitId");
             AdditionalFilters.Add("MasterRegionId");
 
