@@ -127,23 +127,62 @@
         });
 
         document.addEventListener('reloadend', function (e) {
-            $('#CheckAll').click(function () {
-                var checkedStatus = this.checked;
-                $('#data-table tbody tr').find('td:first :checkbox').each(function () {
-                    $(this).prop('checked', checkedStatus);
-                });
-            });
+            if (e.detail.grid.element.id == 'data-table') {
 
-            $('#data-table').on("click", ".view-data", function (event) {
-                event.preventDefault();
-                var url = $(this).attr("href");
-                $.get(url, function (data) {
-                    $('#viewContainer').html(data);
-                    $('#viewModal').modal('show');
+                $('#CheckAll').click(function () {
+                    var checkedStatus = this.checked;
+                    $('#data-table tbody tr').find('td:first :checkbox').each(function () {
+                        $(this).prop('checked', checkedStatus);
+                    });
                 });
-            });
 
-            $('.fix-table').tableHeadFixer({ left: 3 });
+                $('#data-table').on("click", ".view-data", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#viewContainer').html(data);
+                        $('#viewModal').modal('show');
+
+                        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                            new MvcGrid(element);
+                        });
+                    });
+                });
+
+                $('#data-table').on("click", ".verification-data", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#viewContainer').html(data);
+                        $('#viewModal').modal('show');
+                    });
+                });
+
+                $('.fix-table').tableHeadFixer({ left: 2 });
+            }
+            else if (e.detail.grid.element.id == 'others-table') {
+                $('#others-table').on("click", ".view-data", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#viewContainer').html(data);
+                        $('#viewModal').modal('show');
+
+                        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                            new MvcGrid(element);
+                        });
+                    });
+                });
+                $('#others-table').on("click", ".dateedit-data", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#viewContainer').html(data);
+                        $('#viewModal').modal('show');
+                    });
+                });
+                $('.fix-table').tableHeadFixer({ left: 1 });
+            }
         });
     </script>
 }

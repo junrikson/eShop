@@ -397,7 +397,7 @@
 
             document.querySelector('#btnChangeCurrency').innerHTML = data.Message;
 
-            var param = { purchaseRequestId: $("#Id").val() };
+            var param = { purchaseOrderId: $("#Id").val() };
             var options = {};
 
             options.url = "/Purchases/GetTotal";

@@ -12,6 +12,8 @@
         ((User.IsInRole("SalesOrdersView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "SalesOrders", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
         ((User.IsInRole("SalesOrdersPrint")) ? "&nbsp;<a class=\"btn btn-info btn-xs print-data\" target=\"_blank\" href=\"" + @Url.Action("Print", "SalesOrders", new { id = model.Id }) + "\"><i class=\"fa fa-print\"></i> Print</a>" : "") + "</div>").Encoded(false);
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
+        columns.Add(model => model.Date).Titled(@Html.DisplayNameFor(model => model.Date));
+        columns.Add(model => model.SalesRequest.Code).Titled(@Html.DisplayNameFor(model => model.SalesRequest.Code));
         columns.Add(model => model.MasterBusinessUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Name));
         columns.Add(model => model.MasterCustomer.Name).Titled(@Html.DisplayNameFor(model => model.MasterCustomer.Name));
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));

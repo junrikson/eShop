@@ -674,6 +674,10 @@
         document.getElementById("btnMasterCategories").click();
     }
 
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    var headers = {};
+    headers['__RequestVerificationToken'] = token;
+
        $('#btnMasterCategories').click(function (event) {
            event.preventDefault();
            var url = $(this).attr("href");
@@ -747,7 +751,11 @@
             $('#detailsContainer').html("");
 
             document.getElementById("btnMasterWarehouses").click();
-        }
+    }
+
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    var headers = {};
+    headers['__RequestVerificationToken'] = token;
 
         $('#btnMasterWarehouses').click(function (event) {
             event.preventDefault();
@@ -822,7 +830,11 @@
             $('#detailsContainer').html("");
 
             document.getElementById("btnMasterAccounts").click();
-        }
+    }
+
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    var headers = {};
+    headers['__RequestVerificationToken'] = token;
 
         $('#btnMasterAccounts').click(function (event) {
             event.preventDefault();
