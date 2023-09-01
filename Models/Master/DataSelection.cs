@@ -1635,7 +1635,6 @@ namespace eShop.Models
         [Display(Name = "Name")]
         public string MasterItemName { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Keterangan")]
         public string MasterItemNotes { get; set; }
 

@@ -1,8 +1,9 @@
-﻿@model eShop.Models.MasterBusinessUnitItemSelection
+﻿@model eShop.Models.MasterBusinessRegionItemSelection
 
 @{
     Layout = null;
 }
+
 
 <div id="divEmp">
     <div class="modal-dialog modal-lg">
@@ -23,6 +24,13 @@
 
                             <input type="hidden" id="MasterBusinessUnitId" name="MasterBusinessUnitId" value="@Model.MasterBusinessUnitId">
                             <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.MasterRegionId)
+                                    @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist())
+                                    @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div class="col-md-4">
                                     @Html.LabelFor(model => model.MasterItemStartId)
                                     @Html.DatalistFor(model => model.MasterItemStartId, new eShop.Models.AllMasterItemDatalist())
@@ -36,7 +44,7 @@
                                     @Html.DatalistFor(model => model.MasterItemEndId, new eShop.Models.AllMasterItemDatalist())
                                     @Html.ValidationMessageFor(model => model.MasterItemEndId, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="col-md-3 text-right">
+                                <div class="col-md-3 text-right" style="margin-top: 20px">
                                     <input type="submit" value="+ Add" class="btn btn-success" />
                                     <a id="batchDeleteItems" class="btn btn-danger mx-1" href="#">
                                         <i class="fa fa-trash"></i> Delete
@@ -57,3 +65,5 @@
         </div>
     </div>
 </div>
+
+

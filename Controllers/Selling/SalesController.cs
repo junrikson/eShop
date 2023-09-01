@@ -881,7 +881,7 @@ namespace eShop.Controllers
                         sale.Notes = salesOrder.Notes;
                         sale.Total = salesOrder.Total;
 
-                        db.Entry(salesOrder).State = EntityState.Modified;
+                        db.Entry(sale).State = EntityState.Modified;
                         db.SaveChanges();
 
                         dbTran.Commit();
