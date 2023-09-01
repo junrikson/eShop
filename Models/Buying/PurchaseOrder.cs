@@ -70,6 +70,28 @@ namespace eShop.Models
         [Display(Name = "Kode Supplier")]
         public virtual MasterSupplier MasterSupplier { get; set; }
 
+        [Display(Name = "Sales Order")]
+        public int? SalesOrderId { get; set; }
+
+        [Display(Name = "Sales Order")]
+        public virtual SalesOrder SalesOrder { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kode Konsumen")]
+        [Required(ErrorMessage = "Kode Konsumen harus diisi.")]
+        public int MasterCustomerId { get; set; }
+
+        [Display(Name = "Kode Konsumen")]
+        public virtual MasterCustomer MasterCustomer { get; set; }
+
+        //[DatalistColumn]
+        //[Display(Name = "Kode Sales")]
+        //[Required(ErrorMessage = "Kode Sales harus diisi.")]
+        //public int MasterSalesPersonId { get; set; }
+
+        //[Display(Name = "Kode Sales")]
+        //public virtual MasterSalesPerson MasterSalesPerson { get; set; }
+
         [Display(Name = "Gudang")]
         [Required(ErrorMessage = "Gudang harus diisi.")]
         public int MasterWarehouseId { get; set; }
