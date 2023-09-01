@@ -98,6 +98,8 @@ namespace eShop.Controllers
                 Rate = masterCurrency.Rate,
                 MasterSupplierId = db.MasterSuppliers.FirstOrDefault().Id,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
+                MasterCustomerId = db.MasterCustomers.FirstOrDefault().Id,
+                //MasterSalesPersonId = db.MasterSalesPersons.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -120,6 +122,8 @@ namespace eShop.Controllers
                     purchaseOrder.MasterRegionId = 0;
                     purchaseOrder.MasterSupplierId = 0;
                     purchaseOrder.MasterWarehouseId = 0;
+                    purchaseOrder.MasterCustomerId = 0;
+                   // purchaseOrder.MasterSalesPersonId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -142,7 +146,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseOrdersAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,SalesOrderId,MasterCustomerId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
         {
             purchaseOrder.Created = DateTime.Now;
             purchaseOrder.Updated = DateTime.Now;
@@ -166,6 +170,8 @@ namespace eShop.Controllers
             db.Entry(purchaseOrder).Property("PurchaseRequestId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterSupplierId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterWarehouseId").IsModified = true;
+            db.Entry(purchaseOrder).Property("SalesOrderId").IsModified = true;
+            db.Entry(purchaseOrder).Property("MasterCustomerId").IsModified = true;
             db.Entry(purchaseOrder).Property("Total").IsModified = true;
             db.Entry(purchaseOrder).Property("Notes").IsModified = true;
             db.Entry(purchaseOrder).Property("Active").IsModified = true;
@@ -913,6 +919,90 @@ namespace eShop.Controllers
                 Currency = purchaseOrder.MasterCurrency.Code + " : " + purchaseOrder.Rate.ToString("N2")
             });
         }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "PurchaseOrdersActive")]
+        public JsonResult PopulateSalesOrderDetails(int purchaseOrderid, int salesOrderId)
+        {
+            PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(purchaseOrderid);
+            SalesOrder salesOrder = db.SalesOrders.Find(salesOrderId);
+
+            if (purchaseOrder != null && salesOrder != null)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var remove = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrder.Id).ToList();
+
+                        if (remove != null)
+                        {
+                            db.PurchaseOrdersDetails.RemoveRange(remove);
+                            db.SaveChanges();
+                        }
+
+                        var salesOrdersDetails = db.SalesOrdersDetails.Where(x => x.SalesOrderId == salesOrder.Id).ToList();
+
+                        if (salesOrdersDetails != null)
+                        {
+                            foreach (SalesOrderDetails salesOrderDetails in salesOrdersDetails)
+                            {
+                                PurchaseOrderDetails purchaseOrderDetails = new PurchaseOrderDetails
+                                {
+                                    PurchaseOrderId = purchaseOrder.Id,
+                                    MasterItemId = salesOrderDetails.MasterItemId,
+                                    MasterItemUnitId = salesOrderDetails.MasterItemUnitId,
+                                    Quantity = salesOrderDetails.Quantity,
+                                    Price = salesOrderDetails.Price,
+                                    Total = salesOrderDetails.Total,
+                                    Notes = salesOrderDetails.Notes,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.PurchaseOrdersDetails.Add(purchaseOrderDetails);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        purchaseOrder.SalesOrderId = salesOrder.Id;
+                        purchaseOrder.SalesOrderId = salesOrder.MasterBusinessUnitId;
+                        purchaseOrder.SalesOrderId = salesOrder.MasterRegionId;
+                        purchaseOrder.SalesOrderId = salesOrder.MasterCurrencyId;
+                        purchaseOrder.Rate = salesOrder.Rate;
+                        purchaseOrder.MasterCustomerId = salesOrder.MasterCustomerId;
+                        purchaseOrder.MasterWarehouseId = salesOrder.MasterWarehouseId;
+                        purchaseOrder.Notes = salesOrder.Notes;
+                        purchaseOrder.Total = salesOrder.Total;
+
+                        db.Entry(purchaseOrder).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+
+            return Json(new
+            {
+                purchaseOrder.MasterRegionId,
+                purchaseOrder.MasterBusinessUnitId,
+                purchaseOrder.MasterCustomerId,
+                purchaseOrder.MasterWarehouseId,
+                purchaseOrder.Notes,
+                Total = purchaseOrder.Total.ToString("N2"),
+                purchaseOrder.Date,
+                Currency = purchaseOrder.MasterCurrency.Code + " : " + purchaseOrder.Rate.ToString("N2")
+            });
+        }
+
 
         protected override void Dispose(bool disposing)
         {

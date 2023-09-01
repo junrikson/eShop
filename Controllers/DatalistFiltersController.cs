@@ -235,6 +235,18 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterBusinessRegionSalesPerson(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0)
+        {
+            MasterBusinessRegionSalesPersonDatalist datalist = new MasterBusinessRegionSalesPersonDatalist(db);
+
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterWarehouse(DatalistFilter filter)
         {
             MasterWarehouseDatalist datalist = new MasterWarehouseDatalist(db);
