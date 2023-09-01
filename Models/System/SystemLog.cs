@@ -265,7 +265,9 @@ namespace eShop.Models
         [Display(Name = "Unit Kategori")]
         MasterBusinessRegionCategory = 129,
         [Display(Name = "Unit Merek")]
-        MasterBusinessRegionBrand = 130
+        MasterBusinessRegionBrand = 130,
+        [Display(Name = "Unit Merek")]
+        MasterBusinessRegionItem = 131
     }
 
     public enum EnumActions

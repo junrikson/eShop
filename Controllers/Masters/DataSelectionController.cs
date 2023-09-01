@@ -730,14 +730,14 @@ namespace eShop.Controllers
 
         // End of MasterBusinessRegionBrand
 
-        // Begin of MasterBusinessUnitItem
+        // Begin of MasterBusinessRegionItem
 
         [HttpGet]
         [Authorize(Roles = "MasterItemsAdd")]
-        public PartialViewResult MasterItemsGrid(int masterBusinessUnitId)
+        public PartialViewResult MasterItemsGrid(int masterBusinessUnitId, int masterRegionId)
         {
-            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterItemsGrid", db.Set<MasterBusinessUnitItem>().AsQueryable()
-                    .Where(x => x.MasterBusinessUnitId == masterBusinessUnitId));
+            return PartialView("../Masters/MasterBusinessUnits/DataSelection/_MasterItemsGrid", db.Set<MasterBusinessRegionItem>().AsQueryable()
+                    .Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId));
         }
 
         [Authorize(Roles = "MasterItemsAdd")]
@@ -755,7 +755,7 @@ namespace eShop.Controllers
                 return HttpNotFound();
             }
 
-            MasterBusinessUnitItemSelection obj = new MasterBusinessUnitItemSelection
+            MasterBusinessRegionItemSelection obj = new MasterBusinessRegionItemSelection
             {
                 MasterBusinessUnitId = masterBusinessUnit.Id,
                 MasterBusinessUnit = masterBusinessUnit
@@ -767,13 +767,13 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterItemsAdd")]
-        public ActionResult AddMasterItems([Bind(Include = "MasterBusinessUnitId, MasterItemStartId, MasterItemEndId")] MasterBusinessUnitItemSelection obj)
+        public ActionResult AddMasterItems([Bind(Include = "MasterBusinessUnitId, MasterRegionId, MasterItemStartId, MasterItemEndId")] MasterBusinessRegionItemSelection obj)
         {
             if (ModelState.IsValid)
             {
                 if (obj.MasterItemEndId == null)
                 {
-                    MasterBusinessUnitItem temp = db.MasterBusinessUnitItems.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterItemId == obj.MasterItemStartId).FirstOrDefault();
+                    MasterBusinessRegionItem temp = db.MasterBusinessRegionItems.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.MasterItemId == obj.MasterItemStartId).FirstOrDefault();
 
                     if (temp == null)
                     {
@@ -781,18 +781,19 @@ namespace eShop.Controllers
                         {
                             try
                             {
-                                MasterBusinessUnitItem masterBusinessUnitItem = new MasterBusinessUnitItem
+                                MasterBusinessRegionItem masterBusinessRegionItem = new MasterBusinessRegionItem
                                 {
                                     MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                                    MasterRegionId = obj.MasterRegionId,
                                     MasterItemId = obj.MasterItemStartId,
                                     Created = DateTime.Now,
                                     UserId = User.Identity.GetUserId<int>()
                                 };
 
-                                db.MasterBusinessUnitItems.Add(masterBusinessUnitItem);
+                                db.MasterBusinessRegionItems.Add(masterBusinessRegionItem);
                                 db.SaveChanges();
 
-                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessUnitItem, MenuId = masterBusinessUnitItem.MasterBusinessUnitId, MenuCode = masterBusinessUnitItem.MasterItemId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionItem, MenuId = masterBusinessRegionItem.MasterBusinessUnitId, MenuCode = masterBusinessRegionItem.MasterItemId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                                 db.SaveChanges();
 
                                 dbTran.Commit();
@@ -814,25 +815,26 @@ namespace eShop.Controllers
 
                     foreach (MasterItem masterItem in masterItems)
                     {
-                        MasterBusinessUnitItem temp = db.MasterBusinessUnitItems.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterItemId == masterItem.Id).FirstOrDefault();
+                        MasterBusinessRegionItem temp = db.MasterBusinessRegionItems.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId && x.MasterItemId == masterItem.Id).FirstOrDefault();
                         if (temp == null)
                         {
                             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                             {
                                 try
                                 {
-                                    MasterBusinessUnitItem masterBusinessUnitItem = new MasterBusinessUnitItem
+                                    MasterBusinessRegionItem masterBusinessRegionItem = new MasterBusinessRegionItem
                                     {
                                         MasterBusinessUnitId = obj.MasterBusinessUnitId,
+                                        MasterRegionId = obj.MasterRegionId,
                                         MasterItemId = masterItem.Id,
                                         Created = DateTime.Now,
                                         UserId = User.Identity.GetUserId<int>()
                                     };
 
-                                    db.MasterBusinessUnitItems.Add(masterBusinessUnitItem);
+                                    db.MasterBusinessRegionItems.Add(masterBusinessRegionItem);
                                     db.SaveChanges();
 
-                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessUnitItem, MenuId = masterBusinessUnitItem.MasterBusinessUnitId, MenuCode = masterBusinessUnitItem.MasterItemId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionItem, MenuId = masterBusinessRegionItem.MasterBusinessUnitId, MenuCode = masterBusinessRegionItem.MasterItemId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                                     db.SaveChanges();
 
                                     dbTran.Commit();
@@ -858,9 +860,9 @@ namespace eShop.Controllers
         [HttpPost]
         [Authorize(Roles = "MasterItemsDelete")]
         [ValidateJsonAntiForgeryToken]
-        public ActionResult BatchDeleteItems(int[] ids, int masterBusinessUnitId)
+        public ActionResult BatchDeleteItems(int[] ids, int masterBusinessUnitId, int masterRegionId)
         {
-            if (ids == null || ids.Length <= 0 || masterBusinessUnitId == 0)
+            if (ids == null || ids.Length <= 0 || masterBusinessUnitId == 0 || masterRegionId == 0)
                 return Json("Pilih salah satu data yang akan dihapus.");
 
             MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
@@ -874,7 +876,7 @@ namespace eShop.Controllers
                     int failed = 0;
                     foreach (int id in ids)
                     {
-                        MasterBusinessUnitItem obj = db.MasterBusinessUnitItems.Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterItemId == id).FirstOrDefault();
+                        MasterBusinessRegionItem obj = db.MasterBusinessRegionItems.Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId && x.MasterItemId == id).FirstOrDefault();
                         if (obj == null)
                             failed++;
                         else
@@ -883,11 +885,11 @@ namespace eShop.Controllers
                             {
                                 try
                                 {
-                                    MasterBusinessUnitItem tmp = obj;
-                                    db.MasterBusinessUnitItems.Remove(obj);
+                                    MasterBusinessRegionItem tmp = obj;
+                                    db.MasterBusinessRegionItems.Remove(obj);
                                     db.SaveChanges();
 
-                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessUnitItem, MenuId = tmp.MasterBusinessUnitId, MenuCode = tmp.MasterItemId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterBusinessRegionItem, MenuId = tmp.MasterBusinessUnitId, MenuCode = tmp.MasterItemId.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
                                     db.SaveChanges();
 
                                     dbTran.Commit();
@@ -905,7 +907,8 @@ namespace eShop.Controllers
             }
         }
 
-        // End of MasterBusinessUnitItem
+        // End of MasterBusinessRegionItem
+
 
         // Begin of MasterBusinessRegionCategory
 

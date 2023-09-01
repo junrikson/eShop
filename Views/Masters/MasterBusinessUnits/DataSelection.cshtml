@@ -596,77 +596,84 @@
            });
        });
 
-        function AddItemsSuccess() {
-            $('#detailsContainer').html("");
+    function AddItemsSuccess() {
+        $('#detailsContainer').html("");
 
-            document.getElementById("btnMasterItems").click();
-        }
+        document.getElementById("btnMasterItems").click();
+    }
 
-        var token = $('input[name="__RequestVerificationToken"]').val();
-        var headers = {};
-        headers['__RequestVerificationToken'] = token;
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    var headers = {};
+    headers['__RequestVerificationToken'] = token;
 
-        $('#btnMasterItems').click(function (event) {
-            event.preventDefault();
-            var url = $(this).attr("href");
-            $.get(url, function (data) {
-                $('#detailsContainer').html(data);
-                $('#detailsModal').modal('show');
+       $('#btnMasterItems').click(function (event) {
+           event.preventDefault();
+           var url = $(this).attr("href");
+           $.get(url, function (data) {
+               $('#detailsContainer').html(data);
+               $('#detailsModal').modal('show');
 
-                $('form').each(function () {
-                    var $el = $(this);
-                    $el.data('validator', null);
-                    $.validator.unobtrusive.parse($el);
-                });
+               $('form').each(function () {
+                   var $el = $(this);
+                   $el.data('validator', null);
+                   $.validator.unobtrusive.parse($el);
+               });
 
-                [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
-                    new MvcGrid(element);
-                });
+               [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                   new MvcGrid(element);
+               });
 
-                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                    new MvcDatalist(element);
-                });
+               [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                   new MvcDatalist(element);
+               });
 
-                $("#batchDeleteItems").click(function () {
-                    event.preventDefault();
-                    var selectedIDs = new Array();
-                    var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id };
+               $("#MasterRegionId").on("change", function () {
+                   var grid = new MvcGrid(document.querySelector('#details-table'));
+                   grid.query.set('masterRegionId', $("#MasterRegionId").val());
+                   grid.reload();
+               }).change();
 
-                    $('#details-table tbody tr').find('td:first :checkbox').each(function () {
-                        if ($(this).prop('checked')) {
-                            selectedIDs.push($(this).val());
-                        }
-                    });
+               $("#batchDeleteItems").click(function () {
+                   event.preventDefault();
+                   var selectedIDs = new Array();
+                   var regionId = $("#MasterRegionId").val();
+                   var data = { ids: selectedIDs, masterBusinessUnitId: @Model.Id, masterRegionId: regionId };
 
-                    if (selectedIDs.length <= 0) {
-                        bootbox.alert("Pilih salah satu data yang akan dihapus.");
-                    }
-                    else {
-                        bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
-                            if (result) {
-                                var options = {};
-                                options.url = "/DataSelection/BatchDeleteItems";
-                                options.type = "POST";
-                                options.headers = headers;
-                                options.data = JSON.stringify(data);
-                                options.contentType = "application/json";
-                                options.dataType = "json";
-                                options.success = function (msg) {
-                                    bootbox.alert(msg);
+                   $('#details-table tbody tr').find('td:first :checkbox').each(function () {
+                       if ($(this).prop('checked')) {
+                           selectedIDs.push($(this).val());
+                       }
+                   });
 
-                                    var grid = new MvcGrid(document.querySelector('#details-table'));
-                                    grid.reload();
-                                };
-                                options.error = function () {
-                                    bootbox.alert("Terjadi kesalahan saat menghapus.");
-                                };
-                                $.ajax(options);
-                            }
-                        });
-                    }
-                });
-            });
-        });
+                   if (selectedIDs.length <= 0) {
+                       bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                   }
+                   else {
+                       bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                           if (result) {
+                               var options = {};
+                               options.url = "/DataSelection/BatchDeleteItems";
+                               options.type = "POST";
+                               options.headers = headers;
+                               options.data = JSON.stringify(data);
+                               options.contentType = "application/json";
+                               options.dataType = "json";
+                               options.success = function (msg) {
+                                   bootbox.alert(msg);
+
+                                   var grid = new MvcGrid(document.querySelector('#details-table'));
+                                   grid.reload();
+                               };
+                               options.error = function () {
+                                   bootbox.alert("Terjadi kesalahan saat menghapus.");
+                               };
+                               $.ajax(options);
+                           }
+                       });
+                   }
+               });
+           });
+       });
 
     function AddCategoriesSuccess() {
         $('#detailsContainer').html("");
