@@ -35,103 +35,89 @@
                         {
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(model => model.Id)
-                            <div class="form-horizontal">
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.MasterBusinessUnitId)
-                                        @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
-                                        @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
-                                    </div>
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.MasterBusinessUnitId)
+                                    @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.MasterRegionId)
-                                        @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist(), new { @class = "datalist2" })
-                                        @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.MasterRegionId)
+                                    @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist(), new { @class = "datalist2" })
+                                    @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.PurchaseRequestId)
-                                        @Html.DatalistFor(model => model.PurchaseRequestId, new eShop.Models.OutstandingPurchaseRequestDatalist())
-                                        @Html.ValidationMessageFor(model => model.PurchaseRequestId, "", new { @class = "text-danger" })
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.PurchaseRequestId)
+                                    @Html.DatalistFor(model => model.PurchaseRequestId, new eShop.Models.OutstandingPurchaseRequestDatalist())
+                                    @Html.ValidationMessageFor(model => model.PurchaseRequestId, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.MasterWarehouseId)
-                                        @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterBusinessRegionWarehouseDatalist(), new { @class = "datalist2" })
-                                        @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.SalesOrderId)
+                                    @Html.DatalistFor(model => model.SalesOrderId, new eShop.Models.OutstandingSalesOrderDatalist())
+                                    @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-10">
-                                        @Html.LabelFor(model => model.Code)
-                                        @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                        @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="col-md-2 text-center">
-                                        @Html.LabelFor(model => model.Active)
-                                        <div class="checkbox text-center">
-                                            @Html.CheckBoxFor(model => model.Active)
-                                            @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.MasterWarehouseId)
+                                    @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterBusinessRegionWarehouseDatalist(), new { @class = "datalist2" })
+                                    @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.Date)
-                                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.LabelFor(model => model.Code)
+                                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.MasterSupplierId)
-                                        @Html.DatalistFor(model => model.MasterSupplierId, new eShop.Models.MasterBusinessRegionSupplierDatalist())
-                                        @Html.ValidationMessageFor(model => model.MasterSupplierId, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.SalesOrderId)
-                                        @Html.DatalistFor(model => model.SalesOrderId, new eShop.Models.OutstandingSalesOrderDatalist())
-                                        @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.MasterCustomerId)
-                                        @Html.DatalistFor(model => model.MasterCustomerId, new eShop.Models.MasterBusinessRegionCustomerDatalist())
-                                        @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                                @*<div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.MasterSalesPersonId)
-                                            @Html.DatalistFor(model => model.MasterSalesPersonId, new eShop.Models.MasterBusinessRegionSalesPersonDatalist())
-                                            @Html.ValidationMessageFor(model => model.MasterSalesPersonId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>*@
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.Notes)
-                                        @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-6 text-left">
-                                            <a href="#" id="cancel" class="btn btn-danger" style="margin-top:10px">
-                                                Cancel
-                                            </a>
-                                        </div>
-                                        <div class="col-md-6 text-right">
-                                            <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
-                                        </div>
+                                <div class="col-md-2 text-center">
+                                    @Html.LabelFor(model => model.Active)
+                                    <div class="checkbox text-center">
+                                        @Html.CheckBoxFor(model => model.Active)
+                                        @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Date)
+                                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.MasterSupplierId)
+                                    @Html.DatalistFor(model => model.MasterSupplierId, new eShop.Models.MasterBusinessRegionSupplierDatalist())
+                                    @Html.ValidationMessageFor(model => model.MasterSupplierId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Notes)
+                                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6 text-left">
+                                        <a href="#" id="cancel" class="btn btn-danger" style="margin-top:10px">
+                                            Cancel
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         }
                     </div>
                     <!-- /.box-body -->
@@ -418,10 +404,10 @@
 
             document.querySelector('#btnChangeCurrency').innerHTML = data.Message;
 
-            var param = { purchaseRequestId: $("#Id").val() };
+            var param = { purchaseOrderId: $("#Id").val() };
             var options = {};
 
-            options.url = "/PurchaseOrders/GetTotal";
+            options.url = "/Purchases/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -433,30 +419,74 @@
             $.ajax(options);
         }
 
-            var token = $('input[name="__RequestVerificationToken"]').val();
-            var headers = {};
-            headers['__RequestVerificationToken'] = token;
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        var headers = {};
+        headers['__RequestVerificationToken'] = token;
 
-            $(document).ready(function () {
+        $(document).ready(function ()
+        {
+            $("#PurchaseRequestId").on("change", function () {
+                var purchaseRequestId = $("#PurchaseRequestId").val();
+                var purchaseOrderId = $("#Id").val();
+                var data = { PurchaseOrderId: purchaseOrderId, PurchaseRequestId: purchaseRequestId };
+                var options = {};
+                var grid = new MvcGrid(document.querySelector('#detail-table'));
 
-                $("#PurchaseRequestId").on("change", function () {
-                    var purchaseRequestId = $("#PurchaseRequestId").val();
+                if (purchaseRequestId !== 0 && purchaseRequestId !== '') {
+                    options.url = "/PurchaseOrders/PopulateDetails";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(data);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (obj) {
+                        document.getElementById('SalesOrderId').value = "";
+                        document.getElementById('MasterRegionId').value = obj.MasterRegionId;
+                        document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
+                        document.getElementById('MasterSupplierId').value = obj.MasterSupplierId;
+                        document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
+                        document.getElementById('Notes').value = obj.Notes;
+                        document.getElementById('Total').value = obj.Total;
+                        document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
+
+                        $(document.getElementById('MasterBusinessUnitId')).trigger("change");
+
+                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                            new MvcDatalist(element).reload();
+                        });
+
+                        grid.reload();
+                    };
+                    options.error = function () {
+                        document.getElementById('Code').value = "";
+                        document.getElementById('MasterBusinessUnitId').value = "0";
+                        grid.reload();
+                    };
+                    $.ajax(options);
+                }
+            }).change();
+
+ //           $(document).ready(function () {
+                $("#SalesOrderId").on("change", function () {
+                    var salesOrderId = $("#SalesOrderId").val();
                     var purchaseOrderid = $("#Id").val();
-                    var data = { PurchaseOrderid: purchaseOrderid, PurchaseRequestId: purchaseRequestId };
+                    var data = { PurchaseOrderid: purchaseOrderid, SalesOrderId: salesOrderId };
                     var options = {};
                     var grid = new MvcGrid(document.querySelector('#detail-table'));
 
-                    if (purchaseRequestId !== 0 && purchaseRequestId !== '') {
-                        options.url = "/PurchaseOrders/PopulateDetails";
+                    if (salesOrderId !== 0 && salesOrderId !== '') {
+                        //options.url = "/PurchaseOrders/PopulateDetails";
+                        options.url = "/PurchaseOrders/PopulateSalesOrderDetails";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
                         options.contentType = "application/json";
                         options.dataType = "json";
                         options.success = function (obj) {
+                            document.getElementById('PurchaseRequestId').value = "";
                             document.getElementById('MasterRegionId').value = obj.MasterRegionId;
                             document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                            document.getElementById('MasterSupplierId').value = obj.MasterSupplierId;
+                           // document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
                             document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
                             document.getElementById('Notes').value = obj.Notes;
                             document.getElementById('Total').value = obj.Total;
@@ -478,55 +508,12 @@
                         $.ajax(options);
                     }
                 }).change();
+       //     });
 
-
-                $(document).ready(function () {
-                    $("#SalesOrderId").on("change", function () {
-                        var salesOrderId = $("#SalesOrderId").val();
-                        var purchaseOrderid = $("#Id").val();
-                        var data = { PurchaseOrderid: purchaseOrderid, SalesOrderId: salesOrderId };
-                        var options = {};
-                        var grid = new MvcGrid(document.querySelector('#detail-table'));
-
-                        if (salesOrderId !== 0 && salesOrderId !== '') {
-                            //options.url = "/PurchaseOrders/PopulateDetails";
-                            options.url = "/PurchaseOrders/PopulateSalesOrderDetails";
-                            options.type = "POST";
-                            options.headers = headers;
-                            options.data = JSON.stringify(data);
-                            options.contentType = "application/json";
-                            options.dataType = "json";
-                            options.success = function (obj) {
-                                document.getElementById('MasterRegionId').value = obj.MasterRegionId;
-                                document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                                document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
-                                document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
-                                document.getElementById('Notes').value = obj.Notes;
-                                document.getElementById('Total').value = obj.Total;
-                                document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
-
-                                $(document.getElementById('MasterBusinessUnitId')).trigger("change");
-
-                                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                                    new MvcDatalist(element).reload();
-                                });
-
-                                grid.reload();
-                            };
-                            options.error = function () {
-                                document.getElementById('Code').value = "asuuuuuuuuuuuu";
-                                document.getElementById('MasterBusinessUnitId').value = "0";
-                                grid.reload();
-                            };
-                            $.ajax(options);
-                        }
-                    }).change();
-                });
-
-                 $("#DetailsBatchDelete").click(function ()
-                 {
-                   var selectedIDs = new Array();
-                   $('#detail-table tbody tr').find('td:first :checkbox').each(function ()
+            $("#DetailsBatchDelete").click(function ()
+            {
+                var selectedIDs = new Array();
+                $('#detail-table tbody tr').find('td:first :checkbox').each(function ()
                 {
                     if ($(this).prop('checked'))
                     {
@@ -583,7 +570,7 @@
                 }
             });
 
-             $("#cancel").click(function () {
+            $("#cancel").click(function () {
                 var data = { id: $("input#Id").val() };
                 var options = {};
                 options.url = "/PurchaseOrders/Cancel";
@@ -602,9 +589,9 @@
             });
 
             $("#MasterRegionId").on("change", function () {
+                var id = $("#Id").val();
                 var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
                 var masterRegionId = $("#MasterRegionId").val();
-                var id = $("#Id").val();
                 var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
                 var options = {};
 
@@ -715,7 +702,7 @@
                             options.error = function () {
                                 document.getElementById('MasterItemUnitId').value = 0;
 
-                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
                                     new MvcDatalist(element).reload();
                                 });
                             };

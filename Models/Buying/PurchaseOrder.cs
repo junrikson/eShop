@@ -78,8 +78,8 @@ namespace eShop.Models
 
         [DatalistColumn]
         [Display(Name = "Kode Konsumen")]
-        [Required(ErrorMessage = "Kode Konsumen harus diisi.")]
-        public int MasterCustomerId { get; set; }
+       // [Required(ErrorMessage = "Kode Konsumen harus diisi.")]
+        public int? MasterCustomerId { get; set; }
 
         [Display(Name = "Kode Konsumen")]
         public virtual MasterCustomer MasterCustomer { get; set; }

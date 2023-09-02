@@ -180,7 +180,7 @@ namespace eShop.Models
         public OutstandingSalesOrderDatalist()
         {
             Url = "/DatalistFilters/AllOutstandingSalesOrder";
-            Title = "Purchase Order";
+            Title = "Sales Order";
             AdditionalFilters.Add("MasterBusinessUnitId");
             AdditionalFilters.Add("MasterRegionId");
 
