@@ -80,6 +80,20 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-12">
+                                            @Html.LabelFor(model => model.SalesOrderId)
+                                            @Html.TextBoxFor(model => model.SalesOrder.Code, new { disabled = "disabled", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            @Html.LabelFor(model => model.MasterCustomerId)
+                                            @Html.TextBoxFor(model => model.MasterCustomer.Code, new { disabled = "disabled", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
                                             @Html.LabelFor(model => model.Notes)
                                             @Html.TextBoxFor(model => model.Notes, new { disabled = "disabled", @class = "form-control" })
                                             @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })

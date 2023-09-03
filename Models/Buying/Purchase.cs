@@ -68,7 +68,7 @@ namespace eShop.Models
         public virtual MasterWarehouse MasterWarehouse { get; set; }
 
         [Display(Name = "Kode Supplier")]
-        [Required(ErrorMessage = "Kode Supplier harus diisi.")]
+    //    [Required(ErrorMessage = "Kode Supplier harus diisi.")]
         public int MasterSupplierId { get; set; }
 
         [Display(Name = "Kode Supplier")]

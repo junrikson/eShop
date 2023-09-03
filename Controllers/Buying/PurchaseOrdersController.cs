@@ -277,7 +277,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseOrdersEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,SalesOrderId,MasterCustomerId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
         {
             purchaseOrder.Updated = DateTime.Now;
             purchaseOrder.UserId = User.Identity.GetUserId<int>();
@@ -298,6 +298,9 @@ namespace eShop.Controllers
             db.Entry(purchaseOrder).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterRegionId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterWarehouseId").IsModified = true;
+            db.Entry(purchaseOrder).Property("MasterSupplierId").IsModified = true;
+            db.Entry(purchaseOrder).Property("SalesOrderId").IsModified = true;
+            db.Entry(purchaseOrder).Property("MasterCustomerId").IsModified = true;
             db.Entry(purchaseOrder).Property("Total").IsModified = true;
             db.Entry(purchaseOrder).Property("Notes").IsModified = true;
             db.Entry(purchaseOrder).Property("Active").IsModified = true;
@@ -968,9 +971,9 @@ namespace eShop.Controllers
                         }
 
                         purchaseOrder.SalesOrderId = salesOrder.Id;
-                        purchaseOrder.SalesOrderId = salesOrder.MasterBusinessUnitId;
-                        purchaseOrder.SalesOrderId = salesOrder.MasterRegionId;
-                        purchaseOrder.SalesOrderId = salesOrder.MasterCurrencyId;
+                        purchaseOrder.MasterBusinessUnitId = salesOrder.MasterBusinessUnitId;
+                        purchaseOrder.MasterRegionId = salesOrder.MasterRegionId;
+                        purchaseOrder.MasterCurrencyId = salesOrder.MasterCurrencyId;
                         purchaseOrder.Rate = salesOrder.Rate;
                         purchaseOrder.MasterCustomerId = salesOrder.MasterCustomerId;
                         purchaseOrder.MasterWarehouseId = salesOrder.MasterWarehouseId;
