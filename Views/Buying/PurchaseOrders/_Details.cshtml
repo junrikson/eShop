@@ -45,6 +45,13 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-12">
+                                            @Html.LabelFor(model => model.SalesOrderId)
+                                            @Html.TextBoxFor(model => model.SalesOrder.Code, new { disabled = "disabled", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
                                             @Html.LabelFor(model => model.MasterWarehouseId)
                                             @Html.TextBoxFor(model => model.MasterWarehouse.Code, new { disabled = "disabled", @class = "form-control" })
                                             @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
@@ -76,20 +83,6 @@
                                             @Html.LabelFor(model => model.MasterSupplierId)
                                             @Html.TextBoxFor(model => model.MasterSupplier.Code, new { disabled = "disabled", @class = "form-control" })
                                             @Html.ValidationMessageFor(model => model.MasterSupplierId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.SalesOrderId)
-                                            @Html.TextBoxFor(model => model.SalesOrder.Code, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.MasterCustomerId)
-                                            @Html.TextBoxFor(model => model.MasterCustomer.Code, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                     <div class="form-group">
