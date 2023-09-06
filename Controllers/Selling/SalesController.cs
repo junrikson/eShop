@@ -846,7 +846,7 @@ namespace eShop.Controllers
                             db.SaveChanges();
                         }
 
-                        var salesOrdersDetails = db.SalesOrdersDetails.Where(x => x.SalesOrderId == sale.Id).ToList();
+                        var salesOrdersDetails = db.SalesOrdersDetails.Where(x => x.SalesOrderId == salesOrder.Id).ToList();
 
                         if (salesOrdersDetails != null)
                         {

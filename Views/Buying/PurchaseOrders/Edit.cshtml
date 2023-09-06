@@ -61,6 +61,13 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
+                                    @Html.LabelFor(model => model.SalesOrderId)
+                                    @Html.DatalistFor(model => model.SalesOrderId, new eShop.Models.OutstandingSalesOrderDatalist())
+                                    @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
                                     @Html.LabelFor(model => model.MasterWarehouseId)
                                     @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterBusinessRegionWarehouseDatalist(), new { @class = "datalist2" })
                                     @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
@@ -92,20 +99,6 @@
                                     @Html.LabelFor(model => model.MasterSupplierId)
                                     @Html.DatalistFor(model => model.MasterSupplierId, new eShop.Models.MasterBusinessRegionSupplierDatalist())
                                     @Html.ValidationMessageFor(model => model.MasterSupplierId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.SalesOrderId)
-                                    @Html.DatalistFor(model => model.SalesOrderId, new eShop.Models.OutstandingSalesOrderDatalist())
-                                    @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.MasterCustomerId)
-                                    @Html.DatalistFor(model => model.MasterCustomerId, new eShop.Models.MasterBusinessRegionCustomerDatalist())
-                                    @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="form-group">

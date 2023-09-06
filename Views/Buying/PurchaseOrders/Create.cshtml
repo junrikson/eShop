@@ -61,7 +61,7 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     @Html.LabelFor(model => model.SalesOrderId)
-                                    @Html.DatalistFor(model => model.SalesOrderId, new eShop.Models.OutstandingSalesOrderDatalist())
+                                    @Html.DatalistFor(model => model.SalesOrderId, new eShop.Models.OutstandingSalesOrderPurchaseOrderDatalist())
                                     @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -466,7 +466,6 @@
                 }
             }).change();
 
- //           $(document).ready(function () {
                 $("#SalesOrderId").on("change", function () {
                     var salesOrderId = $("#SalesOrderId").val();
                     var purchaseOrderid = $("#Id").val();
@@ -475,7 +474,6 @@
                     var grid = new MvcGrid(document.querySelector('#detail-table'));
 
                     if (salesOrderId !== 0 && salesOrderId !== '') {
-                        //options.url = "/PurchaseOrders/PopulateDetails";
                         options.url = "/PurchaseOrders/PopulateSalesOrderDetails";
                         options.type = "POST";
                         options.headers = headers;
@@ -486,7 +484,6 @@
                             document.getElementById('PurchaseRequestId').value = "";
                             document.getElementById('MasterRegionId').value = obj.MasterRegionId;
                             document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                           // document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
                             document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
                             document.getElementById('Notes').value = obj.Notes;
                             document.getElementById('Total').value = obj.Total;
@@ -508,7 +505,6 @@
                         $.ajax(options);
                     }
                 }).change();
-       //     });
 
             $("#DetailsBatchDelete").click(function ()
             {
@@ -609,10 +605,15 @@
                         options.dataType = "json";
                         options.success = function (code) {
                             document.getElementById('Code').value = code;
+                            document.getElementById('PurchaseRequestId').value = "";
+                            document.getElementById('SalesOrderId').value = "";
+                            document.getElementById('MasterWarehouseId').value = "";
+                            document.getElementById('Notes').value = "";
 
                             [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
                                 new MvcDatalist(element).reload();
-                            });
+
+                              });
                         };
                         options.error = function () {
                             document.getElementById('Code').value = "";
@@ -643,6 +644,7 @@
                         [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
                             new MvcDatalist(element).reload();
                         });
+
                     };
                     options.error = function () {
                         document.getElementById('Code').value = "";

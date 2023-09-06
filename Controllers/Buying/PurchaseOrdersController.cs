@@ -98,8 +98,6 @@ namespace eShop.Controllers
                 Rate = masterCurrency.Rate,
                 MasterSupplierId = db.MasterSuppliers.FirstOrDefault().Id,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
-                MasterCustomerId = db.MasterCustomers.FirstOrDefault().Id,
-                //MasterSalesPersonId = db.MasterSalesPersons.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -122,8 +120,6 @@ namespace eShop.Controllers
                     purchaseOrder.MasterRegionId = 0;
                     purchaseOrder.MasterSupplierId = 0;
                     purchaseOrder.MasterWarehouseId = 0;
-                    purchaseOrder.MasterCustomerId = 0;
-                   // purchaseOrder.MasterSalesPersonId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -146,7 +142,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseOrdersAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,SalesOrderId,MasterCustomerId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,SalesOrderId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
         {
             purchaseOrder.Created = DateTime.Now;
             purchaseOrder.Updated = DateTime.Now;
@@ -171,7 +167,6 @@ namespace eShop.Controllers
             db.Entry(purchaseOrder).Property("MasterSupplierId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterWarehouseId").IsModified = true;
             db.Entry(purchaseOrder).Property("SalesOrderId").IsModified = true;
-            db.Entry(purchaseOrder).Property("MasterCustomerId").IsModified = true;
             db.Entry(purchaseOrder).Property("Total").IsModified = true;
             db.Entry(purchaseOrder).Property("Notes").IsModified = true;
             db.Entry(purchaseOrder).Property("Active").IsModified = true;
@@ -277,7 +272,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseOrdersEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,SalesOrderId,MasterCustomerId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,SalesOrderId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
         {
             purchaseOrder.Updated = DateTime.Now;
             purchaseOrder.UserId = User.Identity.GetUserId<int>();
@@ -300,7 +295,6 @@ namespace eShop.Controllers
             db.Entry(purchaseOrder).Property("MasterWarehouseId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterSupplierId").IsModified = true;
             db.Entry(purchaseOrder).Property("SalesOrderId").IsModified = true;
-            db.Entry(purchaseOrder).Property("MasterCustomerId").IsModified = true;
             db.Entry(purchaseOrder).Property("Total").IsModified = true;
             db.Entry(purchaseOrder).Property("Notes").IsModified = true;
             db.Entry(purchaseOrder).Property("Active").IsModified = true;
@@ -975,7 +969,6 @@ namespace eShop.Controllers
                         purchaseOrder.MasterRegionId = salesOrder.MasterRegionId;
                         purchaseOrder.MasterCurrencyId = salesOrder.MasterCurrencyId;
                         purchaseOrder.Rate = salesOrder.Rate;
-                        purchaseOrder.MasterCustomerId = salesOrder.MasterCustomerId;
                         purchaseOrder.MasterWarehouseId = salesOrder.MasterWarehouseId;
                         purchaseOrder.Notes = salesOrder.Notes;
                         purchaseOrder.Total = salesOrder.Total;
@@ -997,7 +990,6 @@ namespace eShop.Controllers
             {
                 purchaseOrder.MasterRegionId,
                 purchaseOrder.MasterBusinessUnitId,
-                purchaseOrder.MasterCustomerId,
                 purchaseOrder.MasterWarehouseId,
                 purchaseOrder.Notes,
                 Total = purchaseOrder.Total.ToString("N2"),
