@@ -173,6 +173,94 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalProductionBillofMaterial(ApplicationDbContext db, int productionBillofMaterialId, int? productionBillofMaterialDetailsId = null)
+        {
+            decimal total = 0;
+            List<ProductionBillofMaterialDetails> productionBillofMaterialDetails = null;
+
+            if (productionBillofMaterialDetailsId == null)
+            {
+                productionBillofMaterialDetails = db.ProductionBillofMaterialsDetails.Where(x => x.ProductionBillofMaterialId == productionBillofMaterialId).ToList();
+            }
+            else
+            {
+                productionBillofMaterialDetails = db.ProductionBillofMaterialsDetails.Where(x => x.ProductionBillofMaterialId == productionBillofMaterialId && x.Id != productionBillofMaterialDetailsId).ToList();
+            }
+
+            if (productionBillofMaterialDetails != null)
+            {
+                total = productionBillofMaterialDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+        public static decimal GetTotalPackingBillofMaterial(ApplicationDbContext db, int packingBillofMaterialId, int? packingBillofMaterialDetailsId = null)
+        {
+            decimal total = 0;
+            List<PackingBillofMaterialDetails> packingBillofMaterialDetails = null;
+
+            if (packingBillofMaterialDetailsId == null)
+            {
+                packingBillofMaterialDetails = db.PackingBillofMaterialsDetails.Where(x => x.PackingBillofMaterialId == packingBillofMaterialId).ToList();
+            }
+            else
+            {
+                packingBillofMaterialDetails = db.PackingBillofMaterialsDetails.Where(x => x.PackingBillofMaterialId == packingBillofMaterialId && x.Id != packingBillofMaterialDetailsId).ToList();
+            }
+
+            if (packingBillofMaterialDetails != null)
+            {
+                total = packingBillofMaterialDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+        public static decimal GetTotalPackingWorkOrder(ApplicationDbContext db, int packingWorkOrderId, int? packingWorkOrderDetailsId = null)
+        {
+            decimal total = 0;
+            List<PackingWorkOrderDetails> packingWorkOrderDetails = null;
+
+            if (packingWorkOrderDetailsId == null)
+            {
+                packingWorkOrderDetails = db.PackingWorkOrdersDetails.Where(x => x.PackingWorkOrderId == packingWorkOrderId).ToList();
+            }
+            else
+            {
+                packingWorkOrderDetails = db.PackingWorkOrdersDetails.Where(x => x.PackingWorkOrderId == packingWorkOrderId && x.Id != packingWorkOrderDetailsId).ToList();
+            }
+
+            if (packingWorkOrderDetails != null)
+            {
+                total = packingWorkOrderDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+        public static decimal GetTotalProductionWorkOrder(ApplicationDbContext db, int productionWorkOrderId, int? productionWorkOrderDetailsId = null)
+        {
+            decimal total = 0;
+            List<ProductionWorkOrderDetails> productionWorkOrderDetails = null;
+
+            if (productionWorkOrderDetailsId == null)
+            {
+                productionWorkOrderDetails = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderId == productionWorkOrderId).ToList();
+            }
+            else
+            {
+                productionWorkOrderDetails = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderId == productionWorkOrderId && x.Id != productionWorkOrderDetailsId).ToList();
+            }
+
+            if (productionWorkOrderDetails != null)
+            {
+                total = productionWorkOrderDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
 
         public static void CreatePurchaseJournal(ApplicationDbContext db, Purchase purchase)
         {

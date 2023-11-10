@@ -9,19 +9,27 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public class PurchaseRequest
+    public class ProductionWorkOrder
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Kode PR harus diisi.")]
+        [DatalistColumn]
+        [Required(ErrorMessage = "Nomor SPK Produksi harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode PR")]
+        [Display(Name = "Nomor SPK Produksi")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "PurchaseRequests", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
+        [Remote("IsCodeExists", "ProductionWorkOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
 
+        [DatalistColumn]
+       // [Required(ErrorMessage = "Nama BOM Produksi harus diisi.")]
+        [Display(Name = "Nama")]
+        [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
+        public string Name { get; set; }
+
+        [DatalistColumn]
         [Display(Name = "Tanggal")]
         [Required(ErrorMessage = "Tanggal harus diisi.")]
         [DataType(DataType.Date)]
@@ -54,31 +62,43 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
-        [Display(Name = "Kode Supplier")]
-        [Required(ErrorMessage = "Kode Supplier harus diisi.")]
-        public int MasterSupplierId { get; set; }
+        //[DatalistColumn]
+        //[Display(Name = "Kode Customer")]
+        //[Required(ErrorMessage = "Kode Customer harus diisi.")]
+        //public int MasterCustomerId { get; set; }
 
-        [Display(Name = "Kode Supplier")]
-        public virtual MasterSupplier MasterSupplier { get; set; }
+        //[Display(Name = "Kode Customer")]
+        //public virtual MasterCustomer MasterCustomer { get; set; }
 
-        [Display(Name = "Gudang")]
-        [Required(ErrorMessage = "Gudang harus diisi.")]
-        public int MasterWarehouseId { get; set; }
+        //[Display(Name = "Gudang")]
+        //[Required(ErrorMessage = "Gudang harus diisi.")]
+        //public int MasterWarehouseId { get; set; }
 
-        [Display(Name = "Gudang")]
-        public virtual MasterWarehouse MasterWarehouse { get; set; }
+        //[Display(Name = "Gudang")]
+        //public virtual MasterWarehouse MasterWarehouse { get; set; }
+
+        [Display(Name = "Satuan")]
+        [Required(ErrorMessage = "Master Satuan harus diisi.")]
+        public int MasterUnitId { get; set; }
+
+        [Display(Name = "Satuan")]
+        public virtual MasterUnit MasterUnit { get; set; }
+
+        [Display(Name = "Quantity")]
+        [Required(ErrorMessage = "Quantity harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Quantity { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Display(Name = "DiscountGlobal")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal DiscountGlobal { get; set; }
-
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
+
+        [Display(Name = "Print")]
+        public bool IsPrint { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
@@ -98,23 +118,27 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
-
-        [Display(Name = "Print")]
-        public bool IsPrint { get; set; }
     }
-    public class PurchaseRequestViewModel
+
+    public class ProductionWorkOrderViewModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Kode PR harus diisi.")]
+        [Required(ErrorMessage = "Nomor SPK Produksi harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode PR")]
+        [Display(Name = "Nomor")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "PurchaseRequests", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
+        [Remote("IsCodeExists", "ProductionWorkOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
+
+        [DatalistColumn]
+       // [Required(ErrorMessage = "Nama BOM Produksi harus diisi.")]
+        [Display(Name = "Nama")]
+        [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
+        public string Name { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Tanggal")]
@@ -145,80 +169,68 @@ namespace eShop.Models
         [Display(Name = "Wilayah")]
         public string MasterRegionCode { get; set; }
 
-        [DatalistColumn]
-        [Display(Name = "Supplier")]
-        public string MasterSupplierCode { get; set; }
+        [Display(Name = "Mata Uang")]
+        [Required(ErrorMessage = "Mata Uang harus diisi.")]
+        public int MasterCurrencyId { get; set; }
 
-        [DatalistColumn]
-        [Display(Name = "Gudang")]
-        public string MasterWarehouseCode { get; set; }
+        [Display(Name = "Mata Uang")]
+        public virtual MasterCurrency MasterCurrency { get; set; }
 
-        [DatalistColumn]
+        [Display(Name = "Rate")]
+        [Required(ErrorMessage = "Rate harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
+        public decimal Rate { get; set; }
+
+        //[DatalistColumn]
+        //[Display(Name = "Kode Customer")]
+        //[Required(ErrorMessage = "Kode Customer harus diisi.")]
+        //public int MasterCustomerId { get; set; }
+
+        //[Display(Name = "Kode Customer")]
+        //public virtual MasterCustomer MasterCustomer { get; set; }
+
+        //[DatalistColumn]
+        //[Display(Name = "Customer")]
+        //public string MasterCustomerCode { get; set; }
+
+        //[Display(Name = "Gudang")]
+        //[Required(ErrorMessage = "Gudang harus diisi.")]
+        //public int MasterWarehouseId { get; set; }
+
+        //[Display(Name = "Gudang")]
+        //public virtual MasterWarehouse MasterWarehouse { get; set; }
+
+        //[DatalistColumn]
+        //[Display(Name = "Gudang")]
+        //public string MasterWarehouseCode { get; set; }
+
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
+
+        [Display(Name = "Print")]
+        public bool IsPrint { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
     }
 
-    public class OutstandingPurchaseRequestDatalist : MvcDatalist<PurchaseRequestViewModel>
-    {
-        private DbContext Context { get; }
-
-        public OutstandingPurchaseRequestDatalist(DbContext context)
-        {
-            Context = context;
-
-            GetLabel = (model) => model.Code + " - " + model.MasterSupplierCode;
-        }
-        public OutstandingPurchaseRequestDatalist()
-        {
-            Url = "/DatalistFilters/AllOutstandingPurchaseRequest";
-            Title = "Purchase Request";
-            AdditionalFilters.Add("MasterBusinessUnitId");
-            AdditionalFilters.Add("MasterRegionId");
-
-            Filter.Sort = "Code";
-            Filter.Order = DatalistSortOrder.Asc;
-            Filter.Rows = 10;
-        }
-
-        public override IQueryable<PurchaseRequestViewModel> GetModels()
-        {
-            return Context.Set<PurchaseRequest>()
-                .Where(x => !Context.Set<PurchaseOrder>().Where(p => p.Active == true && p.PurchaseRequestId == x.Id).Any())
-                .Select(x => new PurchaseRequestViewModel
-                {
-                    Id = x.Id,
-                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
-                    MasterBusinessUnitId = x.MasterBusinessUnitId,
-                    MasterBusinessUnit = x.MasterBusinessUnit,
-                    MasterRegionCode = x.MasterRegion.Code,
-                    MasterRegionId = x.MasterRegionId,
-                    MasterRegion = x.MasterRegion,
-                    MasterSupplierCode = x.MasterSupplier.Code,
-                    MasterWarehouseCode = x.MasterWarehouse.Code,
-                    Code = x.Code,
-                    Date = x.Date,
-                    Total = x.Total,
-                    Active = x.Active,
-                });
-        }
-    }
-
-    public class PurchaseRequestDetails
+    public class ProductionWorkOrderDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Display(Name = "Purchase Request")]
-        [Required(ErrorMessage = "Invoice harus diisi.")]
-        public int PurchaseRequestId { get; set; }
+        [Display(Name = "Production WorkOrder Material")]
+        [Required(ErrorMessage = "Nomor SPK harus diisi.")]
+        public int ProductionWorkOrderId { get; set; }
 
-        [Display(Name = "Purchase Request")]
-        public virtual PurchaseRequest PurchaseRequest { get; set; }
+        [Display(Name = "Production Bill of Material")]
+        public virtual ProductionWorkOrder ProductionWorkOrder { get; set; }
 
         [Display(Name = "Master Item")]
         [Required(ErrorMessage = "Master Item harus diisi.")]
@@ -228,7 +240,7 @@ namespace eShop.Models
         public virtual MasterItem MasterItem { get; set; }
 
         [Display(Name = "Satuan")]
-        [Required(ErrorMessage = "Master Satuan harus diisi.")]
+        [Required(ErrorMessage = "Master Item harus diisi.")]
         public int MasterItemUnitId { get; set; }
 
         [Display(Name = "Satuan")]
@@ -244,21 +256,13 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Price { get; set; }
 
-        [Display(Name = "Keterangan")]
-        [DataType(DataType.MultilineText)]
-        public string Notes { get; set; }
-
-        [Display(Name = "PercentageDiscount")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal PercentageDiscount { get; set; }
-
-        [Display(Name = "CashDiscount")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal CashDiscount { get; set; }
-
         [Display(Name = "Nilai")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
+
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
 
         [Display(Name = "Dibuat")]
         [DataType(DataType.DateTime)]
@@ -277,3 +281,4 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 }
+

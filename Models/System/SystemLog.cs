@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace eShop.Models
 {
@@ -266,8 +267,27 @@ namespace eShop.Models
         MasterBusinessRegionCategory = 129,
         [Display(Name = "Unit Merek")]
         MasterBusinessRegionBrand = 130,
-        [Display(Name = "Unit Merek")]
-        MasterBusinessRegionItem = 131
+        [Display(Name = "Unit Region")]
+        MasterBusinessRegionItem = 131,
+        [Display(Name = "Production Bill of Material")]
+        ProductionBillofMaterial = 132,
+        [Display(Name = "Production Bill of Material Details")]
+        ProductionBillofMaterialDetails = 133,
+        [Display(Name = "Packing Bill of Material")]
+        PackingBillofMaterial = 134,
+        [Display(Name = "Packing Bill of Material Details")]
+        PackingBillofMaterialDetails = 135,
+        [Display(Name = "Packing Work Order Material")]
+        PackingWorkOrder = 136,
+        [Display(Name = "Packing Work Order Material Details")]
+        PackingWorkOrderDetails = 137,
+        [Display(Name = "Produktion Work Order Material")]
+        ProductionWorkOrder = 138,
+        [Display(Name = "Produktion Work Order Material Details")]
+        ProductionWorkOrderDetails = 139
+
+        //ProductionBillofMaterial = 132
+
     }
 
     public enum EnumActions

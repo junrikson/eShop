@@ -80,6 +80,29 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.RawMaterial)
+                                    <div class="checkbox text-center">
+                                        @Html.EditorFor(model => model.RawMaterial)
+                                        @Html.ValidationMessageFor(model => model.RawMaterial, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    @Html.LabelFor(model => model.HalfFinishedGood)
+                                    <div class="checkbox text-center">
+                                        @Html.EditorFor(model => model.HalfFinishedGood)
+                                        @Html.ValidationMessageFor(model => model.HalfFinishedGood, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    @Html.LabelFor(model => model.FinishedGood)
+                                    <div class="checkbox text-center">
+                                        @Html.EditorFor(model => model.FinishedGood)
+                                        @Html.ValidationMessageFor(model => model.FinishedGood, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div class="col-md-12">
                                     @Html.LabelFor(model => model.Notes)
                                     @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })

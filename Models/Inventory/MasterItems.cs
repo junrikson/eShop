@@ -54,8 +54,17 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
+        [Display(Name = "Bahan Baku")]
+        public bool RawMaterial { get; set; }
+
+        [Display(Name = "Bahan Setengah Jadi")]
+        public bool HalfFinishedGood { get; set; }
+
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
+
+        [Display(Name = "Barang Jadi")]
+        public bool FinishedGood { get; set; }
 
         [Display(Name = "Dibuat")]
         [DataType(DataType.DateTime)]

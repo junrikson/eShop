@@ -215,5 +215,49 @@ namespace eShop.Properties {
                 return ((string)(this["SalesReturnCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BOMPD/")]
+        public string ProductionBillofMaterialCode
+        {
+            get
+            {
+                return ((string)(this["ProductionBillofMaterialCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BOMPK/")]
+        public string PackingBillofMaterialCode
+        {
+            get
+            {
+                return ((string)(this["PackingBillofMaterialCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SPKPK/")]
+        public string PackingWorkOrderCode
+        {
+            get
+            {
+                return ((string)(this["PackingWorkOrderCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SPKPD/")]
+        public string ProductionWorkOrderCode
+        {
+            get
+            {
+                return ((string)(this["ProductionWorkOrderCode"]));
+            }
+        }
     }
 }
