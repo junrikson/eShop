@@ -1,0 +1,188 @@
+﻿@model IEnumerable<eShop.Models.MaterialSlip>
+
+@{
+    ViewBag.Title = "Pengambilan Bahan Baku";
+    ViewBag.Current = "MaterialSlips";
+}
+
+@section Styles {
+    @Styles.Render("~/style/mvcgrid")
+    <style>
+        .grid-column-red {
+            color: #EE0000;
+            font-weight: bold;
+        }
+
+        .grid-column-green {
+            color: #009900;
+        }
+    </style>
+}
+
+<style>
+    .tablegrid-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+</style>
+<div class="content-wrapper">
+    <section class="content-header-fixed">
+        <h1 class="col-md-6">
+            Pengambilan Bahan Baku
+        </h1>
+        <div class="col-md-6 text-right">
+            @if (User.IsInRole("MaterialSlipsAdd"))
+            {
+                <a class="btn btn-success mx-1" href="@Url.Action("Create", "MaterialSlips")">
+                    <i class="fa fa-plus"></i> Add
+                </a>
+            }
+            @if (User.IsInRole("MaterialSlipsDelete"))
+            {
+                <button id="batchDelete" class="btn btn-danger mx-1">
+                    <i class="fa fa-trash"></i> Delete
+                </button>
+            }
+        </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" style="margin-top:30px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-body" style="overflow:auto; white-space: nowrap">
+                        @Html.AjaxGrid(Url.Action("IndexGrid"), new { id = "data-table" })
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div id="viewContainer">
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/mvcgrid")
+    @Scripts.Render("~/script/tableHeadFixer")
+    @Scripts.Render("~/script/InputMask")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/unobtrusive")
+
+    <script>
+        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+            new MvcGrid(element);
+        });
+
+        $(document).on('keyup', '.mvc-grid-search', function () {
+            var grid = new MvcGrid(document.querySelector('#data-table'));
+            grid.query.set('search', this.value);
+
+            grid.reload();
+        });
+
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        var headers = {};
+        headers['__RequestVerificationToken'] = token;
+
+        $(document).ready(function () {
+
+            $("#batchDelete").click(function () {
+                var selectedIDs = new Array();
+                $('#data-table tbody tr').find('td:first :checkbox').each(function () {
+                    if ($(this).prop('checked')) {
+                        selectedIDs.push($(this).val());
+                    }
+                });
+
+                if (selectedIDs.length <= 0) {
+                    bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                }
+                else {
+                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                        if (result) {
+                            var options = {};
+                            options.url = "/MaterialSlips/BatchDelete";
+                            options.type = "POST";
+                            options.headers = headers;
+                            options.data = JSON.stringify(selectedIDs);
+                            options.contentType = "application/json";
+                            options.dataType = "json";
+                            options.success = function (msg) {
+                                bootbox.alert(msg);
+
+                                var grid = new MvcGrid(document.querySelector('#data-table'));
+                                grid.reload();
+                            };
+                            options.error = function () {
+                                bootbox.alert("Terjadi kesalahan saat menghapus.");
+                            };
+                            $.ajax(options);
+                        }
+                    });
+                }
+            });
+        });
+
+        document.addEventListener('reloadend', function (e) {
+            if (e.detail.grid.element.id == 'data-table') {
+
+                $('#CheckAll').click(function () {
+                    var checkedStatus = this.checked;
+                    $('#data-table tbody tr').find('td:first :checkbox').each(function () {
+                        $(this).prop('checked', checkedStatus);
+                    });
+                });
+
+                $('#data-table').on("click", ".view-data", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#viewContainer').html(data);
+                        $('#viewModal').modal('show');
+
+                        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                            new MvcGrid(element);
+                        });
+                    });
+                });
+
+                $('#data-table').on("click", ".verification-data", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#viewContainer').html(data);
+                        $('#viewModal').modal('show');
+                    });
+                });
+
+                $('.fix-table').tableHeadFixer({ left: 2 });
+            }
+            else if (e.detail.grid.element.id == 'others-table') {
+                $('#others-table').on("click", ".view-data", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#viewContainer').html(data);
+                        $('#viewModal').modal('show');
+
+                        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                            new MvcGrid(element);
+                        });
+                    });
+                });
+                $('#others-table').on("click", ".dateedit-data", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#viewContainer').html(data);
+                        $('#viewModal').modal('show');
+                    });
+                });
+                $('.fix-table').tableHeadFixer({ left: 1 });
+            }
+        });
+    </script>
+}

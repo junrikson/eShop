@@ -16,9 +16,9 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Nomor SPK Produksi harus diisi.")]
+        [Required(ErrorMessage = "Nomor Perintah Kerja Produksi harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor SPK Produksi")]
+        [Display(Name = "Nomor Perintah Kerja Produksi")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "ProductionWorkOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
@@ -28,6 +28,12 @@ namespace eShop.Models
         [Display(Name = "Nama")]
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
         public string Name { get; set; }
+
+        [Display(Name = "Nomor Formula Produksi")]
+        public int? ProductionBillofMaterialId { get; set; }
+
+        [Display(Name = "Nomor Formula Produks")]
+        public virtual ProductionBillofMaterial ProductionBillofMaterial { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Tanggal")]
@@ -127,14 +133,14 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Nomor SPK Produksi harus diisi.")]
+        [Required(ErrorMessage = "Nomor Perintah Kerja Produksi harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor")]
+        [Display(Name = "Nomor Perintah Kerja Produksi")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "ProductionWorkOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
 
-        [DatalistColumn]
+
        // [Required(ErrorMessage = "Nama BOM Produksi harus diisi.")]
         [Display(Name = "Nama")]
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
@@ -217,6 +223,51 @@ namespace eShop.Models
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
+    }
+
+    public class OutstandingProductionWorkOrderDatalist : MvcDatalist<ProductionWorkOrderViewModel>
+    {
+        private DbContext Context { get; }
+
+        public OutstandingProductionWorkOrderDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code;
+        }
+        public OutstandingProductionWorkOrderDatalist()
+        {
+            Url = "/DatalistFilters/AllOutstandingProductionWorkOrder";
+            Title = "Perintah Kerja Produksi";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<ProductionWorkOrderViewModel> GetModels()
+        {
+            return Context.Set<ProductionWorkOrder>()
+                .Where(x => !Context.Set<MaterialSlip>().Where(p => p.Active == true && p.ProductionWorkOrderId == x.Id).Any())
+                .Select(x => new ProductionWorkOrderViewModel
+                {
+                    Id = x.Id,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnit = x.MasterBusinessUnit,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterRegionId = x.MasterRegionId,
+                    MasterRegion = x.MasterRegion,
+                    //MasterCustomerCode = x.MasterCustomer.Code,
+                   // MasterWarehouseCode = x.MasterWarehouse.Code,
+                    Code = x.Code,
+                    Date = x.Date,
+                    Total = x.Total,
+                    Active = x.Active,
+                });
+        }
     }
 
     public class ProductionWorkOrderDetails

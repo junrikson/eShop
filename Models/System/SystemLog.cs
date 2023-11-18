@@ -284,7 +284,13 @@ namespace eShop.Models
         [Display(Name = "Produktion Work Order Material")]
         ProductionWorkOrder = 138,
         [Display(Name = "Produktion Work Order Material Details")]
-        ProductionWorkOrderDetails = 139
+        ProductionWorkOrderDetails = 139,
+        [Display(Name = "Standar Biaya Produksi")]
+        StandardProductCosts = 140,
+        [Display(Name = "Pengambilan Bahan Baku")]
+        MaterialSlip = 141,
+        [Display(Name = "Pengambilan Bahan Baku Detail")]
+        MaterialSlipDetails = 142
 
         //ProductionBillofMaterial = 132
 

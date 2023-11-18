@@ -1,8 +1,8 @@
-﻿@model eShop.Models.PackingBillofMaterial
+﻿@model eShop.Models.PackingWorkOrder
 
 @{
-    ViewBag.Title = "Packing Bill of Material";
-    ViewBag.Current = "PackingBillofMaterials";
+    ViewBag.Title = "Perintah Kerja Barang Jadi";
+    ViewBag.Current = "PackingWorkOrders";
 }
 
 @section Styles {
@@ -27,7 +27,7 @@
                     <div class="box-header with-bRequest">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Add - Packing Bill of Material</h3>
+                        <h3 class="box-title">Add - Perintah Kerja Barang Jadi</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -70,6 +70,14 @@
                                         @Html.CheckBoxFor(model => model.Active)
                                         @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
                                     </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.PackingBillofMaterialId)
+                                    @*@Html.DatalistFor(model => model.PackingBillofMaterialId, new eShop.Models.AllPackingBillofMaterialDatalist() { Multi = true } ,new { @class = "datalist2" })*@
+                                    @Html.DatalistFor(model => model.PackingBillofMaterialId, new eShop.Models.AllPackingBillofMaterialDatalist(), new { @class = "datalist2" })
+                                    @Html.ValidationMessageFor(model => model.PackingBillofMaterialId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -134,12 +142,12 @@
                             <h3 class="box-title">Details</h3>
                         </div>
                         <div class="text-right col-md-10">
-                             <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "PackingBillofMaterials")" ">
+                             <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "PackingWorkOrders")" ">
                                 @Model.MasterCurrency.Code : @Model.Rate.ToString("N2")
                             </button>
                             <label style="font-weight: bold">TOTAL :</label>
                             <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "PackingBillofMaterials")">
+                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "PackingWorkOrders")">
                                 <i class="fa fa-plus"></i> Add
                             </button>
                             <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
@@ -249,7 +257,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?packingBillofMaterialId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?packingWorkOrderId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -272,7 +280,7 @@
                         var data = { id: Id };
                         var options = {};
 
-                        options.url = "/PackingBillofMaterials/GetMasterUnit";
+                        options.url = "/PackingWorkOrders/GetMasterUnit";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -300,7 +308,7 @@
 
         $('#btnChangeCurrency').click(function (event) {
             event.preventDefault();
-            var url = $(this).attr("href") + "?packingBillofMaterialId=" + $("input#Id").val();
+            var url = $(this).attr("href") + "?packingWorkOrderId=" + $("input#Id").val();
             $.get(url, function (data) {
                 $('#detailsContainer').html(data);
                 $('#detailsModal').modal('show');
@@ -320,7 +328,7 @@
                     var data = { Id: id };
                     var options = {};
 
-                    options.url = "/PackingBillofMaterials/GetCurrencyRate";
+                    options.url = "/PackingWorkOrders/GetCurrencyRate";
                     options.type = "POST";
                     options.headers = headers;
                     options.data = JSON.stringify(data);
@@ -349,10 +357,10 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { packingBillofMaterialId: $("#Id").val() };
+            var param = { packingWorkOrderId: $("#Id").val() };
             var options = {};
 
-            options.url = "/PackingBillofMaterials/GetTotal";
+            options.url = "/PackingWorkOrders/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -375,10 +383,10 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { packingBillofMaterialId: $("#Id").val() };
+            var param = { packingWorkOrderId: $("#Id").val() };
             var options = {};
 
-            options.url = "/PackingBillofMaterials/GetTotal";
+            options.url = "/PackingWorkOrders/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -404,10 +412,10 @@
 
             document.querySelector('#btnChangeCurrency').innerHTML = data.Message;
 
-            var param = { packingBillofMaterialId: $("#Id").val() };
+            var param = { packingWorkOrderId: $("#Id").val() };
             var options = {};
 
-            options.url = "/PackingBillofMaterials/GetTotal";
+            options.url = "/PackingWorkOrders/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -426,14 +434,14 @@
         $(document).ready(function ()
         {
             $("#PackingBillofMaterialId").on("change", function () {
-                var salesRequestId = $("#PackingBillofMaterialId").val();
-                var salesRequestid = $("#Id").val();
-                var data = { PackingBillofMaterialid: packingBillofMaterialid, PackingBillofMaterialId: packingBillofMaterialId };
+                var packingBillofMaterialId = $("#PackingBillofMaterialId").val();
+                var packingWorkOrderid = $("#Id").val();
+                var data = { PackingWorkOrderid: packingWorkOrderid, PackingBillofMaterialId: packingBillofMaterialId };
                 var options = {};
                 var grid = new MvcGrid(document.querySelector('#detail-table'));
 
                 if (packingBillofMaterialId !== 0 && packingBillofMaterialId !== '') {
-                    options.url = "/PackingBillofMaterials/PopulateDetails";
+                    options.url = "/PackingWorkOrders/PopulateDetails";
                     options.type = "POST";
                     options.headers = headers;
                     options.data = JSON.stringify(data);
@@ -442,8 +450,8 @@
                     options.success = function (obj) {
                         document.getElementById('MasterRegionId').value = obj.MasterRegionId;
                         document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                        document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
-                        document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
+                       // document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
+                        //document.getElementById('MasterUnitId').value = obj.MasterUnitId;
                         document.getElementById('Notes').value = obj.Notes;
                         document.getElementById('Total').value = obj.Total;
                         document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
@@ -486,7 +494,7 @@
                         if (result)
                         {
                             var options = {};
-                            options.url = "/PackingBillofMaterials/DetailsBatchDelete";
+                            options.url = "/PackingWorkOrders/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
@@ -502,7 +510,7 @@
                                 var param = { packingBillofMaterialId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/PackingBillofMaterials/GetTotal";
+                                options2.url = "/PackingWorkOrders/GetTotal";
                                 options2.type = "POST";
                                 options2.headers = headers;
                                 options2.data = JSON.stringify(param);
@@ -527,17 +535,17 @@
             $("#cancel").click(function () {
                 var data = { id: $("input#Id").val() };
                 var options = {};
-                options.url = "/PackingBillofMaterials/Cancel";
+                options.url = "/PackingWorkOrders/Cancel";
                 options.type = "POST";
                 options.headers = headers;
                 options.data = JSON.stringify(data);
                 options.contentType = "application/json";
                 options.dataType = "json";
                 options.success = function (msg) {
-                    window.location.href = '@Url.Action("Index", "PackingBillofMaterials")';
+                    window.location.href = '@Url.Action("Index", "PackingWorkOrders")';
                 };
                 options.error = function () {
-                    window.location.href = '@Url.Action("Index", "PackingBillofMaterials")';
+                    window.location.href = '@Url.Action("Index", "PackingWorkOrders")';
                 };
                 $.ajax(options);
             });
@@ -555,7 +563,7 @@
                         document.getElementById('MasterRegionId').value = "0";
                     }
                     else {
-                        options.url = "/PackingBillofMaterials/GetCode";
+                        options.url = "/PackingWorkOrders/GetCode";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -585,7 +593,7 @@
                 var options = {};
 
                 if (masterRegionId !== 0 && masterRegionId !== '') {
-                    options.url = "/PackingBillofMaterials/GetCode";
+                    options.url = "/PackingWorkOrders/GetCode";
                     options.type = "POST";
                     options.headers = headers;
                     options.data = JSON.stringify(data);
@@ -640,7 +648,7 @@
                             var data = { id: Id };
                             var options = {};
 
-                            options.url = "/PackingBillofMaterials/GetMasterUnit";
+                            options.url = "/PackingWorkOrders/GetMasterUnit";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(data);

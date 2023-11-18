@@ -384,6 +384,54 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllProductionBillofMaterial(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitId = 0)
+        {
+            AllProductionBillofMaterialDatalist datalist = new AllProductionBillofMaterialDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterRegionId"] = masterRegionId;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = masterBusinessUnitId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllPackingBillofMaterial(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitId = 0)
+        {
+            AllPackingBillofMaterialDatalist datalist = new AllPackingBillofMaterialDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterRegionId"] = masterRegionId;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = masterBusinessUnitId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllOutstandingProductionWorkOrder(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitId = 0)
+        {
+            OutstandingProductionWorkOrderDatalist datalist = new OutstandingProductionWorkOrderDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterRegionId"] = masterRegionId;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = masterBusinessUnitId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllOutstandingPackingWorkOrder(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitId = 0)
+        {
+            OutstandingPackingWorkOrderDatalist datalist = new OutstandingPackingWorkOrderDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterRegionId"] = masterRegionId;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = masterBusinessUnitId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllAuthorization(DatalistFilter filter)
         {
             AuthorizationDatalist datalist = new AuthorizationDatalist(db);

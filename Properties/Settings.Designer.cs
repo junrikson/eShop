@@ -259,5 +259,16 @@ namespace eShop.Properties {
                 return ((string)(this["ProductionWorkOrderCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("MS/")]
+        public string MaterialSlipCode
+        {
+            get
+            {
+                return ((string)(this["MaterialSlipCode"]));
+            }
+        }
     }
 }

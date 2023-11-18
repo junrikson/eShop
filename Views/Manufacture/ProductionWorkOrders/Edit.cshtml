@@ -1,7 +1,7 @@
 ﻿@model eShop.Models.ProductionWorkOrder
 
 @{
-    ViewBag.Title = "Production Work Order";
+    ViewBag.Title = "Perintah Kerja Produksi";
     ViewBag.Current = "ProductionWorkOrders";
 }
 
@@ -27,7 +27,7 @@
                     <div class="box-header with-bRequest">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Edit - Production Work Order</h3>
+                        <h3 class="box-title">Edit - Perintah Kerja Produksi</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -74,20 +74,30 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
+                                    @Html.LabelFor(model => model.ProductionBillofMaterialId)
+                                    @Html.DatalistFor(model => model.ProductionBillofMaterialId, new eShop.Models.AllProductionBillofMaterialDatalist(), new { @class = "datalist2" })
+                                    @Html.ValidationMessageFor(model => model.ProductionBillofMaterialId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
                                     @Html.LabelFor(model => model.Date)
                                     @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="form-group">
-                <div class="col-md-12">
-      
-            @Html.LabelFor(model => model.Name)
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-      
-                </div>
-            </div>
+                                <div class="col-md-9">
+                                    @Html.LabelFor(model => model.MasterUnitId)
+                                    @Html.DatalistFor(model => model.MasterUnitId, new eShop.Models.MasterUnitDatalist(), new { @class = "datalist2" })
+                                    @Html.ValidationMessageFor(model => model.MasterUnitId, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    @Html.LabelFor(model => model.Quantity)
+                                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control total2" } })
+                                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="col-md-12">
                                     @Html.LabelFor(model => model.Notes)

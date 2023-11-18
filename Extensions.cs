@@ -261,6 +261,28 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalMaterialSlip(ApplicationDbContext db, int materialSlipId, int? materialSlipDetailsId = null)
+        {
+            decimal total = 0;
+            List<MaterialSlipDetails> materialSlipDetails = null;
+
+            if (materialSlipDetailsId == null)
+            {
+                materialSlipDetails = db.MaterialSlipsDetails.Where(x => x.MaterialSlipId == materialSlipId).ToList();
+            }
+            else
+            {
+                materialSlipDetails = db.MaterialSlipsDetails.Where(x => x.MaterialSlipId == materialSlipId && x.Id != materialSlipDetailsId).ToList();
+            }
+
+            if (materialSlipDetails != null)
+            {
+                total = materialSlipDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
 
         public static void CreatePurchaseJournal(ApplicationDbContext db, Purchase purchase)
         {

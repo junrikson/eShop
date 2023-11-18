@@ -147,7 +147,7 @@ namespace eShop.Controllers
             productionWorkOrder.Created = DateTime.Now;
             productionWorkOrder.Updated = DateTime.Now;
             productionWorkOrder.UserId = User.Identity.GetUserId<int>();
-            productionWorkOrder.Total = SharedFunctions.GetTotalSalesRequest(db, productionWorkOrder.Id);
+            productionWorkOrder.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id);
             productionWorkOrder.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(productionWorkOrder.Code)) productionWorkOrder.Code = productionWorkOrder.Code.ToUpper();
@@ -196,7 +196,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionWorkOrder.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, productionWorkOrder.Id).ToString("N2");
+                ViewBag.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id).ToString("N2");
 
                 return View("../Manufacture/ProductionWorkOrders/Create", productionWorkOrder);
             }
@@ -260,7 +260,7 @@ namespace eShop.Controllers
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
             ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionWorkOrder.MasterBusinessUnitId);
-            ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, productionWorkOrder.Id).ToString("N2");
+            ViewBag.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id).ToString("N2");
 
             return View("../Manufacture/ProductionWorkOrders/Edit", productionWorkOrder);
         }
@@ -275,7 +275,7 @@ namespace eShop.Controllers
         {
             productionWorkOrder.Updated = DateTime.Now;
             productionWorkOrder.UserId = User.Identity.GetUserId<int>();
-            productionWorkOrder.Total = SharedFunctions.GetTotalSalesRequest(db, productionWorkOrder.Id);
+            productionWorkOrder.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id);
             productionWorkOrder.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(productionWorkOrder.Code)) productionWorkOrder.Code = productionWorkOrder.Code.ToUpper();
@@ -324,7 +324,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionWorkOrder.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, productionWorkOrder.Id).ToString("N2");
+                ViewBag.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id).ToString("N2");
 
                 return View("../Manufacture/ProductionWorkOrders/Edit", productionWorkOrder);
             }
@@ -510,7 +510,7 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         ProductionWorkOrder productionWorkOrder = db.ProductionWorkOrders.Find(productionWorkOrderDetails.ProductionWorkOrderId);
-                        productionWorkOrder.Total = SharedFunctions.GetTotalSalesRequest(db, productionWorkOrder.Id, productionWorkOrderDetails.Id) + productionWorkOrderDetails.Total;
+                        productionWorkOrder.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id, productionWorkOrderDetails.Id) + productionWorkOrderDetails.Total;
 
                         db.Entry(productionWorkOrder).State = EntityState.Modified;
                         db.SaveChanges();
@@ -751,7 +751,7 @@ namespace eShop.Controllers
                             db.SaveChanges();
                         }
 
-                        productionWorkOrder.Total = SharedFunctions.GetTotalSalesRequest(db, productionWorkOrder.Id);
+                        productionWorkOrder.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id);
                         db.Entry(productionWorkOrder).State = EntityState.Modified;
                         db.SaveChanges();
 
@@ -831,6 +831,98 @@ namespace eShop.Controllers
         public JsonResult GetTotal(int productionWorkOrderId)
         {
             return Json(SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrderId).ToString("N2"));
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "ProductionWorkOrdersActive")]
+        public JsonResult PopulateDetails(int productionWorkOrderid, int productionBillofMaterialid)
+        {
+            ProductionWorkOrder productionWorkOrder = db.ProductionWorkOrders.Find(productionWorkOrderid);
+            ProductionBillofMaterial productionBillofMaterial = db.ProductionBillofMaterials.Find(productionBillofMaterialid);
+
+            if (productionWorkOrder != null && productionBillofMaterial != null)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var remove = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderId == productionWorkOrder.Id).ToList();
+
+                        if (remove != null)
+                        {
+                            foreach (ProductionWorkOrderDetails temp in remove)
+                            {
+                                //SharedFunctions.RemovePurchaseJournalDetails(db, temp);
+
+                                db.ProductionWorkOrdersDetails.Remove(temp);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        var productionBillofMaterialsDetails = db.ProductionBillofMaterialsDetails.Where(x => x.ProductionBillofMaterialId == productionBillofMaterial.Id).ToList();
+
+                        if (productionBillofMaterialsDetails != null)
+                        {
+                            foreach (ProductionBillofMaterialDetails productionBillofMaterialDetails in productionBillofMaterialsDetails)
+                            {
+                                ProductionWorkOrderDetails productionWorkOrderDetails = new ProductionWorkOrderDetails
+                                {
+                                    ProductionWorkOrderId = productionWorkOrder.Id,
+                                    MasterItemId = productionBillofMaterialDetails.MasterItemId,
+                                    MasterItemUnitId = productionBillofMaterialDetails.MasterItemUnitId,
+                                    Quantity = productionBillofMaterialDetails.Quantity,
+                                    Price = productionBillofMaterialDetails.Price,
+                                    Total = productionBillofMaterialDetails.Total,
+                                    Notes = productionBillofMaterialDetails.Notes,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.ProductionWorkOrdersDetails.Add(productionWorkOrderDetails);
+                                db.SaveChanges();
+
+                                //SharedFunctions.CreatePurchaseJournalDetails(db, purchaseDetails);
+                            }
+                        }
+
+                        productionWorkOrder.ProductionBillofMaterialId = productionBillofMaterial.Id;
+                        productionWorkOrder.MasterBusinessUnitId = productionBillofMaterial.MasterBusinessUnitId;
+                        productionWorkOrder.MasterRegionId = productionBillofMaterial.MasterRegionId;
+                        productionWorkOrder.MasterCurrencyId = productionBillofMaterial.MasterCurrencyId;
+                        productionWorkOrder.Rate = productionBillofMaterial.Rate;
+                        //productionWorkOrder.MasterUnitId = productionBillofMaterial.MasterUnitId;
+                        productionWorkOrder.Quantity = productionBillofMaterial.Quantity;
+                        productionWorkOrder.Notes = productionBillofMaterial.Notes;
+                        productionWorkOrder.Total = productionBillofMaterial.Total;
+
+                        db.Entry(productionWorkOrder).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        db.Entry(productionWorkOrder).Reload();
+
+                        //SharedFunctions.UpdatePurchaseJournal(db, purchase);
+
+                        dbTran.Commit();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+
+            return Json(new
+            {
+                productionWorkOrder.MasterRegionId,
+                productionWorkOrder.MasterBusinessUnitId,
+                productionWorkOrder.Notes,
+                Total = productionWorkOrder.Total.ToString("N2"),
+                productionWorkOrder.Date,
+                Currency = productionWorkOrder.MasterCurrency.Code + " : " + productionWorkOrder.Rate.ToString("N2")
+            });
         }
 
         protected override void Dispose(bool disposing)

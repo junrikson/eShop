@@ -15,7 +15,7 @@
         <div class="modal-body">
             @Html.Partial("MvcDatalist/_Dialog")
             <div id="divEmp">
-                @using (Ajax.BeginForm("ChangeCurrency", "SalesRequests", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "ChangeCurrencySuccess" }))
+                @using (Ajax.BeginForm("ChangeCurrency", "PackingWorkOrders", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "ChangeCurrencySuccess" }))
                 {
                     @Html.AntiForgeryToken()
 

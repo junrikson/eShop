@@ -147,7 +147,7 @@ namespace eShop.Controllers
             packingWorkOrder.Created = DateTime.Now;
             packingWorkOrder.Updated = DateTime.Now;
             packingWorkOrder.UserId = User.Identity.GetUserId<int>();
-            packingWorkOrder.Total = SharedFunctions.GetTotalSalesRequest(db, packingWorkOrder.Id);
+            packingWorkOrder.Total = SharedFunctions.GetTotalPackingWorkOrder(db, packingWorkOrder.Id);
             packingWorkOrder.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(packingWorkOrder.Code)) packingWorkOrder.Code = packingWorkOrder.Code.ToUpper();
@@ -196,7 +196,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", packingWorkOrder.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, packingWorkOrder.Id).ToString("N2");
+                ViewBag.Total = SharedFunctions.GetTotalPackingWorkOrder(db, packingWorkOrder.Id).ToString("N2");
 
                 return View("../Manufacture/PackingWorkOrders/Create", packingWorkOrder);
             }
@@ -260,7 +260,7 @@ namespace eShop.Controllers
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
             ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", packingWorkOrder.MasterBusinessUnitId);
-            ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, packingWorkOrder.Id).ToString("N2");
+            ViewBag.Total = SharedFunctions.GetTotalPackingWorkOrder(db, packingWorkOrder.Id).ToString("N2");
 
             return View("../Manufacture/PackingWorkOrders/Edit", packingWorkOrder);
         }
@@ -275,7 +275,7 @@ namespace eShop.Controllers
         {
             packingWorkOrder.Updated = DateTime.Now;
             packingWorkOrder.UserId = User.Identity.GetUserId<int>();
-            packingWorkOrder.Total = SharedFunctions.GetTotalSalesRequest(db, packingWorkOrder.Id);
+            packingWorkOrder.Total = SharedFunctions.GetTotalPackingWorkOrder(db, packingWorkOrder.Id);
             packingWorkOrder.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(packingWorkOrder.Code)) packingWorkOrder.Code = packingWorkOrder.Code.ToUpper();
@@ -307,7 +307,7 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SalesRequest, MenuId = packingWorkOrder.Id, MenuCode = packingWorkOrder.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PackingWorkOrder, MenuId = packingWorkOrder.Id, MenuCode = packingWorkOrder.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -324,7 +324,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", packingWorkOrder.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, packingWorkOrder.Id).ToString("N2");
+                ViewBag.Total = SharedFunctions.GetTotalPackingWorkOrder(db, packingWorkOrder.Id).ToString("N2");
 
                 return View("../Manufacture/PackingWorkOrders/Edit", packingWorkOrder);
             }
@@ -510,7 +510,7 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         PackingWorkOrder packingWorkOrder = db.PackingWorkOrders.Find(packingWorkOrderDetails.PackingWorkOrderId);
-                        packingWorkOrder.Total = SharedFunctions.GetTotalSalesRequest(db, packingWorkOrder.Id, packingWorkOrderDetails.Id) + packingWorkOrderDetails.Total;
+                        packingWorkOrder.Total = SharedFunctions.GetTotalPackingWorkOrder(db, packingWorkOrder.Id, packingWorkOrderDetails.Id) + packingWorkOrderDetails.Total;
 
                         db.Entry(packingWorkOrder).State = EntityState.Modified;
                         db.SaveChanges();
@@ -751,7 +751,7 @@ namespace eShop.Controllers
                             db.SaveChanges();
                         }
 
-                        packingWorkOrder.Total = SharedFunctions.GetTotalSalesRequest(db, packingWorkOrder.Id);
+                        packingWorkOrder.Total = SharedFunctions.GetTotalPackingWorkOrder(db, packingWorkOrder.Id);
                         db.Entry(packingWorkOrder).State = EntityState.Modified;
                         db.SaveChanges();
 
@@ -831,6 +831,98 @@ namespace eShop.Controllers
         public JsonResult GetTotal(int packingWorkOrderId)
         {
             return Json(SharedFunctions.GetTotalPackingWorkOrder(db, packingWorkOrderId).ToString("N2"));
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "PackingWorkOrdersActive")]
+        public JsonResult PopulateDetails(int packingWorkOrderid, int packingBillofMaterialid)
+        {
+            PackingWorkOrder packingWorkOrder = db.PackingWorkOrders.Find(packingWorkOrderid);
+            PackingBillofMaterial packingBillofMaterial = db.PackingBillofMaterials.Find(packingBillofMaterialid);
+
+            if (packingWorkOrder != null && packingBillofMaterial != null)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var remove = db.PackingWorkOrdersDetails.Where(x => x.PackingWorkOrderId == packingWorkOrder.Id).ToList();
+
+                        if (remove != null)
+                        {
+                            foreach (PackingWorkOrderDetails temp in remove)
+                            {
+                                //SharedFunctions.RemovePurchaseJournalDetails(db, temp);
+
+                                db.PackingWorkOrdersDetails.Remove(temp);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        var packingBillofMaterialsDetails = db.PackingBillofMaterialsDetails.Where(x => x.PackingBillofMaterialId == packingBillofMaterial.Id).ToList();
+
+                        if (packingBillofMaterialsDetails != null)
+                        {
+                            foreach (PackingBillofMaterialDetails packingBillofMaterialDetails in packingBillofMaterialsDetails)
+                            {
+                                PackingWorkOrderDetails packingWorkOrderDetails = new PackingWorkOrderDetails
+                                {
+                                    PackingWorkOrderId = packingWorkOrder.Id,
+                                    MasterItemId = packingBillofMaterialDetails.MasterItemId,
+                                    MasterItemUnitId = packingBillofMaterialDetails.MasterItemUnitId,
+                                    Quantity = packingBillofMaterialDetails.Quantity,
+                                    Price = packingBillofMaterialDetails.Price,
+                                    Total = packingBillofMaterialDetails.Total,
+                                    Notes = packingBillofMaterialDetails.Notes,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.PackingWorkOrdersDetails.Add(packingWorkOrderDetails);
+                                db.SaveChanges();
+
+                                //SharedFunctions.CreatePurchaseJournalDetails(db, purchaseDetails);
+                            }
+                        }
+
+                        packingWorkOrder.PackingBillofMaterialId = packingBillofMaterial.Id;
+                        packingWorkOrder.MasterBusinessUnitId = packingBillofMaterial.MasterBusinessUnitId;
+                        packingWorkOrder.MasterRegionId = packingBillofMaterial.MasterRegionId;
+                        packingWorkOrder.MasterCurrencyId = packingBillofMaterial.MasterCurrencyId;
+                        packingWorkOrder.Rate = packingBillofMaterial.Rate;
+                        packingWorkOrder.MasterUnitId = packingBillofMaterial.MasterUnitId;
+                        packingWorkOrder.Quantity = packingBillofMaterial.Quantity;
+                        packingWorkOrder.Notes = packingBillofMaterial.Notes;
+                        packingWorkOrder.Total = packingBillofMaterial.Total;
+
+                        db.Entry(packingWorkOrder).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        db.Entry(packingWorkOrder).Reload();
+
+                        //SharedFunctions.UpdatePurchaseJournal(db, purchase);
+
+                        dbTran.Commit();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+
+            return Json(new
+            {
+                packingWorkOrder.MasterRegionId,
+                packingWorkOrder.MasterBusinessUnitId,
+                packingWorkOrder.Notes,
+                Total = packingWorkOrder.Total.ToString("N2"),
+                packingWorkOrder.Date,
+                Currency = packingWorkOrder.MasterCurrency.Code + " : " + packingWorkOrder.Rate.ToString("N2")
+            });
         }
 
         protected override void Dispose(bool disposing)

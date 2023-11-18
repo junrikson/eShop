@@ -22,7 +22,7 @@
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     @Html.HiddenFor(model => model.Id)
-                    @Html.HiddenFor(model => model.ProductionBillofMaterialId)
+                    @Html.HiddenFor(model => model.PackingBillofMaterialId)
                     <div class="form-group">
                         <div class="col-md-12">
                             @Html.LabelFor(model => model.MasterItemId)

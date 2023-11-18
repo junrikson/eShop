@@ -219,6 +219,50 @@ namespace eShop.Models
         public bool Active { get; set; }
     }
 
+    public class AllPackingBillofMaterialDatalist : MvcDatalist<PackingBillofMaterialViewModel>
+    {
+        private DbContext Context { get; }
+
+        public AllPackingBillofMaterialDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code;
+        }
+        public AllPackingBillofMaterialDatalist()
+        {
+            Url = "/DatalistFilters/AllPackingBillofMaterial";
+            Title = "Formula Barang jadi";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<PackingBillofMaterialViewModel> GetModels()
+        {
+            return Context.Set<PackingBillofMaterial>()
+                // .Where(x => !Context.Set<ProductionWorkOrder>().Where(p => p.Active == true && p.ProductionBillofMaterialId == x.Id).Any())
+                .Select(x => new PackingBillofMaterialViewModel
+                {
+                    Id = x.Id,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnit = x.MasterBusinessUnit,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterRegionId = x.MasterRegionId,
+                    MasterRegion = x.MasterRegion,
+                    Code = x.Code,
+                    Date = x.Date,
+                    Total = x.Total,
+                    Active = x.Active,
+
+                });
+        }
+    }
+
     public class PackingBillofMaterialDetails
     {
         [Key]

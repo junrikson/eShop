@@ -1,7 +1,7 @@
 ﻿@model eShop.Models.ProductionBillofMaterial
 
 @{
-    ViewBag.Title = "Production Bill of Material";
+    ViewBag.Title = "Produksi Bill of Material";
     ViewBag.Current = "ProductionBillofMaterials";
 }
 
@@ -27,7 +27,7 @@
                     <div class="box-header with-bRequest">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Add - Production Bill of Material</h3>
+                        <h3 class="box-title">Add - Produksi Bill of Material</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -425,45 +425,45 @@
 
         $(document).ready(function ()
         {
-            $("#ProductionBillofMaterialId").on("change", function () {
-                var salesRequestId = $("#ProductionBillofMaterialId").val();
-                var salesRequestid = $("#Id").val();
-                var data = { ProductionBillofMaterialid: productionBillofMaterialid, ProductionBillofMaterialId: productionBillofMaterialId };
-                var options = {};
-                var grid = new MvcGrid(document.querySelector('#detail-table'));
+            //$("#ProductionBillofMaterialId").on("change", function () {
+            //    var salesRequestId = $("#ProductionBillofMaterialId").val();
+            //    var salesRequestid = $("#Id").val();
+            //    var data = { ProductionBillofMaterialid: productionBillofMaterialid, ProductionBillofMaterialId: productionBillofMaterialId };
+            //    var options = {};
+            //    var grid = new MvcGrid(document.querySelector('#detail-table'));
 
-                if (productionBillofMaterialId !== 0 && productionBillofMaterialId !== '') {
-                    options.url = "/ProductionBillofMaterials/PopulateDetails";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (obj) {
-                        document.getElementById('MasterRegionId').value = obj.MasterRegionId;
-                        document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                        document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
-                        document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
-                        document.getElementById('Notes').value = obj.Notes;
-                        document.getElementById('Total').value = obj.Total;
-                        document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
+            //    if (productionBillofMaterialId !== 0 && productionBillofMaterialId !== '') {
+            //        options.url = "/ProductionBillofMaterials/PopulateDetails";
+            //        options.type = "POST";
+            //        options.headers = headers;
+            //        options.data = JSON.stringify(data);
+            //        options.contentType = "application/json";
+            //        options.dataType = "json";
+            //        options.success = function (obj) {
+            //            document.getElementById('MasterRegionId').value = obj.MasterRegionId;
+            //            document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
+            //            document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
+            //            document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
+            //            document.getElementById('Notes').value = obj.Notes;
+            //            document.getElementById('Total').value = obj.Total;
+            //            document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
 
-                        $(document.getElementById('MasterBusinessUnitId')).trigger("change");
+            //            $(document.getElementById('MasterBusinessUnitId')).trigger("change");
 
-                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                            new MvcDatalist(element).reload();
-                        });
+            //            [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+            //                new MvcDatalist(element).reload();
+            //            });
 
-                        grid.reload();
-                    };
-                    options.error = function () {
-                        document.getElementById('Code').value = "";
-                        document.getElementById('MasterBusinessUnitId').value = "0";
-                        grid.reload();
-                    };
-                    $.ajax(options);
-                }
-            }).change();
+            //            grid.reload();
+            //        };
+            //        options.error = function () {
+            //            document.getElementById('Code').value = "";
+            //            document.getElementById('MasterBusinessUnitId').value = "0";
+            //            grid.reload();
+            //        };
+            //        $.ajax(options);
+            //    }
+            //}).change();
             $("#DetailsBatchDelete").click(function ()
             {
                 var selectedIDs = new Array();

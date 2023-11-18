@@ -16,9 +16,9 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Nomor SPK Packing harus diisi.")]
+        [Required(ErrorMessage = "Nomor Perintah Kerja Barang jadi harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor SPK Packing")]
+        [Display(Name = "Nomor Perintah Kerja Barang jadi")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "PackingWorkOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
@@ -28,6 +28,12 @@ namespace eShop.Models
         [Display(Name = "Nama")]
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
         public string Name { get; set; }
+
+        [Display(Name = "Nomor Formula Barang Jadi")]
+        public int? PackingBillofMaterialId { get; set; }
+
+        [Display(Name = "Nomor Formula Barang Jadi")]
+        public virtual PackingBillofMaterial PackingBillofMaterial { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Tanggal")]
@@ -127,9 +133,9 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Nomor SPK Packing harus diisi.")]
+        [Required(ErrorMessage = "Nomor Perintah Kerja Barang jadi harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor")]
+        [Display(Name = "Nomor Perintah Kerja Barang jadi")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "PackingWorkOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
@@ -139,6 +145,12 @@ namespace eShop.Models
         [Display(Name = "Nama")]
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
         public string Name { get; set; }
+
+        [Display(Name = "Nomor Formula Barang Jadi")]
+        public int? PackingBillofMaterialId { get; set; }
+
+        [Display(Name = "Nomor Formula Barang Jadi")]
+        public virtual PackingBillofMaterial PackingBillofMaterial { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Tanggal")]
@@ -219,6 +231,52 @@ namespace eShop.Models
         public bool Active { get; set; }
     }
 
+    public class OutstandingPackingWorkOrderDatalist : MvcDatalist<PackingWorkOrderViewModel>
+    {
+        private DbContext Context { get; }
+
+        public OutstandingPackingWorkOrderDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code;
+        }
+        public OutstandingPackingWorkOrderDatalist()
+        {
+            Url = "/DatalistFilters/AllOutstandingPackingWorkOrder";
+            Title = "Perintah Kerja Barang Jadi";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<PackingWorkOrderViewModel> GetModels()
+        {
+            return Context.Set<PackingWorkOrder>()
+                .Where(x => !Context.Set<MaterialSlip>().Where(p => p.Active == true && p.PackingWorkOrderId == x.Id).Any())
+                .Select(x => new PackingWorkOrderViewModel
+                {
+                    Id = x.Id,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnit = x.MasterBusinessUnit,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterRegionId = x.MasterRegionId,
+                    MasterRegion = x.MasterRegion,
+                    //MasterCustomerCode = x.MasterCustomer.Code,
+                    // MasterWarehouseCode = x.MasterWarehouse.Code,
+                    Code = x.Code,
+                    Date = x.Date,
+                    Total = x.Total,
+                    Active = x.Active,
+                });
+        }
+    }
+
+
     public class PackingWorkOrderDetails
     {
         [Key]
@@ -226,7 +284,7 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [Display(Name = "Packing WorkOrder Material")]
-        [Required(ErrorMessage = "Nomor SPK harus diisi.")]
+        [Required(ErrorMessage = "Nomor Perintah Kerja Barang jadi harus diisi.")]
         public int PackingWorkOrderId { get; set; }
 
         [Display(Name = "Packing Bill of Material")]

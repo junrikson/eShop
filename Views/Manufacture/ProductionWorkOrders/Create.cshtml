@@ -1,7 +1,7 @@
 ﻿@model eShop.Models.ProductionWorkOrder
 
 @{
-    ViewBag.Title = "Production Work Order";
+    ViewBag.Title = "Perintah Kerja Produksi";
     ViewBag.Current = "ProductionWorkOrders";
 }
 
@@ -27,7 +27,7 @@
                     <div class="box-header with-bRequest">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Add - Production Work Order</h3>
+                        <h3 class="box-title">Add - Perintah Kerja Produksi</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -74,9 +74,9 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        @Html.LabelFor(model => model.Name)
-                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                        @Html.LabelFor(model => model.ProductionBillofMaterialId)
+                                        @Html.DatalistFor(model => model.ProductionBillofMaterialId, new eShop.Models.AllProductionBillofMaterialDatalist(), new { @class = "datalist2" })
+                                        @Html.ValidationMessageFor(model => model.ProductionBillofMaterialId, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -86,7 +86,7 @@
                                         @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-                                @*<div class="form-group">
+                                <div class="form-group">
                                     <div class="col-md-9">
                                         @Html.LabelFor(model => model.MasterUnitId)
                                         @Html.DatalistFor(model => model.MasterUnitId, new eShop.Models.MasterUnitDatalist(), new { @class = "datalist2" })
@@ -97,7 +97,7 @@
                                         @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control total2" } })
                                         @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
                                     </div>
-                                </div>*@
+                                </div>
 
                                 <div class="form-group">
                                     <div class="col-md-12">
@@ -131,7 +131,7 @@
                         <div class="col-md-2">
                             <i class="fa fa-info"></i>
 
-                            <h3 class="box-title">Details BOM</h3>
+                            <h3 class="box-title">Details Work Order</h3>
                         </div>
                         <div class="text-right col-md-10">
                             <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "ProductionWorkOrders")" ">
@@ -158,71 +158,7 @@
             </div>
             <!-- /.col -->
 
-            <div class="col-md-8">
-                <div class="box box-primary">
-                    <div class="box-header with-bRequest">
-                        <div class="col-md-2">
-                            <i class="fa fa-info"></i>
 
-                            <h3 class="box-title">Details RM </h3>
-                        </div>
-                        <div class="text-right col-md-10">
-                            @*<button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "ProductionWorkOrders")" ">
-                                @Model.MasterCurrency.Code : @Model.Rate.ToString("N2")
-                            </button>
-                            <label style="font-weight: bold">TOTAL :</label>
-                            <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "ProductionWorkOrders")">
-                                <i class="fa fa-plus"></i> Add
-                            </button>
-                            <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
-                                <i class="fa fa-trash"></i> Delete
-                            </button>*@
-                        </div>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body" style="overflow:auto; white-space: nowrap">
-                        @Html.AjaxGrid(Url.Action("DetailsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "detail-table" })
-                    </div>
-                    <!-- /.box-body -->
-
-                </div>
-                <!-- /.box -->
-            </div>
-            <!-- /.col -->
-
-            <div class="col-md-8">
-                <div class="box box-primary">
-                    <div class="box-header with-bRequest">
-                        <div class="col-md-2">
-                            <i class="fa fa-info"></i>
-
-                            <h3 class="box-title">Details SDM</h3>
-                        </div>
-                        <div class="text-right col-md-10">
-                            @*<button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "ProductionWorkOrders")" ">
-                                @Model.MasterCurrency.Code : @Model.Rate.ToString("N2")
-                            </button>
-                            <label style="font-weight: bold">TOTAL :</label>
-                            <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "ProductionWorkOrders")">
-                                <i class="fa fa-plus"></i> Add
-                            </button>
-                            <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
-                                <i class="fa fa-trash"></i> Delete
-                            </button>*@
-                        </div>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body" style="overflow:auto; white-space: nowrap">
-                        @Html.AjaxGrid(Url.Action("DetailsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "detail-table" })
-                    </div>
-                    <!-- /.box-body -->
-
-                </div>
-                <!-- /.box -->
-            </div>
-            <!-- /.col -->
 
 
         </div>
@@ -495,14 +431,14 @@
 
         $(document).ready(function ()
         {
-            $("#ProductionWorkOrderId").on("change", function () {
-                var salesRequestId = $("#ProductionWorkOrderId").val();
-                var salesRequestid = $("#Id").val();
-                var data = { ProductionWorkOrderid: productionWorkOrderid, ProductionWorkOrderId: productionWorkOrderId };
+            $("#ProductionBillofMaterialId").on("change", function () {
+                var productionBillofMaterialId = $("#ProductionBillofMaterialId").val();
+                var productionWorkOrderId = $("#Id").val();
+                var data = { ProductionWorkOrderId: productionWorkOrderId, ProductionBillofMaterialId: productionBillofMaterialId };
                 var options = {};
                 var grid = new MvcGrid(document.querySelector('#detail-table'));
 
-                if (productionWorkOrderId !== 0 && productionWorkOrderId !== '') {
+                if (productionBillofMaterialId !== 0 && productionBillofMaterialId !== '') {
                     options.url = "/ProductionWorkOrders/PopulateDetails";
                     options.type = "POST";
                     options.headers = headers;
@@ -512,8 +448,9 @@
                     options.success = function (obj) {
                         document.getElementById('MasterRegionId').value = obj.MasterRegionId;
                         document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                        document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
-                        document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
+                        //document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
+                        //document.getElementById('MasterUnitId').value = msg;
+                        //document.getElementById('Total').value = 
                         document.getElementById('Notes').value = obj.Notes;
                         document.getElementById('Total').value = obj.Total;
                         document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;

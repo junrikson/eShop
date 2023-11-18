@@ -156,7 +156,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterCustomer> MasterCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterSupplier> MasterSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterWarehouse> MasterWarehouses { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterSalesPerson> MasterSalesPersons { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterSalesPerson> MasterSalesPersons { get; set; }        
+        public System.Data.Entity.DbSet<eShop.Models.StandardProductCost> StandardProductCosts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillofMaterial> ProductionBillofMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillofMaterialDetails> ProductionBillofMaterialsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PackingBillofMaterial> PackingBillofMaterials { get; set; }
@@ -165,6 +166,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderDetails> ProductionWorkOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PackingWorkOrder> PackingWorkOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PackingWorkOrderDetails> PackingWorkOrdersDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MaterialSlip> MaterialSlips { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MaterialSlipDetails> MaterialSlipsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustment> StockAdjustments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustmentDetails> StockAdjustmentsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.WarehouseTransfer> WarehouseTransfers { get; set; }

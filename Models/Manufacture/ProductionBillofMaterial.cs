@@ -62,21 +62,6 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
-        //[DatalistColumn]
-        //[Display(Name = "Kode Customer")]
-        //[Required(ErrorMessage = "Kode Customer harus diisi.")]
-        //public int MasterCustomerId { get; set; }
-
-        //[Display(Name = "Kode Customer")]
-        //public virtual MasterCustomer MasterCustomer { get; set; }
-
-        //[Display(Name = "Gudang")]
-        //[Required(ErrorMessage = "Gudang harus diisi.")]
-        //public int MasterWarehouseId { get; set; }
-
-        //[Display(Name = "Gudang")]
-        //public virtual MasterWarehouse MasterWarehouse { get; set; }
-
         [Display(Name = "Satuan")]
         [Required(ErrorMessage = "Master Satuan harus diisi.")]
         public int MasterUnitId { get; set; }
@@ -181,29 +166,6 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
-        //[DatalistColumn]
-        //[Display(Name = "Kode Customer")]
-        //[Required(ErrorMessage = "Kode Customer harus diisi.")]
-        //public int MasterCustomerId { get; set; }
-
-        //[Display(Name = "Kode Customer")]
-        //public virtual MasterCustomer MasterCustomer { get; set; }
-
-        //[DatalistColumn]
-        //[Display(Name = "Customer")]
-        //public string MasterCustomerCode { get; set; }
-
-        //[Display(Name = "Gudang")]
-        //[Required(ErrorMessage = "Gudang harus diisi.")]
-        //public int MasterWarehouseId { get; set; }
-
-        //[Display(Name = "Gudang")]
-        //public virtual MasterWarehouse MasterWarehouse { get; set; }
-
-        //[DatalistColumn]
-        //[Display(Name = "Gudang")]
-        //public string MasterWarehouseCode { get; set; }
-
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -219,7 +181,51 @@ namespace eShop.Models
         public bool Active { get; set; }
     }
 
-    public class ProductionBillofMaterialDetails
+    public class AllProductionBillofMaterialDatalist : MvcDatalist<ProductionBillofMaterialViewModel>
+    {
+        private DbContext Context { get; }
+
+        public AllProductionBillofMaterialDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code;
+        }
+        public AllProductionBillofMaterialDatalist()
+        {
+            Url = "/DatalistFilters/AllProductionBillofMaterial";
+            Title = "ProductionBillofMaterial";
+            AdditionalFilters.Add("MasterBusinessUnitId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<ProductionBillofMaterialViewModel> GetModels()
+        {
+            return Context.Set<ProductionBillofMaterial>()
+               // .Where(x => !Context.Set<ProductionWorkOrder>().Where(p => p.Active == true && p.ProductionBillofMaterialId == x.Id).Any())
+                .Select(x => new ProductionBillofMaterialViewModel
+                {
+                    Id = x.Id,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnit = x.MasterBusinessUnit,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterRegionId = x.MasterRegionId,
+                    MasterRegion = x.MasterRegion,
+                    Code = x.Code,
+                    Date = x.Date,
+                    Total = x.Total,
+                    Active = x.Active,
+
+                });
+        }
+    }
+
+        public class ProductionBillofMaterialDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

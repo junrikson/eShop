@@ -147,7 +147,7 @@ namespace eShop.Controllers
             productionBillofMaterial.Created = DateTime.Now;
             productionBillofMaterial.Updated = DateTime.Now;
             productionBillofMaterial.UserId = User.Identity.GetUserId<int>();
-            productionBillofMaterial.Total = SharedFunctions.GetTotalSalesRequest(db, productionBillofMaterial.Id);
+            productionBillofMaterial.Total = SharedFunctions.GetTotalProductionBillofMaterial(db, productionBillofMaterial.Id);
             productionBillofMaterial.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(productionBillofMaterial.Code)) productionBillofMaterial.Code = productionBillofMaterial.Code.ToUpper();
@@ -196,7 +196,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionBillofMaterial.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, productionBillofMaterial.Id).ToString("N2");
+                ViewBag.Total = SharedFunctions.GetTotalProductionBillofMaterial(db, productionBillofMaterial.Id).ToString("N2");
 
                 return View("../Manufacture/ProductionBillofMaterials/Create", productionBillofMaterial);
             }
@@ -260,7 +260,7 @@ namespace eShop.Controllers
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
             ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionBillofMaterial.MasterBusinessUnitId);
-            ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, productionBillofMaterial.Id).ToString("N2");
+            ViewBag.Total = SharedFunctions.GetTotalProductionBillofMaterial(db, productionBillofMaterial.Id).ToString("N2");
 
             return View("../Manufacture/ProductionBillofMaterials/Edit", productionBillofMaterial);
         }
@@ -275,7 +275,7 @@ namespace eShop.Controllers
         {
             productionBillofMaterial.Updated = DateTime.Now;
             productionBillofMaterial.UserId = User.Identity.GetUserId<int>();
-            productionBillofMaterial.Total = SharedFunctions.GetTotalSalesRequest(db, productionBillofMaterial.Id);
+            productionBillofMaterial.Total = SharedFunctions.GetTotalProductionBillofMaterial(db, productionBillofMaterial.Id);
             productionBillofMaterial.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(productionBillofMaterial.Code)) productionBillofMaterial.Code = productionBillofMaterial.Code.ToUpper();
@@ -307,7 +307,7 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SalesRequest, MenuId = productionBillofMaterial.Id, MenuCode = productionBillofMaterial.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionBillofMaterial, MenuId = productionBillofMaterial.Id, MenuCode = productionBillofMaterial.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -324,7 +324,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionBillofMaterial.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, productionBillofMaterial.Id).ToString("N2");
+                ViewBag.Total = SharedFunctions.GetTotalProductionBillofMaterial(db, productionBillofMaterial.Id).ToString("N2");
 
                 return View("../Manufacture/ProductionBillofMaterials/Edit", productionBillofMaterial);
             }
@@ -510,7 +510,7 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         ProductionBillofMaterial productionBillofMaterial = db.ProductionBillofMaterials.Find(productionBillofMaterialDetails.ProductionBillofMaterialId);
-                        productionBillofMaterial.Total = SharedFunctions.GetTotalSalesRequest(db, productionBillofMaterial.Id, productionBillofMaterialDetails.Id) + productionBillofMaterialDetails.Total;
+                        productionBillofMaterial.Total = SharedFunctions.GetTotalProductionBillofMaterial(db, productionBillofMaterial.Id, productionBillofMaterialDetails.Id) + productionBillofMaterialDetails.Total;
 
                         db.Entry(productionBillofMaterial).State = EntityState.Modified;
                         db.SaveChanges();
@@ -751,7 +751,7 @@ namespace eShop.Controllers
                             db.SaveChanges();
                         }
 
-                        productionBillofMaterial.Total = SharedFunctions.GetTotalSalesRequest(db, productionBillofMaterial.Id);
+                        productionBillofMaterial.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionBillofMaterial.Id);
                         db.Entry(productionBillofMaterial).State = EntityState.Modified;
                         db.SaveChanges();
 

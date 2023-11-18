@@ -1,4 +1,4 @@
-﻿@model eShop.Models.PackingBillofMaterialDetails
+﻿@model eShop.Models.PackingWorkOrderDetails
 
 @{
     Layout = null;
@@ -15,7 +15,7 @@
         <div class="modal-body">
             @Html.Partial("MvcDatalist/_Dialog")
             <div id="divEmp">
-                @using (Ajax.BeginForm("DetailsCreate", "PackingBillofMaterials", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
+                @using (Ajax.BeginForm("DetailsCreate", "PackingWorkOrders", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
                 {
                     @Html.AntiForgeryToken()
 

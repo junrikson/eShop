@@ -69,7 +69,7 @@ namespace eShop.Models
         {
             Context = context;
 
-            GetLabel = (model) => model.Code;
+            GetLabel = (model) => model.Code + " - " + model.Name;
         }
         public MasterUnitDatalist()
         {
