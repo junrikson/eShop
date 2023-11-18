@@ -1,4 +1,4 @@
-﻿@model eShop.Models.MaterialSlipDetails
+﻿@model eShop.Models.FinishedGoodSlipDetails
 
 @{
     Layout = null;
@@ -15,7 +15,7 @@
         <div class="modal-body">
             @Html.Partial("MvcDatalist/_Dialog")
             <div id="divEmp">
-                @using (Ajax.BeginForm("DetailsEdit", "MaterialSlips", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "EditSuccess" }))
+                @using (Ajax.BeginForm("DetailsEdit", "FinishedGoodSlips", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "EditSuccess" }))
                 {
                     @Html.AntiForgeryToken()
 

@@ -270,5 +270,16 @@ namespace eShop.Properties {
                 return ((string)(this["MaterialSlipCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("FGS/")]
+        public string FinishedGoodSlipCode
+        {
+            get
+            {
+                return ((string)(this["FinishedGoodSlipCode"]));
+            }
+        }
     }
 }

@@ -141,7 +141,6 @@ namespace eShop.Models
         public string Code { get; set; }
 
         [DatalistColumn]
-       // [Required(ErrorMessage = "Nama BOM Produksi harus diisi.")]
         [Display(Name = "Nama")]
         [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
         public string Name { get; set; }
@@ -193,29 +192,6 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
-        //[DatalistColumn]
-        //[Display(Name = "Kode Customer")]
-        //[Required(ErrorMessage = "Kode Customer harus diisi.")]
-        //public int MasterCustomerId { get; set; }
-
-        //[Display(Name = "Kode Customer")]
-        //public virtual MasterCustomer MasterCustomer { get; set; }
-
-        //[DatalistColumn]
-        //[Display(Name = "Customer")]
-        //public string MasterCustomerCode { get; set; }
-
-        //[Display(Name = "Gudang")]
-        //[Required(ErrorMessage = "Gudang harus diisi.")]
-        //public int MasterWarehouseId { get; set; }
-
-        //[Display(Name = "Gudang")]
-        //public virtual MasterWarehouse MasterWarehouse { get; set; }
-
-        //[DatalistColumn]
-        //[Display(Name = "Gudang")]
-        //public string MasterWarehouseCode { get; set; }
-
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -266,16 +242,13 @@ namespace eShop.Models
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterRegionId = x.MasterRegionId,
                     MasterRegion = x.MasterRegion,
-                    //MasterCustomerCode = x.MasterCustomer.Code,
-                    // MasterWarehouseCode = x.MasterWarehouse.Code,
                     Code = x.Code,
                     Date = x.Date,
                     Total = x.Total,
                     Active = x.Active,
                 });
         }
-    }
-
+    } 
 
     public class PackingWorkOrderDetails
     {

@@ -283,6 +283,28 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalFinishedGoodSlip(ApplicationDbContext db, int finishedGoodSlipId, int? finishedGoodSlipDetailsId = null)
+        {
+            decimal total = 0;
+            List<FinishedGoodSlipDetails> finishedGoodSlipDetails = null;
+
+            if (finishedGoodSlipDetailsId == null)
+            {
+                finishedGoodSlipDetails = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlipId).ToList();
+            }
+            else
+            {
+                finishedGoodSlipDetails = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlipId && x.Id != finishedGoodSlipDetailsId).ToList();
+            }
+
+            if (finishedGoodSlipDetails != null)
+            {
+                total = finishedGoodSlipDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
 
         public static void CreatePurchaseJournal(ApplicationDbContext db, Purchase purchase)
         {

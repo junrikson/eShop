@@ -290,9 +290,13 @@ namespace eShop.Models
         [Display(Name = "Pengambilan Bahan Baku")]
         MaterialSlip = 141,
         [Display(Name = "Pengambilan Bahan Baku Detail")]
-        MaterialSlipDetails = 142
+        MaterialSlipDetails = 142,
+        [Display(Name = "Penyelesaian Barang Jadi")]
+        FinishedGoodSlip = 143,
+        [Display(Name = "Penyelesaian Barang Jadi Detail")]
+        FinishedGoodSlipDetails = 144
 
-        //ProductionBillofMaterial = 132
+
 
     }
 
