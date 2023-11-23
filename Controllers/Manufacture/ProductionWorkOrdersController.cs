@@ -96,8 +96,8 @@ namespace eShop.Controllers
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
                 MasterCurrencyId = masterCurrency.Id,
                 Rate = masterCurrency.Rate,
-                MasterUnitId = db.MasterUnits.FirstOrDefault().Id,
-                // MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
+                HeaderMasterItemUnitId = db.MasterItemUnits.FirstOrDefault().Id,
+                HeaderMasterItemId = db.MasterItems.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -118,8 +118,8 @@ namespace eShop.Controllers
                     productionWorkOrder.Active = true;
                     productionWorkOrder.MasterBusinessUnitId = 0;
                     productionWorkOrder.MasterRegionId = 0;
-                    // productionWorkOrder.MasterCustomerId = 0;
-                    // productionWorkOrdert.MasterWarehouseId = 0;
+                    productionWorkOrder.HeaderMasterItemId = 0;
+                    productionWorkOrder.HeaderMasterItemUnitId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -142,7 +142,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionWorkOrdersAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,Date,MasterBusinessUnitId,MasterRegionId,Quantity,MasterUnitId,Notes,Active,Created,Updated,UserId")] ProductionWorkOrder productionWorkOrder)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,HeaderQuantity,HeaderMasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] ProductionWorkOrder productionWorkOrder)
         {
             productionWorkOrder.Created = DateTime.Now;
             productionWorkOrder.Updated = DateTime.Now;
@@ -160,12 +160,12 @@ namespace eShop.Controllers
 
             db.Entry(productionWorkOrder).State = EntityState.Unchanged;
             db.Entry(productionWorkOrder).Property("Code").IsModified = true;
-            db.Entry(productionWorkOrder).Property("Name").IsModified = true;
             db.Entry(productionWorkOrder).Property("Date").IsModified = true;
             db.Entry(productionWorkOrder).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(productionWorkOrder).Property("MasterRegionId").IsModified = true;
-            db.Entry(productionWorkOrder).Property("MasterUnitId").IsModified = true;
-            db.Entry(productionWorkOrder).Property("Quantity").IsModified = true;
+            db.Entry(productionWorkOrder).Property("HeaderMasterItemUnitId").IsModified = true;
+            db.Entry(productionWorkOrder).Property("HeaderMasterItemId").IsModified = true;            
+            db.Entry(productionWorkOrder).Property("HeaderQuantity").IsModified = true;
             db.Entry(productionWorkOrder).Property("Total").IsModified = true;
             db.Entry(productionWorkOrder).Property("Notes").IsModified = true;
             db.Entry(productionWorkOrder).Property("Active").IsModified = true;
@@ -271,7 +271,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionWorkOrdersEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,Date,MasterBusinessUnitId,MasterRegionId,Quantity,MasterUnitId,Notes,Active,Created,Updated,UserId")] ProductionWorkOrder productionWorkOrder)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,HeaderQuantity,HeaderMasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] ProductionWorkOrder productionWorkOrder)
         {
             productionWorkOrder.Updated = DateTime.Now;
             productionWorkOrder.UserId = User.Identity.GetUserId<int>();
@@ -288,13 +288,13 @@ namespace eShop.Controllers
 
             db.Entry(productionWorkOrder).State = EntityState.Unchanged;
             db.Entry(productionWorkOrder).Property("Code").IsModified = true;
-            db.Entry(productionWorkOrder).Property("Name").IsModified = true;
             db.Entry(productionWorkOrder).Property("Date").IsModified = true;
             db.Entry(productionWorkOrder).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(productionWorkOrder).Property("MasterRegionId").IsModified = true;
             db.Entry(productionWorkOrder).Property("Total").IsModified = true;
-            db.Entry(productionWorkOrder).Property("MasterUnitId").IsModified = true;
-            db.Entry(productionWorkOrder).Property("Quantity").IsModified = true;
+            db.Entry(productionWorkOrder).Property("HeaderMasterItemUnitId").IsModified = true;
+            db.Entry(productionWorkOrder).Property("HeaderMasterItemId").IsModified = true;
+            db.Entry(productionWorkOrder).Property("HeaderQuantity").IsModified = true;
             db.Entry(productionWorkOrder).Property("Notes").IsModified = true;
             db.Entry(productionWorkOrder).Property("Active").IsModified = true;
             db.Entry(productionWorkOrder).Property("Updated").IsModified = true;
@@ -670,7 +670,7 @@ namespace eShop.Controllers
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "ProductionWorkOrdersActive")]
+        [Authorize(Roles = "PackingWorkOrdersActive")]
         public JsonResult GetMasterUnit(int id)
         {
             int masterItemUnitId = 0;
@@ -693,6 +693,33 @@ namespace eShop.Controllers
 
             return Json(masterItemUnitId);
         }
+
+        //[HttpPost]
+        //[ValidateJsonAntiForgeryToken]
+        //[Authorize(Roles = "PackingWorkOrdersActive")]
+        //public JsonResult GetHeaderMasterUnit(int id)
+        //{
+        //    int headermasterItemUnitId = 0;
+        //    MasterItem masterItem = db.MasterItems.Find(id);
+
+        //    if (masterItem != null)
+        //    {
+        //        MasterItemUnit masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id && x.Default).FirstOrDefault();
+
+        //        if (masterItemUnit != null)
+        //            headermasterItemUnitId = masterItemUnit.Id;
+        //        else
+        //        {
+        //            masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id).FirstOrDefault();
+
+        //            if (masterItemUnit != null)
+        //                headermasterItemUnitId = masterItemUnit.Id;
+        //        }
+        //    }
+
+        //    return Json(headermasterItemUnitId);
+        //}
+
 
         [Authorize(Roles = "ProductionWorkOrdersActive")]
         public ActionResult ChangeCurrency(int? productionWorkOrderId)
@@ -745,7 +772,7 @@ namespace eShop.Controllers
                             if (masterItemUnit == null)
                                 productionWorkOrderDetails.Total = 0;
                             else
-                                productionWorkOrderDetails.Total = productionWorkOrderDetails.Quantity * productionWorkOrderDetails.Price * masterItemUnit.MasterUnit.Ratio * productionWorkOrder.Rate;
+                                productionWorkOrderDetails.Total = productionWorkOrderDetails.Quantity * productionWorkOrderDetails.Price * masterItemUnit.MasterUnit.Ratio * productionWorkOrder.Rate ;
 
                             db.Entry(productionWorkOrderDetails).State = EntityState.Modified;
                             db.SaveChanges();
@@ -892,8 +919,9 @@ namespace eShop.Controllers
                         productionWorkOrder.MasterRegionId = productionBillofMaterial.MasterRegionId;
                         productionWorkOrder.MasterCurrencyId = productionBillofMaterial.MasterCurrencyId;
                         productionWorkOrder.Rate = productionBillofMaterial.Rate;
-                        //productionWorkOrder.MasterUnitId = productionBillofMaterial.MasterUnitId;
-                        productionWorkOrder.Quantity = productionBillofMaterial.Quantity;
+                        productionWorkOrder.HeaderMasterItemUnitId = productionBillofMaterial.HeaderMasterItemUnitId;
+                        productionWorkOrder.HeaderMasterItemId = productionBillofMaterial.HeaderMasterItemId;                        
+                        productionWorkOrder.HeaderQuantity = productionBillofMaterial.HeaderQuantity;
                         productionWorkOrder.Notes = productionBillofMaterial.Notes;
                         productionWorkOrder.Total = productionBillofMaterial.Total;
 
@@ -919,6 +947,9 @@ namespace eShop.Controllers
                 productionWorkOrder.MasterRegionId,
                 productionWorkOrder.MasterBusinessUnitId,
                 productionWorkOrder.Notes,
+                productionWorkOrder.HeaderQuantity,
+                productionWorkOrder.HeaderMasterItemUnitId,
+                productionWorkOrder.HeaderMasterItemId,
                 Total = productionWorkOrder.Total.ToString("N2"),
                 productionWorkOrder.Date,
                 Currency = productionWorkOrder.MasterCurrency.Code + " : " + productionWorkOrder.Rate.ToString("N2")

@@ -44,6 +44,26 @@ namespace eShop.Models
         [Display(Name = "Wilayah")]
         public virtual MasterRegion MasterRegion { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Kode Produk")]
+        [Required(ErrorMessage = "Kode Produk harus diisi.")]
+        public int HeaderMasterItemId { get; set; }
+
+        [Display(Name = "Kode Produk")]
+        public virtual MasterItem HeaderMasterItem { get; set; }
+
+        [Display(Name = "Satuan")]
+        [Required(ErrorMessage = "Master Satuan harus diisi.")]
+        public int HeaderMasterItemUnitId { get; set; }
+
+        [Display(Name = "Satuan")]
+        public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
+
+        [Display(Name = "Quantity")]
+        [Required(ErrorMessage = "Quantity harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal HeaderQuantity { get; set; }
+
         [Display(Name = "Mata Uang")]
         [Required(ErrorMessage = "Mata Uang harus diisi.")]
         public int MasterCurrencyId { get; set; }
@@ -148,6 +168,26 @@ namespace eShop.Models
         [DatalistColumn]
         [Display(Name = "Wilayah")]
         public string MasterRegionCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kode Produk")]
+        [Required(ErrorMessage = "Kode Produk harus diisi.")]
+        public int HeaderMasterItemId { get; set; }
+
+        [Display(Name = "Kode Produk")]
+        public virtual MasterItem HeaderMasterItem { get; set; }
+
+        [Display(Name = "Satuan")]
+        [Required(ErrorMessage = "Master Satuan harus diisi.")]
+        public int HeaderMasterItemUnitId { get; set; }
+
+        [Display(Name = "Satuan")]
+        public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
+
+        [Display(Name = "Quantity")]
+        [Required(ErrorMessage = "Quantity harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal HeaderQuantity { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Gudang")]

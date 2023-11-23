@@ -96,8 +96,8 @@ namespace eShop.Controllers
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
                 MasterCurrencyId = masterCurrency.Id,
                 Rate = masterCurrency.Rate,
-                MasterUnitId = db.MasterUnits.FirstOrDefault().Id,
-               // MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
+                HeaderMasterItemId = db.MasterItems.FirstOrDefault().Id,
+                HeaderMasterItemUnitId = db.MasterItemUnits.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -118,8 +118,9 @@ namespace eShop.Controllers
                     productionBillofMaterial.Active = true;
                     productionBillofMaterial.MasterBusinessUnitId = 0;
                     productionBillofMaterial.MasterRegionId = 0;
-                   // productionBillofMaterial.MasterCustomerId = 0;
-                   // productionBillofMaterialt.MasterWarehouseId = 0;
+                    productionBillofMaterial.HeaderMasterItemUnitId = 0;
+                    productionBillofMaterial.HeaderMasterItemId = 0;
+
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -142,7 +143,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionBillofMaterialsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,Date,MasterBusinessUnitId,MasterRegionId,Quantity,MasterUnitId,Notes,Active,Created,Updated,UserId")] ProductionBillofMaterial productionBillofMaterial)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,HeaderQuantity,HeaderMasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] ProductionBillofMaterial productionBillofMaterial)
         {
             productionBillofMaterial.Created = DateTime.Now;
             productionBillofMaterial.Updated = DateTime.Now;
@@ -160,12 +161,12 @@ namespace eShop.Controllers
 
             db.Entry(productionBillofMaterial).State = EntityState.Unchanged;
             db.Entry(productionBillofMaterial).Property("Code").IsModified = true;
-            db.Entry(productionBillofMaterial).Property("Name").IsModified = true;
             db.Entry(productionBillofMaterial).Property("Date").IsModified = true;
             db.Entry(productionBillofMaterial).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(productionBillofMaterial).Property("MasterRegionId").IsModified = true;
-            db.Entry(productionBillofMaterial).Property("MasterUnitId").IsModified = true;
-            db.Entry(productionBillofMaterial).Property("Quantity").IsModified = true;
+            db.Entry(productionBillofMaterial).Property("HeaderMasterItemUnitId").IsModified = true;
+            db.Entry(productionBillofMaterial).Property("HeaderMasterItemId").IsModified = true;
+            db.Entry(productionBillofMaterial).Property("HeaderQuantity").IsModified = true;
             db.Entry(productionBillofMaterial).Property("Total").IsModified = true;
             db.Entry(productionBillofMaterial).Property("Notes").IsModified = true;
             db.Entry(productionBillofMaterial).Property("Active").IsModified = true;
@@ -271,7 +272,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionBillofMaterialsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,Date,MasterBusinessUnitId,MasterRegionId,Quantity,MasterUnitId,Notes,Active,Created,Updated,UserId")] ProductionBillofMaterial productionBillofMaterial)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,HeaderQuantity,HeaderMasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] ProductionBillofMaterial productionBillofMaterial)
         {
             productionBillofMaterial.Updated = DateTime.Now;
             productionBillofMaterial.UserId = User.Identity.GetUserId<int>();
@@ -288,13 +289,13 @@ namespace eShop.Controllers
 
             db.Entry(productionBillofMaterial).State = EntityState.Unchanged;
             db.Entry(productionBillofMaterial).Property("Code").IsModified = true;
-            db.Entry(productionBillofMaterial).Property("Name").IsModified = true;
             db.Entry(productionBillofMaterial).Property("Date").IsModified = true;
             db.Entry(productionBillofMaterial).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(productionBillofMaterial).Property("MasterRegionId").IsModified = true;
             db.Entry(productionBillofMaterial).Property("Total").IsModified = true;
-            db.Entry(productionBillofMaterial).Property("MasterUnitId").IsModified = true;
-            db.Entry(productionBillofMaterial).Property("Quantity").IsModified = true;
+            db.Entry(productionBillofMaterial).Property("HeaderMasterItemUnitId").IsModified = true;
+            db.Entry(productionBillofMaterial).Property("HeaderMasterItemId").IsModified = true;
+            db.Entry(productionBillofMaterial).Property("HeaderQuantity").IsModified = true;
             db.Entry(productionBillofMaterial).Property("Notes").IsModified = true;
             db.Entry(productionBillofMaterial).Property("Active").IsModified = true;
             db.Entry(productionBillofMaterial).Property("Updated").IsModified = true;
@@ -667,6 +668,32 @@ namespace eShop.Controllers
             return PartialView("../Manufacture/ProductionBillofMaterials/_DetailsGrid", db.ProductionBillofMaterialsDetails
                 .Where(x => x.ProductionBillofMaterialId == Id).ToList());
         }
+
+        //[HttpPost]
+        //[ValidateJsonAntiForgeryToken]
+        //[Authorize(Roles = "ProductionBillofMaterialsActive")]
+        //public JsonResult GetHeaderMasterUnit(int id)
+        //{
+        //    int headermasterItemUnitId = 0;
+        //    MasterItem masterItem = db.MasterItems.Find(id);
+
+        //    if (masterItem != null)
+        //    {
+        //        MasterItemUnit masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id && x.Default).FirstOrDefault();
+
+        //        if (masterItemUnit != null)
+        //            headermasterItemUnitId = masterItemUnit.Id;
+        //        else
+        //        {
+        //            masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id).FirstOrDefault();
+
+        //            if (masterItemUnit != null)
+        //                headermasterItemUnitId = masterItemUnit.Id;
+        //        }
+        //    }
+
+        //    return Json(headermasterItemUnitId);
+        //}
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]

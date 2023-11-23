@@ -10,6 +10,23 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
+    public enum EnumItemType
+    {
+        [Display(Name = "Persediaan")]
+        Inventory = 1,
+        [Display(Name = "Non Persediaan")]
+        NonInventory = 2,
+        [Display(Name = "Jasa")]
+        Service = 2 
+    }
+
+    public enum EnumInventoryPartType
+    {
+        [Display(Name = "Bahan Baku")]
+        RawMaterial = 1,
+        [Display(Name = "Diproduksi")]
+        CanBeProduced = 2
+    }
     public class MasterItem
     {
         [Key]
@@ -54,17 +71,28 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Display(Name = "Bahan Baku")]
-        public bool RawMaterial { get; set; }
+        [Required(ErrorMessage = "Jenis Barang harus diisi.")]
+        [Display(Name = "Jenis Barang")]
+        public EnumItemType ItemType { get; set; }
 
-        [Display(Name = "Bahan Setengah Jadi")]
-        public bool HalfFinishedGood { get; set; }
+        [Required(ErrorMessage = "Tipe Persediaan harus diisi.")]
+        [Display(Name = "Tipe Persediaan")]
+        public EnumInventoryPartType InventoryPartType { get; set; }
+
+        [Display(Name = "Default Discount (%)")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DefaultDiscountPercentage { get; set; }
+
+        [Display(Name = "Harga Beli")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal PurchasePrice { get; set; }
+
+        [Display(Name = "Pajak Penjualan dan Pembelian")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Vat { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
-
-        [Display(Name = "Barang Jadi")]
-        public bool FinishedGood { get; set; }
 
         [Display(Name = "Dibuat")]
         [DataType(DataType.DateTime)]
@@ -250,7 +278,7 @@ namespace eShop.Models
         public MasterItemUnitDatalist()
         {
             Url = "/DatalistFilters/AllMasterItemUnit";
-            Title = "Master Item";
+            Title = "Master Satuan";
             AdditionalFilters.Add("MasterUnitId");
 
             Filter.Sort = "MasterUnitCode";

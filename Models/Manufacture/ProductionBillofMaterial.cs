@@ -24,12 +24,6 @@ namespace eShop.Models
         public string Code { get; set; }
 
         [DatalistColumn]
-       // [Required(ErrorMessage = "Nama BOM Produksi harus diisi.")]
-        [Display(Name = "Nama")]
-        [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
-        public string Name { get; set; }
-
-        [DatalistColumn]
         [Display(Name = "Tanggal")]
         [Required(ErrorMessage = "Tanggal harus diisi.")]
         [DataType(DataType.Date)]
@@ -62,17 +56,25 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
-        [Display(Name = "Satuan")]
-        [Required(ErrorMessage = "Master Satuan harus diisi.")]
-        public int MasterUnitId { get; set; }
+        [DatalistColumn]
+        [Display(Name = "Kode Produk")]
+        [Required(ErrorMessage = "Kode Produk harus diisi.")]
+        public int HeaderMasterItemId { get; set; }
+
+        [Display(Name = "Kode Produk")]
+        public virtual MasterItem HeaderMasterItem { get; set; }
 
         [Display(Name = "Satuan")]
-        public virtual MasterUnit MasterUnit { get; set; }
+        [Required(ErrorMessage = "Master Satuan harus diisi.")]
+        public int HeaderMasterItemUnitId { get; set; }
+
+        [Display(Name = "Satuan")]
+        public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Quantity { get; set; }
+        public decimal HeaderQuantity { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
@@ -120,12 +122,6 @@ namespace eShop.Models
         public string Code { get; set; }
 
         [DatalistColumn]
-       // [Required(ErrorMessage = "Nama BOM Produksi harus diisi.")]
-        [Display(Name = "Nama")]
-        [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
-        public string Name { get; set; }
-
-        [DatalistColumn]
         [Display(Name = "Tanggal")]
         [Required(ErrorMessage = "Tanggal harus diisi.")]
         [DataType(DataType.Date)]
@@ -166,6 +162,28 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Kode Produk")]
+        [Required(ErrorMessage = "Kode Produk harus diisi.")]
+        public int HeaderMasterItemId { get; set; }
+
+        [Display(Name = "Kode Produk")]
+        public virtual MasterItem HeaderMasterItem { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Satuan")]
+        [Required(ErrorMessage = "Master Satuan harus diisi.")]
+        public int HeaderMasterItemUnitId { get; set; }
+
+        [Display(Name = "Satuan")]
+        public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Quantity")]
+        [Required(ErrorMessage = "Quantity harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal HeaderQuantity { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -194,7 +212,7 @@ namespace eShop.Models
         public AllProductionBillofMaterialDatalist()
         {
             Url = "/DatalistFilters/AllProductionBillofMaterial";
-            Title = "ProductionBillofMaterial";
+            Title = "Nomor Formula Produksi";
             AdditionalFilters.Add("MasterBusinessUnitId");
             AdditionalFilters.Add("MasterRegionId");
 
@@ -206,7 +224,7 @@ namespace eShop.Models
         public override IQueryable<ProductionBillofMaterialViewModel> GetModels()
         {
             return Context.Set<ProductionBillofMaterial>()
-               // .Where(x => !Context.Set<ProductionWorkOrder>().Where(p => p.Active == true && p.ProductionBillofMaterialId == x.Id).Any())
+                // .Where(x => !Context.Set<ProductionWorkOrder>().Where(p => p.Active == true && p.ProductionBillofMaterialId == x.Id).Any())
                 .Select(x => new ProductionBillofMaterialViewModel
                 {
                     Id = x.Id,
@@ -216,12 +234,14 @@ namespace eShop.Models
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterRegionId = x.MasterRegionId,
                     MasterRegion = x.MasterRegion,
+                    HeaderMasterItem = x.HeaderMasterItem,
+                    HeaderMasterItemUnitId = x.HeaderMasterItemUnitId,
                     Code = x.Code,
                     Date = x.Date,
                     Total = x.Total,
                     Active = x.Active,
 
-                });
+                }); ;
         }
     }
 

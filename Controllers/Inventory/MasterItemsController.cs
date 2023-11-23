@@ -98,6 +98,7 @@ namespace eShop.Controllers
         [Authorize(Roles = "MasterItemsAdd")]
         public ActionResult Create()
         {
+
             MasterItem masterItem = new MasterItem
             {
                 Code = "temp/" + Guid.NewGuid().ToString(),
@@ -105,7 +106,9 @@ namespace eShop.Controllers
                 MasterCategoryId = db.MasterCategories.FirstOrDefault().Id,
                 MasterBrandId = db.MasterBrands.FirstOrDefault().Id,
                 MasterSupplierId = db.MasterSuppliers.FirstOrDefault().Id,
-                Notes = "",
+                ItemType = EnumItemType.Inventory,
+                InventoryPartType = EnumInventoryPartType.RawMaterial,
+            Notes = "",
                 Active = false,
                 Created = DateTime.Now,
                 Updated = DateTime.Now,
@@ -167,7 +170,7 @@ namespace eShop.Controllers
         [HttpPost]
         [Authorize(Roles = "MasterItemsAdd")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,MasterCategoryId,MasterBrandId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] MasterItem masterItem)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,MasterCategoryId,MasterBrandId,MasterSupplierId,ItemType,InventoryPartType,Notes,Active,Created,Updated,UserId")] MasterItem masterItem)
         {
             masterItem.UserId = User.Identity.GetUserId<int>();
             masterItem.Created = DateTime.Now;

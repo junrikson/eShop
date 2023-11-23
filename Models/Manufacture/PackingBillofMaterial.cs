@@ -16,18 +16,12 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Nomor BOM Packing harus diisi.")]
+        [Required(ErrorMessage = "Nomor Formula Barang Jadi harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor BOM Packing")]
+        [Display(Name = "Nomor Formula Barang Jadi")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "PackingBillofMaterials", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
-
-        [DatalistColumn]
-       // [Required(ErrorMessage = "Nama BOM Produksi harus diisi.")]
-        [Display(Name = "Nama")]
-        [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
-        public string Name { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Tanggal")]
@@ -62,32 +56,25 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
-        //[DatalistColumn]
-        //[Display(Name = "Kode Customer")]
-        //[Required(ErrorMessage = "Kode Customer harus diisi.")]
-        //public int MasterCustomerId { get; set; }
+        [DatalistColumn]
+        [Display(Name = "Kode Produk")]
+        [Required(ErrorMessage = "Kode Produk harus diisi.")]
+        public int HeaderMasterItemId { get; set; }
 
-        //[Display(Name = "Kode Customer")]
-        //public virtual MasterCustomer MasterCustomer { get; set; }
-
-        //[Display(Name = "Gudang")]
-        //[Required(ErrorMessage = "Gudang harus diisi.")]
-        //public int MasterWarehouseId { get; set; }
-
-        //[Display(Name = "Gudang")]
-        //public virtual MasterWarehouse MasterWarehouse { get; set; }
+        [Display(Name = "Kode Produk")]
+        public virtual MasterItem HeaderMasterItem { get; set; }
 
         [Display(Name = "Satuan")]
         [Required(ErrorMessage = "Master Satuan harus diisi.")]
-        public int MasterUnitId { get; set; }
+        public int HeaderMasterItemUnitId { get; set; }
 
         [Display(Name = "Satuan")]
-        public virtual MasterUnit MasterUnit { get; set; }
+        public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Quantity { get; set; }
+        public decimal HeaderQuantity { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
@@ -127,18 +114,12 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Nomor BOM Packing harus diisi.")]
+        [Required(ErrorMessage = "Nomor Formula Barang Jadi harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor")]
+        [Display(Name = "Nomor Formula Barang Jadi")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "PackingBillofMaterials", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
-
-        [DatalistColumn]
-       // [Required(ErrorMessage = "Nama BOM Produksi harus diisi.")]
-        [Display(Name = "Nama")]
-        [StringLength(256, ErrorMessage = "Maksimal 256 huruf.")]
-        public string Name { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Tanggal")]
@@ -181,28 +162,25 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
-        //[DatalistColumn]
-        //[Display(Name = "Kode Customer")]
-        //[Required(ErrorMessage = "Kode Customer harus diisi.")]
-        //public int MasterCustomerId { get; set; }
+        [DatalistColumn]
+        [Display(Name = "Kode Produk")]
+        [Required(ErrorMessage = "Kode Produk harus diisi.")]
+        public int HeaderMasterItemId { get; set; }
 
-        //[Display(Name = "Kode Customer")]
-        //public virtual MasterCustomer MasterCustomer { get; set; }
+        [Display(Name = "Kode Produk")]
+        public virtual MasterItem HeaderMasterItem { get; set; }
 
-        //[DatalistColumn]
-        //[Display(Name = "Customer")]
-        //public string MasterCustomerCode { get; set; }
+        [Display(Name = "Satuan")]
+        [Required(ErrorMessage = "Master Satuan harus diisi.")]
+        public int HeaderMasterItemUnitId { get; set; }
 
-        //[Display(Name = "Gudang")]
-        //[Required(ErrorMessage = "Gudang harus diisi.")]
-        //public int MasterWarehouseId { get; set; }
+        [Display(Name = "Satuan")]
+        public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
 
-        //[Display(Name = "Gudang")]
-        //public virtual MasterWarehouse MasterWarehouse { get; set; }
-
-        //[DatalistColumn]
-        //[Display(Name = "Gudang")]
-        //public string MasterWarehouseCode { get; set; }
+        [Display(Name = "Quantity")]
+        [Required(ErrorMessage = "Quantity harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal HeaderQuantity { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]

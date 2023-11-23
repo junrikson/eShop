@@ -36,13 +36,6 @@
                                             @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-                                    @*<div class="form-group">
-            <div class="col-md-12">
-                @Html.LabelFor(model => model.MasterWarehouseId)
-                @Html.TextBoxFor(model => model.MasterWarehouse.Code, new { disabled = "disabled", @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
                                     <div class="form-group">
                                         <div class="col-md-10">
                                             @Html.LabelFor(model => model.Code)
@@ -59,9 +52,21 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            @Html.LabelFor(model => model.Name)
-                                            @Html.TextBoxFor(model => model.Name, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                            @Html.LabelFor(model => model.HeaderMasterItemId)
+                                            @Html.TextBoxFor(model => model.HeaderMasterItem.Name, new { disabled = "disabled", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HeaderMasterItemId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-9">
+                                            @Html.LabelFor(model => model.HeaderMasterItemUnitId)
+                                            @Html.TextBoxFor(model => model.HeaderMasterItemUnit.MasterUnit.Code, new { disabled = "disabled", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HeaderMasterItemUnitId, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-3 text-center">
+                                            @Html.LabelFor(model => model.HeaderQuantity)
+                                            @Html.TextBoxFor(model => model.HeaderQuantity, new { disabled = "disabled", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HeaderQuantity, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -71,13 +76,6 @@
                                             @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-                                    @*<div class="form-group">
-            <div class="col-md-12">
-                @Html.LabelFor(model => model.MasterCustomerId)
-                @Html.TextBoxFor(model => model.MasterCustomer.Code, new { disabled = "disabled", @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
                                     <div class="form-group">
                                         <div class="col-md-12">
                                             @Html.LabelFor(model => model.Notes)

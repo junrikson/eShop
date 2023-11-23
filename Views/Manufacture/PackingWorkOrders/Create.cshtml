@@ -51,13 +51,6 @@
                                     @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
-                            @*<div class="form-group">
-            <div class="col-md-12">
-                @Html.LabelFor(model => model.MasterWarehouseId)
-                @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterBusinessRegionWarehouseDatalist(), new { @class = "datalist2" })
-                @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
                             <div class="form-group">
                                 <div class="col-md-10">
                                     @Html.LabelFor(model => model.Code)
@@ -82,31 +75,30 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    @Html.LabelFor(model => model.Name)
-                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
                                     @Html.LabelFor(model => model.Date)
                                     @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-9">
-                                    @Html.LabelFor(model => model.MasterUnitId)
-                                    @Html.DatalistFor(model => model.MasterUnitId, new eShop.Models.MasterUnitDatalist(), new { @class = "datalist2" })
-                                    @Html.ValidationMessageFor(model => model.MasterUnitId, "", new { @class = "text-danger" })
-                                </div>
-                                <div class="col-md-3 text-center">
-                                    @Html.LabelFor(model => model.Quantity)
-                                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control total2" } })
-                                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.HeaderMasterItemId)
+                                    @Html.DatalistFor(model => model.HeaderMasterItemId, new eShop.Models.MasterBusinessRegionItemDatalist(), new { @class = "datalist2" })
+                                    @Html.ValidationMessageFor(model => model.HeaderMasterItemId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <div class="col-md-9">
+                                    @Html.LabelFor(model => model.HeaderMasterItemUnitId)
+                                    @Html.DatalistFor(model => model.HeaderMasterItemUnitId, new eShop.Models.MasterItemUnitDatalist(), new { @class = "datalist2" })
+                                    @Html.ValidationMessageFor(model => model.HeaderMasterItemUnitId, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    @Html.LabelFor(model => model.HeaderQuantity)
+                                    @Html.EditorFor(model => model.HeaderQuantity, new { htmlAttributes = new { @class = "form-control total2" } })
+                                    @Html.ValidationMessageFor(model => model.HeaderQuantity, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="col-md-12">
                                     @Html.LabelFor(model => model.Notes)
@@ -450,8 +442,9 @@
                     options.success = function (obj) {
                         document.getElementById('MasterRegionId').value = obj.MasterRegionId;
                         document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                       // document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
-                        //document.getElementById('MasterUnitId').value = obj.MasterUnitId;
+                        document.getElementById('HeaderMasterItemId').value = obj.HeaderMasterItemId;
+                        document.getElementById('HeaderMasterItemUnitId').value = obj.HeaderMasterItemUnitId;
+                        document.getElementById('HeaderQuantity').value = obj.HeaderQuantity;
                         document.getElementById('Notes').value = obj.Notes;
                         document.getElementById('Total').value = obj.Total;
                         document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;

@@ -96,8 +96,8 @@ namespace eShop.Controllers
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
                 MasterCurrencyId = masterCurrency.Id,
                 Rate = masterCurrency.Rate,
-                MasterUnitId = db.MasterUnits.FirstOrDefault().Id,
-                // MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
+                HeaderMasterItemId = db.MasterItems.FirstOrDefault().Id,
+                HeaderMasterItemUnitId = db.MasterUnits.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -118,8 +118,8 @@ namespace eShop.Controllers
                     packingBillofMaterial.Active = true;
                     packingBillofMaterial.MasterBusinessUnitId = 0;
                     packingBillofMaterial.MasterRegionId = 0;
-                    // packingBillofMaterial.MasterCustomerId = 0;
-                    // packingBillofMaterialt.MasterWarehouseId = 0;
+                    packingBillofMaterial.HeaderMasterItemId = 0;
+                    packingBillofMaterial.HeaderMasterItemUnitId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -142,12 +142,12 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PackingBillofMaterialsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,Date,MasterBusinessUnitId,MasterRegionId,Quantity,MasterUnitId,Notes,Active,Created,Updated,UserId")] PackingBillofMaterial packingBillofMaterial)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,HeaderQuantity,HeaderMasterItemId,HeaderMasterItemUnitId,Total,Notes,Active,Created,Updated,UserId")] PackingBillofMaterial packingBillofMaterial)
         {
             packingBillofMaterial.Created = DateTime.Now;
             packingBillofMaterial.Updated = DateTime.Now;
             packingBillofMaterial.UserId = User.Identity.GetUserId<int>();
-            packingBillofMaterial.Total = SharedFunctions.GetTotalSalesRequest(db, packingBillofMaterial.Id);
+            packingBillofMaterial.Total = SharedFunctions.GetTotalPackingBillofMaterial(db, packingBillofMaterial.Id);
             packingBillofMaterial.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(packingBillofMaterial.Code)) packingBillofMaterial.Code = packingBillofMaterial.Code.ToUpper();
@@ -160,12 +160,12 @@ namespace eShop.Controllers
 
             db.Entry(packingBillofMaterial).State = EntityState.Unchanged;
             db.Entry(packingBillofMaterial).Property("Code").IsModified = true;
-            db.Entry(packingBillofMaterial).Property("Name").IsModified = true;
             db.Entry(packingBillofMaterial).Property("Date").IsModified = true;
             db.Entry(packingBillofMaterial).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(packingBillofMaterial).Property("MasterRegionId").IsModified = true;
-            db.Entry(packingBillofMaterial).Property("MasterUnitId").IsModified = true;
-            db.Entry(packingBillofMaterial).Property("Quantity").IsModified = true;
+            db.Entry(packingBillofMaterial).Property("HeaderMasterItemId").IsModified = true;
+            db.Entry(packingBillofMaterial).Property("HeaderMasterItemUnitId").IsModified = true;
+            db.Entry(packingBillofMaterial).Property("HeaderQuantity").IsModified = true;
             db.Entry(packingBillofMaterial).Property("Total").IsModified = true;
             db.Entry(packingBillofMaterial).Property("Notes").IsModified = true;
             db.Entry(packingBillofMaterial).Property("Active").IsModified = true;
@@ -196,7 +196,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", packingBillofMaterial.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, packingBillofMaterial.Id).ToString("N2");
+                ViewBag.Total = SharedFunctions.GetTotalPackingBillofMaterial(db, packingBillofMaterial.Id).ToString("N2");
 
                 return View("../Manufacture/PackingBillofMaterials/Create", packingBillofMaterial);
             }
@@ -260,7 +260,7 @@ namespace eShop.Controllers
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
             ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", packingBillofMaterial.MasterBusinessUnitId);
-            ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, packingBillofMaterial.Id).ToString("N2");
+            ViewBag.Total = SharedFunctions.GetTotalPackingBillofMaterial(db, packingBillofMaterial.Id).ToString("N2");
 
             return View("../Manufacture/PackingBillofMaterials/Edit", packingBillofMaterial);
         }
@@ -271,11 +271,11 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PackingBillofMaterialsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,Date,MasterBusinessUnitId,MasterRegionId,Quantity,MasterUnitId,Notes,Active,Created,Updated,UserId")] PackingBillofMaterial packingBillofMaterial)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,HeaderQuantity,HeaderMasterItemId,HeaderMasterItemUnitId,Total,Notes,Active,Created,Updated,UserId")] PackingBillofMaterial packingBillofMaterial)
         {
             packingBillofMaterial.Updated = DateTime.Now;
             packingBillofMaterial.UserId = User.Identity.GetUserId<int>();
-            packingBillofMaterial.Total = SharedFunctions.GetTotalSalesRequest(db, packingBillofMaterial.Id);
+            packingBillofMaterial.Total = SharedFunctions.GetTotalPackingBillofMaterial(db, packingBillofMaterial.Id);
             packingBillofMaterial.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
 
             if (!string.IsNullOrEmpty(packingBillofMaterial.Code)) packingBillofMaterial.Code = packingBillofMaterial.Code.ToUpper();
@@ -288,13 +288,13 @@ namespace eShop.Controllers
 
             db.Entry(packingBillofMaterial).State = EntityState.Unchanged;
             db.Entry(packingBillofMaterial).Property("Code").IsModified = true;
-            db.Entry(packingBillofMaterial).Property("Name").IsModified = true;
             db.Entry(packingBillofMaterial).Property("Date").IsModified = true;
             db.Entry(packingBillofMaterial).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(packingBillofMaterial).Property("MasterRegionId").IsModified = true;
             db.Entry(packingBillofMaterial).Property("Total").IsModified = true;
-            db.Entry(packingBillofMaterial).Property("MasterUnitId").IsModified = true;
-            db.Entry(packingBillofMaterial).Property("Quantity").IsModified = true;
+            db.Entry(packingBillofMaterial).Property("HeaderMasterItemId").IsModified = true;
+            db.Entry(packingBillofMaterial).Property("HeaderMasterItemUnitId").IsModified = true;
+            db.Entry(packingBillofMaterial).Property("HeaderQuantity").IsModified = true;
             db.Entry(packingBillofMaterial).Property("Notes").IsModified = true;
             db.Entry(packingBillofMaterial).Property("Active").IsModified = true;
             db.Entry(packingBillofMaterial).Property("Updated").IsModified = true;
@@ -324,7 +324,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", packingBillofMaterial.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalSalesRequest(db, packingBillofMaterial.Id).ToString("N2");
+                ViewBag.Total = SharedFunctions.GetTotalPackingBillofMaterial(db, packingBillofMaterial.Id).ToString("N2");
 
                 return View("../Manufacture/PackingBillofMaterials/Edit", packingBillofMaterial);
             }
@@ -510,7 +510,7 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         PackingBillofMaterial packingBillofMaterial = db.PackingBillofMaterials.Find(packingBillofMaterialDetails.PackingBillofMaterialId);
-                        packingBillofMaterial.Total = SharedFunctions.GetTotalSalesRequest(db, packingBillofMaterial.Id, packingBillofMaterialDetails.Id) + packingBillofMaterialDetails.Total;
+                        packingBillofMaterial.Total = SharedFunctions.GetTotalPackingBillofMaterial(db, packingBillofMaterial.Id, packingBillofMaterialDetails.Id) + packingBillofMaterialDetails.Total;
 
                         db.Entry(packingBillofMaterial).State = EntityState.Modified;
                         db.SaveChanges();
@@ -670,6 +670,32 @@ namespace eShop.Controllers
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "PackingWorkOrdersActive")]
+        public JsonResult GetHeaderMasterUnit(int id)
+        {
+            int headermasterItemUnitId = 0;
+            MasterItem masterItem = db.MasterItems.Find(id);
+
+            if (masterItem != null)
+            {
+                MasterItemUnit masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id && x.Default).FirstOrDefault();
+
+                if (masterItemUnit != null)
+                    headermasterItemUnitId = masterItemUnit.Id;
+                else
+                {
+                    masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id).FirstOrDefault();
+
+                    if (masterItemUnit != null)
+                        headermasterItemUnitId = masterItemUnit.Id;
+                }
+            }
+
+            return Json(headermasterItemUnitId);
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "PackingBillofMaterialsActive")]
         public JsonResult GetMasterUnit(int id)
         {
@@ -751,7 +777,7 @@ namespace eShop.Controllers
                             db.SaveChanges();
                         }
 
-                        packingBillofMaterial.Total = SharedFunctions.GetTotalSalesRequest(db, packingBillofMaterial.Id);
+                        packingBillofMaterial.Total = SharedFunctions.GetTotalPackingBillofMaterial(db, packingBillofMaterial.Id);
                         db.Entry(packingBillofMaterial).State = EntityState.Modified;
                         db.SaveChanges();
 

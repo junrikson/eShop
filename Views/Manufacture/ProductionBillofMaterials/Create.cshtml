@@ -1,7 +1,7 @@
 ﻿@model eShop.Models.ProductionBillofMaterial
 
 @{
-    ViewBag.Title = "Produksi Bill of Material";
+    ViewBag.Title = "Formula Produksi";
     ViewBag.Current = "ProductionBillofMaterials";
 }
 
@@ -27,7 +27,7 @@
                     <div class="box-header with-bRequest">
                         <i class="fa fa-plus"></i>
 
-                        <h3 class="box-title">Add - Produksi Bill of Material</h3>
+                        <h3 class="box-title">Add - Formula Produksi</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -51,13 +51,6 @@
                                     @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
-                            @*<div class="form-group">
-            <div class="col-md-12">
-                @Html.LabelFor(model => model.MasterWarehouseId)
-                @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterBusinessRegionWarehouseDatalist(), new { @class = "datalist2" })
-                @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
                             <div class="form-group">
                                 <div class="col-md-10">
                                     @Html.LabelFor(model => model.Code)
@@ -74,28 +67,28 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    @Html.LabelFor(model => model.Name)
-                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
                                     @Html.LabelFor(model => model.Date)
                                     @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.HeaderMasterItemId)
+                                    @Html.DatalistFor(model => model.HeaderMasterItemId, new eShop.Models.MasterBusinessRegionItemDatalist(), new { @class = "datalist2" })
+                                    @Html.ValidationMessageFor(model => model.HeaderMasterItemId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div class="col-md-9">
-                                    @Html.LabelFor(model => model.MasterUnitId)
-                                    @Html.DatalistFor(model => model.MasterUnitId, new eShop.Models.MasterUnitDatalist(), new { @class = "datalist2" })
-                                    @Html.ValidationMessageFor(model => model.MasterUnitId, "", new { @class = "text-danger" })
+                                    @Html.LabelFor(model => model.HeaderMasterItemUnitId)
+                                    @Html.DatalistFor(model => model.HeaderMasterItemUnitId, new eShop.Models.MasterItemUnitDatalist(), new { @class = "datalist2" })
+                                    @Html.ValidationMessageFor(model => model.HeaderMasterItemUnitId, "", new { @class = "text-danger" })
                                 </div>
                                 <div class="col-md-3 text-center">
-                                    @Html.LabelFor(model => model.Quantity)
-                                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control total2" } })
-                                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                    @Html.LabelFor(model => model.HeaderQuantity)
+                                    @Html.EditorFor(model => model.HeaderQuantity, new { htmlAttributes = new { @class = "form-control total2" } })
+                                    @Html.ValidationMessageFor(model => model.HeaderQuantity, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
@@ -134,13 +127,16 @@
                             <h3 class="box-title">Details</h3>
                         </div>
                         <div class="text-right col-md-10">
-                             <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "ProductionBillofMaterials")" ">
+                            <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "ProductionBillofMaterials")" ">
                                 @Model.MasterCurrency.Code : @Model.Rate.ToString("N2")
                             </button>
                             <label style="font-weight: bold">TOTAL :</label>
                             <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
                             <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "ProductionBillofMaterials")">
                                 <i class="fa fa-plus"></i> Add
+                            </button>
+                            <button id="btnAddBiaya" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "ProductionBillofMaterials")">
+                                <i class="fa fa-plus"></i> Add Biaya
                             </button>
                             <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
                                 <i class="fa fa-trash"></i> Delete
@@ -243,7 +239,7 @@
         $('#btnAdd').click(function (event) {
             event.preventDefault();
             if ($("#MasterBusinessUnitId").val() === "") {
-                bootbox.alert("Unit Bisnis belum dipilih!");
+                bootbox.alert("Unit Bisnis belum dipilih90!");
             }
             else if ($("#MasterRegionId").val() === "") {
                 bootbox.alert("Wilayah belum dipilih!");
@@ -294,9 +290,38 @@
                         };
                         $.ajax(options);
                     }).change();
+
                 });
             }
         });
+
+        $("#HeaderMasterItemId").on("change", function () {
+            var Id = $("#HeaderMasterItemId").val();
+            var data = { id: Id };
+            var options = {};
+
+            options.url = "/ProductionBillofMaterials/GetHeaderMasterUnit";
+            options.type = "POST";
+            options.headers = headers;
+            options.data = JSON.stringify(data);
+            options.contentType = "application/json";
+            options.dataType = "json";
+            options.success = function (msg) {
+                document.getElementById('HeaderMasterItemUnitId').value = msg;
+
+                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                    new MvcDatalist(element).reload();
+                });
+            };
+            options.error = function () {
+                document.getElementById('HeaderMasterItemUnitId').value = 0;
+
+                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                    new MvcDatalist(element).reload();
+                });
+            };
+            $.ajax(options);
+        }).change();
 
         $('#btnChangeCurrency').click(function (event) {
             event.preventDefault();
@@ -551,7 +576,7 @@
 
                 if (masterRegionId !== 0 && masterRegionId !== '') {
                     if ($("#MasterBusinessUnitId").val() === "") {
-                        bootbox.alert("Unit Bisnis belum dipilih!");
+                        bootbox.alert("Unit Bisnis belum dipilih756!");
                         document.getElementById('MasterRegionId').value = "0";
                     }
                     else {
