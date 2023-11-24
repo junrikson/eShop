@@ -22,7 +22,7 @@
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     @Html.HiddenFor(model => model.Id)
-                    @Html.HiddenFor(model => model.MaterialSlipId)
+                    @Html.HiddenFor(model => model.FinishedGoodSlipId)
                     <div class="form-group">
                         <div class="col-md-12">
                             @Html.LabelFor(model => model.MasterItemId)
@@ -42,13 +42,13 @@
                             @Html.ValidationMessageFor(model => model.MasterItemUnitId, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <div class="col-md-12">
                             @Html.LabelFor(model => model.Price)
                             @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control total2" } })
                             @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
                         </div>
-                    </div>
+                    </div>*@
                     <div class="form-group">
                         <div class="col-md-12">
                             @Html.LabelFor(model => model.Notes)

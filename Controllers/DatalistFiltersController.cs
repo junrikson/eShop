@@ -456,6 +456,18 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllOutstandingMaterialSlipRetur(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitId = 0)
+        {
+            MaterialSlipReturDatalist datalist = new MaterialSlipReturDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterRegionId"] = masterRegionId;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = masterBusinessUnitId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllAuthorization(DatalistFilter filter)
         {
             AuthorizationDatalist datalist = new AuthorizationDatalist(db);

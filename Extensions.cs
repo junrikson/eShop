@@ -283,6 +283,28 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalMaterialReturn(ApplicationDbContext db, int materialReturnId, int? materialReturnDetailsId = null)
+        {
+            decimal total = 0;
+            List<MaterialReturnDetails> materialReturnDetails = null;
+
+            if (materialReturnDetailsId == null)
+            {
+                materialReturnDetails = db.MaterialReturnsDetails.Where(x => x.MaterialReturnId == materialReturnId).ToList();
+            }
+            else
+            {
+                materialReturnDetails = db.MaterialReturnsDetails.Where(x => x.MaterialReturnId == materialReturnId && x.Id != materialReturnDetailsId).ToList();
+            }
+
+            if (materialReturnDetails != null)
+            {
+                total = materialReturnDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
         public static decimal GetTotalFinishedGoodSlip(ApplicationDbContext db, int finishedGoodSlipId, int? finishedGoodSlipDetailsId = null)
         {
             decimal total = 0;

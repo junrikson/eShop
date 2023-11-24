@@ -170,6 +170,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlipDetails> MaterialSlipsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlip> FinishedGoodSlips { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlipDetails> FinishedGoodSlipsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MaterialReturn> MaterialReturns { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MaterialReturnDetails> MaterialReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustment> StockAdjustments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustmentDetails> StockAdjustmentsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.WarehouseTransfer> WarehouseTransfers { get; set; }

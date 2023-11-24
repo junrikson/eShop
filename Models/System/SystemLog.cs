@@ -294,7 +294,11 @@ namespace eShop.Models
         [Display(Name = "Penyelesaian Barang Jadi")]
         FinishedGoodSlip = 143,
         [Display(Name = "Penyelesaian Barang Jadi Detail")]
-        FinishedGoodSlipDetails = 144
+        FinishedGoodSlipDetails = 144,
+        [Display(Name = "Retur Bahan Baku")]
+        MaterialReturn = 141,
+        [Display(Name = "Retur Bahan Baku Detail")]
+        MaterialReturnDetails = 142
 
 
 

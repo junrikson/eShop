@@ -310,6 +310,7 @@
     <Compile Include="Controllers\Inventory\WarehouseTransfersController.cs" />
     <Compile Include="Controllers\Inventory\StockAdjustmentsController.cs" />
     <Compile Include="Controllers\Manufacture\FinishedGoodSlipsController.cs" />
+    <Compile Include="Controllers\Manufacture\MaterialReturnsController.cs" />
     <Compile Include="Controllers\Manufacture\MaterialSlipsController.cs" />
     <Compile Include="Controllers\Manufacture\StandardProductCostsController.cs" />
     <Compile Include="Controllers\Manufacture\PackingWorkOrdersController.cs" />
@@ -360,6 +361,7 @@
     <Compile Include="Controllers\AR\AdvanceRepaymentsController.cs" />
     <Compile Include="Models\AR\Repayment.cs" />
     <Compile Include="Models\Manufacture\FinishedGoodSlip.cs" />
+    <Compile Include="Models\Manufacture\MaterialReturn.cs" />
     <Compile Include="Models\Manufacture\PackingBillofMaterial.cs" />
     <Compile Include="Models\Manufacture\PackingWorkOrder.cs" />
     <Compile Include="Models\Manufacture\MaterialSlip.cs" />
@@ -7236,6 +7238,16 @@
     <Content Include="Views\Manufacture\FinishedGoodSlips\Create.cshtml" />
     <Content Include="Views\Manufacture\FinishedGoodSlips\Edit.cshtml" />
     <Content Include="Views\Manufacture\FinishedGoodSlips\Index.cshtml" />
+    <Content Include="Views\Manufacture\MaterialReturns\_ChangeCurrency.cshtml" />
+    <Content Include="Views\Manufacture\MaterialReturns\_Details.cshtml" />
+    <Content Include="Views\Manufacture\MaterialReturns\_DetailsCreate.cshtml" />
+    <Content Include="Views\Manufacture\MaterialReturns\_DetailsEdit.cshtml" />
+    <Content Include="Views\Manufacture\MaterialReturns\_DetailsGrid.cshtml" />
+    <Content Include="Views\Manufacture\MaterialReturns\_IndexGrid.cshtml" />
+    <Content Include="Views\Manufacture\MaterialReturns\_ViewGrid.cshtml" />
+    <Content Include="Views\Manufacture\MaterialReturns\Create.cshtml" />
+    <Content Include="Views\Manufacture\MaterialReturns\Edit.cshtml" />
+    <Content Include="Views\Manufacture\MaterialReturns\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -281,5 +281,16 @@ namespace eShop.Properties {
                 return ((string)(this["FinishedGoodSlipCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("MR/")]
+        public string MaterialReturnCode
+        {
+            get
+            {
+                return ((string)(this["MaterialReturnCode"]));
+            }
+        }
     }
 }

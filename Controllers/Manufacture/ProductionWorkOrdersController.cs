@@ -772,7 +772,7 @@ namespace eShop.Controllers
                             if (masterItemUnit == null)
                                 productionWorkOrderDetails.Total = 0;
                             else
-                                productionWorkOrderDetails.Total = productionWorkOrderDetails.Quantity * productionWorkOrderDetails.Price * masterItemUnit.MasterUnit.Ratio * productionWorkOrder.Rate ;
+                                productionWorkOrderDetails.Total = productionWorkOrderDetails.Quantity * productionWorkOrderDetails.Price * masterItemUnit.MasterUnit.Ratio * productionWorkOrder.Rate  ;
 
                             db.Entry(productionWorkOrderDetails).State = EntityState.Modified;
                             db.SaveChanges();
