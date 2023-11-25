@@ -38,10 +38,8 @@
                                 <div class="nav-tabs-custom">
                                     <ul class="nav nav-tabs">
                                         <li class="active"><a href="#tab_1" data-toggle="tab">General</a></li>
-                                        <li><a href="#tab_2" data-toggle="tab">Sales / Purchase</a></li>
-                                        <li><a href="#tab_3" data-toggle="tab">Account</a></li>
-                                        <li><a href="#tab_4" data-toggle="tab">Image</a></li>
-                                        <li><a href="#tab_5" data-toggle="tab">Others</a></li>
+                                        <li><a href="#tab_2" data-toggle="tab">Image</a></li>
+
                                     </ul>
 
 
@@ -91,12 +89,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-md-6 hideable" id="ItemType">
-                                                @Html.LabelFor(model => model.ItemType)
-                                                @Html.EnumDropDownListFor(model => model.ItemType, htmlAttributes: new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => model.ItemType, "", new { @class = "text-danger" })
-                                            </div>
-                                            <div class="col-md-6 hideable" id="InventoryPartType">
+                                            <div class="col-md-12 hideable" id="InventoryPartType">
                                                 @Html.LabelFor(model => model.InventoryPartType)
                                                 @Html.EnumDropDownListFor(model => model.InventoryPartType, htmlAttributes: new { @class = "form-control" })
                                                 @Html.ValidationMessageFor(model => model.InventoryPartType, "", new { @class = "text-danger" })
@@ -120,46 +113,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- /.Tab 2 Start -->
-                                    <div class="tab-pane form-horizontal" id="tab_2">
-                                        <h2 class="box-title">Sales Information</h2>
-                                        <div class="form-group">
-                                            <div class="col-md-12">
-                                                @Html.LabelFor(model => model.DefaultDiscountPercentage)
-                                                @Html.EditorFor(model => model.DefaultDiscountPercentage, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.DefaultDiscountPercentage, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <h2 class="box-title">Purchase Information</h2>
-                                        <div class="form-group">
-                                            <div class="col-md-12">
-                                                @Html.LabelFor(model => model.PurchasePrice)
-                                                @Html.EditorFor(model => model.PurchasePrice, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <h2 class="box-title">Sales and Purchase Tax</h2>
-                                        <div class="form-group">
-                                            <div class="col-md-12">
-                                                @Html.LabelFor(model => model.Vat)
-                                                @Html.EditorFor(model => model.Vat, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.Vat, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.Tab 2 end -->
-                                    <!-- /.Tab 3 Start -->
-                                    <div class="tab-pane form-horizontal" id="tab_3">
-                                        <div class="form-group">
-                                            <h2 class="box-title">Sales Information</h2>
-                                            <div class="col-md-12">
-                                                @Html.LabelFor(model => model.Name)
-                                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.Tab 3 end -->
                                 </div>
                                 </div>
                             </div>

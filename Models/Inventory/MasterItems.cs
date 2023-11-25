@@ -10,22 +10,12 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public enum EnumItemType
-    {
-        [Display(Name = "Persediaan")]
-        Inventory = 1,
-        [Display(Name = "Non Persediaan")]
-        NonInventory = 2,
-        [Display(Name = "Jasa")]
-        Service = 2 
-    }
-
     public enum EnumInventoryPartType
     {
         [Display(Name = "Bahan Baku")]
         RawMaterial = 1,
-        [Display(Name = "Diproduksi")]
-        CanBeProduced = 2
+        [Display(Name = "Barang Jadi")]
+        FinishedGood = 2
     }
     public class MasterItem
     {
@@ -70,10 +60,6 @@ namespace eShop.Models
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
-
-        [Required(ErrorMessage = "Jenis Barang harus diisi.")]
-        [Display(Name = "Jenis Barang")]
-        public EnumItemType ItemType { get; set; }
 
         [Required(ErrorMessage = "Tipe Persediaan harus diisi.")]
         [Display(Name = "Tipe Persediaan")]

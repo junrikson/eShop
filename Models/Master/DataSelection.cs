@@ -1637,10 +1637,6 @@ namespace eShop.Models
         public string MasterItemName { get; set; }
 
         [DatalistColumn]
-        [Display(Name = "Jenis Barang")]
-        public EnumItemType ItemType { get; set; }
-
-        [DatalistColumn]
         [Display(Name = "Tipe Persediaan")]
         public EnumInventoryPartType InventoryPartType { get; set; }
 
@@ -1687,8 +1683,7 @@ namespace eShop.Models
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,
                     MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
-                    ItemType = x.MasterItem.ItemType,
-                    InventoryPartType = x.MasterItem.InventoryPartType,
+                   // InventoryPartType = x.MasterItem.InventoryPartType,
                     Active = x.MasterItem.Active
                     
 

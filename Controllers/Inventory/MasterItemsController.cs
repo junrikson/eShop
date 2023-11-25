@@ -106,7 +106,6 @@ namespace eShop.Controllers
                 MasterCategoryId = db.MasterCategories.FirstOrDefault().Id,
                 MasterBrandId = db.MasterBrands.FirstOrDefault().Id,
                 MasterSupplierId = db.MasterSuppliers.FirstOrDefault().Id,
-                ItemType = EnumItemType.Inventory,
                 InventoryPartType = EnumInventoryPartType.RawMaterial,
             Notes = "",
                 Active = false,
