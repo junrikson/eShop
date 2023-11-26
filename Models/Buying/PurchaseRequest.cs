@@ -72,6 +72,10 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
+        [Display(Name = "DiscountGlobal")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountGlobal { get; set; }
+
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
@@ -224,7 +228,7 @@ namespace eShop.Models
         public virtual MasterItem MasterItem { get; set; }
 
         [Display(Name = "Satuan")]
-        [Required(ErrorMessage = "Master Item harus diisi.")]
+        [Required(ErrorMessage = "Master Satuan harus diisi.")]
         public int MasterItemUnitId { get; set; }
 
         [Display(Name = "Satuan")]
@@ -243,6 +247,14 @@ namespace eShop.Models
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        [Display(Name = "PercentageDiscount")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal PercentageDiscount { get; set; }
+
+        [Display(Name = "CashDiscount")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal CashDiscount { get; set; }
 
         [Display(Name = "Nilai")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]

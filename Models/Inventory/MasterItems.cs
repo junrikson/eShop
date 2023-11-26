@@ -10,6 +10,13 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
+    public enum EnumInventoryPartType
+    {
+        [Display(Name = "Bahan Baku")]
+        RawMaterial = 1,
+        [Display(Name = "Barang Jadi")]
+        FinishedGood = 2
+    }
     public class MasterItem
     {
         [Key]
@@ -53,6 +60,22 @@ namespace eShop.Models
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        [Required(ErrorMessage = "Tipe Persediaan harus diisi.")]
+        [Display(Name = "Tipe Persediaan")]
+        public EnumInventoryPartType InventoryPartType { get; set; }
+
+        [Display(Name = "Default Discount (%)")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DefaultDiscountPercentage { get; set; }
+
+        [Display(Name = "Harga Beli")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal PurchasePrice { get; set; }
+
+        [Display(Name = "Pajak Penjualan dan Pembelian")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Vat { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
@@ -241,8 +264,51 @@ namespace eShop.Models
         public MasterItemUnitDatalist()
         {
             Url = "/DatalistFilters/AllMasterItemUnit";
-            Title = "Master Item";
-            AdditionalFilters.Add("MasterUnitId");
+            Title = "Master Satuan";
+            AdditionalFilters.Add("MasterItemId");
+
+            Filter.Sort = "MasterUnitCode";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterItemUnitViewModel> GetModels()
+        {
+            return Context.Set<MasterItemUnit>()
+                .Select(x => new MasterItemUnitViewModel
+                {
+                    Id = x.Id,
+                    MasterItemId = x.MasterItemId,
+                    MasterItem = x.MasterItem,
+                    MasterUnitId = x.MasterUnitId,
+                    MasterUnit = x.MasterUnit,
+                    MasterUnitCode = x.MasterUnit.Code,
+                    MasterUnitRatio = x.MasterUnit.Ratio,
+                    MasterUnitNotes = x.MasterUnit.Notes,
+                    Default = x.Default,
+                    Active = x.Active,
+                    Created = x.Created,
+                    Updated = x.Updated,
+                    UserId = x.UserId
+                });
+        }
+    }
+
+    public class HeaderMasterItemUnitDatalist : MvcDatalist<MasterItemUnitViewModel>
+    {
+        private DbContext Context { get; }
+
+        public HeaderMasterItemUnitDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.MasterUnitCode;
+        }
+        public HeaderMasterItemUnitDatalist()
+        {
+            Url = "/DatalistFilters/AllHeaderMasterItemUnit";
+            Title = "Master Satuan";
+            AdditionalFilters.Add("HeaderMasterItemId");
 
             Filter.Sort = "MasterUnitCode";
             Filter.Order = DatalistSortOrder.Asc;

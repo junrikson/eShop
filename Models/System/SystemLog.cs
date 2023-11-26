@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace eShop.Models
 {
@@ -266,8 +267,41 @@ namespace eShop.Models
         MasterBusinessRegionCategory = 129,
         [Display(Name = "Unit Merek")]
         MasterBusinessRegionBrand = 130,
-        [Display(Name = "Unit Merek")]
-        MasterBusinessRegionItem = 131
+        [Display(Name = "Unit Region")]
+        MasterBusinessRegionItem = 131,
+        [Display(Name = "Production Bill of Material")]
+        ProductionBillOfMaterial = 132,
+        [Display(Name = "Production Bill of Material Details")]
+        ProductionBillOfMaterialDetails = 133,
+        [Display(Name = "Packing Bill of Material")]
+        PackingBillOfMaterial = 134,
+        [Display(Name = "Packing Bill of Material Details")]
+        PackingBillOfMaterialDetails = 135,
+        [Display(Name = "Packing Work Order Material")]
+        PackingWorkOrder = 136,
+        [Display(Name = "Packing Work Order Material Details")]
+        PackingWorkOrderDetails = 137,
+        [Display(Name = "Produktion Work Order Material")]
+        ProductionWorkOrder = 138,
+        [Display(Name = "Produktion Work Order Material Details")]
+        ProductionWorkOrderDetails = 139,
+        [Display(Name = "Standar Biaya Produksi")]
+        StandardProductCosts = 140,
+        [Display(Name = "Pengambilan Bahan Baku")]
+        MaterialSlip = 141,
+        [Display(Name = "Pengambilan Bahan Baku Detail")]
+        MaterialSlipDetails = 142,
+        [Display(Name = "Penyelesaian Barang Jadi")]
+        FinishedGoodSlip = 143,
+        [Display(Name = "Penyelesaian Barang Jadi Detail")]
+        FinishedGoodSlipDetails = 144,
+        [Display(Name = "Retur Bahan Baku")]
+        MaterialReturn = 141,
+        [Display(Name = "Retur Bahan Baku Detail")]
+        MaterialReturnDetails = 142
+
+
+
     }
 
     public enum EnumActions

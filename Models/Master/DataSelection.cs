@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Runtime.Remoting.Messaging;
 using System.Web.Mvc;
 
@@ -1635,6 +1636,10 @@ namespace eShop.Models
         [Display(Name = "Name")]
         public string MasterItemName { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Tipe Persediaan")]
+        public EnumInventoryPartType InventoryPartType { get; set; }
+
         [Display(Name = "Keterangan")]
         public string MasterItemNotes { get; set; }
 
@@ -1667,6 +1672,7 @@ namespace eShop.Models
         public override IQueryable<MasterBusinessRegionItemViewModel> GetModels()
         {
             return Context.Set<MasterBusinessRegionItem>()
+          //.Where(x => !Context.Set<Sale>().Where(p => p.Active == true && p.SalesOrderId == x.Id).Any())
                 .Select(x => new MasterBusinessRegionItemViewModel
                 {
                     Id = x.MasterItemId,
@@ -1677,7 +1683,9 @@ namespace eShop.Models
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,
                     MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
+                   // InventoryPartType = x.MasterItem.InventoryPartType,
                     Active = x.MasterItem.Active
+                    
 
                 });
         }

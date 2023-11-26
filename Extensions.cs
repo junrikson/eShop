@@ -173,6 +173,91 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalProductionBillOfMaterial(ApplicationDbContext db, int productionBillofMaterialId, int? productionBillofMaterialDetailsId = null)
+        {
+            decimal total = 0;
+            List<ProductionBillOfMaterialDetails> productionBillofMaterialDetails = null;
+            if (productionBillofMaterialDetailsId == null)
+            {
+                productionBillofMaterialDetails = db.ProductionBillOfMaterialsDetails.Where(x => x.ProductionBillOfMaterialId == productionBillofMaterialId).ToList();
+            }
+            else
+            {
+                productionBillofMaterialDetails = db.ProductionBillOfMaterialsDetails.Where(x => x.ProductionBillOfMaterialId == productionBillofMaterialId && x.Id != productionBillofMaterialDetailsId).ToList();
+            }
+            if (productionBillofMaterialDetails != null)
+            {
+                total = productionBillofMaterialDetails.Sum(y => y.Total);
+            }
+            return total;
+        }
+
+        public static decimal GetTotalMaterialSlip(ApplicationDbContext db, int materialSlipId, int? materialSlipDetailsId = null)
+        {
+            decimal total = 0;
+            List<MaterialSlipDetails> materialSlipDetails = null;
+
+            if (materialSlipDetailsId == null)
+            {
+                materialSlipDetails = db.MaterialSlipsDetails.Where(x => x.MaterialSlipId == materialSlipId).ToList();
+            }
+            else
+            {
+                materialSlipDetails = db.MaterialSlipsDetails.Where(x => x.MaterialSlipId == materialSlipId && x.Id != materialSlipDetailsId).ToList();
+            }
+
+            if (materialSlipDetails != null)
+            {
+                total = materialSlipDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+        public static decimal GetTotalMaterialReturn(ApplicationDbContext db, int materialReturnId, int? materialReturnDetailsId = null)
+        {
+            decimal total = 0;
+            List<MaterialReturnDetails> materialReturnDetails = null;
+
+            if (materialReturnDetailsId == null)
+            {
+                materialReturnDetails = db.MaterialReturnsDetails.Where(x => x.MaterialReturnId == materialReturnId).ToList();
+            }
+            else
+            {
+                materialReturnDetails = db.MaterialReturnsDetails.Where(x => x.MaterialReturnId == materialReturnId && x.Id != materialReturnDetailsId).ToList();
+            }
+
+            if (materialReturnDetails != null)
+            {
+                total = materialReturnDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
+        public static decimal GetTotalFinishedGoodSlip(ApplicationDbContext db, int finishedGoodSlipId, int? finishedGoodSlipDetailsId = null)
+        {
+            decimal total = 0;
+            List<FinishedGoodSlipDetails> finishedGoodSlipDetails = null;
+
+            if (finishedGoodSlipDetailsId == null)
+            {
+                finishedGoodSlipDetails = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlipId).ToList();
+            }
+            else
+            {
+                finishedGoodSlipDetails = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlipId && x.Id != finishedGoodSlipDetailsId).ToList();
+            }
+
+            if (finishedGoodSlipDetails != null)
+            {
+                total = finishedGoodSlipDetails.Sum(y => y.Total);
+            }
+
+            return total;
+        }
+
 
         public static void CreatePurchaseJournal(ApplicationDbContext db, Purchase purchase)
         {

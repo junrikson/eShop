@@ -1,8 +1,8 @@
 ﻿@model eShop.Models.Sale
 
 @{
-    ViewBag.Title = "Sales Request";
-    ViewBag.Current = "SalesRequests";
+    ViewBag.Title = "Sale";
+    ViewBag.Current = "Sales";
 }
 
 
@@ -16,7 +16,7 @@
                             <div class="box-header with-border">
                                 <i class="fa fa-plus"></i>
 
-                                <h3 class="box-title">Details - Sales Order</h3>
+                                <h3 class="box-title">Details - Sale</h3>
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
@@ -41,9 +41,9 @@
                                             @*@Html.LabelFor(model => model.SalesRequestId)
                                             @Html.DatalistFor(model => model.SalesRequestId, new eShop.Models.OutstandingSalesRequestDatalist())
                                             @Html.ValidationMessageFor(model => model.SalesRequestId, "", new { @class = "text-danger" })*@
-                                            @Html.LabelFor(model => model.SalesRequestId)
-                                            @Html.TextBoxFor(model => model.SalesRequest.Code, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.SalesRequestId, "", new { @class = "text-danger" })
+                                            @Html.LabelFor(model => model.SalesOrderId)
+                                            @Html.TextBoxFor(model => model.SalesOrder.Code, new { disabled = "disabled", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                     <div class="form-group">

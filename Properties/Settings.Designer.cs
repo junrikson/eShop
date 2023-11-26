@@ -215,5 +215,82 @@ namespace eShop.Properties {
                 return ((string)(this["SalesReturnCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BOMPD/")]
+        public string ProductionBillOfMaterialCode
+        {
+            get
+            {
+                return ((string)(this["ProductionBillOfMaterialCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BOMPK/")]
+        public string PackingBillOfMaterialCode
+        {
+            get
+            {
+                return ((string)(this["PackingBillOfMaterialCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SPKPK/")]
+        public string PackingWorkOrderCode
+        {
+            get
+            {
+                return ((string)(this["PackingWorkOrderCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SPKPD/")]
+        public string ProductionWorkOrderCode
+        {
+            get
+            {
+                return ((string)(this["ProductionWorkOrderCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("MS/")]
+        public string MaterialSlipCode
+        {
+            get
+            {
+                return ((string)(this["MaterialSlipCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("FGS/")]
+        public string FinishedGoodSlipCode
+        {
+            get
+            {
+                return ((string)(this["FinishedGoodSlipCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("MR/")]
+        public string MaterialReturnCode
+        {
+            get
+            {
+                return ((string)(this["MaterialReturnCode"]));
+            }
+        }
     }
 }
