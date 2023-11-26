@@ -82,12 +82,6 @@ namespace eShop.Models
         [Display(Name = "Nomor Perintah Kerja Produksi")]
         public virtual ProductionWorkOrder ProductionWorkOrder { get; set; }
 
-        [Display(Name = "Nomor Perintah Kerja Barang Jadi")]
-        public int? PackingWorkOrderId { get; set; }
-
-        [Display(Name = "Nomor Perintah Kerja Barang Jadi")]
-        public virtual PackingWorkOrder PackingWorkOrder { get; set; }
-
         [Display(Name = "Gudang")]
         [Required(ErrorMessage = "Gudang harus diisi.")]
         public int MasterWarehouseId { get; set; }

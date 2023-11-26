@@ -158,14 +158,11 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterWarehouse> MasterWarehouses { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterSalesPerson> MasterSalesPersons { get; set; }        
         public System.Data.Entity.DbSet<eShop.Models.StandardProductCost> StandardProductCosts { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.ProductionBillofMaterial> ProductionBillofMaterials { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.ProductionBillofMaterialDetails> ProductionBillofMaterialsDetails { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.PackingBillofMaterial> PackingBillofMaterials { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.PackingBillofMaterialDetails> PackingBillofMaterialsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterial> ProductionBillOfMaterials { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterialDetails> ProductionBillOfMaterialsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrder> ProductionWorkOrders { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderBillOfMaterial> ProductionWorkOrderBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderDetails> ProductionWorkOrdersDetails { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.PackingWorkOrder> PackingWorkOrders { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.PackingWorkOrderDetails> PackingWorkOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlip> MaterialSlips { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlipDetails> MaterialSlipsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlip> FinishedGoodSlips { get; set; }
@@ -290,6 +287,8 @@ namespace eShop.Models
             modelBuilder.Entity<JournalDetails>().Property(x => x.Credit).HasPrecision(18, 2);
             modelBuilder.Entity<Journal>().Property(x => x.Debit).HasPrecision(18, 2);
             modelBuilder.Entity<Journal>().Property(x => x.Credit).HasPrecision(18, 2);
+            modelBuilder.Entity<ProductionBillOfMaterialDetails>().Property(x => x.Quantity).HasPrecision(18, 10);
+            modelBuilder.Entity<ProductionWorkOrderDetails>().Property(x => x.Quantity).HasPrecision(18, 10);
         }
     }
 }

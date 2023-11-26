@@ -1,8 +1,8 @@
-﻿@model eShop.Models.ProductionBillofMaterial
+﻿@model eShop.Models.ProductionBillOfMaterial
 
 @{
-    ViewBag.Title = "Production Bill of Material";
-    ViewBag.Current = "ProductionBillofMaterials";
+    ViewBag.Title = "Production Bill Of Material";
+    ViewBag.Current = "ProductionBillOfMaterials";
 }
 
 
@@ -16,7 +16,7 @@
                             <div class="box-header with-border">
                                 <i class="fa fa-plus"></i>
 
-                                <h3 class="box-title">Details - Produksi Bill of Material</h3>
+                                <h3 class="box-title">Details - Produksi Bill Of Material</h3>
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
@@ -100,7 +100,7 @@
                                     <h3 class="box-title">Details</h3>
                                 </div>
                                 <div class="text-right col-md-10">
-                                    <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "ProductionBillofMaterials")" disabled>
+                                    <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "ProductionBillOfMaterials")" disabled>
                                         @Model.MasterCurrency.Code : @Model.Rate.ToString("N2")
                                     </button>
                                     <label style="font-weight: bold">TOTAL :</label>

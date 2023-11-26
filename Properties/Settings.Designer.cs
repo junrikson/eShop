@@ -219,22 +219,22 @@ namespace eShop.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("BOMPD/")]
-        public string ProductionBillofMaterialCode
+        public string ProductionBillOfMaterialCode
         {
             get
             {
-                return ((string)(this["ProductionBillofMaterialCode"]));
+                return ((string)(this["ProductionBillOfMaterialCode"]));
             }
         }
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("BOMPK/")]
-        public string PackingBillofMaterialCode
+        public string PackingBillOfMaterialCode
         {
             get
             {
-                return ((string)(this["PackingBillofMaterialCode"]));
+                return ((string)(this["PackingBillOfMaterialCode"]));
             }
         }
 

@@ -1,8 +1,8 @@
-﻿@model eShop.Models.ProductionBillofMaterial
+﻿@model eShop.Models.ProductionBillOfMaterial
 
 @{
     ViewBag.Title = "Formula Produksi";
-    ViewBag.Current = "ProductionBillofMaterials";
+    ViewBag.Current = "ProductionBillOfMaterials";
 }
 
 @section Styles {
@@ -220,9 +220,9 @@
         });
 
         Inputmask.extendAliases({
-            'myNum10': {
+            'myNum3': {
                 alias: 'currency',
-                digits: 10,
+                digits: 3,
                 digitsOptional: false,
                 integerDigits: 12,
                 prefix: '',
@@ -243,7 +243,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?productionBillofMaterialId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?productionBillOfMaterialId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -258,7 +258,7 @@
                         $.validator.unobtrusive.parse($el);
                     });
 
-                    Inputmask("myNum").mask("#Quantity");
+                    Inputmask("myNum3").mask("#Quantity");
                     Inputmask("myNum").mask("#Price");
 
                     $("#MasterItemId").on("change", function () {
@@ -266,7 +266,7 @@
                         var data = { id: Id };
                         var options = {};
 
-                        options.url = "/ProductionBillofMaterials/GetMasterUnit";
+                        options.url = "/ProductionBillOfMaterials/GetMasterUnit";
                         options.type = "POST";
                         options.headers = headers;
                         options.data = JSON.stringify(data);
@@ -294,7 +294,7 @@
 
         $('#btnChangeCurrency').click(function (event) {
             event.preventDefault();
-            var url = $(this).attr("href") + "?productionBillofMaterialId=" + $("input#Id").val();
+            var url = $(this).attr("href") + "?productionBillOfMaterialId=" + $("input#Id").val();
             $.get(url, function (data) {
                 $('#detailsContainer').html(data);
                 $('#detailsModal').modal('show');
@@ -314,7 +314,7 @@
                     var data = { Id: id };
                     var options = {};
 
-                    options.url = "/ProductionBillofMaterials/GetCurrencyRate";
+                    options.url = "/ProductionBillOfMaterials/GetCurrencyRate";
                     options.type = "POST";
                     options.headers = headers;
                     options.data = JSON.stringify(data);
@@ -343,10 +343,10 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { productionBillofMaterialId: $("#Id").val() };
+            var param = { productionBillOfMaterialId: $("#Id").val() };
             var options = {};
 
-            options.url = "/ProductionBillofMaterials/GetTotal";
+            options.url = "/ProductionBillOfMaterials/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -369,10 +369,10 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { productionBillofMaterialId: $("#Id").val() };
+            var param = { productionBillOfMaterialId: $("#Id").val() };
             var options = {};
 
-            options.url = "/ProductionBillofMaterials/GetTotal";
+            options.url = "/ProductionBillOfMaterials/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -397,10 +397,10 @@
 
             document.querySelector('#btnChangeCurrency').innerHTML = data.Message;
 
-            var param = { productionBillofMaterialId: $("#Id").val() };
+            var param = { productionBillOfMaterialId: $("#Id").val() };
             var options = {};
 
-            options.url = "/ProductionBillofMaterials/GetTotal";
+            options.url = "/ProductionBillOfMaterials/GetTotal";
             options.type = "POST";
             options.headers = headers;
             options.data = JSON.stringify(param);
@@ -433,7 +433,7 @@
                     bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/ProductionBillofMaterials/DetailsBatchDelete";
+                            options.url = "/ProductionBillOfMaterials/DetailsBatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);
@@ -448,7 +448,7 @@
                                 var param = { productionBillofMaterialId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/ProductionBillofMaterials/GetTotal";
+                                options2.url = "/ProductionBillOfMaterials/GetTotal";
                                 options2.type = "POST";
                                 options2.headers = headers;
                                 options2.data = JSON.stringify(param);
@@ -495,7 +495,7 @@
                             $.validator.unobtrusive.parse($el);
                         });
 
-                        Inputmask("myNum").mask("#Quantity");
+                        Inputmask("myNum3").mask("#Quantity");
                         Inputmask("myNum").mask("#Price");
 
                         $("#MasterItemId").on("change", function () {
@@ -503,7 +503,7 @@
                             var data = { id: Id };
                             var options = {};
 
-                            options.url = "/ProductionBillofMaterials/GetMasterUnit";
+                            options.url = "/ProductionBillOfMaterials/GetMasterUnit";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(data);

@@ -265,7 +265,50 @@ namespace eShop.Models
         {
             Url = "/DatalistFilters/AllMasterItemUnit";
             Title = "Master Satuan";
-            AdditionalFilters.Add("MasterUnitId");
+            AdditionalFilters.Add("MasterItemId");
+
+            Filter.Sort = "MasterUnitCode";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterItemUnitViewModel> GetModels()
+        {
+            return Context.Set<MasterItemUnit>()
+                .Select(x => new MasterItemUnitViewModel
+                {
+                    Id = x.Id,
+                    MasterItemId = x.MasterItemId,
+                    MasterItem = x.MasterItem,
+                    MasterUnitId = x.MasterUnitId,
+                    MasterUnit = x.MasterUnit,
+                    MasterUnitCode = x.MasterUnit.Code,
+                    MasterUnitRatio = x.MasterUnit.Ratio,
+                    MasterUnitNotes = x.MasterUnit.Notes,
+                    Default = x.Default,
+                    Active = x.Active,
+                    Created = x.Created,
+                    Updated = x.Updated,
+                    UserId = x.UserId
+                });
+        }
+    }
+
+    public class HeaderMasterItemUnitDatalist : MvcDatalist<MasterItemUnitViewModel>
+    {
+        private DbContext Context { get; }
+
+        public HeaderMasterItemUnitDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.MasterUnitCode;
+        }
+        public HeaderMasterItemUnitDatalist()
+        {
+            Url = "/DatalistFilters/AllHeaderMasterItemUnit";
+            Title = "Master Satuan";
+            AdditionalFilters.Add("HeaderMasterItemId");
 
             Filter.Sort = "MasterUnitCode";
             Filter.Order = DatalistSortOrder.Asc;

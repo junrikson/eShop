@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public class ProductionBillofMaterial
+    public class ProductionBillOfMaterial
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -20,7 +20,7 @@ namespace eShop.Models
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Nomor BOM Produksi")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "ProductionBillofMaterials", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
+        [Remote("IsCodeExists", "ProductionBillOfMaterials", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
 
         [DatalistColumn]
@@ -44,13 +44,6 @@ namespace eShop.Models
         [Display(Name = "Wilayah")]
         public virtual MasterRegion MasterRegion { get; set; }
 
-        [Display(Name = "Mata Uang")]
-        [Required(ErrorMessage = "Mata Uang harus diisi.")]
-        public int MasterCurrencyId { get; set; }
-
-        [Display(Name = "Mata Uang")]
-        public virtual MasterCurrency MasterCurrency { get; set; }
-
         [Display(Name = "Rate")]
         [Required(ErrorMessage = "Rate harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
@@ -59,22 +52,17 @@ namespace eShop.Models
         [DatalistColumn]
         [Display(Name = "Kode Produk")]
         [Required(ErrorMessage = "Kode Produk harus diisi.")]
-        public int HeaderMasterItemId { get; set; }
+        public int MasterItemId { get; set; }
 
         [Display(Name = "Kode Produk")]
-        public virtual MasterItem HeaderMasterItem { get; set; }
+        public virtual MasterItem MasterItem { get; set; }
 
         [Display(Name = "Satuan")]
         [Required(ErrorMessage = "Master Satuan harus diisi.")]
-        public int HeaderMasterItemUnitId { get; set; }
+        public int MasterItemUnitId { get; set; }
 
         [Display(Name = "Satuan")]
-        public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
-
-        [Display(Name = "Quantity")]
-        [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal HeaderQuantity { get; set; }
+        public virtual MasterItemUnit MasterItemUnit { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
@@ -107,7 +95,7 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class ProductionBillofMaterialViewModel
+    public class ProductionBillOfMaterialViewModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -118,7 +106,7 @@ namespace eShop.Models
         [Index("IX_Code", Order = 1, IsUnique = true)]
         [Display(Name = "Nomor")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "ProductionBillofMaterials", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
+        [Remote("IsCodeExists", "ProductionBillOfMaterials", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
 
         [DatalistColumn]
@@ -170,13 +158,12 @@ namespace eShop.Models
         [Display(Name = "Kode Produk")]
         public virtual MasterItem HeaderMasterItem { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Satuan")]
         [Required(ErrorMessage = "Master Satuan harus diisi.")]
-        public int HeaderMasterItemUnitId { get; set; }
+        public int MasterItemUnitId { get; set; }
 
         [Display(Name = "Satuan")]
-        public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
+        public virtual MasterItemUnit MasterItemUnit { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Quantity")]
@@ -199,19 +186,19 @@ namespace eShop.Models
         public bool Active { get; set; }
     }
 
-    public class AllProductionBillofMaterialDatalist : MvcDatalist<ProductionBillofMaterialViewModel>
+    public class ProductionBillOfMaterialDatalist : MvcDatalist<ProductionBillOfMaterialViewModel>
     {
         private DbContext Context { get; }
 
-        public AllProductionBillofMaterialDatalist(DbContext context)
+        public ProductionBillOfMaterialDatalist(DbContext context)
         {
             Context = context;
 
             GetLabel = (model) => model.Code;
         }
-        public AllProductionBillofMaterialDatalist()
+        public ProductionBillOfMaterialDatalist()
         {
-            Url = "/DatalistFilters/AllProductionBillofMaterial";
+            Url = "/DatalistFilters/AllProductionBillOfMaterial";
             Title = "Nomor Formula Produksi";
             AdditionalFilters.Add("MasterBusinessUnitId");
             AdditionalFilters.Add("MasterRegionId");
@@ -221,11 +208,11 @@ namespace eShop.Models
             Filter.Rows = 10;
         }
 
-        public override IQueryable<ProductionBillofMaterialViewModel> GetModels()
+        public override IQueryable<ProductionBillOfMaterialViewModel> GetModels()
         {
-            return Context.Set<ProductionBillofMaterial>()
+            return Context.Set<ProductionBillOfMaterial>()
                 // .Where(x => !Context.Set<ProductionWorkOrder>().Where(p => p.Active == true && p.ProductionBillofMaterialId == x.Id).Any())
-                .Select(x => new ProductionBillofMaterialViewModel
+                .Select(x => new ProductionBillOfMaterialViewModel
                 {
                     Id = x.Id,
                     MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
@@ -234,8 +221,8 @@ namespace eShop.Models
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterRegionId = x.MasterRegionId,
                     MasterRegion = x.MasterRegion,
-                    HeaderMasterItem = x.HeaderMasterItem,
-                    HeaderMasterItemUnitId = x.HeaderMasterItemUnitId,
+                    HeaderMasterItem = x.MasterItem,
+                    MasterItemUnitId = x.MasterItemUnitId,
                     Code = x.Code,
                     Date = x.Date,
                     Total = x.Total,
@@ -245,18 +232,18 @@ namespace eShop.Models
         }
     }
 
-        public class ProductionBillofMaterialDetails
+        public class ProductionBillOfMaterialDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Display(Name = "Production Bill of Material")]
+        [Display(Name = "Production Bill Of Material")]
         [Required(ErrorMessage = "Nomor BOM harus diisi.")]
-        public int ProductionBillofMaterialId { get; set; }
+        public int ProductionBillOfMaterialId { get; set; }
 
-        [Display(Name = "Production Bill of Material")]
-        public virtual ProductionBillofMaterial ProductionBillofMaterial { get; set; }
+        [Display(Name = "Production Bill Of Material")]
+        public virtual ProductionBillOfMaterial ProductionBillOfMaterial { get; set; }
 
         [Display(Name = "Master Item")]
         [Required(ErrorMessage = "Master Item harus diisi.")]

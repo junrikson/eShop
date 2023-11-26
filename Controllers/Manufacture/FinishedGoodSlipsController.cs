@@ -855,9 +855,6 @@ namespace eShop.Controllers
                         FinishedGoodSlipDetails finishedGoodSlipDetails = new FinishedGoodSlipDetails
                         {
                             FinishedGoodSlipId = finishedGoodSlip.Id,
-                            MasterItemId = productionWorkOrder.HeaderMasterItemId,
-                            MasterItemUnitId = productionWorkOrder.HeaderMasterItemUnitId,
-                            Quantity = productionWorkOrder.HeaderQuantity,
                             // Properti lainnya dapat diisi sesuai kebutuhan
                             Created = DateTime.Now,
                             Updated = DateTime.Now,
@@ -871,92 +868,8 @@ namespace eShop.Controllers
                         finishedGoodSlip.ProductionWorkOrderId = productionWorkOrder.Id;
                         finishedGoodSlip.MasterBusinessUnitId = productionWorkOrder.MasterBusinessUnitId;
                         finishedGoodSlip.MasterRegionId = productionWorkOrder.MasterRegionId;
-                        finishedGoodSlip.MasterCurrencyId = productionWorkOrder.MasterCurrencyId;
-                        finishedGoodSlip.Rate = productionWorkOrder.Rate;
                         finishedGoodSlip.Notes = productionWorkOrder.Notes;
-                        finishedGoodSlip.Total = productionWorkOrder.Total;
-
-                        db.Entry(finishedGoodSlip).State = EntityState.Modified;
-                        db.SaveChanges();
-
-                        dbTran.Commit();
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-
-            return Json(new
-            {
-                finishedGoodSlip.MasterRegionId,
-                finishedGoodSlip.MasterBusinessUnitId,
-                finishedGoodSlip.MasterWarehouseId,
-                finishedGoodSlip.Notes,
-                Total = finishedGoodSlip.Total.ToString("N2"),
-                finishedGoodSlip.Date,
-                Currency = finishedGoodSlip.MasterCurrency.Code + " : " + finishedGoodSlip.Rate.ToString("N2")
-            });
-        }
-
-
-
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "FinishedGoodSlipsActive")]
-        public JsonResult PopulatePackingDetails(int finishedGoodSlipid, int packingWorkOrderId)
-        {
-            FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(finishedGoodSlipid);
-            PackingWorkOrder packingWorkOrder = db.PackingWorkOrders.Find(packingWorkOrderId);
-
-            if (finishedGoodSlip != null && packingWorkOrder != null)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var remove = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlip.Id).ToList();
-
-                        if (remove != null)
-                        {
-                            db.FinishedGoodSlipsDetails.RemoveRange(remove);
-                            db.SaveChanges();
-                        }
-
-                        var packingWorkOrdersDetails = db.PackingWorkOrdersDetails.Where(x => x.PackingWorkOrderId == packingWorkOrder.Id).ToList();
-
-                        if (packingWorkOrdersDetails != null)
-                        {
-                            foreach (PackingWorkOrderDetails packingWorkOrderDetails in packingWorkOrdersDetails)
-                            {
-                                FinishedGoodSlipDetails finishedGoodSlipDetails = new FinishedGoodSlipDetails
-                                {
-                                    FinishedGoodSlipId = finishedGoodSlip.Id,
-                                    MasterItemId = packingWorkOrderDetails.MasterItemId,
-                                    MasterItemUnitId = packingWorkOrderDetails.MasterItemUnitId,
-                                    Quantity = packingWorkOrderDetails.Quantity,
-                                    Price = packingWorkOrderDetails.Price,
-                                    Total = packingWorkOrderDetails.Total,
-                                    Notes = packingWorkOrderDetails.Notes,
-                                    Created = DateTime.Now,
-                                    Updated = DateTime.Now,
-                                    UserId = User.Identity.GetUserId<int>()
-                                };
-
-                                db.FinishedGoodSlipsDetails.Add(finishedGoodSlipDetails);
-                                db.SaveChanges();
-                            }
-                        }
-
-                        finishedGoodSlip.PackingWorkOrderId = packingWorkOrder.Id;
-                        finishedGoodSlip.MasterBusinessUnitId = packingWorkOrder.MasterBusinessUnitId;
-                        finishedGoodSlip.MasterRegionId = packingWorkOrder.MasterRegionId;
-                        finishedGoodSlip.MasterCurrencyId = packingWorkOrder.MasterCurrencyId;
-                        finishedGoodSlip.Rate = packingWorkOrder.Rate;
-                        finishedGoodSlip.Notes = packingWorkOrder.Notes;
-                        finishedGoodSlip.Total = packingWorkOrder.Total;
+                        //finishedGoodSlip.Total = productionWorkOrder.Total;
 
                         db.Entry(finishedGoodSlip).State = EntityState.Modified;
                         db.SaveChanges();

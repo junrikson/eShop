@@ -871,8 +871,8 @@ namespace eShop.Controllers
                                     MasterItemId = productionWorkOrderDetails.MasterItemId,
                                     MasterItemUnitId = productionWorkOrderDetails.MasterItemUnitId,
                                     Quantity = productionWorkOrderDetails.Quantity,
-                                    Price = productionWorkOrderDetails.Price,
-                                    Total = productionWorkOrderDetails.Total,
+                                    //Price = productionWorkOrderDetails.Price,
+                                    //Total = productionWorkOrderDetails.Total,
                                     Notes = productionWorkOrderDetails.Notes,
                                     Created = DateTime.Now,
                                     Updated = DateTime.Now,
@@ -887,13 +887,8 @@ namespace eShop.Controllers
                         materialSlip.ProductionWorkOrderId = productionWorkOrder.Id;
                         materialSlip.MasterBusinessUnitId = productionWorkOrder.MasterBusinessUnitId;
                         materialSlip.MasterRegionId = productionWorkOrder.MasterRegionId;
-                        materialSlip.MasterCurrencyId = productionWorkOrder.MasterCurrencyId;
-                        materialSlip.HeaderMasterItemUnitId = productionWorkOrder.HeaderMasterItemUnitId;
-                        materialSlip.HeaderMasterItemId = productionWorkOrder.HeaderMasterItemId;
-                        materialSlip.HeaderQuantity = productionWorkOrder.HeaderQuantity;
-                        materialSlip.Rate = productionWorkOrder.Rate;
                         materialSlip.Notes = productionWorkOrder.Notes;
-                        materialSlip.Total = productionWorkOrder.Total;
+                        //materialSlip.Total = productionWorkOrder.Total;
 
                         db.Entry(materialSlip).State = EntityState.Modified;
                         db.SaveChanges();
@@ -923,93 +918,7 @@ namespace eShop.Controllers
             });
         }
 
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "MaterialSlipsActive")]
-        public JsonResult PopulatePackingDetails(int materialSlipid, int packingWorkOrderId)
-        {
-            MaterialSlip materialSlip = db.MaterialSlips.Find(materialSlipid);
-            PackingWorkOrder packingWorkOrder = db.PackingWorkOrders.Find(packingWorkOrderId);
-
-            if (materialSlip != null && packingWorkOrder != null)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var remove = db.MaterialSlipsDetails.Where(x => x.MaterialSlipId == materialSlip.Id).ToList();
-
-                        if (remove != null)
-                        {
-                            db.MaterialSlipsDetails.RemoveRange(remove);
-                            db.SaveChanges();
-                        }
-
-                        var packingWorkOrdersDetails = db.PackingWorkOrdersDetails.Where(x => x.PackingWorkOrderId == packingWorkOrder.Id).ToList();
-
-                        if (packingWorkOrdersDetails != null)
-                        {
-                            foreach (PackingWorkOrderDetails packingWorkOrderDetails in packingWorkOrdersDetails)
-                            {
-                                MaterialSlipDetails materialSlipDetails = new MaterialSlipDetails
-                                {
-                                    MaterialSlipId = materialSlip.Id,
-                                    MasterItemId = packingWorkOrderDetails.MasterItemId,
-                                    MasterItemUnitId = packingWorkOrderDetails.MasterItemUnitId,
-                                    Quantity = packingWorkOrderDetails.Quantity,
-                                    Price = packingWorkOrderDetails.Price,
-                                    Total = packingWorkOrderDetails.Total,
-                                    Notes = packingWorkOrderDetails.Notes,
-                                    Created = DateTime.Now,
-                                    Updated = DateTime.Now,
-                                    UserId = User.Identity.GetUserId<int>()
-                                };
-
-                                db.MaterialSlipsDetails.Add(materialSlipDetails);
-                                db.SaveChanges();
-                            }
-                        }
-
-                        materialSlip.PackingWorkOrderId = packingWorkOrder.Id;
-                        materialSlip.MasterBusinessUnitId = packingWorkOrder.MasterBusinessUnitId;
-                        materialSlip.MasterRegionId = packingWorkOrder.MasterRegionId;
-                        materialSlip.MasterCurrencyId = packingWorkOrder.MasterCurrencyId;
-                        materialSlip.HeaderMasterItemUnitId = packingWorkOrder.HeaderMasterItemUnitId;
-                        materialSlip.HeaderMasterItemId = packingWorkOrder.HeaderMasterItemId;
-                        materialSlip.HeaderQuantity = packingWorkOrder.HeaderQuantity;
-                        materialSlip.Rate = packingWorkOrder.Rate;
-                        materialSlip.Notes = packingWorkOrder.Notes;
-                        materialSlip.Total = packingWorkOrder.Total;
-
-                        db.Entry(materialSlip).State = EntityState.Modified;
-                        db.SaveChanges();
-
-                        dbTran.Commit();
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-
-            return Json(new
-            {
-                materialSlip.MasterRegionId,
-                materialSlip.MasterBusinessUnitId,
-                materialSlip.MasterWarehouseId,
-                materialSlip.Notes,
-                materialSlip.HeaderQuantity,
-                materialSlip.HeaderMasterItemUnitId,
-                materialSlip.HeaderMasterItemId,
-                Total = materialSlip.Total.ToString("N2"),
-                materialSlip.Date,
-                Currency = materialSlip.MasterCurrency.Code + " : " + materialSlip.Rate.ToString("N2")
-            });
-        }
-
-
+ 
         protected override void Dispose(bool disposing)
         {
             if (disposing)

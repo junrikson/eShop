@@ -1,8 +1,8 @@
-﻿ @model IEnumerable<eShop.Models.ProductionBillofMaterial>
+﻿ @model IEnumerable<eShop.Models.ProductionBillOfMaterial>
 
 @{
     ViewBag.Title = "Formula Produksi";
-    ViewBag.Current = "Production Bill of Materials";
+    ViewBag.Current = "Production Bill Of Materials";
 }
 
 @section Styles {
@@ -30,13 +30,13 @@
             Formula Produksi
         </h1>
         <div class="col-md-6 text-right">
-            @if (User.IsInRole("ProductionBillofMaterialsAdd"))
+            @if (User.IsInRole("ProductionBillOfMaterialsAdd"))
             {
-                <a class="btn btn-success mx-1" href="@Url.Action("Create", "ProductionBillofMaterials")">
+                <a class="btn btn-success mx-1" href="@Url.Action("Create", "ProductionBillOfMaterials")">
                     <i class="fa fa-plus"></i> Add
                 </a>
             }
-            @if (User.IsInRole("ProductionBillofMaterialsDelete"))
+            @if (User.IsInRole("ProductionBillOfMaterialsDelete"))
             {
                 <button id="batchDelete" class="btn btn-danger mx-1">
                     <i class="fa fa-trash"></i> Delete
@@ -104,7 +104,7 @@
                     bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/ProductionBillofMaterials/BatchDelete";
+                            options.url = "/ProductionBillOfMaterials/BatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);

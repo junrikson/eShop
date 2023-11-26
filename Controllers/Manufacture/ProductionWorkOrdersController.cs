@@ -94,10 +94,6 @@ namespace eShop.Controllers
                 Date = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
-                MasterCurrencyId = masterCurrency.Id,
-                Rate = masterCurrency.Rate,
-                HeaderMasterItemUnitId = db.MasterItemUnits.FirstOrDefault().Id,
-                HeaderMasterItemId = db.MasterItems.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -118,8 +114,6 @@ namespace eShop.Controllers
                     productionWorkOrder.Active = true;
                     productionWorkOrder.MasterBusinessUnitId = 0;
                     productionWorkOrder.MasterRegionId = 0;
-                    productionWorkOrder.HeaderMasterItemId = 0;
-                    productionWorkOrder.HeaderMasterItemUnitId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -142,14 +136,12 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionWorkOrdersAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,HeaderQuantity,HeaderMasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] ProductionWorkOrder productionWorkOrder)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,Notes,Active,Created,Updated,UserId")] ProductionWorkOrder productionWorkOrder)
         {
             productionWorkOrder.Created = DateTime.Now;
             productionWorkOrder.Updated = DateTime.Now;
             productionWorkOrder.UserId = User.Identity.GetUserId<int>();
-            productionWorkOrder.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id);
-            productionWorkOrder.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
-
+           
             if (!string.IsNullOrEmpty(productionWorkOrder.Code)) productionWorkOrder.Code = productionWorkOrder.Code.ToUpper();
             if (!string.IsNullOrEmpty(productionWorkOrder.Notes)) productionWorkOrder.Notes = productionWorkOrder.Notes.ToUpper();
 
@@ -163,10 +155,6 @@ namespace eShop.Controllers
             db.Entry(productionWorkOrder).Property("Date").IsModified = true;
             db.Entry(productionWorkOrder).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(productionWorkOrder).Property("MasterRegionId").IsModified = true;
-            db.Entry(productionWorkOrder).Property("HeaderMasterItemUnitId").IsModified = true;
-            db.Entry(productionWorkOrder).Property("HeaderMasterItemId").IsModified = true;            
-            db.Entry(productionWorkOrder).Property("HeaderQuantity").IsModified = true;
-            db.Entry(productionWorkOrder).Property("Total").IsModified = true;
             db.Entry(productionWorkOrder).Property("Notes").IsModified = true;
             db.Entry(productionWorkOrder).Property("Active").IsModified = true;
             db.Entry(productionWorkOrder).Property("Updated").IsModified = true;
@@ -196,8 +184,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionWorkOrder.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id).ToString("N2");
-
+                
                 return View("../Manufacture/ProductionWorkOrders/Create", productionWorkOrder);
             }
         }
@@ -223,6 +210,14 @@ namespace eShop.Controllers
                                 if (details != null)
                                 {
                                     db.ProductionWorkOrdersDetails.RemoveRange(details);
+                                    db.SaveChanges();
+                                }
+
+                                var billOfMaterials = db.ProductionWorkOrderBillOfMaterials.Where(x => x.ProductionWorkOrderId == obj.Id).ToList();
+
+                                if (billOfMaterials != null)
+                                {
+                                    db.ProductionWorkOrderBillOfMaterials.RemoveRange(billOfMaterials);
                                     db.SaveChanges();
                                 }
 
@@ -260,7 +255,7 @@ namespace eShop.Controllers
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
             ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionWorkOrder.MasterBusinessUnitId);
-            ViewBag.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id).ToString("N2");
+            //ViewBag.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id).ToString("N2");
 
             return View("../Manufacture/ProductionWorkOrders/Edit", productionWorkOrder);
         }
@@ -271,13 +266,11 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionWorkOrdersEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,HeaderQuantity,HeaderMasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] ProductionWorkOrder productionWorkOrder)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,Notes,Active,Created,Updated,UserId")] ProductionWorkOrder productionWorkOrder)
         {
             productionWorkOrder.Updated = DateTime.Now;
             productionWorkOrder.UserId = User.Identity.GetUserId<int>();
-            productionWorkOrder.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id);
-            productionWorkOrder.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
-
+           
             if (!string.IsNullOrEmpty(productionWorkOrder.Code)) productionWorkOrder.Code = productionWorkOrder.Code.ToUpper();
             if (!string.IsNullOrEmpty(productionWorkOrder.Notes)) productionWorkOrder.Notes = productionWorkOrder.Notes.ToUpper();
 
@@ -291,10 +284,6 @@ namespace eShop.Controllers
             db.Entry(productionWorkOrder).Property("Date").IsModified = true;
             db.Entry(productionWorkOrder).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(productionWorkOrder).Property("MasterRegionId").IsModified = true;
-            db.Entry(productionWorkOrder).Property("Total").IsModified = true;
-            db.Entry(productionWorkOrder).Property("HeaderMasterItemUnitId").IsModified = true;
-            db.Entry(productionWorkOrder).Property("HeaderMasterItemId").IsModified = true;
-            db.Entry(productionWorkOrder).Property("HeaderQuantity").IsModified = true;
             db.Entry(productionWorkOrder).Property("Notes").IsModified = true;
             db.Entry(productionWorkOrder).Property("Active").IsModified = true;
             db.Entry(productionWorkOrder).Property("Updated").IsModified = true;
@@ -324,8 +313,7 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionWorkOrder.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id).ToString("N2");
-
+                
                 return View("../Manufacture/ProductionWorkOrders/Edit", productionWorkOrder);
             }
         }
@@ -362,6 +350,14 @@ namespace eShop.Controllers
                                     db.SaveChanges();
                                 }
 
+                                var billOfMaterials = db.ProductionWorkOrderBillOfMaterials.Where(x => x.ProductionWorkOrderId == obj.Id).ToList();
+
+                                if (billOfMaterials != null)
+                                {
+                                    db.ProductionWorkOrderBillOfMaterials.RemoveRange(billOfMaterials);
+                                    db.SaveChanges();
+                                }
+
                                 db.ProductionWorkOrders.Remove(obj);
                                 db.SaveChanges();
 
@@ -384,65 +380,65 @@ namespace eShop.Controllers
         }
 
         [Authorize(Roles = "ProductionWorkOrdersPrint")]
-        public ActionResult Print(int? id)
-        {
-            ProductionWorkOrder obj = db.ProductionWorkOrders.Find(id);
+        //public ActionResult Print(int? id)
+        //{
+        //    ProductionWorkOrder obj = db.ProductionWorkOrders.Find(id);
 
-            if (obj == null)
-            {
-                return HttpNotFound();
-            }
+        //    if (obj == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
 
-            using (ReportDocument rd = new ReportDocument())
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormSalesRequest.rpt"));
-                        rd.SetParameterValue("Code", obj.Code);
-                        rd.SetParameterValue("Terbilang", "# " + TerbilangExtension.Terbilang(Math.Floor(obj.Total)).ToUpper() + " RUPIAH #");
+        //    using (ReportDocument rd = new ReportDocument())
+        //    {
+        //        using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+        //        {
+        //            try
+        //            {
+        //                rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormSalesRequest.rpt"));
+        //                rd.SetParameterValue("Code", obj.Code);
+        //                rd.SetParameterValue("Terbilang", "# " + TerbilangExtension.Terbilang(Math.Floor(obj.Total)).ToUpper() + " RUPIAH #");
 
-                        string connString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        //                string connString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-                        SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connString);
-                        ConnectionInfo crConnectionInfo = new ConnectionInfo
-                        {
-                            ServerName = builder.DataSource,
-                            DatabaseName = builder.InitialCatalog,
-                            UserID = builder.UserID,
-                            Password = builder.Password
-                        };
+        //                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connString);
+        //                ConnectionInfo crConnectionInfo = new ConnectionInfo
+        //                {
+        //                    ServerName = builder.DataSource,
+        //                    DatabaseName = builder.InitialCatalog,
+        //                    UserID = builder.UserID,
+        //                    Password = builder.Password
+        //                };
 
-                        TableLogOnInfos crTableLogonInfos = new TableLogOnInfos();
-                        TableLogOnInfo crTableLogonInfo = new TableLogOnInfo();
-                        Tables crTables = rd.Database.Tables;
-                        foreach (Table crTable in crTables)
-                        {
-                            crTableLogonInfo = crTable.LogOnInfo;
-                            crTableLogonInfo.ConnectionInfo = crConnectionInfo;
-                            crTable.ApplyLogOnInfo(crTableLogonInfo);
-                        }
+        //                TableLogOnInfos crTableLogonInfos = new TableLogOnInfos();
+        //                TableLogOnInfo crTableLogonInfo = new TableLogOnInfo();
+        //                Tables crTables = rd.Database.Tables;
+        //                foreach (Table crTable in crTables)
+        //                {
+        //                    crTableLogonInfo = crTable.LogOnInfo;
+        //                    crTableLogonInfo.ConnectionInfo = crConnectionInfo;
+        //                    crTable.ApplyLogOnInfo(crTableLogonInfo);
+        //                }
 
-                        obj.IsPrint = true;
-                        db.Entry(obj).Property("IsPrint").IsModified = true;
-                        db.SaveChanges();
+        //                obj.IsPrint = true;
+        //                db.Entry(obj).Property("IsPrint").IsModified = true;
+        //                db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Repayment, MenuId = obj.Id, MenuCode = obj.Code, Actions = EnumActions.PRINT, UserId = User.Identity.GetUserId<int>() });
-                        db.SaveChanges();
+        //                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Repayment, MenuId = obj.Id, MenuCode = obj.Code, Actions = EnumActions.PRINT, UserId = User.Identity.GetUserId<int>() });
+        //                db.SaveChanges();
 
-                        dbTran.Commit();
+        //                dbTran.Commit();
 
-                        return new CrystalReportPdfResult(rd, "SR_" + obj.Code + ".pdf");
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-        }
+        //                return new CrystalReportPdfResult(rd, "SR_" + obj.Code + ".pdf");
+        //            }
+        //            catch (DbEntityValidationException ex)
+        //            {
+        //                dbTran.Rollback();
+        //                throw ex;
+        //            }
+        //        }
+        //    }
+        //}
 
         [Authorize(Roles = "ProductionWorkOrdersActive")]
         private ProductionWorkOrder GetModelState(ProductionWorkOrder productionWorkOrder)
@@ -474,31 +470,24 @@ namespace eShop.Controllers
                 return HttpNotFound();
             }
 
-            ProductionWorkOrderDetails productionWorkOrderDetails = new ProductionWorkOrderDetails
+            ProductionWorkOrderBillOfMaterial obj = new ProductionWorkOrderBillOfMaterial
             {
                 ProductionWorkOrderId = productionWorkOrderId
             };
 
-            return PartialView("../Manufacture/ProductionWorkOrders/_DetailsCreate", productionWorkOrderDetails);
+            return PartialView("../Manufacture/ProductionWorkOrders/_DetailsCreate", obj);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionWorkOrdersActive")]
-        public ActionResult DetailsCreate([Bind(Include = "Id,ProductionWorkOrderId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] ProductionWorkOrderDetails productionWorkOrderDetails)
+        public ActionResult DetailsCreate([Bind(Include = "Id,ProductionWorkOrderId,ProductionBillOfMaterialId,Quantity,Notes,Created,Updated,UserId")] ProductionWorkOrderBillOfMaterial obj)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(productionWorkOrderDetails.MasterItemUnitId);
+            obj.Created = DateTime.Now;
+            obj.Updated = DateTime.Now;
+            obj.UserId = User.Identity.GetUserId<int>();
 
-            if (masterItemUnit == null)
-                productionWorkOrderDetails.Total = 0;
-            else
-                productionWorkOrderDetails.Total = productionWorkOrderDetails.Quantity * productionWorkOrderDetails.Price * masterItemUnit.MasterUnit.Ratio;
-
-            productionWorkOrderDetails.Created = DateTime.Now;
-            productionWorkOrderDetails.Updated = DateTime.Now;
-            productionWorkOrderDetails.UserId = User.Identity.GetUserId<int>();
-
-            if (!string.IsNullOrEmpty(productionWorkOrderDetails.Notes)) productionWorkOrderDetails.Notes = productionWorkOrderDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
@@ -506,16 +495,32 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        db.ProductionWorkOrdersDetails.Add(productionWorkOrderDetails);
+                        db.ProductionWorkOrderBillOfMaterials.Add(obj);
                         db.SaveChanges();
 
-                        ProductionWorkOrder productionWorkOrder = db.ProductionWorkOrders.Find(productionWorkOrderDetails.ProductionWorkOrderId);
-                        productionWorkOrder.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id, productionWorkOrderDetails.Id) + productionWorkOrderDetails.Total;
+                        var productionBillOfMaterialsDetails = db.ProductionBillOfMaterialsDetails.Where(x => x.ProductionBillOfMaterialId == obj.ProductionBillOfMaterialId).ToList();
+                        if(productionBillOfMaterialsDetails.Count > 0)
+                        {
+                            foreach(ProductionBillOfMaterialDetails productionBillOfMaterialDetails in productionBillOfMaterialsDetails)
+                            {
+                                ProductionWorkOrderDetails productionWorkOrderDetails = new ProductionWorkOrderDetails
+                                {
+                                    ProductionWorkOrderId = obj.ProductionWorkOrderId,
+                                    ProductionWorkOrderBillOfMaterialId = obj.Id,
+                                    MasterItemId = productionBillOfMaterialDetails.MasterItemId,
+                                    MasterItemUnitId = productionBillOfMaterialDetails.MasterItemUnitId,
+                                    Quantity = productionBillOfMaterialDetails.Quantity * obj.Quantity,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
 
-                        db.Entry(productionWorkOrder).State = EntityState.Modified;
-                        db.SaveChanges();
+                                db.ProductionWorkOrdersDetails.Add(productionWorkOrderDetails);
+                                db.SaveChanges();
+                            }
+                        }
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionWorkOrderDetails, MenuId = productionWorkOrderDetails.Id, MenuCode = productionWorkOrderDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionWorkOrderDetails, MenuId = obj.Id, MenuCode = obj.ProductionBillOfMaterialId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -530,7 +535,7 @@ namespace eShop.Controllers
                 }
             }
 
-            return PartialView("../Manufacture/ProductionWorkOrders/_DetailsCreate", productionWorkOrderDetails);
+            return PartialView("../Manufacture/ProductionWorkOrders/_DetailsCreate", obj);
         }
 
         [Authorize(Roles = "ProductionWorkOrdersActive")]
@@ -541,7 +546,7 @@ namespace eShop.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            ProductionWorkOrderDetails obj = db.ProductionWorkOrdersDetails.Find(id);
+            ProductionWorkOrderBillOfMaterial obj = db.ProductionWorkOrderBillOfMaterials.Find(id);
 
             if (obj == null)
             {
@@ -553,29 +558,19 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionWorkOrdersActive")]
-        public ActionResult DetailsEdit([Bind(Include = "Id,ProductionWorkOrderId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] ProductionWorkOrderDetails productionWorkOrderDetails)
+        public ActionResult DetailsEdit([Bind(Include = "Id,ProductionWorkOrderId,ProductionBillOfMaterialId,Quantity,Notes,Created,Updated,UserId")] ProductionWorkOrderBillOfMaterial obj)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(productionWorkOrderDetails.MasterItemUnitId);
+            obj.Updated = DateTime.Now;
+            obj.UserId = User.Identity.GetUserId<int>();
 
-            if (masterItemUnit == null)
-                productionWorkOrderDetails.Total = 0;
-            else
-                productionWorkOrderDetails.Total = productionWorkOrderDetails.Quantity * productionWorkOrderDetails.Price * masterItemUnit.MasterUnit.Ratio;
+            if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
 
-            productionWorkOrderDetails.Updated = DateTime.Now;
-            productionWorkOrderDetails.UserId = User.Identity.GetUserId<int>();
-
-            if (!string.IsNullOrEmpty(productionWorkOrderDetails.Notes)) productionWorkOrderDetails.Notes = productionWorkOrderDetails.Notes.ToUpper();
-
-            db.Entry(productionWorkOrderDetails).State = EntityState.Unchanged;
-            db.Entry(productionWorkOrderDetails).Property("MasterItemId").IsModified = true;
-            db.Entry(productionWorkOrderDetails).Property("MasterItemUnitId").IsModified = true;
-            db.Entry(productionWorkOrderDetails).Property("Quantity").IsModified = true;
-            db.Entry(productionWorkOrderDetails).Property("Price").IsModified = true;
-            db.Entry(productionWorkOrderDetails).Property("Total").IsModified = true;
-            db.Entry(productionWorkOrderDetails).Property("Notes").IsModified = true;
-            db.Entry(productionWorkOrderDetails).Property("Updated").IsModified = true;
-            db.Entry(productionWorkOrderDetails).Property("UserId").IsModified = true;
+            db.Entry(obj).State = EntityState.Unchanged;
+            db.Entry(obj).Property("ProductionBillOfMaterialId").IsModified = true;
+            db.Entry(obj).Property("Quantity").IsModified = true;
+            db.Entry(obj).Property("Notes").IsModified = true;
+            db.Entry(obj).Property("Updated").IsModified = true;
+            db.Entry(obj).Property("UserId").IsModified = true;
 
             if (ModelState.IsValid)
             {
@@ -585,13 +580,36 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        ProductionWorkOrder productionWorkOrder = db.ProductionWorkOrders.Find(productionWorkOrderDetails.ProductionWorkOrderId);
-                        productionWorkOrder.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id, productionWorkOrderDetails.Id) + productionWorkOrderDetails.Total;
+                        var temp = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderBillOfMaterialId == obj.Id).ToList();
+                        if(temp.Any())
+                        {
+                            db.ProductionWorkOrdersDetails.RemoveRange(temp);
+                            db.SaveChanges();
+                        }
 
-                        db.Entry(productionWorkOrder).State = EntityState.Modified;
-                        db.SaveChanges();
+                        var productionBillOfMaterialsDetails = db.ProductionBillOfMaterialsDetails.Where(x => x.ProductionBillOfMaterialId == obj.ProductionBillOfMaterialId).ToList();
+                        if (productionBillOfMaterialsDetails.Count > 0)
+                        {
+                            foreach (ProductionBillOfMaterialDetails productionBillOfMaterialDetails in productionBillOfMaterialsDetails)
+                            {
+                                ProductionWorkOrderDetails productionWorkOrderDetails = new ProductionWorkOrderDetails
+                                {
+                                    ProductionWorkOrderId = obj.ProductionWorkOrderId,
+                                    ProductionWorkOrderBillOfMaterialId = obj.Id,
+                                    MasterItemId = productionBillOfMaterialDetails.MasterItemId,
+                                    MasterItemUnitId = productionBillOfMaterialDetails.MasterItemUnitId,
+                                    Quantity = productionBillOfMaterialDetails.Quantity * obj.Quantity,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionWorkOrderDetails, MenuId = productionWorkOrderDetails.Id, MenuCode = productionWorkOrderDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                                db.ProductionWorkOrdersDetails.Add(productionWorkOrderDetails);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionWorkOrderDetails, MenuId = obj.Id, MenuCode = obj.ProductionBillOfMaterialId.ToString(), Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -605,7 +623,7 @@ namespace eShop.Controllers
                     }
                 }
             }
-            return PartialView("../Manufacture/ProductionWorkOrders/_DetailsEdit", productionWorkOrderDetails);
+            return PartialView("../Manufacture/ProductionWorkOrders/_DetailsEdit", obj);
         }
 
         [HttpPost]
@@ -622,7 +640,7 @@ namespace eShop.Controllers
                     int failed = 0;
                     foreach (int id in ids)
                     {
-                        ProductionWorkOrderDetails obj = db.ProductionWorkOrdersDetails.Find(id);
+                        ProductionWorkOrderBillOfMaterial obj = db.ProductionWorkOrderBillOfMaterials.Find(id);
                         if (obj == null)
                             failed++;
                         else
@@ -631,16 +649,16 @@ namespace eShop.Controllers
                             {
                                 try
                                 {
-                                    ProductionWorkOrderDetails tmp = obj;
+                                    ProductionWorkOrderBillOfMaterial tmp = obj;
 
-                                    ProductionWorkOrder productionWorkOrder = db.ProductionWorkOrders.Find(tmp.ProductionWorkOrderId);
+                                    var details = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderBillOfMaterialId == obj.Id).ToList();
+                                    if (details.Any())
+                                    {
+                                        db.ProductionWorkOrdersDetails.RemoveRange(details);
+                                        db.SaveChanges();
+                                    }
 
-                                    productionWorkOrder.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id, tmp.Id);
-
-                                    db.Entry(productionWorkOrder).State = EntityState.Modified;
-                                    db.SaveChanges();
-
-                                    db.ProductionWorkOrdersDetails.Remove(obj);
+                                    db.ProductionWorkOrderBillOfMaterials.Remove(obj);
                                     db.SaveChanges();
 
                                     db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionWorkOrderDetails, MenuId = tmp.Id, MenuCode = tmp.Id.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
@@ -668,6 +686,14 @@ namespace eShop.Controllers
                 .Where(x => x.ProductionWorkOrderId == Id).ToList());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "ProductionWorkOrdersActive")]
+        public PartialViewResult BoMGrid(int Id)
+        {
+            return PartialView("../Manufacture/ProductionWorkOrders/_BoMGrid", db.ProductionWorkOrderBillOfMaterials
+                .Where(x => x.ProductionWorkOrderId == Id).ToList());
+        }
+
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "PackingWorkOrdersActive")]
@@ -692,123 +718,6 @@ namespace eShop.Controllers
             }
 
             return Json(masterItemUnitId);
-        }
-
-        //[HttpPost]
-        //[ValidateJsonAntiForgeryToken]
-        //[Authorize(Roles = "PackingWorkOrdersActive")]
-        //public JsonResult GetHeaderMasterUnit(int id)
-        //{
-        //    int headermasterItemUnitId = 0;
-        //    MasterItem masterItem = db.MasterItems.Find(id);
-
-        //    if (masterItem != null)
-        //    {
-        //        MasterItemUnit masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id && x.Default).FirstOrDefault();
-
-        //        if (masterItemUnit != null)
-        //            headermasterItemUnitId = masterItemUnit.Id;
-        //        else
-        //        {
-        //            masterItemUnit = db.MasterItemUnits.Where(x => x.MasterItemId == masterItem.Id).FirstOrDefault();
-
-        //            if (masterItemUnit != null)
-        //                headermasterItemUnitId = masterItemUnit.Id;
-        //        }
-        //    }
-
-        //    return Json(headermasterItemUnitId);
-        //}
-
-
-        [Authorize(Roles = "ProductionWorkOrdersActive")]
-        public ActionResult ChangeCurrency(int? productionWorkOrderId)
-        {
-            if (productionWorkOrderId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            ProductionWorkOrder productionWorkOrder = db.ProductionWorkOrders.Find(productionWorkOrderId);
-
-            ChangeCurrency obj = new ChangeCurrency
-            {
-                Id = productionWorkOrder.Id,
-                MasterCurrencyId = productionWorkOrder.MasterCurrencyId,
-                Rate = productionWorkOrder.Rate
-            };
-
-            if (obj == null)
-            {
-                return HttpNotFound();
-            }
-
-            return PartialView("../Manufacture/ProductionWorkOrders/_ChangeCurrency", obj);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "ProductionWorkOrdersActive")]
-        public ActionResult ChangeCurrency([Bind(Include = "Id,MasterCurrencyId,Rate")] ChangeCurrency changeCurrency)
-        {
-            MasterCurrency masterCurrency = db.MasterCurrencies.Find(changeCurrency.MasterCurrencyId);
-
-            ProductionWorkOrder productionWorkOrder = db.ProductionWorkOrders.Find(changeCurrency.Id);
-            productionWorkOrder.MasterCurrencyId = changeCurrency.MasterCurrencyId;
-            productionWorkOrder.Rate = changeCurrency.Rate;
-
-            if (ModelState.IsValid)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var productionWorkOrdersDetails = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderId == productionWorkOrder.Id).ToList();
-
-                        foreach (ProductionWorkOrderDetails productionWorkOrderDetails in productionWorkOrdersDetails)
-                        {
-                            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(productionWorkOrderDetails.MasterItemUnitId);
-
-                            if (masterItemUnit == null)
-                                productionWorkOrderDetails.Total = 0;
-                            else
-                                productionWorkOrderDetails.Total = productionWorkOrderDetails.Quantity * productionWorkOrderDetails.Price * masterItemUnit.MasterUnit.Ratio * productionWorkOrder.Rate  ;
-
-                            db.Entry(productionWorkOrderDetails).State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
-
-                        productionWorkOrder.Total = SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrder.Id);
-                        db.Entry(productionWorkOrder).State = EntityState.Modified;
-                        db.SaveChanges();
-
-                        dbTran.Commit();
-
-                        var returnObject = new
-                        {
-                            Status = "success",
-                            Message = masterCurrency.Code + " : " + productionWorkOrder.Rate.ToString("N2")
-                        };
-
-                        return Json(returnObject, JsonRequestBehavior.AllowGet);
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-
-            return PartialView("../Manufacture/ProductionWorkOrders/_ChangeCurrency", changeCurrency);
-        }
-
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "ProductionWorkOrdersActive")]
-        public JsonResult GetCurrencyRate(int id)
-        {
-            return Json(db.MasterCurrencies.Find(id).Rate);
         }
 
         [HttpPost]
@@ -850,110 +759,6 @@ namespace eShop.Controllers
                 code = (Convert.ToInt32(lastData.Code.Substring(0, 4)) + 1).ToString("D4") + code;
 
             return code;
-        }
-
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "ProductionWorkOrdersActive")]
-        public JsonResult GetTotal(int productionWorkOrderId)
-        {
-            return Json(SharedFunctions.GetTotalProductionWorkOrder(db, productionWorkOrderId).ToString("N2"));
-        }
-
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "ProductionWorkOrdersActive")]
-        public JsonResult PopulateDetails(int productionWorkOrderid, int productionBillofMaterialid)
-        {
-            ProductionWorkOrder productionWorkOrder = db.ProductionWorkOrders.Find(productionWorkOrderid);
-            ProductionBillofMaterial productionBillofMaterial = db.ProductionBillofMaterials.Find(productionBillofMaterialid);
-
-            if (productionWorkOrder != null && productionBillofMaterial != null)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var remove = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderId == productionWorkOrder.Id).ToList();
-
-                        if (remove != null)
-                        {
-                            foreach (ProductionWorkOrderDetails temp in remove)
-                            {
-                                //SharedFunctions.RemovePurchaseJournalDetails(db, temp);
-
-                                db.ProductionWorkOrdersDetails.Remove(temp);
-                                db.SaveChanges();
-                            }
-                        }
-
-                        var productionBillofMaterialsDetails = db.ProductionBillofMaterialsDetails.Where(x => x.ProductionBillofMaterialId == productionBillofMaterial.Id).ToList();
-
-                        if (productionBillofMaterialsDetails != null)
-                        {
-                            foreach (ProductionBillofMaterialDetails productionBillofMaterialDetails in productionBillofMaterialsDetails)
-                            {
-                                ProductionWorkOrderDetails productionWorkOrderDetails = new ProductionWorkOrderDetails
-                                {
-                                    ProductionWorkOrderId = productionWorkOrder.Id,
-                                    MasterItemId = productionBillofMaterialDetails.MasterItemId,
-                                    MasterItemUnitId = productionBillofMaterialDetails.MasterItemUnitId,
-                                    Quantity = productionBillofMaterialDetails.Quantity,
-                                    Price = productionBillofMaterialDetails.Price,
-                                    Total = productionBillofMaterialDetails.Total,
-                                    Notes = productionBillofMaterialDetails.Notes,
-                                    Created = DateTime.Now,
-                                    Updated = DateTime.Now,
-                                    UserId = User.Identity.GetUserId<int>()
-                                };
-
-                                db.ProductionWorkOrdersDetails.Add(productionWorkOrderDetails);
-                                db.SaveChanges();
-
-                                //SharedFunctions.CreatePurchaseJournalDetails(db, purchaseDetails);
-                            }
-                        }
-
-                        productionWorkOrder.ProductionBillofMaterialId = productionBillofMaterial.Id;
-                        productionWorkOrder.MasterBusinessUnitId = productionBillofMaterial.MasterBusinessUnitId;
-                        productionWorkOrder.MasterRegionId = productionBillofMaterial.MasterRegionId;
-                        productionWorkOrder.MasterCurrencyId = productionBillofMaterial.MasterCurrencyId;
-                        productionWorkOrder.Rate = productionBillofMaterial.Rate;
-                        productionWorkOrder.HeaderMasterItemUnitId = productionBillofMaterial.HeaderMasterItemUnitId;
-                        productionWorkOrder.HeaderMasterItemId = productionBillofMaterial.HeaderMasterItemId;                        
-                        productionWorkOrder.HeaderQuantity = productionBillofMaterial.HeaderQuantity;
-                        productionWorkOrder.Notes = productionBillofMaterial.Notes;
-                        productionWorkOrder.Total = productionBillofMaterial.Total;
-
-                        db.Entry(productionWorkOrder).State = EntityState.Modified;
-                        db.SaveChanges();
-
-                        db.Entry(productionWorkOrder).Reload();
-
-                        //SharedFunctions.UpdatePurchaseJournal(db, purchase);
-
-                        dbTran.Commit();
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-
-            return Json(new
-            {
-                productionWorkOrder.MasterRegionId,
-                productionWorkOrder.MasterBusinessUnitId,
-                productionWorkOrder.Notes,
-                productionWorkOrder.HeaderQuantity,
-                productionWorkOrder.HeaderMasterItemUnitId,
-                productionWorkOrder.HeaderMasterItemId,
-                Total = productionWorkOrder.Total.ToString("N2"),
-                productionWorkOrder.Date,
-                Currency = productionWorkOrder.MasterCurrency.Code + " : " + productionWorkOrder.Rate.ToString("N2")
-            });
         }
 
         protected override void Dispose(bool disposing)

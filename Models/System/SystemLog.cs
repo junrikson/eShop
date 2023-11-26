@@ -270,13 +270,13 @@ namespace eShop.Models
         [Display(Name = "Unit Region")]
         MasterBusinessRegionItem = 131,
         [Display(Name = "Production Bill of Material")]
-        ProductionBillofMaterial = 132,
+        ProductionBillOfMaterial = 132,
         [Display(Name = "Production Bill of Material Details")]
-        ProductionBillofMaterialDetails = 133,
+        ProductionBillOfMaterialDetails = 133,
         [Display(Name = "Packing Bill of Material")]
-        PackingBillofMaterial = 134,
+        PackingBillOfMaterial = 134,
         [Display(Name = "Packing Bill of Material Details")]
-        PackingBillofMaterialDetails = 135,
+        PackingBillOfMaterialDetails = 135,
         [Display(Name = "Packing Work Order Material")]
         PackingWorkOrder = 136,
         [Display(Name = "Packing Work Order Material Details")]
