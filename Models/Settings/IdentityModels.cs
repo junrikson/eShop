@@ -160,6 +160,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.StandardProductCost> StandardProductCosts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterial> ProductionBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterialDetails> ProductionBillOfMaterialsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterialCostDetails> ProductionBillOfMaterialsCostsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrder> ProductionWorkOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderBillOfMaterial> ProductionWorkOrderBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderDetails> ProductionWorkOrdersDetails { get; set; }

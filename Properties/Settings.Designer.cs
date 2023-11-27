@@ -292,5 +292,16 @@ namespace eShop.Properties {
                 return ((string)(this["MaterialReturnCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SPC/")]
+        public string StandardProductCostCode
+        {
+            get
+            {
+                return ((string)(this["StandardProductCostCode"]));
+            }
+        }
     }
 }

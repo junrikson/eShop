@@ -50,24 +50,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.HeaderMasterItemId)
-                                            @Html.TextBoxFor(model => model.HeaderMasterItem.Name, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.HeaderMasterItemId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-9">
-                                            @Html.LabelFor(model => model.HeaderMasterItemUnitId)
-                                            @Html.TextBoxFor(model => model.HeaderMasterItemUnit.MasterUnit.Code, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.HeaderMasterItemUnitId, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div class="col-md-3 text-center">
-                                            @Html.LabelFor(model => model.HeaderQuantity)
-                                            @Html.TextBoxFor(model => model.HeaderQuantity, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.HeaderQuantity, "", new { @class = "text-danger" })
-                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-12">

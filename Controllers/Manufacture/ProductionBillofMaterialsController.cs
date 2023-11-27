@@ -481,8 +481,9 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionBillOfMaterialsActive")]
-        public ActionResult DetailsCreate([Bind(Include = "Id,ProductionBillOfMaterialId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] ProductionBillOfMaterialDetails productionBillOfMaterialDetails)
+        public ActionResult DetailsCreate([Bind(Include = "Id,ProductionBillOfMaterialId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] ProductionBillOfMaterialViewModel obj)
         {
+            ProductionBillOfMaterialDetails productionBillOfMaterialDetails = db.ProductionBillOfMaterialsDetails.Find(obj.Id);
             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(productionBillOfMaterialDetails.MasterItemUnitId);
 
             if (masterItemUnit == null)
@@ -526,7 +527,7 @@ namespace eShop.Controllers
                 }
             }
 
-            return PartialView("../Manufacture/ProductionBillOfMaterials/_DetailsCreate", productionBillOfMaterialDetails);
+            return PartialView("../Manufacture/ProductionBillOfMaterials/_DetailsCreate", obj);
         }
 
         [Authorize(Roles = "ProductionBillOfMaterialsActive")]
@@ -661,6 +662,14 @@ namespace eShop.Controllers
         public PartialViewResult DetailsGrid(int Id)
         {
             return PartialView("../Manufacture/ProductionBillOfMaterials/_DetailsGrid", db.ProductionBillOfMaterialsDetails
+                .Where(x => x.ProductionBillOfMaterialId == Id).ToList());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "ProductionBillOfMaterialsActive")]
+        public PartialViewResult CostsGrid(int Id)
+        {
+            return PartialView("../Manufacture/ProductionBillOfMaterials/_CostsGrid", db.ProductionBillOfMaterialsCostsDetails
                 .Where(x => x.ProductionBillOfMaterialId == Id).ToList());
         }
 

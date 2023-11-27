@@ -141,10 +141,10 @@
 
                         <div class="tab-pane form-horizontal" id="tab_2">
                             <div class="text-right col-md-12">
-                                <label style="font-weight: bold">TOTAL :</label>
+                                <label style="font-weight: bold">TOTAL COST :</label>
                                 <input type="text" id="TotalCost" value="@ViewBag.TotalCost" disabled="disabled" style="text-align:right;" />
                                 <button id="btnCostAdd" class="btn btn-success mx-1" href="@Url.Action("CostsCreate", "ProductionBillOfMaterials")">
-                                    <i class="fa fa-plus"></i> Add
+                                    <i class="fa fa-plus"></i> Add Biaya
                                 </button>
                                 <button id="btnCostsBatchDelete" class="btn btn-danger mx-1">
                                     <i class="fa fa-trash"></i> Delete
@@ -153,7 +153,7 @@
 
                             <div class="form-group">
                                 <div class="box-body" style="overflow:auto; white-space: nowrap">
-                                    @Html.AjaxGrid(Url.Action("CostsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "detail-table" })
+                                    @Html.AjaxGrid(Url.Action("CostsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "cost-table" })
                                 </div>
                             </div>
                         </div>
@@ -449,7 +449,7 @@
                 if (masterRegionId != 0 && masterRegionId !== '') {
                     if ($("#MasterBusinessUnitId").val() === "") {
                         bootbox.alert("Unit Bisnis belum dipilih!");
-                        document.getElementById('MasterRegionId').value = "0";
+                        document.getElementById('MasterRegionId').value = 0;
                     }
                     else {
                         options.url = "/ProductionBillOfMaterials/GetCode";
@@ -481,7 +481,7 @@
                 var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
                 var options = {};
 
-                if (masterRegionId !== 0 && masterRegionId !== '') {
+                if (masterRegionId != 0 && masterRegionId !== '') {
                     options.url = "/ProductionBillOfMaterials/GetCode";
                     options.type = "POST";
                     options.headers = headers;
