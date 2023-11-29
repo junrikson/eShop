@@ -310,7 +310,6 @@
     <Compile Include="Controllers\Inventory\WarehouseTransfersController.cs" />
     <Compile Include="Controllers\Inventory\StockAdjustmentsController.cs" />
     <Compile Include="Controllers\Manufacture\FinishedGoodSlipsController.cs" />
-    <Compile Include="Controllers\Manufacture\StandardProductCostsController.cs" />
     <Compile Include="Controllers\Manufacture\MaterialReturnsController.cs" />
     <Compile Include="Controllers\Manufacture\MaterialSlipsController.cs" />
     <Compile Include="Controllers\Manufacture\ProductionWorkOrdersController.cs" />
@@ -361,7 +360,6 @@
     <Compile Include="Models\Manufacture\FinishedGoodSlip.cs" />
     <Compile Include="Models\Manufacture\MaterialReturn.cs" />
     <Compile Include="Models\Manufacture\MaterialSlip.cs" />
-    <Compile Include="Models\Manufacture\StandardProductCost.cs" />
     <Compile Include="Models\Manufacture\ProductionWorkOrder.cs" />
     <Compile Include="Models\Manufacture\ProductionBillOfMaterial.cs" />
     <Compile Include="Models\Master\DataSelection.cs" />
@@ -7214,13 +7212,17 @@
     <Content Include="Views\Manufacture\MaterialReturns\Edit.cshtml" />
     <Content Include="Views\Manufacture\MaterialReturns\Index.cshtml" />
     <Content Include="Views\Manufacture\ProductionWorkOrders\_BoMGrid.cshtml" />
-    <Content Include="Views\Manufacture\StandardProductCosts\_Create.cshtml" />
-    <Content Include="Views\Manufacture\StandardProductCosts\_Details.cshtml" />
+    <Content Include="Views\Manufacture\StandardProductCosts\_Creat1e.cshtml" />
     <Content Include="Views\Manufacture\StandardProductCosts\_Edit.cshtml" />
     <Content Include="Views\Manufacture\StandardProductCosts\_IndexGrid.cshtml" />
     <Content Include="Views\Manufacture\StandardProductCosts\Index.cshtml" />
     <Content Include="Views\Manufacture\ProductionBillofMaterials\_CostsGrid.cshtml" />
     <Content Include="Views\Manufacture\ProductionBillofMaterials\_CostsCreate.cshtml" />
+    <Content Include="Views\Manufacture\StandardProductCosts\_DetailsCreate.cshtml" />
+    <Content Include="Views\Manufacture\StandardProductCosts\_DetailsGrid.cshtml" />
+    <Content Include="Views\Manufacture\StandardProductCosts\_ViewGrid.cshtml" />
+    <Content Include="Views\Manufacture\StandardProductCosts\_Create.cshtml" />
+    <Content Include="Views\Manufacture\MaterialSlips\_BoMGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

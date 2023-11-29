@@ -294,6 +294,68 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+    public class ProductionBillOfMaterialDetailsViewModel
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Display(Name = "Production Bill Of Material")]
+        [Required(ErrorMessage = "Nomor BOM harus diisi.")]
+        public int ProductionBillOfMaterialId { get; set; }
+
+        [Display(Name = "Production Bill Of Material")]
+        public virtual ProductionBillOfMaterial ProductionBillOfMaterial { get; set; }
+
+        [Display(Name = "Master Item")]
+        [Required(ErrorMessage = "Master Item harus diisi.")]
+        public int MasterItemId { get; set; }
+
+        [Display(Name = "Master Item")]
+        public virtual MasterItem MasterItem { get; set; }
+
+        [Display(Name = "Satuan")]
+        [Required(ErrorMessage = "Master Item harus diisi.")]
+        public int MasterItemUnitId { get; set; }
+
+        [Display(Name = "Satuan")]
+        public virtual MasterItemUnit MasterItemUnit { get; set; }
+
+        [Display(Name = "Quantity")]
+        [Required(ErrorMessage = "Quantity harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Quantity { get; set; }
+
+        [Display(Name = "Harga")]
+        [Required(ErrorMessage = "Harga harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Price { get; set; }
+
+        [Display(Name = "Nilai")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Total { get; set; }
+
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
     public class ProductionBillOfMaterialCostDetails
     {
         [Key]

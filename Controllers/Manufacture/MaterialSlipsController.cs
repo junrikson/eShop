@@ -82,6 +82,14 @@ namespace eShop.Controllers
                 .Where(x => x.MaterialSlipId == Id).ToList());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "MaterialSlipsActive")]
+        public PartialViewResult BoMGrid(int Id)
+        {
+            return PartialView("../Manufacture/MaterialSlips/_BoMGrid", db.MaterialSlipsBillOfMaterials
+                .Where(x => x.MaterialSlipId == Id).ToList());
+        }
+
         // GET: MaterialSlips/Create
         [Authorize(Roles = "MaterialSlipsAdd")]
         public ActionResult Create()
@@ -94,10 +102,10 @@ namespace eShop.Controllers
                 Date = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
-                MasterCurrencyId = masterCurrency.Id,
-                HeaderMasterItemUnitId = db.MasterItemUnits.FirstOrDefault().Id,
-                HeaderMasterItemId = db.MasterItems.FirstOrDefault().Id,
-                Rate = masterCurrency.Rate,
+                //MasterCurrencyId = masterCurrency.Id,
+                //HeaderMasterItemUnitId = db.MasterItemUnits.FirstOrDefault().Id,
+                //HeaderMasterItemId = db.MasterItems.FirstOrDefault().Id,
+                //Rate = masterCurrency.Rate,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
@@ -119,8 +127,8 @@ namespace eShop.Controllers
                     materialSlip.Active = true;
                     materialSlip.MasterBusinessUnitId = 0;
                     materialSlip.MasterRegionId = 0;
-                    materialSlip.HeaderMasterItemId = 0;
-                    materialSlip.HeaderMasterItemUnitId = 0;
+                    //materialSlip.HeaderMasterItemId = 0;
+                    //materialSlip.HeaderMasterItemUnitId = 0;
                     materialSlip.MasterWarehouseId = 0;
                 }
                 catch (DbEntityValidationException ex)
@@ -144,7 +152,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MaterialSlipsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,ProductionWorkOrderId,MasterWarehouseId,HeaderQuantity,HeaderMasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] MaterialSlip materialSlip)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,ProductionWorkOrderId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] MaterialSlip materialSlip)
         {
             materialSlip.Created = DateTime.Now;
             materialSlip.Updated = DateTime.Now;
@@ -165,9 +173,6 @@ namespace eShop.Controllers
             db.Entry(materialSlip).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(materialSlip).Property("MasterRegionId").IsModified = true;
             db.Entry(materialSlip).Property("ProductionWorkOrderId").IsModified = true;
-            db.Entry(materialSlip).Property("HeaderMasterItemUnitId").IsModified = true;
-            db.Entry(materialSlip).Property("HeaderMasterItemId").IsModified = true;
-            db.Entry(materialSlip).Property("HeaderQuantity").IsModified = true;
             db.Entry(materialSlip).Property("MasterWarehouseId").IsModified = true;
             db.Entry(materialSlip).Property("Total").IsModified = true;
             db.Entry(materialSlip).Property("Notes").IsModified = true;
@@ -274,7 +279,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MaterialSlipsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,MasterCustomerId,HeaderQuantity,HeaderMasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] MaterialSlip materialSlip)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] MaterialSlip materialSlip)
         {
             materialSlip.Updated = DateTime.Now;
             materialSlip.UserId = User.Identity.GetUserId<int>();
@@ -293,9 +298,6 @@ namespace eShop.Controllers
             db.Entry(materialSlip).Property("Date").IsModified = true;
             db.Entry(materialSlip).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(materialSlip).Property("MasterRegionId").IsModified = true;
-            db.Entry(materialSlip).Property("MasterWarehouseId").IsModified = true;
-            db.Entry(materialSlip).Property("HeaderMasterItemId").IsModified = true;
-            db.Entry(materialSlip).Property("HeaderQuantity").IsModified = true;
             db.Entry(materialSlip).Property("MasterWarehouseId").IsModified = true;
             db.Entry(materialSlip).Property("Total").IsModified = true;
             db.Entry(materialSlip).Property("Notes").IsModified = true;
@@ -536,6 +538,8 @@ namespace eShop.Controllers
             return PartialView("../Manufacture/MaterialSlips/_DetailsCreate", materialSlipDetails);
         }
 
+
+
         [Authorize(Roles = "MaterialSlipsActive")]
         public ActionResult DetailsEdit(int? id)
         {
@@ -710,8 +714,8 @@ namespace eShop.Controllers
             ChangeCurrency obj = new ChangeCurrency
             {
                 Id = materialSlip.Id,
-                MasterCurrencyId = materialSlip.MasterCurrencyId,
-                Rate = materialSlip.Rate
+                //MasterCurrencyId = materialSlip.MasterCurrencyId,
+                //Rate = materialSlip.Rate
             };
 
             if (obj == null)
@@ -722,62 +726,62 @@ namespace eShop.Controllers
             return PartialView("../Manufacture/MaterialSlips/_ChangeCurrency", obj);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "MaterialSlipsActive")]
-        public ActionResult ChangeCurrency([Bind(Include = "Id,MasterCurrencyId,Rate")] ChangeCurrency changeCurrency)
-        {
-            MasterCurrency masterCurrency = db.MasterCurrencies.Find(changeCurrency.MasterCurrencyId);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = "MaterialSlipsActive")]
+        //public ActionResult ChangeCurrency([Bind(Include = "Id,MasterCurrencyId,Rate")] ChangeCurrency changeCurrency)
+        //{
+        //    MasterCurrency masterCurrency = db.MasterCurrencies.Find(changeCurrency.MasterCurrencyId);
 
-            MaterialSlip materialSlip = db.MaterialSlips.Find(changeCurrency.Id);
-            materialSlip.MasterCurrencyId = changeCurrency.MasterCurrencyId;
-            materialSlip.Rate = changeCurrency.Rate;
+        //    MaterialSlip materialSlip = db.MaterialSlips.Find(changeCurrency.Id);
+        //    //materialSlip.MasterCurrencyId = changeCurrency.MasterCurrencyId;
+        //    //materialSlip.Rate = changeCurrency.Rate;
 
-            if (ModelState.IsValid)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var materialSlipsDetails = db.MaterialSlipsDetails.Where(x => x.MaterialSlipId == materialSlip.Id).ToList();
+        //    if (ModelState.IsValid)
+        //    {
+        //        using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+        //        {
+        //            try
+        //            {
+        //                var materialSlipsDetails = db.MaterialSlipsDetails.Where(x => x.MaterialSlipId == materialSlip.Id).ToList();
 
-                        foreach (MaterialSlipDetails materialSlipDetails in materialSlipsDetails)
-                        {
-                            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(materialSlipDetails.MasterItemUnitId);
+        //                foreach (MaterialSlipDetails materialSlipDetails in materialSlipsDetails)
+        //                {
+        //                    MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(materialSlipDetails.MasterItemUnitId);
 
-                            if (masterItemUnit == null)
-                                materialSlipDetails.Total = 0;
-                            else
-                                materialSlipDetails.Total = materialSlipDetails.Quantity * materialSlipDetails.Price * masterItemUnit.MasterUnit.Ratio * materialSlip.Rate;
+        //                    if (masterItemUnit == null)
+        //                        materialSlipDetails.Total = 0;
+        //                    else
+        //                        materialSlipDetails.Total = materialSlipDetails.Quantity * materialSlipDetails.Price * masterItemUnit.MasterUnit.Ratio * materialSlip.Rate;
 
-                            db.Entry(materialSlipDetails).State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
+        //                    db.Entry(materialSlipDetails).State = EntityState.Modified;
+        //                    db.SaveChanges();
+        //                }
 
-                        materialSlip.Total = SharedFunctions.GetTotalSalesRequest(db, materialSlip.Id);
-                        db.Entry(materialSlip).State = EntityState.Modified;
-                        db.SaveChanges();
+        //                materialSlip.Total = SharedFunctions.GetTotalSalesRequest(db, materialSlip.Id);
+        //                db.Entry(materialSlip).State = EntityState.Modified;
+        //                db.SaveChanges();
 
-                        dbTran.Commit();
+        //                dbTran.Commit();
 
-                        var returnObject = new
-                        {
-                            Status = "success",
-                            Message = masterCurrency.Code + " : " + materialSlip.Rate.ToString("N2")
-                        };
+        //                var returnObject = new
+        //                {
+        //                    Status = "success",
+        //                    Message = masterCurrency.Code + " : " + materialSlip.Rate.ToString("N2")
+        //                };
 
-                        return Json(returnObject, JsonRequestBehavior.AllowGet);
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
+        //                return Json(returnObject, JsonRequestBehavior.AllowGet);
+        //            }
+        //            catch (DbEntityValidationException ex)
+        //            {
+        //                dbTran.Rollback();
+        //                throw ex;
+        //            }
+        //        }
+        //    }
 
-            return PartialView("../Manufacture/MaterialSlips/_ChangeCurrency", changeCurrency);
-        }
+        //    return PartialView("../Manufacture/MaterialSlips/_ChangeCurrency", changeCurrency);
+        //}
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
@@ -871,8 +875,6 @@ namespace eShop.Controllers
                                     MasterItemId = productionWorkOrderDetails.MasterItemId,
                                     MasterItemUnitId = productionWorkOrderDetails.MasterItemUnitId,
                                     Quantity = productionWorkOrderDetails.Quantity,
-                                    //Price = productionWorkOrderDetails.Price,
-                                    //Total = productionWorkOrderDetails.Total,
                                     Notes = productionWorkOrderDetails.Notes,
                                     Created = DateTime.Now,
                                     Updated = DateTime.Now,
@@ -907,14 +909,14 @@ namespace eShop.Controllers
             {
                 materialSlip.MasterRegionId,
                 materialSlip.MasterBusinessUnitId,
-                materialSlip.MasterWarehouseId,
-                materialSlip.HeaderQuantity,
-                materialSlip.HeaderMasterItemUnitId,
-                materialSlip.HeaderMasterItemId,
+                //materialSlip.MasterWarehouseId,
+                //materialSlip.HeaderQuantity,
+                //materialSlip.HeaderMasterItemUnitId,
+                //materialSlip.HeaderMasterItemId,
                 materialSlip.Notes,
-                Total = materialSlip.Total.ToString("N2"),
+                //Total = materialSlip.Total.ToString("N2"),
                 materialSlip.Date,
-                Currency = materialSlip.MasterCurrency.Code + " : " + materialSlip.Rate.ToString("N2")
+                //Currency = materialSlip.MasterCurrency.Code + " : " + materialSlip.Rate.ToString("N2")
             });
         }
 

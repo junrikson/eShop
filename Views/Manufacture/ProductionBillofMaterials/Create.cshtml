@@ -124,8 +124,8 @@
                             <div class="text-right col-md-12">
                                 <label style="font-weight: bold">TOTAL :</label>
                                 <input type="text" id="TotalItems" value="@ViewBag.TotalItems" disabled="disabled" style="text-align:right;" />
-                                <button id="btnItemAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "ProductionBillOfMaterials")">
-                                    <i class="fa fa-plus"></i> Add
+                                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "ProductionBillOfMaterials")">
+                                    <i class="fa fa-plus"></i> Add Item
                                 </button>
                                 <button id="btnItemsBatchDelete" class="btn btn-danger mx-1">
                                     <i class="fa fa-trash"></i> Delete
@@ -160,6 +160,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
     </section>
 </div>
@@ -283,14 +285,73 @@
                         options.contentType = "application/json";
                         options.dataType = "json";
                         options.success = function (msg) {
-                            document.getElementById('MasterUnitId').value = msg;
+                            document.getElementById('MasterItemUnitId').value = msg;
 
                             [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
                                 new MvcDatalist(element).reload();
                             });
                         };
                         options.error = function () {
-                            document.getElementById('MasterUnitId').value = 0;
+                            document.getElementById('MasterItemUnitId').value = 0;
+
+                            [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                                new MvcDatalist(element).reload();
+                            });
+                        };
+                        $.ajax(options);
+                    }).change();
+
+                });
+            }
+        });
+
+        $('#btnCostAdd').click(function (event) {
+            event.preventDefault();
+            if ($("#MasterBusinessUnitId").val() === "") {
+                bootbox.alert("Unit Bisnis belum dipilih!");
+            }
+            else if ($("#MasterRegionId").val() === "") {
+                bootbox.alert("Wilayah belum dipilih!");
+            }
+            else {
+                var url = $(this).attr("href") + "?productionBillOfMaterialId=" + $("input#Id").val();
+                $.get(url, function (data) {
+                    $('#detailsContainer').html(data);
+                    $('#detailsModal').modal('show');
+
+                    [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                        new MvcDatalist(element);
+                    });
+
+                    $('form').each(function () {
+                        var $el = $(this);
+                        $el.data('validator', null);
+                        $.validator.unobtrusive.parse($el);
+                    });
+
+                    Inputmask("myNum3").mask("#Quantity");
+                    Inputmask("myNum").mask("#Price");
+
+                    $("#MasterItemId").on("change", function () {
+                        var Id = $("#MasterItemId").val();
+                        var data = { id: Id };
+                        var options = {};
+
+                        options.url = "/ProductionBillOfMaterials/GetMasterUnit";
+                        options.type = "POST";
+                        options.headers = headers;
+                        options.data = JSON.stringify(data);
+                        options.contentType = "application/json";
+                        options.dataType = "json";
+                        options.success = function (msg) {
+                            document.getElementById('MasterItemUnitId').value = msg;
+
+                            [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                                new MvcDatalist(element).reload();
+                            });
+                        };
+                        options.error = function () {
+                            document.getElementById('MasterItemUnitId').value = 0;
 
                             [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
                                 new MvcDatalist(element).reload();
@@ -314,19 +375,22 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { productionBillOfMaterialId: $("#Id").val() };
-            var options = {};
+            var grid2 = new MvcGrid(document.querySelector('#cost-table'));
+            grid2.reload();
 
-            options.url = "/ProductionBillOfMaterials/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
+            //var param = { productionBillOfMaterialId: $("#Id").val() };
+            //var options = {};
+
+            //options.url = "/ProductionBillOfMaterials/GetTotal";
+            //options.type = "POST";
+            //options.headers = headers;
+            //options.data = JSON.stringify(param);
+            //options.contentType = "application/json";
+            //options.dataType = "json";
+            //options.success = function (msg) {
+            //    document.getElementById('Total').value = msg;
+            //};
+            //$.ajax(options);
         }
 
         function EditSuccess(data) {
@@ -340,19 +404,22 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { productionBillOfMaterialId: $("#Id").val() };
-            var options = {};
+            var grid2 = new MvcGrid(document.querySelector('#cost-table'));
+            grid2.reload();
 
-            options.url = "/ProductionBillOfMaterials/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
+            //var param = { productionBillOfMaterialId: $("#Id").val() };
+            //var options = {};
+
+            //options.url = "/ProductionBillOfMaterials/GetTotal";
+            //options.type = "POST";
+            //options.headers = headers;
+            //options.data = JSON.stringify(param);
+            //options.contentType = "application/json";
+            //options.dataType = "json";
+            //options.success = function (msg) {
+            //    document.getElementById('Total').value = msg;
+            //};
+            //$.ajax(options);
         }
 
         var token = $('input[name="__RequestVerificationToken"]').val();
@@ -395,6 +462,9 @@
 
                                 var grid = new MvcGrid(document.querySelector('#detail-table'));
                                 grid.reload();
+
+                                var grid2 = new MvcGrid(document.querySelector('#cost-table'));
+                                grid2.reload();
 
                                 var param = { productionBillOfMaterialId: $("#Id").val() };
                                 var options2 = {};

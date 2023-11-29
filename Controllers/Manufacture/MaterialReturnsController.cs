@@ -877,8 +877,8 @@ namespace eShop.Controllers
                         materialReturn.MaterialSlipId = materialSlip.Id;
                         materialReturn.MasterBusinessUnitId = materialSlip.MasterBusinessUnitId;
                         materialReturn.MasterRegionId = materialSlip.MasterRegionId;
-                        materialReturn.MasterCurrencyId = materialSlip.MasterCurrencyId;
-                        materialReturn.Rate = materialSlip.Rate;
+                        //materialReturn.MasterCurrencyId = materialSlip.MasterCurrencyId;
+                        //materialReturn.Rate = materialSlip.Rate;
                         materialReturn.Notes = materialSlip.Notes;
                         materialReturn.Total = materialSlip.Total;
 

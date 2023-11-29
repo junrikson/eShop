@@ -44,38 +44,6 @@ namespace eShop.Models
         [Display(Name = "Wilayah")]
         public virtual MasterRegion MasterRegion { get; set; }
 
-        [DatalistColumn]
-        [Display(Name = "Kode Produk")]
-        [Required(ErrorMessage = "Kode Produk harus diisi.")]
-        public int HeaderMasterItemId { get; set; }
-
-        [Display(Name = "Kode Produk")]
-        public virtual MasterItem HeaderMasterItem { get; set; }
-
-        [Display(Name = "Satuan")]
-        [Required(ErrorMessage = "Master Satuan harus diisi.")]
-        public int HeaderMasterItemUnitId { get; set; }
-
-        [Display(Name = "Satuan")]
-        public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
-
-        [Display(Name = "Quantity")]
-        [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal HeaderQuantity { get; set; }
-
-        [Display(Name = "Mata Uang")]
-        [Required(ErrorMessage = "Mata Uang harus diisi.")]
-        public int MasterCurrencyId { get; set; }
-
-        [Display(Name = "Mata Uang")]
-        public virtual MasterCurrency MasterCurrency { get; set; }
-
-        [Display(Name = "Rate")]
-        [Required(ErrorMessage = "Rate harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
-        public decimal Rate { get; set; }
-
         [Display(Name = "Nomor Perintah Kerja Produksi")]
         public int? ProductionWorkOrderId { get; set; }
 
@@ -120,6 +88,53 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+    public class MaterialSlipBillOfMaterial
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Display(Name = "Pengambilan Bahan Baku Material")]
+        [Required(ErrorMessage = "Nomor Pengambilan Bahan Baku harus diisi.")]
+        public int MaterialSlipId { get; set; }
+
+        [Display(Name = "Pengambilan Bahan Baku")]
+        public virtual MaterialSlip MaterialSlip { get; set; }
+
+        [Display(Name = "Production Bill of Material")]
+        [Required(ErrorMessage = "Production Bill of Material harus diisi.")]
+        public int ProductionBillOfMaterialId { get; set; }
+
+        [Display(Name = "Production Bill of Material")]
+        public virtual ProductionBillOfMaterial ProductionBillOfMaterial { get; set; }
+
+        [Display(Name = "Quantity")]
+        [Required(ErrorMessage = "Quantity harus diisi.")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public int Quantity { get; set; }
+
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
+
     public class MaterialSlipModel
     {
         [Key]
@@ -163,25 +178,25 @@ namespace eShop.Models
         [Display(Name = "Wilayah")]
         public string MasterRegionCode { get; set; }
 
-        [DatalistColumn]
-        [Display(Name = "Kode Produk")]
-        [Required(ErrorMessage = "Kode Produk harus diisi.")]
-        public int HeaderMasterItemId { get; set; }
+        //[DatalistColumn]
+        //[Display(Name = "Kode Produk")]
+        //[Required(ErrorMessage = "Kode Produk harus diisi.")]
+        //public int HeaderMasterItemId { get; set; }
 
-        [Display(Name = "Kode Produk")]
-        public virtual MasterItem HeaderMasterItem { get; set; }
+        //[Display(Name = "Kode Produk")]
+        //public virtual MasterItem HeaderMasterItem { get; set; }
 
-        [Display(Name = "Satuan")]
-        [Required(ErrorMessage = "Master Satuan harus diisi.")]
-        public int HeaderMasterItemUnitId { get; set; }
+        //[Display(Name = "Satuan")]
+        //[Required(ErrorMessage = "Master Satuan harus diisi.")]
+        //public int HeaderMasterItemUnitId { get; set; }
 
-        [Display(Name = "Satuan")]
-        public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
+        //[Display(Name = "Satuan")]
+        //public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
 
-        [Display(Name = "Quantity")]
-        [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal HeaderQuantity { get; set; }
+        //[Display(Name = "Quantity")]
+        //[Required(ErrorMessage = "Quantity harus diisi.")]
+        //[DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        //public decimal HeaderQuantity { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Gudang")]

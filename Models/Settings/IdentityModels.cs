@@ -157,7 +157,6 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterSupplier> MasterSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterWarehouse> MasterWarehouses { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterSalesPerson> MasterSalesPersons { get; set; }        
-        public System.Data.Entity.DbSet<eShop.Models.StandardProductCost> StandardProductCosts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterial> ProductionBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterialDetails> ProductionBillOfMaterialsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterialCostDetails> ProductionBillOfMaterialsCostsDetails { get; set; }
@@ -165,6 +164,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderBillOfMaterial> ProductionWorkOrderBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderDetails> ProductionWorkOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlip> MaterialSlips { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MaterialSlipBillOfMaterial> MaterialSlipsBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlipDetails> MaterialSlipsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlip> FinishedGoodSlips { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlipDetails> FinishedGoodSlipsDetails { get; set; }

@@ -394,6 +394,16 @@ namespace eShop.Controllers
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
         }
 
+        //[HttpGet]
+        //public JsonResult AllStandardProductCost(DatalistFilter filter)
+        //{
+        //    StandardProductCostDatalist datalist = new StandardProductCostDatalist(db);
+        //    filter.AdditionalFilters["Active"] = true;
+        //    datalist.Filter = filter;
+
+        //    return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        //}
+
         [HttpGet]
         public JsonResult AllProductionBillOfMaterial(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitId = 0)
         {
