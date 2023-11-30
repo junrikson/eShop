@@ -326,7 +326,7 @@ namespace eShop.Models
         public override IQueryable<ProductionWorkOrderFinishedGoodSlipViewModel> GetModels()
         {
             return Context.Set<ProductionWorkOrder>()
-                .Where(x => !Context.Set<FinishedGoodSlip>().Where(p => p.Active == true && p.ProductionWorkOrderId == x.Id).Any())
+               // .Where(x => !Context.Set<FinishedGoodSlip>().Where(p => p.Active == true && p.ProductionWorkOrderId == x.Id).Any())
                 .Select(x => new ProductionWorkOrderFinishedGoodSlipViewModel
                 {
                     Id = x.Id,

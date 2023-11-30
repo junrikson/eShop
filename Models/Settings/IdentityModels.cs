@@ -165,8 +165,10 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderDetails> ProductionWorkOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlip> MaterialSlips { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlipBillOfMaterial> MaterialSlipsBillOfMaterials { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MaterialSlipProductionWorkOrder> MaterialSlipProductionWorkOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlipDetails> MaterialSlipsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlip> FinishedGoodSlips { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlipProductionWorkOrder> FinishedGoodSlipProductionWorkOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlipDetails> FinishedGoodSlipsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialReturn> MaterialReturns { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialReturnDetails> MaterialReturnsDetails { get; set; }

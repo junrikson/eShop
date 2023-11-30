@@ -82,6 +82,14 @@ namespace eShop.Controllers
                 .Where(x => x.FinishedGoodSlipId == Id).ToList());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "MaterialSlipsActive")]
+        public PartialViewResult WoGrid(int Id)
+        {
+            return PartialView("../Manufacture/FinishedGoodSlips/_WoGrid", db.FinishedGoodSlipProductionWorkOrders
+                .Where(x => x.FinishedGoodSlipId == Id).ToList());
+        }
+
         // GET: FinishedGoodSlips/Create
         [Authorize(Roles = "FinishedGoodSlipsAdd")]
         public ActionResult Create()
@@ -94,8 +102,6 @@ namespace eShop.Controllers
                 Date = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
-                MasterCurrencyId = masterCurrency.Id,
-                Rate = masterCurrency.Rate,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
@@ -140,7 +146,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "FinishedGoodSlipsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,ProductionWorkOrderId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] FinishedGoodSlip finishedGoodSlip)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] FinishedGoodSlip finishedGoodSlip)
         {
             finishedGoodSlip.Created = DateTime.Now;
             finishedGoodSlip.Updated = DateTime.Now;
@@ -160,9 +166,9 @@ namespace eShop.Controllers
             db.Entry(finishedGoodSlip).Property("Date").IsModified = true;
             db.Entry(finishedGoodSlip).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(finishedGoodSlip).Property("MasterRegionId").IsModified = true;
-            db.Entry(finishedGoodSlip).Property("ProductionWorkOrderId").IsModified = true;
+            //db.Entry(finishedGoodSlip).Property("ProductionWorkOrderId").IsModified = true;
             db.Entry(finishedGoodSlip).Property("MasterWarehouseId").IsModified = true;
-            db.Entry(finishedGoodSlip).Property("Total").IsModified = true;
+            //db.Entry(finishedGoodSlip).Property("Total").IsModified = true;
             db.Entry(finishedGoodSlip).Property("Notes").IsModified = true;
             db.Entry(finishedGoodSlip).Property("Active").IsModified = true;
             db.Entry(finishedGoodSlip).Property("Updated").IsModified = true;
@@ -394,7 +400,7 @@ namespace eShop.Controllers
                     {
                         rd.Load(Path.Combine(Server.MapPath("~/CrystalReports"), "FormFinishedGoodSlip.rpt"));
                         rd.SetParameterValue("Code", obj.Code);
-                        rd.SetParameterValue("Terbilang", "# " + TerbilangExtension.Terbilang(Math.Floor(obj.Total)).ToUpper() + " RUPIAH #");
+                       // rd.SetParameterValue("Terbilang", "# " + TerbilangExtension.Terbilang(Math.Floor(obj.Total)).ToUpper() + " RUPIAH #");
 
                         string connString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
@@ -475,23 +481,92 @@ namespace eShop.Controllers
             return PartialView("../Manufacture/FinishedGoodSlips/_DetailsCreate", finishedGoodSlipDetails);
         }
 
+        [Authorize(Roles = "FinishedGoodSlipsActive")]
+        public ActionResult WorkOrdersCreate(int finishedGoodSlipId)
+        {
+            FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(finishedGoodSlipId);
+
+            if (finishedGoodSlip == null)
+            {
+                return HttpNotFound();
+            }
+
+            FinishedGoodSlipProductionWorkOrder finishedGoodSlipProductionWorkOrder = new FinishedGoodSlipProductionWorkOrder
+            {
+                FinishedGoodSlipId = finishedGoodSlipId
+            };
+
+            return PartialView("../Manufacture/FinishedGoodSlips/_WorkOrdersCreate", finishedGoodSlipProductionWorkOrder);
+        }
+
+
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = "FinishedGoodSlipsActive")]
+        //public ActionResult DetailsCreate([Bind(Include = "Id,FinishedGoodSlipId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] FinishedGoodSlipDetails finishedGoodSlipDetails)
+        //{
+        //    MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(finishedGoodSlipDetails.MasterItemUnitId);
+
+        //    //if (masterItemUnit == null)
+        //    //    finishedGoodSlipDetails.Total = 0;
+        //    //else
+        //    //    finishedGoodSlipDetails.Total = finishedGoodSlipDetails.Quantity * finishedGoodSlipDetails.Price * masterItemUnit.MasterUnit.Ratio;
+
+        //    finishedGoodSlipDetails.Created = DateTime.Now;
+        //    finishedGoodSlipDetails.Updated = DateTime.Now;
+        //    finishedGoodSlipDetails.UserId = User.Identity.GetUserId<int>();
+
+        //    if (!string.IsNullOrEmpty(finishedGoodSlipDetails.Notes)) finishedGoodSlipDetails.Notes = finishedGoodSlipDetails.Notes.ToUpper();
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+        //        {
+        //            try
+        //            {
+        //                db.FinishedGoodSlipsDetails.Add(finishedGoodSlipDetails);
+        //                db.SaveChanges();
+
+        //                FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(finishedGoodSlipDetails.FinishedGoodSlipId);
+        //               // finishedGoodSlip.Total = SharedFunctions.GetTotalFinishedGoodSlip(db, finishedGoodSlip.Id, finishedGoodSlipDetails.Id) + finishedGoodSlipDetails.Total;
+
+        //                db.Entry(finishedGoodSlip).State = EntityState.Modified;
+        //                db.SaveChanges();
+
+        //                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.FinishedGoodSlipDetails, MenuId = finishedGoodSlipDetails.Id, MenuCode = finishedGoodSlipDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+        //                db.SaveChanges();
+
+        //                dbTran.Commit();
+
+        //                return Json("success", JsonRequestBehavior.AllowGet);
+        //            }
+        //            catch (DbEntityValidationException ex)
+        //            {
+        //                dbTran.Rollback();
+        //                throw ex;
+        //            }
+        //        }
+        //    }
+
+        //    return PartialView("../Manufacture/FinishedGoodSlips/_DetailsCreate", finishedGoodSlipDetails);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "FinishedGoodSlipsActive")]
-        public ActionResult DetailsCreate([Bind(Include = "Id,FinishedGoodSlipId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] FinishedGoodSlipDetails finishedGoodSlipDetails)
+        public ActionResult WorkOrdersCreate([Bind(Include = "Id,FinishedGoodSlipId,ProductionWorkOrderId,Notes,Created,Updated,UserId")] FinishedGoodSlipProductionWorkOrder obj)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(finishedGoodSlipDetails.MasterItemUnitId);
+            var productionWorkOrder = db.ProductionWorkOrders.Find(obj.ProductionWorkOrderId);
+            if (productionWorkOrder != null)
+            {
+                obj.Created = productionWorkOrder.Created;
+                obj.Updated = productionWorkOrder.Updated;
+            }
 
-            //if (masterItemUnit == null)
-            //    finishedGoodSlipDetails.Total = 0;
-            //else
-            //    finishedGoodSlipDetails.Total = finishedGoodSlipDetails.Quantity * finishedGoodSlipDetails.Price * masterItemUnit.MasterUnit.Ratio;
+            obj.UserId = User.Identity.GetUserId<int>();
 
-            finishedGoodSlipDetails.Created = DateTime.Now;
-            finishedGoodSlipDetails.Updated = DateTime.Now;
-            finishedGoodSlipDetails.UserId = User.Identity.GetUserId<int>();
-
-            if (!string.IsNullOrEmpty(finishedGoodSlipDetails.Notes)) finishedGoodSlipDetails.Notes = finishedGoodSlipDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
@@ -499,16 +574,36 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        db.FinishedGoodSlipsDetails.Add(finishedGoodSlipDetails);
+                        db.FinishedGoodSlipProductionWorkOrders.Add(obj);
                         db.SaveChanges();
 
-                        FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(finishedGoodSlipDetails.FinishedGoodSlipId);
-                       // finishedGoodSlip.Total = SharedFunctions.GetTotalFinishedGoodSlip(db, finishedGoodSlip.Id, finishedGoodSlipDetails.Id) + finishedGoodSlipDetails.Total;
+                        var productionWorkOrderBillOfMaterials = db.ProductionWorkOrderBillOfMaterials
+                        .Where(p => p.ProductionWorkOrderId == obj.ProductionWorkOrderId)
+                        .ToList();
 
-                        db.Entry(finishedGoodSlip).State = EntityState.Modified;
-                        db.SaveChanges();
+                        //var productionWorkOrdersDetails = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderId == obj.ProductionWorkOrderId).ToList();
+                        if (productionWorkOrderBillOfMaterials.Count > 0)
+                        {
+                            foreach (ProductionWorkOrderBillOfMaterial productionWorkOrderBillOfMaterial in productionWorkOrderBillOfMaterials)
+                            {
+                                FinishedGoodSlipDetails finishedGoodSlipDetails = new FinishedGoodSlipDetails
+                                {
+                                    FinishedGoodSlipId = obj.FinishedGoodSlipId,
+                                    // FinishedGoodSlipProductionWorkOrderId = obj.Id,
+                                    MasterItemId = productionWorkOrderBillOfMaterial.ProductionBillOfMaterial.MasterItemId,
+                                    MasterItemUnitId = productionWorkOrderBillOfMaterial.ProductionBillOfMaterial.MasterItemUnitId,
+                                    Quantity = productionWorkOrderBillOfMaterial.Quantity,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.FinishedGoodSlipDetails, MenuId = finishedGoodSlipDetails.Id, MenuCode = finishedGoodSlipDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                                db.FinishedGoodSlipsDetails.Add(finishedGoodSlipDetails);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionWorkOrderDetails, MenuId = obj.Id, MenuCode = obj.ProductionWorkOrderId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -523,8 +618,9 @@ namespace eShop.Controllers
                 }
             }
 
-            return PartialView("../Manufacture/FinishedGoodSlips/_DetailsCreate", finishedGoodSlipDetails);
+            return PartialView("../Manufacture/FinishedGoodSlips/_WorkOrdersCreate", obj);
         }
+
 
         [Authorize(Roles = "FinishedGoodSlipsActive")]
         public ActionResult DetailsEdit(int? id)
@@ -543,17 +639,29 @@ namespace eShop.Controllers
             return PartialView("../Manufacture/FinishedGoodSlips/_DetailsEdit", obj);
         }
 
+        [Authorize(Roles = "FinishedGoodSlipsActive")]
+        public ActionResult WorkOrdersEdit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            FinishedGoodSlipProductionWorkOrder obj = db.FinishedGoodSlipProductionWorkOrders.Find(id);
+
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("../Manufacture/FinishedGoodSlips/_WorkOrdersEdit", obj);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "FinishedGoodSlipsActive")]
-        public ActionResult DetailsEdit([Bind(Include = "Id,FinishedGoodSlipId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] FinishedGoodSlipDetails finishedGoodSlipDetails)
+        public ActionResult DetailsEdit([Bind(Include = "Id,FinishedGoodSlipId,MasterItemId,MasterItemUnitId,Quantity,Notes,Created,Updated,UserId")] FinishedGoodSlipDetails finishedGoodSlipDetails)
         {
             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(finishedGoodSlipDetails.MasterItemUnitId);
-
-            //if (masterItemUnit == null)
-            //    finishedGoodSlipDetails.Total = 0;
-            //else
-            //    finishedGoodSlipDetails.Total = finishedGoodSlipDetails.Quantity * finishedGoodSlipDetails.Price * masterItemUnit.MasterUnit.Ratio;
 
             finishedGoodSlipDetails.Updated = DateTime.Now;
             finishedGoodSlipDetails.UserId = User.Identity.GetUserId<int>();
@@ -564,8 +672,6 @@ namespace eShop.Controllers
             db.Entry(finishedGoodSlipDetails).Property("MasterItemId").IsModified = true;
             db.Entry(finishedGoodSlipDetails).Property("MasterItemUnitId").IsModified = true;
             db.Entry(finishedGoodSlipDetails).Property("Quantity").IsModified = true;
-            db.Entry(finishedGoodSlipDetails).Property("Price").IsModified = true;
-            db.Entry(finishedGoodSlipDetails).Property("Total").IsModified = true;
             db.Entry(finishedGoodSlipDetails).Property("Notes").IsModified = true;
             db.Entry(finishedGoodSlipDetails).Property("Updated").IsModified = true;
             db.Entry(finishedGoodSlipDetails).Property("UserId").IsModified = true;
@@ -579,7 +685,7 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(finishedGoodSlipDetails.FinishedGoodSlipId);
-                        finishedGoodSlip.Total = SharedFunctions.GetTotalFinishedGoodSlip(db, finishedGoodSlip.Id, finishedGoodSlipDetails.Id) + finishedGoodSlipDetails.Total;
+                        //finishedGoodSlip.Total = SharedFunctions.GetTotalFinishedGoodSlip(db, finishedGoodSlip.Id, finishedGoodSlipDetails.Id) + finishedGoodSlipDetails.Total;
 
                         db.Entry(finishedGoodSlip).State = EntityState.Modified;
                         db.SaveChanges();
@@ -687,87 +793,6 @@ namespace eShop.Controllers
             return Json(masterItemUnitId);
         }
 
-        [Authorize(Roles = "FinishedGoodSlipsActive")]
-        public ActionResult ChangeCurrency(int? finishedGoodSlipId)
-        {
-            if (finishedGoodSlipId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(finishedGoodSlipId);
-
-            ChangeCurrency obj = new ChangeCurrency
-            {
-                Id = finishedGoodSlip.Id,
-                MasterCurrencyId = finishedGoodSlip.MasterCurrencyId,
-                Rate = finishedGoodSlip.Rate
-            };
-
-            if (obj == null)
-            {
-                return HttpNotFound();
-            }
-
-            return PartialView("../Manufacture/FinishedGoodSlips/_ChangeCurrency", obj);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "FinishedGoodSlipsActive")]
-        public ActionResult ChangeCurrency([Bind(Include = "Id,MasterCurrencyId,Rate")] ChangeCurrency changeCurrency)
-        {
-            MasterCurrency masterCurrency = db.MasterCurrencies.Find(changeCurrency.MasterCurrencyId);
-
-            FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(changeCurrency.Id);
-            finishedGoodSlip.MasterCurrencyId = changeCurrency.MasterCurrencyId;
-            finishedGoodSlip.Rate = changeCurrency.Rate;
-
-            if (ModelState.IsValid)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var finishedGoodSlipsDetails = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlip.Id).ToList();
-
-                        foreach (FinishedGoodSlipDetails finishedGoodSlipDetails in finishedGoodSlipsDetails)
-                        {
-                            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(finishedGoodSlipDetails.MasterItemUnitId);
-
-                            if (masterItemUnit == null)
-                                finishedGoodSlipDetails.Total = 0;
-                            else
-                                finishedGoodSlipDetails.Total = finishedGoodSlipDetails.Quantity * finishedGoodSlipDetails.Price * masterItemUnit.MasterUnit.Ratio * finishedGoodSlip.Rate;
-
-                            db.Entry(finishedGoodSlipDetails).State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
-
-                        finishedGoodSlip.Total = SharedFunctions.GetTotalSalesRequest(db, finishedGoodSlip.Id);
-                        db.Entry(finishedGoodSlip).State = EntityState.Modified;
-                        db.SaveChanges();
-
-                        dbTran.Commit();
-
-                        var returnObject = new
-                        {
-                            Status = "success",
-                            Message = masterCurrency.Code + " : " + finishedGoodSlip.Rate.ToString("N2")
-                        };
-
-                        return Json(returnObject, JsonRequestBehavior.AllowGet);
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-
-            return PartialView("../Manufacture/FinishedGoodSlips/_ChangeCurrency", changeCurrency);
-        }
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
@@ -817,83 +842,6 @@ namespace eShop.Controllers
                 code = (Convert.ToInt32(lastData.Code.Substring(0, 4)) + 1).ToString("D4") + code;
 
             return code;
-        }
-
-        //[HttpPost]
-        //[ValidateJsonAntiForgeryToken]
-        //[Authorize(Roles = "FinishedGoodSlipsActive")]
-        //public JsonResult GetTotal(int finishedGoodSlipId)
-        //{
-        //    return Json(SharedFunctions.GetTotalFinishedGoodSlip(db, finishedGoodSlipId).ToString("N2"));
-        //}
-
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "FinishedGoodSlipsActive")]
-        public JsonResult PopulateDetails(int finishedGoodSlipid, int productionWorkOrderId)
-        {
-            FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(finishedGoodSlipid);
-            ProductionWorkOrder productionWorkOrder = db.ProductionWorkOrders.Find(productionWorkOrderId);
-
-            if (finishedGoodSlip != null && productionWorkOrder != null)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var remove = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlip.Id).ToList();
-
-                        if (remove != null)
-                        {
-                            db.FinishedGoodSlipsDetails.RemoveRange(remove);
-                            db.SaveChanges();
-                        }
-
-                        // Menghapus referensi ke ProductionWorkOrderDetails
-
-                        // Mengambil data dari ProductionWorkOrder untuk diisi ke FinishedGoodSlipDetails
-                        FinishedGoodSlipDetails finishedGoodSlipDetails = new FinishedGoodSlipDetails
-                        {
-                            FinishedGoodSlipId = finishedGoodSlip.Id,
-                            // Properti lainnya dapat diisi sesuai kebutuhan
-                            Created = DateTime.Now,
-                            Updated = DateTime.Now,
-                            UserId = User.Identity.GetUserId<int>()
-                        };
-
-                        db.FinishedGoodSlipsDetails.Add(finishedGoodSlipDetails);
-                        db.SaveChanges();
-
-                        // Mengupdate properti FinishedGoodSlip dengan nilai dari ProductionWorkOrder.
-                        finishedGoodSlip.ProductionWorkOrderId = productionWorkOrder.Id;
-                        finishedGoodSlip.MasterBusinessUnitId = productionWorkOrder.MasterBusinessUnitId;
-                        finishedGoodSlip.MasterRegionId = productionWorkOrder.MasterRegionId;
-                        finishedGoodSlip.Notes = productionWorkOrder.Notes;
-                        //finishedGoodSlip.Total = productionWorkOrder.Total;
-
-                        db.Entry(finishedGoodSlip).State = EntityState.Modified;
-                        db.SaveChanges();
-
-                        dbTran.Commit();
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-
-            return Json(new
-            {
-                finishedGoodSlip.MasterRegionId,
-                finishedGoodSlip.MasterBusinessUnitId,
-                finishedGoodSlip.MasterWarehouseId,
-                finishedGoodSlip.Notes,
-                Total = finishedGoodSlip.Total.ToString("N2"),
-                finishedGoodSlip.Date,
-                Currency = finishedGoodSlip.MasterCurrency.Code + " : " + finishedGoodSlip.Rate.ToString("N2")
-            });
         }
 
 

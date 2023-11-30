@@ -134,6 +134,46 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+    public class MaterialSlipProductionWorkOrder
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Display(Name = "Material Slip")]
+        [Required(ErrorMessage = "Material Slip harus diisi.")]
+        public int MaterialSlipId { get; set; }
+
+        [Display(Name = "Material Slip")]
+        public virtual MaterialSlip MaterialSlip { get; set; }
+
+        [Display(Name = "Nomor Perintah Kerja Produksi")]
+        public int? ProductionWorkOrderId { get; set; }
+
+        [Display(Name = "Nomor Perintah Kerja Produksi")]
+        public virtual ProductionWorkOrder ProductionWorkOrder { get; set; }
+
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
 
     public class MaterialSlipModel
     {
@@ -344,6 +384,13 @@ namespace eShop.Models
 
         [Display(Name = "Material Slip")]
         public virtual MaterialSlip MaterialSlip { get; set; }
+
+        [Display(Name = "Material Slip Production WorkOrder")]
+        [Required(ErrorMessage = "Material Slip Production WorkOrder harus diisi.")]
+        public int MaterialSlipProductionWorkOrderId { get; set; }
+
+        [Display(Name = "Material Slip Production WorkOrder")]
+        public virtual MaterialSlipProductionWorkOrder MaterialSlipProductionWorkOrder { get; set; }
 
         [Display(Name = "Master Item")]
         [Required(ErrorMessage = "Master Item harus diisi.")]

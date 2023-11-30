@@ -65,13 +65,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                @*<div class="form-group">
                                     <div class="col-md-12">
                                         @Html.LabelFor(model => model.ProductionWorkOrderId)
                                         @Html.DatalistFor(model => model.ProductionWorkOrderId, new eShop.Models.OutstandingProductionWorkOrderDatalist())
                                         @Html.ValidationMessageFor(model => model.ProductionWorkOrderId, "", new { @class = "text-danger" })
                                     </div>
-                                </div>
+                                </div>*@
                                 <div class="form-group">
                                     <div class="col-md-12">
                                         @Html.LabelFor(model => model.MasterWarehouseId)
@@ -115,44 +115,48 @@
             <div class="col-md-8">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab_1" data-toggle="tab">Material</a></li>
+                        <li class="active"><a href="#tab_1" data-toggle="tab">Wo</a></li>
                         <li><a href="#tab_2" data-toggle="tab">BoM</a></li>
+                        <li><a href="#tab_3" data-toggle="tab">Material</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active form-horizontal" id="tab_1">
                             <div class="text-right col-md-12">
-                                @*<label style="font-weight: bold">TOTAL :</label>
-                                <input type="text" id="TotalItems" value="@ViewBag.TotalItems" disabled="disabled" style="text-align:right;" />*@
-                                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "MaterialSlips")">
-                                    <i class="fa fa-plus"></i> Add Item
+                                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("WorkOrdersCreate", "MaterialSlips")">
+                                    <i class="fa fa-plus"></i> Add Wo
                                 </button>
-                                <button id="btnItemsBatchDelete" class="btn btn-danger mx-1">
+                                <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
                                     <i class="fa fa-trash"></i> Delete
                                 </button>
                             </div>
 
                             <div class="form-group">
                                 <div class="box-body" style="overflow:auto; white-space: nowrap">
-                                    @Html.AjaxGrid(Url.Action("DetailsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "detail-table" })
+                                    @Html.AjaxGrid(Url.Action("WoGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "wo-table" })
                                 </div>
                             </div>
                         </div>
 
                         <div class="tab-pane form-horizontal" id="tab_2">
-                            @*<div class="text-right col-md-12">
-                                <label style="font-weight: bold">TOTAL COST :</label>
-                                <input type="text" id="TotalCost" value="@ViewBag.TotalCost" disabled="disabled" style="text-align:right;" />
-                                <button id="btnCostAdd" class="btn btn-success mx-1" href="@Url.Action("CostsCreate", "MaterialSlips")">
-                                    <i class="fa fa-plus"></i> Add Biaya
-                                </button>
-                                <button id="btnCostsBatchDelete" class="btn btn-danger mx-1">
-                                    <i class="fa fa-trash"></i> Delete
-                                </button>
-                            </div>*@
-
                             <div class="form-group">
                                 <div class="box-body" style="overflow:auto; white-space: nowrap">
                                     @Html.AjaxGrid(Url.Action("BoMGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "bom-table" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane form-horizontal" id="tab_3">
+                            <div class="text-right col-md-12">
+                                <button id="btnItemAdd" class="btn btn-success mx-1" href="@Url.Action("WorkOrdersCreate", "MaterialSlips")">
+                                    <i class="fa fa-plus"></i> Add Item
+                                </button>
+                                <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
+                                    <i class="fa fa-trash"></i> Delete
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <div class="box-body" style="overflow:auto; white-space: nowrap">
+                                    @Html.AjaxGrid(Url.Action("DetailsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "detail-table" })
                                 </div>
                             </div>
                         </div>
@@ -271,77 +275,9 @@
                     });
 
                     Inputmask("myNum").mask("#Quantity");
-                    Inputmask("myNum").mask("#Price");
 
-                    //$("#MasterItemId").on("change", function () {
-                    //    var Id = $("#MasterItemId").val();
-                    //    var data = { id: Id };
-                    //    var options = {};
-
-                    //    options.url = "/MaterialSlips/GetMasterUnit";
-                    //    options.type = "POST";
-                    //    options.headers = headers;
-                    //    options.data = JSON.stringify(data);
-                    //    options.contentType = "application/json";
-                    //    options.dataType = "json";
-                    //    options.success = function (msg) {
-                    //        document.getElementById('MasterItemUnitId').value = msg;
-
-                    //        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                    //            new MvcDatalist(element).reload();
-                    //        });
-                    //    };
-                    //    options.error = function () {
-                    //        document.getElementById('MasterItemUnitId').value = 0;
-
-                    //        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                    //            new MvcDatalist(element).reload();
-                    //        });
-                    //    };
-                    //    $.ajax(options);
-                    //}).change();
                 });
             }
-        });
-
-        $('#btnChangeCurrency').click(function (event) {
-            event.preventDefault();
-            var url = $(this).attr("href") + "?materialSlipId=" + $("input#Id").val();
-            $.get(url, function (data) {
-                $('#detailsContainer').html(data);
-                $('#detailsModal').modal('show');
-
-                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                    new MvcDatalist(element);
-                });
-
-                $('form').each(function () {
-                    var $el = $(this);
-                    $el.data('validator', null);
-                    $.validator.unobtrusive.parse($el);
-                });
-
-                $("#MasterCurrencyId").on("change", function () {
-                    var id = $("#MasterCurrencyId").val();
-                    var data = { Id: id };
-                    var options = {};
-
-                    options.url = "/MaterialSlips/GetCurrencyRate";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (rate) {
-                        document.getElementById('Rate').value = rate;
-                    };
-                    options.error = function () {
-                    };
-                    $.ajax(options);
-                }).change();
-
-                Inputmask("myNum10").mask("#Rate");
-            });
         });
 
 
@@ -356,19 +292,12 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { materialSlipId: $("#Id").val() };
-            var options = {};
+            var grid2 = new MvcGrid(document.querySelector('#Wo-table'));
+            grid2.reload();
 
-            options.url = "/MaterialSlips/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
+            var grid3 = new MvcGrid(document.querySelector('#bom-table'));
+            grid3.reload();
+
         }
 
         function EditSuccess(data) {
@@ -382,47 +311,13 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { materialSlipId: $("#Id").val() };
-            var options = {};
+            var grid2 = new MvcGrid(document.querySelector('#Wo-table'));
+            grid2.reload();
 
-            options.url = "/MaterialSlips/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
-        }
+            var grid3 = new MvcGrid(document.querySelector('#bom-table'));
+            grid3.reload();
 
-        function ChangeCurrencySuccess(data) {
-            if (data.Status !== "success") {
-                $('#detailsContainer').html(data);
-                return;
-            }
-            $('#detailsModal').modal('hide');
-            $('#detailsContainer').html("");
 
-            var grid = new MvcGrid(document.querySelector('#detail-table'));
-            grid.reload();
-
-            document.querySelector('#btnChangeCurrency').innerHTML = data.Message;
-
-            var param = { materialSlipId: $("#Id").val() };
-            var options = {};
-
-            options.url = "/MaterialSlips/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
         }
 
 
