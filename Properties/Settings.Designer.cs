@@ -218,7 +218,7 @@ namespace eShop.Properties {
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BOMPD/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("BOM/")]
         public string ProductionBillOfMaterialCode
         {
             get
@@ -227,31 +227,10 @@ namespace eShop.Properties {
             }
         }
 
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BOMPK/")]
-        public string PackingBillOfMaterialCode
-        {
-            get
-            {
-                return ((string)(this["PackingBillOfMaterialCode"]));
-            }
-        }
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SPKPK/")]
-        public string PackingWorkOrderCode
-        {
-            get
-            {
-                return ((string)(this["PackingWorkOrderCode"]));
-            }
-        }
-
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SPKPD/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SPK/")]
         public string ProductionWorkOrderCode
         {
             get

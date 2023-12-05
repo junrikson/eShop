@@ -228,6 +228,14 @@ namespace eShop.Controllers
                                     db.SaveChanges();
                                 }
 
+                                var finishedGoodSlipProductionWorkOrders = db.FinishedGoodSlipProductionWorkOrders.Where(x => x.FinishedGoodSlipId == obj.Id).ToList();
+
+                                if (finishedGoodSlipProductionWorkOrders != null)
+                                {
+                                    db.FinishedGoodSlipProductionWorkOrders.RemoveRange(finishedGoodSlipProductionWorkOrders);
+                                    db.SaveChanges();
+                                }
+
                                 db.FinishedGoodSlips.Remove(obj);
                                 db.SaveChanges();
 
@@ -329,6 +337,8 @@ namespace eShop.Controllers
             }
         }
 
+
+
         [HttpPost]
         [Authorize(Roles = "FinishedGoodSlipsDelete")]
         [ValidateJsonAntiForgeryToken]
@@ -358,6 +368,14 @@ namespace eShop.Controllers
                                 if (details != null)
                                 {
                                     db.FinishedGoodSlipsDetails.RemoveRange(details);
+                                    db.SaveChanges();
+                                }
+
+                                var finishedGoodSlipProductionWorkOrders = db.FinishedGoodSlipProductionWorkOrders.Where(x => x.FinishedGoodSlipId == obj.Id).ToList();
+
+                                if (finishedGoodSlipProductionWorkOrders != null)
+                                {
+                                    db.FinishedGoodSlipProductionWorkOrders.RemoveRange(finishedGoodSlipProductionWorkOrders);
                                     db.SaveChanges();
                                 }
 
@@ -499,59 +517,6 @@ namespace eShop.Controllers
             return PartialView("../Manufacture/FinishedGoodSlips/_WorkOrdersCreate", finishedGoodSlipProductionWorkOrder);
         }
 
-
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[Authorize(Roles = "FinishedGoodSlipsActive")]
-        //public ActionResult DetailsCreate([Bind(Include = "Id,FinishedGoodSlipId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] FinishedGoodSlipDetails finishedGoodSlipDetails)
-        //{
-        //    MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(finishedGoodSlipDetails.MasterItemUnitId);
-
-        //    //if (masterItemUnit == null)
-        //    //    finishedGoodSlipDetails.Total = 0;
-        //    //else
-        //    //    finishedGoodSlipDetails.Total = finishedGoodSlipDetails.Quantity * finishedGoodSlipDetails.Price * masterItemUnit.MasterUnit.Ratio;
-
-        //    finishedGoodSlipDetails.Created = DateTime.Now;
-        //    finishedGoodSlipDetails.Updated = DateTime.Now;
-        //    finishedGoodSlipDetails.UserId = User.Identity.GetUserId<int>();
-
-        //    if (!string.IsNullOrEmpty(finishedGoodSlipDetails.Notes)) finishedGoodSlipDetails.Notes = finishedGoodSlipDetails.Notes.ToUpper();
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-        //        {
-        //            try
-        //            {
-        //                db.FinishedGoodSlipsDetails.Add(finishedGoodSlipDetails);
-        //                db.SaveChanges();
-
-        //                FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(finishedGoodSlipDetails.FinishedGoodSlipId);
-        //               // finishedGoodSlip.Total = SharedFunctions.GetTotalFinishedGoodSlip(db, finishedGoodSlip.Id, finishedGoodSlipDetails.Id) + finishedGoodSlipDetails.Total;
-
-        //                db.Entry(finishedGoodSlip).State = EntityState.Modified;
-        //                db.SaveChanges();
-
-        //                db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.FinishedGoodSlipDetails, MenuId = finishedGoodSlipDetails.Id, MenuCode = finishedGoodSlipDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
-        //                db.SaveChanges();
-
-        //                dbTran.Commit();
-
-        //                return Json("success", JsonRequestBehavior.AllowGet);
-        //            }
-        //            catch (DbEntityValidationException ex)
-        //            {
-        //                dbTran.Rollback();
-        //                throw ex;
-        //            }
-        //        }
-        //    }
-
-        //    return PartialView("../Manufacture/FinishedGoodSlips/_DetailsCreate", finishedGoodSlipDetails);
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "FinishedGoodSlipsActive")]
@@ -589,10 +554,10 @@ namespace eShop.Controllers
                                 FinishedGoodSlipDetails finishedGoodSlipDetails = new FinishedGoodSlipDetails
                                 {
                                     FinishedGoodSlipId = obj.FinishedGoodSlipId,
-                                    // FinishedGoodSlipProductionWorkOrderId = obj.Id,
                                     MasterItemId = productionWorkOrderBillOfMaterial.ProductionBillOfMaterial.MasterItemId,
                                     MasterItemUnitId = productionWorkOrderBillOfMaterial.ProductionBillOfMaterial.MasterItemUnitId,
                                     Quantity = productionWorkOrderBillOfMaterial.Quantity,
+                                    QuantitySpk = productionWorkOrderBillOfMaterial.Quantity,
                                     Created = DateTime.Now,
                                     Updated = DateTime.Now,
                                     UserId = User.Identity.GetUserId<int>()
@@ -639,27 +604,10 @@ namespace eShop.Controllers
             return PartialView("../Manufacture/FinishedGoodSlips/_DetailsEdit", obj);
         }
 
-        [Authorize(Roles = "FinishedGoodSlipsActive")]
-        public ActionResult WorkOrdersEdit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            FinishedGoodSlipProductionWorkOrder obj = db.FinishedGoodSlipProductionWorkOrders.Find(id);
-
-            if (obj == null)
-            {
-                return HttpNotFound();
-            }
-            return PartialView("../Manufacture/FinishedGoodSlips/_WorkOrdersEdit", obj);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "FinishedGoodSlipsActive")]
-        public ActionResult DetailsEdit([Bind(Include = "Id,FinishedGoodSlipId,MasterItemId,MasterItemUnitId,Quantity,Notes,Created,Updated,UserId")] FinishedGoodSlipDetails finishedGoodSlipDetails)
+        public ActionResult DetailsEdit([Bind(Include = "Id,FinishedGoodSlipId,MasterItemId,MasterItemUnitId,QuantitySpk,Quantity,Notes,Created,Updated,UserId")] FinishedGoodSlipDetails finishedGoodSlipDetails)
         {
             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(finishedGoodSlipDetails.MasterItemUnitId);
 
@@ -671,6 +619,7 @@ namespace eShop.Controllers
             db.Entry(finishedGoodSlipDetails).State = EntityState.Unchanged;
             db.Entry(finishedGoodSlipDetails).Property("MasterItemId").IsModified = true;
             db.Entry(finishedGoodSlipDetails).Property("MasterItemUnitId").IsModified = true;
+            db.Entry(finishedGoodSlipDetails).Property("QuantitySpk").IsModified = true;
             db.Entry(finishedGoodSlipDetails).Property("Quantity").IsModified = true;
             db.Entry(finishedGoodSlipDetails).Property("Notes").IsModified = true;
             db.Entry(finishedGoodSlipDetails).Property("Updated").IsModified = true;
@@ -705,6 +654,68 @@ namespace eShop.Controllers
                 }
             }
             return PartialView("../Manufacture/FinishedGoodSlips/_DetailsEdit", finishedGoodSlipDetails);
+        }
+
+        [Authorize(Roles = "FinishedGoodSlipsActive")]
+        public ActionResult WorkOrdersEdit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            FinishedGoodSlipProductionWorkOrder obj = db.FinishedGoodSlipProductionWorkOrders.Find(id);
+
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("../Manufacture/FinishedGoodSlips/_WorkOrdersEdit", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "FinishedGoodSlipsActive")]
+        public ActionResult WorkOrdersEdit([Bind(Include = "Id,FinishedGoodSlipId,ProductionWorkOrderId,Created,Updated,UserId")] FinishedGoodSlipProductionWorkOrder obj)
+        {
+            obj.Updated = DateTime.Now;
+            obj.UserId = User.Identity.GetUserId<int>();
+
+            if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
+
+            db.Entry(obj).State = EntityState.Unchanged;
+            db.Entry(obj).Property("ProductionWorkOrderId").IsModified = true;
+            db.Entry(obj).Property("Updated").IsModified = true;
+            db.Entry(obj).Property("UserId").IsModified = true;
+
+            if (ModelState.IsValid)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.SaveChanges();
+
+                        FinishedGoodSlipProductionWorkOrder finishedGoodSlipProductionWorkOrder = db.FinishedGoodSlipProductionWorkOrders.Find(obj.FinishedGoodSlipId);
+
+                        db.Entry(finishedGoodSlipProductionWorkOrder).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        //db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.FinishedGoodSlipDetails, MenuId = finishedGoodSlipDetails.Id, MenuCode = finishedGoodSlipDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+
+                        return Json("success", JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            return PartialView("../Manufacture/FinishedGoodSlips/_WorkOrdersEdit", obj);
         }
 
         [HttpPost]

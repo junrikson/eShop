@@ -65,13 +65,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @*<div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.ProductionWorkOrderId)
-                                        @Html.DatalistFor(model => model.ProductionWorkOrderId, new eShop.Models.OutstandingProductionWorkOrderDatalist())
-                                        @Html.ValidationMessageFor(model => model.ProductionWorkOrderId, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>*@
                                 <div class="form-group">
                                     <div class="col-md-12">
                                         @Html.LabelFor(model => model.MasterWarehouseId)
@@ -147,7 +140,7 @@
 
                         <div class="tab-pane form-horizontal" id="tab_3">
                             <div class="text-right col-md-12">
-                                <button id="btnItemAdd" class="btn btn-success mx-1" href="@Url.Action("WorkOrdersCreate", "MaterialSlips")">
+                                <button id="btnItemAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "MaterialSlips")">
                                     <i class="fa fa-plus"></i> Add Item
                                 </button>
                                 <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
@@ -251,6 +244,36 @@
         });
 
         $('#btnAdd').click(function (event) {
+            event.preventDefault();
+            if ($("#MasterBusinessUnitId").val() === "") {
+                bootbox.alert("Unit Bisnis belum dipilih!");
+            }
+            else if ($("#MasterRegionId").val() === "") {
+                bootbox.alert("Wilayah belum dipilih!");
+            }
+            else {
+                var url = $(this).attr("href") + "?materialSlipId=" + $("input#Id").val();
+                $.get(url, function (data) {
+                    $('#detailsContainer').html(data);
+                    $('#detailsModal').modal('show');
+
+                    [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                        new MvcDatalist(element);
+                    });
+
+                    $('form').each(function () {
+                        var $el = $(this);
+                        $el.data('validator', null);
+                        $.validator.unobtrusive.parse($el);
+                    });
+
+                    Inputmask("myNum").mask("#Quantity");
+
+                });
+            }
+        });
+
+        $('#btnItemAdd').click(function (event) {
             event.preventDefault();
             if ($("#MasterBusinessUnitId").val() === "") {
                 bootbox.alert("Unit Bisnis belum dipilih!");

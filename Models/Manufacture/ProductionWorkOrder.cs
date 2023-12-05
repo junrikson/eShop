@@ -115,7 +115,6 @@ namespace eShop.Models
         [Remote("IsCodeExists", "ProductionWorkOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Kode Produk")]
         [Required(ErrorMessage = "Kode Produk harus diisi.")]
         public int HeaderMasterItemId { get; set; }
@@ -130,7 +129,6 @@ namespace eShop.Models
         [Display(Name = "Satuan")]
         public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
@@ -162,8 +160,28 @@ namespace eShop.Models
         [Display(Name = "Print")]
         public bool IsPrint { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+       // [DatalistColumn]
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
     }
 
     public class ProductionWorkOrderFinishedGoodSlipViewModel
@@ -296,6 +314,9 @@ namespace eShop.Models
                     Code = x.Code,
                     Date = x.Date,
                     Active = x.Active,
+                    Created = x.Created,
+                    Updated = x.Updated,
+                    
                 });
         }
     }

@@ -44,12 +44,6 @@ namespace eShop.Models
         [Display(Name = "Wilayah")]
         public virtual MasterRegion MasterRegion { get; set; }
 
-        //[Display(Name = "Nomor Perintah Kerja Produksi")]
-        //public int? ProductionWorkOrderId { get; set; }
-
-        //[Display(Name = "Nomor Perintah Kerja Produksi")]
-        //public virtual ProductionWorkOrder ProductionWorkOrder { get; set; }
-
         [Display(Name = "Gudang")]
         [Required(ErrorMessage = "Gudang harus diisi.")]
         public int MasterWarehouseId { get; set; }
@@ -131,10 +125,6 @@ namespace eShop.Models
         [Display(Name = "Gudang")]
         public string MasterWarehouseCode { get; set; }
 
-        //[Display(Name = "Total")]
-        //[DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        //public decimal Total { get; set; }
-
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
     }
@@ -205,6 +195,10 @@ namespace eShop.Models
 
         [Display(Name = "Satuan")]
         public virtual MasterItemUnit MasterItemUnit { get; set; }
+
+        [Display(Name = "QuantitySpk")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal QuantitySpk { get; set; }
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]

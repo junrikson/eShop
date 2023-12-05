@@ -8,7 +8,7 @@
         .Build(columns =>
         {
             columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
-            columns.Add(model => ((User.IsInRole("MaterialSlipsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success edit-data btn-xs\" href=\"" + @Url.Action("DetailsEdit", "MaterialSlips", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") + "</div>").Encoded(false);
+            columns.Add(model => ((User.IsInRole("MaterialSlipsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success edit-data btn-xs\" href=\"" + @Url.Action("WorkOrdersEdit", "MaterialSlips", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") + "</div>").Encoded(false);
             columns.Add(model => model.ProductionWorkOrder.Code).Titled(@Html.DisplayNameFor(model => model.ProductionWorkOrder.Code));
             columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
             columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));

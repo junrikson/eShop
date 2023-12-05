@@ -7224,10 +7224,11 @@
     <Content Include="Views\Manufacture\StandardProductCosts\_Create.cshtml" />
     <Content Include="Views\Manufacture\MaterialSlips\_BoMGrid.cshtml" />
     <Content Include="Views\Manufacture\MaterialSlips\_WoGrid.cshtml" />
-    <Content Include="Views\Manufacture\MaterialSlips\_DetailsCreate - Copy.cshtml" />
     <Content Include="Views\Manufacture\FinishedGoodSlips\_WoGrid.cshtml" />
     <Content Include="Views\Manufacture\FinishedGoodSlips\_WorkOrdersCreate.cshtml" />
     <Content Include="Views\Manufacture\FinishedGoodSlips\_WorkOrdersEdit.cshtml" />
+    <Content Include="Views\Manufacture\MaterialSlips\_DetailsCreate.cshtml" />
+    <Content Include="Views\Manufacture\MaterialSlips\_WorkOrdersEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

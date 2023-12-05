@@ -861,7 +861,7 @@ namespace eShop.Controllers
                                     MasterItemId = materialSlipDetails.MasterItemId,
                                     MasterItemUnitId = materialSlipDetails.MasterItemUnitId,
                                     Quantity = materialSlipDetails.Quantity,
-                                    Price = materialSlipDetails.Price,
+                                    //Price = materialSlipDetails.Price,
                                     Total = materialSlipDetails.Total,
                                     Notes = materialSlipDetails.Notes,
                                     Created = DateTime.Now,

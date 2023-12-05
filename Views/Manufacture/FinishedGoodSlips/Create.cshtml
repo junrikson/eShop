@@ -65,13 +65,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @*<div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.ProductionWorkOrderId)
-                                        @Html.DatalistFor(model => model.ProductionWorkOrderId, new eShop.Models.OutsandingProductionWorkOrderFinishedGoodSlipDatalist())
-                                        @Html.ValidationMessageFor(model => model.ProductionWorkOrderId, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>*@
                                 <div class="form-group">
                                     <div class="col-md-12">
                                         @Html.LabelFor(model => model.MasterWarehouseId)
@@ -144,21 +137,6 @@
                             </div>
                         </div>
 
-                        @*<div class="tab-pane form-horizontal" id="tab_3">
-                            <div class="text-right col-md-12">
-                                <button id="btnItemAdd" class="btn btn-success mx-1" href="@Url.Action("WorkOrdersCreate", "MaterialSlips")">
-                                    <i class="fa fa-plus"></i> Add Item
-                                </button>
-                                <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
-                                    <i class="fa fa-trash"></i> Delete
-                                </button>
-                            </div>
-                            <div class="form-group">
-                                <div class="box-body" style="overflow:auto; white-space: nowrap">
-                                    @Html.AjaxGrid(Url.Action("DetailsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "detail-table" })
-                                </div>
-                            </div>
-                        </div>*@
                     </div>
                 </div>
             </div>
@@ -274,35 +252,8 @@
                     });
 
                     Inputmask("myNum").mask("#Quantity");
-                    Inputmask("myNum").mask("#Price");
+                    
 
-                    $("#MasterItemId").on("change", function () {
-                        var Id = $("#MasterItemId").val();
-                        var data = { id: Id };
-                        var options = {};
-
-                        options.url = "/FinishedGoodSlips/GetMasterUnit";
-                        options.type = "POST";
-                        options.headers = headers;
-                        options.data = JSON.stringify(data);
-                        options.contentType = "application/json";
-                        options.dataType = "json";
-                        options.success = function (msg) {
-                            document.getElementById('MasterItemUnitId').value = msg;
-
-                            [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                new MvcDatalist(element).reload();
-                            });
-                        };
-                        options.error = function () {
-                            document.getElementById('MasterItemUnitId').value = 0;
-
-                            [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                new MvcDatalist(element).reload();
-                            });
-                        };
-                        $.ajax(options);
-                    }).change();
                 });
             }
         });
@@ -322,7 +273,6 @@
             var grid2 = new MvcGrid(document.querySelector('#Wo-table'));
             grid2.reload();
 
-
         }
 
         function EditSuccess(data) {
@@ -336,6 +286,9 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
+            var grid2 = new MvcGrid(document.querySelector('#Wo-table'));
+            grid2.reload();
+
 
         }
 
@@ -347,88 +300,7 @@
 
         $(document).ready(function ()
         {
-            $("#ProductionWorkOrderId").on("change", function () {
-                var productionWorkOrderId = $("#ProductionWorkOrderId").val();
-                var finishedGoodSlipid = $("#Id").val();
-                var data = { FinishedGoodSlipid: finishedGoodSlipid, ProductionWorkOrderId: productionWorkOrderId };
-                var options = {};
-                var grid = new MvcGrid(document.querySelector('#detail-table'));
-
-                if (productionWorkOrderId !== 0 && productionWorkOrderId !== '') {
-                    options.url = "/FinishedGoodSlips/PopulateDetails";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (obj) {
-                        document.getElementById('PackingWorkOrderId').value = "";
-                        document.getElementById('MasterRegionId').value = obj.MasterRegionId;
-                        document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                        //document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
-                        //document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
-                        document.getElementById('Notes').value = obj.Notes;
-                      //  document.getElementById('Total').value = obj.Total;
-                       // document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
-
-                        $(document.getElementById('MasterBusinessUnitId')).trigger("change");
-
-                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                            new MvcDatalist(element).reload();
-                        });
-
-                        grid.reload();
-                    };
-                    options.error = function () {
-                        document.getElementById('Code').value = "";
-                        document.getElementById('MasterBusinessUnitId').value = "0";
-                        grid.reload();
-                    };
-                    $.ajax(options);
-                }
-            }).change();
-
-            $("#PackingWorkOrderId").on("change", function () {
-                var packingWorkOrderId = $("#PackingWorkOrderId").val();
-                var finishedGoodSlipid = $("#Id").val();
-                var data = { FinishedGoodSlipid: finishedGoodSlipid, PackingWorkOrderId: packingWorkOrderId };
-                var options = {};
-                var grid = new MvcGrid(document.querySelector('#detail-table'));
-
-                if (packingWorkOrderId !== 0 && packingWorkOrderId !== '') {
-                    options.url = "/FinishedGoodSlips/PopulatePackingDetails";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (obj) {
-                        document.getElementById('ProductionWorkOrderId').value = "";
-                        document.getElementById('MasterRegionId').value = obj.MasterRegionId;
-                        document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                        //document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
-                        //document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
-                        document.getElementById('Notes').value = obj.Notes;
-                       // document.getElementById('Total').value = obj.Total;
-                        //document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
-
-                        $(document.getElementById('MasterBusinessUnitId')).trigger("change");
-
-                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                            new MvcDatalist(element).reload();
-                        });
-
-                        grid.reload();
-                    };
-                    options.error = function () {
-                        document.getElementById('Code').value = "";
-                        document.getElementById('MasterBusinessUnitId').value = "0";
-                        grid.reload();
-                    };
-                    $.ajax(options);
-                }
-            }).change();
-
+            
             $("#DetailsBatchDelete").click(function ()
             {
                 var selectedIDs = new Array();
@@ -464,20 +336,12 @@
                                 var grid = new MvcGrid(document.querySelector('#detail-table'));
                                 grid.reload();
 
+                                var grid2 = new MvcGrid(document.querySelector('#bom-table'));
+                                grid2.reload();
+
                                 var param = { finishedGoodSlipId: $("#Id").val() };
                                 var options2 = {};
 
-                                options2.url = "/FinishedGoodSlips/GetTotal";
-                                options2.type = "POST";
-                                options2.headers = headers;
-                                options2.data = JSON.stringify(param);
-                                options2.contentType = "application/json";
-                                options2.dataType = "json";
-                                options2.success = function (msg)
-                                {
-                                    document.getElementById('Total').value = msg;
-                                };
-                                $.ajax(options2);
                             };
                             options.error = function ()
                             {
@@ -572,10 +436,10 @@
         });
 
         document.addEventListener('reloadend', function (e) {
-            if (e.detail.grid.element.id == 'detail-table') {
+            if (e.wo.grid.element.id == 'wo-table') {
                 $('#CheckAll').click(function () {
                     var checkedStatus = this.checked;
-                    $('#detail-table tbody tr').find('td:first :checkbox').each(function () {
+                    $('#wo-table tbody tr').find('td:first :checkbox').each(function () {
                         $(this).prop('checked', checkedStatus);
                     });
                 });

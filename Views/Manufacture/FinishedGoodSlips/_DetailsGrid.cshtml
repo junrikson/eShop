@@ -12,6 +12,7 @@
             columns.Add(model => model.MasterItem.Code).Titled(@Html.DisplayNameFor(model => model.MasterItem.Code));
             columns.Add(model => model.MasterItem.Name).Titled(@Html.DisplayNameFor(model => model.MasterItem.Name));
             columns.Add(model => model.MasterItemUnit.MasterUnit.Code).Titled(@Html.DisplayNameFor(model => model.MasterItemUnit.MasterUnit.Code));
+            columns.Add(model => model.QuantitySpk).Titled(@Html.DisplayNameFor(model => model.QuantitySpk));
             columns.Add(model => model.Quantity).Titled(@Html.DisplayNameFor(model => model.Quantity)).Formatted("{0:N0}");
             columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
         })

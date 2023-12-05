@@ -292,6 +292,8 @@ namespace eShop.Models
             modelBuilder.Entity<Journal>().Property(x => x.Credit).HasPrecision(18, 2);
             modelBuilder.Entity<ProductionBillOfMaterialDetails>().Property(x => x.Quantity).HasPrecision(18, 10);
             modelBuilder.Entity<ProductionWorkOrderDetails>().Property(x => x.Quantity).HasPrecision(18, 10);
+            modelBuilder.Entity<MaterialSlipDetails>().Property(x => x.Quantity).HasPrecision(18, 10);
+            modelBuilder.Entity<MaterialSlipDetails>().Property(x => x.QuantitySpk).HasPrecision(18, 10);
         }
     }
 }

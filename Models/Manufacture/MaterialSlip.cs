@@ -110,7 +110,6 @@ namespace eShop.Models
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public int Quantity { get; set; }
 
         [Display(Name = "Keterangan")]
@@ -411,15 +410,10 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Quantity { get; set; }
 
-        [Display(Name = "Quantity Wo")]
-        [Required(ErrorMessage = "Quantity Wo harus diisi.")]
+        [Display(Name = "Quantity Spk")]
+        [Required(ErrorMessage = "Quantity Spk harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal QuantityWo { get; set; }
-
-        [Display(Name = "Harga")]
-        [Required(ErrorMessage = "Harga harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Price { get; set; }
+        public decimal QuantitySpk { get; set; }
 
         [Display(Name = "Nilai")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
