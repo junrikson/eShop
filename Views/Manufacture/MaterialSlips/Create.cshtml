@@ -558,33 +558,29 @@
                         Inputmask("myNum").mask("#Quantity");
                         Inputmask("myNum").mask("#Price");
 
-                        $("#MasterItemId").on("change", function () {
-                            var Id = $("#MasterItemId").val();
-                            var data = { id: Id };
-                            var options = {};
+                    });
+                });
 
-                            options.url = "/MaterialSlips/GetMasterUnit";
-                            options.type = "POST";
-                            options.headers = headers;
-                            options.data = JSON.stringify(data);
-                            options.contentType = "application/json";
-                            options.dataType = "json";
-                            options.success = function (msg) {
-                                document.getElementById('MasterItemUnitId').value = msg;
+                $('#Wo-table').on("click", ".edit-data", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#detailsContainer').html(data);
+                        $('#detailsModal').modal('show');
 
-                                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                    new MvcDatalist(element).reload();
-                                });
-                            };
-                            options.error = function () {
-                                document.getElementById('MasterItemUnitId').value = 0;
+                        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                            new MvcDatalist(element);
+                        });
 
-                                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                    new MvcDatalist(element).reload();
-                                });
-                            };
-                            $.ajax(options);
-                        }).change();
+                        $('form').each(function () {
+                            var $el = $(this);
+                            $el.data('validator', null);
+                            $.validator.unobtrusive.parse($el);
+                        });
+
+                        Inputmask("myNum").mask("#Quantity");
+                        Inputmask("myNum").mask("#Price");
+
                     });
                 });
 

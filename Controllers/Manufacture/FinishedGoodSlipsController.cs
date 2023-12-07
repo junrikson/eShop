@@ -678,6 +678,7 @@ namespace eShop.Controllers
         [Authorize(Roles = "FinishedGoodSlipsActive")]
         public ActionResult WorkOrdersEdit([Bind(Include = "Id,FinishedGoodSlipId,ProductionWorkOrderId,Created,Updated,UserId")] FinishedGoodSlipProductionWorkOrder obj)
         {
+            obj.Created = DateTime.Now;
             obj.Updated = DateTime.Now;
             obj.UserId = User.Identity.GetUserId<int>();
 
@@ -686,6 +687,7 @@ namespace eShop.Controllers
             db.Entry(obj).State = EntityState.Unchanged;
             db.Entry(obj).Property("ProductionWorkOrderId").IsModified = true;
             db.Entry(obj).Property("Updated").IsModified = true;
+            db.Entry(obj).Property("Created").IsModified = true;
             db.Entry(obj).Property("UserId").IsModified = true;
 
             if (ModelState.IsValid)
@@ -696,9 +698,9 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        FinishedGoodSlipProductionWorkOrder finishedGoodSlipProductionWorkOrder = db.FinishedGoodSlipProductionWorkOrders.Find(obj.FinishedGoodSlipId);
+                        FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(obj.FinishedGoodSlipId);
 
-                        db.Entry(finishedGoodSlipProductionWorkOrder).State = EntityState.Modified;
+                        db.Entry(obj).State = EntityState.Modified;
                         db.SaveChanges();
 
                         //db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.FinishedGoodSlipDetails, MenuId = finishedGoodSlipDetails.Id, MenuCode = finishedGoodSlipDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
@@ -743,12 +745,12 @@ namespace eShop.Controllers
                                 {
                                     FinishedGoodSlipDetails tmp = obj;
 
-                                    FinishedGoodSlip finishedGoodSlip = db.FinishedGoodSlips.Find(tmp.FinishedGoodSlipId);
-
-                                   // finishedGoodSlip.Total = SharedFunctions.GetTotalFinishedGoodSlip(db, finishedGoodSlip.Id, tmp.Id);
-
-                                    db.Entry(finishedGoodSlip).State = EntityState.Modified;
-                                    db.SaveChanges();
+                                    var details = db.FinishedGoodSlipProductionWorkOrders.Where(x => x.FinishedGoodSlipId == obj.Id).ToList();
+                                    if (details.Any())
+                                    {
+                                        db.FinishedGoodSlipProductionWorkOrders.RemoveRange(details);
+                                        db.SaveChanges();
+                                    }
 
                                     db.FinishedGoodSlipsDetails.Remove(obj);
                                     db.SaveChanges();

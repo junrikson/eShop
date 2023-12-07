@@ -549,7 +549,7 @@
                 var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
                 var options = {};
 
-                if (masterRegionId !== 0 && masterRegionId !== '') {
+                if (masterRegionId != 0 && masterRegionId !== '') {
                     if ($("#MasterBusinessUnitId").val() === "") {
                         bootbox.alert("Unit Bisnis belum dipilih!");
                         document.getElementById('MasterRegionId').value = "0";
@@ -584,7 +584,7 @@
                 var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
                 var options = {};
 
-                if (masterRegionId !== 0 && masterRegionId !== '') {
+                if (masterRegionId != 0 && masterRegionId !== '') {
                     options.url = "/Sales/GetCode";
                     options.type = "POST";
                     options.headers = headers;

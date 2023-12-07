@@ -7,7 +7,7 @@
         .Grid(Model)
         .Build(columns =>
         {
-            //columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+            columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
             columns.Add(model => model.ProductionBillOfMaterial.Code).Titled(@Html.DisplayNameFor(model => model.ProductionBillOfMaterial.Code));
             columns.Add(model => model.ProductionBillOfMaterial.MasterItem.Name).Titled(@Html.DisplayNameFor(model => model.ProductionBillOfMaterial.MasterItem.Name));
             columns.Add(model => model.ProductionBillOfMaterial.MasterItemUnit.MasterUnit.Code).Titled(@Html.DisplayNameFor(model => model.ProductionBillOfMaterial.MasterItemUnit.MasterUnit.Code));

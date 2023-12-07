@@ -275,75 +275,9 @@
                     Inputmask("myNum3").mask("#Quantity");
                     Inputmask("myNum").mask("#Price");
 
-                    $("#MasterItemId").on("change", function () {
-                        var Id = $("#MasterItemId").val();
-                        var data = { id: Id };
-                        var options = {};
 
-                        options.url = "/ProductionBillOfMaterials/GetMasterUnit";
-                        options.type = "POST";
-                        options.headers = headers;
-                        options.data = JSON.stringify(data);
-                        options.contentType = "application/json";
-                        options.dataType = "json";
-                        options.success = function (msg) {
-                            document.getElementById('MasterItemUnitId').value = msg;
-
-                            [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                new MvcDatalist(element).reload();
-                            });
-                        };
-                        options.error = function () {
-                            document.getElementById('MasterItemUnitId').value = 0;
-
-                            [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                new MvcDatalist(element).reload();
-                            });
-                        };
-                        $.ajax(options);
-                    }).change();
                 });
             }
-        });
-
-        $('#btnChangeCurrency').click(function (event) {
-            event.preventDefault();
-            var url = $(this).attr("href") + "?productionBillOfMaterialId=" + $("input#Id").val();
-            $.get(url, function (data) {
-                $('#detailsContainer').html(data);
-                $('#detailsModal').modal('show');
-
-                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                    new MvcDatalist(element);
-                });
-
-                $('form').each(function () {
-                    var $el = $(this);
-                    $el.data('validator', null);
-                    $.validator.unobtrusive.parse($el);
-                });
-
-                $("#MasterCurrencyId").on("change", function () {
-                    var id = $("#MasterCurrencyId").val();
-                    var data = { Id: id };
-                    var options = {};
-
-                    options.url = "/ProductionBillOfMaterials/GetCurrencyRate";
-                    options.type = "POST";
-                    options.headers = headers;
-                    options.data = JSON.stringify(data);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (rate) {
-                        document.getElementById('Rate').value = rate;
-                    };
-                    options.error = function () {
-                    };
-                    $.ajax(options);
-                }).change();
-
-                Inputmask("myNum10").mask("#Rate");
-            });
         });
 
         function CreateSuccess(data) {
@@ -382,34 +316,6 @@
 
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
-
-            var param = { productionBillOfMaterialId: $("#Id").val() };
-            var options = {};
-
-            options.url = "/ProductionBillOfMaterials/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
-        }
-
-        function ChangeCurrencySuccess(data) {
-            if (data.Status !== "success") {
-                $('#detailsContainer').html(data);
-                return;
-            }
-            $('#detailsModal').modal('hide');
-            $('#detailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#detail-table'));
-            grid.reload();
-
-            document.querySelector('#btnChangeCurrency').innerHTML = data.Message;
 
             var param = { productionBillOfMaterialId: $("#Id").val() };
             var options = {};
@@ -512,33 +418,6 @@
                         Inputmask("myNum3").mask("#Quantity");
                         Inputmask("myNum").mask("#Price");
 
-                        $("#MasterItemId").on("change", function () {
-                            var Id = $("#MasterItemId").val();
-                            var data = { id: Id };
-                            var options = {};
-
-                            options.url = "/ProductionBillOfMaterials/GetMasterUnit";
-                            options.type = "POST";
-                            options.headers = headers;
-                            options.data = JSON.stringify(data);
-                            options.contentType = "application/json";
-                            options.dataType = "json";
-                            options.success = function (msg) {
-                                document.getElementById('MasterItemUnitId').value = msg;
-
-                                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                    new MvcDatalist(element).reload();
-                                });
-                            };
-                            options.error = function () {
-                                document.getElementById('MasterItemUnitId').value = 0;
-
-                                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                    new MvcDatalist(element).reload();
-                                });
-                            };
-                            $.ajax(options);
-                        }).change();
                     });
                 });
 
