@@ -792,7 +792,7 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         MaterialSlip materialSlip = db.MaterialSlips.Find(materialSlipDetails.MaterialSlipId);
-                        materialSlip.Total = SharedFunctions.GetTotalMaterialSlip(db, materialSlip.Id, materialSlipDetails.Id) + materialSlipDetails.Total;
+                        //materialSlip.Total = SharedFunctions.GetTotalMaterialSlip(db, materialSlip.Id, materialSlipDetails.Id) + materialSlipDetails.Total;
 
                         db.Entry(materialSlip).State = EntityState.Modified;
                         db.SaveChanges();

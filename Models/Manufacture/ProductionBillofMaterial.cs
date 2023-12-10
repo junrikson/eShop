@@ -109,7 +109,6 @@ namespace eShop.Models
         [Remote("IsCodeExists", "ProductionBillOfMaterials", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Tanggal")]
         [Required(ErrorMessage = "Tanggal harus diisi.")]
         [DataType(DataType.Date)]
@@ -162,6 +161,7 @@ namespace eShop.Models
         [Required(ErrorMessage = "Master Satuan harus diisi.")]
         public int MasterItemUnitId { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Satuan")]
         public virtual MasterItemUnit MasterItemUnit { get; set; }
 

@@ -97,6 +97,8 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+
+
     public class MasterItemSupplierDatalist : MvcDatalist<MasterItem>
     {
         private DbContext Context { get; }
@@ -149,6 +151,84 @@ namespace eShop.Models
             return Context.Set<MasterItem>();
         }
     }
+
+    //public class MasterBusinessRegionItemFinishedGoodDatalist : MvcDatalist<MasterBusinessRegionItemFinishedGoodViewModel>
+    //{
+    //    private DbContext Context { get; }
+
+    //    public MasterBusinessRegionItemFinishedGoodDatalist(DbContext context)
+    //    {
+    //        Context = context;
+
+    //        GetLabel = (model) => model.Code + " " + model.MasterItemName;
+    //    }
+    //    public MasterBusinessRegionItemFinishedGoodDatalist()
+    //    {
+    //        Url = "/DatalistFilters/AllMasterBusinessRegionItemFinishedGood";
+    //        Title = "Master Item";
+
+    //        Filter.Sort = "Code";
+    //        Filter.Order = DatalistSortOrder.Asc;
+    //        Filter.Rows = 10;
+    //    }
+
+    //    //public override IQueryable<MasterBusinessRegionItemFinishedGoodViewModel> GetModels()
+    //    //{
+    //    //    return Context.Set<MasterBusinessRegionItemFinishedGood>()
+    //    //        .Select(x => new MasterBusinessRegionItemFinishedGoodViewModel
+    //    //        {
+    //    //            Id = x.Id,
+    //    //            MasterItemId = x.MasterItemId,
+    //    //            MasterItem = x.MasterItem,
+    //    //            MasterUnitId = x.MasterUnitId,
+    //    //            MasterUnit = x.MasterUnit,
+    //    //            MasterUnitCode = x.MasterUnit.Code,
+    //    //            MasterUnitRatio = x.MasterUnit.Ratio,
+    //    //            MasterUnitNotes = x.MasterUnit.Notes,
+    //    //            Default = x.Default,
+    //    //            Active = x.Active,
+    //    //            Created = x.Created,
+    //    //            Updated = x.Updated,
+    //    //            UserId = x.UserId
+    //    //        });
+    //    //}
+
+
+    //}
+
+    //public class MasterBusinessRegionItemRawMaterialViewModelDatalist : MvcDatalist<MasterBusinessRegionItemRawMaterialViewModel>
+    //{
+    //    private DbContext Context { get; }
+
+    //    public MasterBusinessRegionItemRawMaterialViewModelDatalist(DbContext context)
+    //    {
+    //        Context = context;
+
+    //        GetLabel = (model) => model.Code + " " + model.MasterItemName;
+    //    }
+    //    public MasterBusinessRegionItemRawMaterialViewModelDatalist()
+    //    {
+    //        Url = "/DatalistFilters/AllMasterBusinessRegionItemRawMaterial";
+    //        Title = "Master Item";
+
+    //        Filter.Sort = "Code";
+    //        Filter.Order = DatalistSortOrder.Asc;
+    //        Filter.Rows = 10;
+    //    }
+
+    //    public override IQueryable<MasterBusinessRegionItemRawMaterialViewModel> GetModels()
+    //    {
+    //        return Context.Set<MasterItem>()
+    //            .Select(x => new MasterBusinessRegionItemRawMaterialViewModel
+    //            {
+    //                Id = x.Id,
+    //                Code = x.Code,
+    //                MasterBusinessUnitId = x.MasterBusinessUnitId,
+    //                MasterRegionId = x.MasterRegionId,
+
+    //            });
+    //    }
+    //}
 
 
     public class MasterItemUnit
@@ -250,6 +330,8 @@ namespace eShop.Models
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
     }
+
+
 
     public class MasterItemUnitDatalist : MvcDatalist<MasterItemUnitViewModel>
     {

@@ -734,7 +734,7 @@ namespace eShop.Controllers
                     int failed = 0;
                     foreach (int id in ids)
                     {
-                        FinishedGoodSlipDetails obj = db.FinishedGoodSlipsDetails.Find(id);
+                        FinishedGoodSlipProductionWorkOrder obj = db.FinishedGoodSlipProductionWorkOrders.Find(id);
                         if (obj == null)
                             failed++;
                         else
@@ -743,16 +743,16 @@ namespace eShop.Controllers
                             {
                                 try
                                 {
-                                    FinishedGoodSlipDetails tmp = obj;
+                                    FinishedGoodSlipProductionWorkOrder tmp = obj;
 
-                                    var details = db.FinishedGoodSlipProductionWorkOrders.Where(x => x.FinishedGoodSlipId == obj.Id).ToList();
+                                    var details = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == obj.Id).ToList();
                                     if (details.Any())
                                     {
-                                        db.FinishedGoodSlipProductionWorkOrders.RemoveRange(details);
+                                        db.FinishedGoodSlipsDetails.RemoveRange(details);
                                         db.SaveChanges();
                                     }
 
-                                    db.FinishedGoodSlipsDetails.Remove(obj);
+                                    db.FinishedGoodSlipProductionWorkOrders.Remove(obj);
                                     db.SaveChanges();
 
                                     db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.FinishedGoodSlipDetails, MenuId = tmp.Id, MenuCode = tmp.Id.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });

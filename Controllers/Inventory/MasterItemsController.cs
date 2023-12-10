@@ -274,7 +274,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterItemsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,MasterCategoryId,MasterBrandId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] MasterItem masterItem)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,MasterCategoryId,MasterBrandId,MasterSupplierId,InventoryPartType,Notes,Active,Created,Updated,UserId")] MasterItem masterItem)
         {
             masterItem.Updated = DateTime.Now;
             masterItem.UserId = User.Identity.GetUserId<int>();
@@ -289,6 +289,7 @@ namespace eShop.Controllers
             db.Entry(masterItem).Property("MasterCategoryId").IsModified = true;
             db.Entry(masterItem).Property("MasterBrandId").IsModified = true;
             db.Entry(masterItem).Property("MasterSupplierId").IsModified = true;
+            db.Entry(masterItem).Property("InventoryPartType").IsModified = true;
             db.Entry(masterItem).Property("Notes").IsModified = true;
             db.Entry(masterItem).Property("Active").IsModified = true;
             db.Entry(masterItem).Property("Updated").IsModified = true;
