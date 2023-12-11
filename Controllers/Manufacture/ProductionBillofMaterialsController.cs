@@ -260,7 +260,8 @@ namespace eShop.Controllers
                 MasterBusinessUnitId = productionBillOfMaterial.MasterBusinessUnitId,
                 MasterRegionId = productionBillOfMaterial.MasterRegionId,
                 MasterItemUnitId = productionBillOfMaterial.MasterItemUnitId,
-                HeaderMasterItemId = productionBillOfMaterial.MasterItemId
+                HeaderMasterItemId = productionBillOfMaterial.MasterItemId,
+                Notes = productionBillOfMaterial.Notes
             };
 
             if (obj == null)

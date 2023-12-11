@@ -153,6 +153,7 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -289,7 +290,7 @@ namespace eShop.Models
         public OutstandingProductionWorkOrderDatalist()
         {
             Url = "/DatalistFilters/AllOutstandingProductionWorkOrder";
-            Title = "Perintah Kerja Barang Jadi";
+            Title = "Perintah Kerja Produksi";
             AdditionalFilters.Add("MasterBusinessUnitId");
             AdditionalFilters.Add("MasterRegionId");
 
@@ -313,6 +314,7 @@ namespace eShop.Models
                     MasterRegion = x.MasterRegion,
                     Code = x.Code,
                     Date = x.Date,
+                    Notes = x.ProductionBillOfMaterial.Notes,
                     Active = x.Active,
                     Created = x.Created,
                     Updated = x.Updated,

@@ -101,14 +101,6 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [DatalistColumn]
-        [Required(ErrorMessage = "Nomor BOM Produksi harus diisi.")]
-        [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor")]
-        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "ProductionBillOfMaterials", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
-        public string Code { get; set; }
-
         [Display(Name = "Tanggal")]
         [Required(ErrorMessage = "Tanggal harus diisi.")]
         [DataType(DataType.Date)]
@@ -137,6 +129,14 @@ namespace eShop.Models
         [Display(Name = "Wilayah")]
         public string MasterRegionCode { get; set; }
 
+        [DatalistColumn]
+        [Required(ErrorMessage = "Nomor BOM Produksi harus diisi.")]
+        [Index("IX_Code", Order = 1, IsUnique = true)]
+        [Display(Name = "Nomor")]
+        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
+        [Remote("IsCodeExists", "ProductionBillOfMaterials", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
+        public string Code { get; set; }
+
         [Display(Name = "Mata Uang")]
         [Required(ErrorMessage = "Mata Uang harus diisi.")]
         public int MasterCurrencyId { get; set; }
@@ -149,7 +149,6 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Kode Produk")]
         [Required(ErrorMessage = "Kode Produk harus diisi.")]
         public int HeaderMasterItemId { get; set; }
@@ -157,20 +156,31 @@ namespace eShop.Models
         [Display(Name = "Kode Produk")]
         public virtual MasterItem HeaderMasterItem { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Kode Produk")]
+        public string MasterItemCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Nama Produk")]
+        public string MasterItemName { get; set; }
+
         [Display(Name = "Satuan")]
         [Required(ErrorMessage = "Master Satuan harus diisi.")]
         public int MasterItemUnitId { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Satuan")]
         public virtual MasterItemUnit MasterItemUnit { get; set; }
 
         [DatalistColumn]
+        [Display(Name = "Kode Satuan")]
+        public string MasterUnitCode { get; set; }
+
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal HeaderQuantity { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -182,6 +192,7 @@ namespace eShop.Models
         [Display(Name = "Print")]
         public bool IsPrint { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
     }
@@ -211,7 +222,7 @@ namespace eShop.Models
         public override IQueryable<ProductionBillOfMaterialViewModel> GetModels()
         {
             return Context.Set<ProductionBillOfMaterial>()
-                // .Where(x => !Context.Set<ProductionWorkOrder>().Where(p => p.Active == true && p.ProductionBillofMaterialId == x.Id).Any())
+                // .Where(x => !Context.Set<ProductionBillOfMaterial>().Where(p => p.Active == true ).Any())
                 .Select(x => new ProductionBillOfMaterialViewModel
                 {
                     Id = x.Id,
@@ -222,10 +233,15 @@ namespace eShop.Models
                     MasterRegionId = x.MasterRegionId,
                     MasterRegion = x.MasterRegion,
                     HeaderMasterItem = x.MasterItem,
+                    MasterItemCode = x.MasterItem.Code,
+                    MasterItemName = x.MasterItem.Name,
+                    MasterItemUnit = x.MasterItemUnit,
                     MasterItemUnitId = x.MasterItemUnitId,
+                    MasterUnitCode = x.MasterItemUnit.MasterUnit.Code,
                     Code = x.Code,
                     Date = x.Date,
                     Total = x.Total,
+                    Notes = x.Notes,
                     Active = x.Active,
 
                 }); ;

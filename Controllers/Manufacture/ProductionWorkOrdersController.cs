@@ -487,6 +487,7 @@ namespace eShop.Controllers
             obj.Updated = DateTime.Now;
             obj.UserId = User.Identity.GetUserId<int>();
 
+
             if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
 
             if (ModelState.IsValid)
@@ -510,6 +511,7 @@ namespace eShop.Controllers
                                     MasterItemId = productionBillOfMaterialDetails.MasterItemId,
                                     MasterItemUnitId = productionBillOfMaterialDetails.MasterItemUnitId,
                                     Quantity = productionBillOfMaterialDetails.Quantity * obj.Quantity,
+                                    Notes = obj.Notes,
                                     Created = DateTime.Now,
                                     Updated = DateTime.Now,
                                     UserId = User.Identity.GetUserId<int>()
@@ -599,6 +601,7 @@ namespace eShop.Controllers
                                     MasterItemId = productionBillOfMaterialDetails.MasterItemId,
                                     MasterItemUnitId = productionBillOfMaterialDetails.MasterItemUnitId,
                                     Quantity = productionBillOfMaterialDetails.Quantity * obj.Quantity,
+                                    Notes = productionBillOfMaterialDetails.Notes,
                                     Created = DateTime.Now,
                                     Updated = DateTime.Now,
                                     UserId = User.Identity.GetUserId<int>()
