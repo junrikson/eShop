@@ -97,6 +97,7 @@ namespace eShop.Controllers
                 Rate = masterCurrency.Rate,
                 MasterItemId = db.MasterItems.FirstOrDefault().Id,
                 MasterItemUnitId = db.MasterItemUnits.FirstOrDefault().Id,
+                BillOfMaterialType = EnumBillOfMaterialType.FinishedGood,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -113,7 +114,8 @@ namespace eShop.Controllers
                 MasterBusinessUnitId = 0,
                 MasterRegionId = 0,
                 MasterItemUnitId = 0,
-                HeaderMasterItemId = 0
+                HeaderMasterItemId = 0,
+                BillOfMaterialType = EnumBillOfMaterialType.FinishedGood,
             };
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
@@ -148,7 +150,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionBillOfMaterialsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] ProductionBillOfMaterialViewModel obj)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterItemUnitId,HeaderMasterItemId,BillOfMaterialType,Notes,Active,Created,Updated,UserId")] ProductionBillOfMaterialViewModel obj)
         {
             ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(obj.Id);
 
@@ -167,6 +169,7 @@ namespace eShop.Controllers
             productionBillOfMaterial.MasterRegionId = obj.MasterRegionId;
             productionBillOfMaterial.MasterItemUnitId = obj.MasterItemUnitId;
             productionBillOfMaterial.MasterItemId = obj.HeaderMasterItemId;
+            productionBillOfMaterial.BillOfMaterialType = obj.BillOfMaterialType;
             productionBillOfMaterial.Active = obj.Active;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
@@ -261,6 +264,7 @@ namespace eShop.Controllers
                 MasterRegionId = productionBillOfMaterial.MasterRegionId,
                 MasterItemUnitId = productionBillOfMaterial.MasterItemUnitId,
                 HeaderMasterItemId = productionBillOfMaterial.MasterItemId,
+                BillOfMaterialType = productionBillOfMaterial.BillOfMaterialType,
                 Notes = productionBillOfMaterial.Notes
             };
 
@@ -283,7 +287,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionBillOfMaterialsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] ProductionBillOfMaterialViewModel obj)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterItemUnitId,HeaderMasterItemId,BillOfMaterialType,Notes,Active,Created,Updated,UserId")] ProductionBillOfMaterialViewModel obj)
         {
             ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(obj.Id);
 
@@ -301,6 +305,7 @@ namespace eShop.Controllers
             productionBillOfMaterial.MasterRegionId = obj.MasterRegionId;
             productionBillOfMaterial.MasterItemUnitId = obj.MasterItemUnitId;
             productionBillOfMaterial.MasterItemId = obj.HeaderMasterItemId;
+            productionBillOfMaterial.BillOfMaterialType = obj.BillOfMaterialType;
             productionBillOfMaterial.Active = obj.Active;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())

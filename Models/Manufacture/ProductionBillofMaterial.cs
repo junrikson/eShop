@@ -1,5 +1,6 @@
 ﻿using Datalist;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,6 +10,14 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
+
+    public enum EnumBillOfMaterialType
+    {
+        [Display(Name = "Barang jadi")]
+        FinishedGood = 1,
+        [Display(Name = "Barang Setengah Jadi")]
+        HalfFinishedGood = 2
+    }
     public class ProductionBillOfMaterial
     {
         [Key]
@@ -63,6 +72,11 @@ namespace eShop.Models
 
         [Display(Name = "Satuan")]
         public virtual MasterItemUnit MasterItemUnit { get; set; }
+
+        [DatalistColumn]
+        //[Required(ErrorMessage = "Jenis konsumen harus diisi.")]
+        [Display(Name = "Type Formula")]
+        public EnumBillOfMaterialType BillOfMaterialType { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
@@ -175,6 +189,11 @@ namespace eShop.Models
         [Display(Name = "Kode Satuan")]
         public string MasterUnitCode { get; set; }
 
+        [DatalistColumn]
+        //[Required(ErrorMessage = "Jenis konsumen harus diisi.")]
+        [Display(Name = "Type Formula")]
+        public EnumBillOfMaterialType BillOfMaterialType { get; set; }
+
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
@@ -238,6 +257,7 @@ namespace eShop.Models
                     MasterItemUnit = x.MasterItemUnit,
                     MasterItemUnitId = x.MasterItemUnitId,
                     MasterUnitCode = x.MasterItemUnit.MasterUnit.Code,
+                    BillOfMaterialType = x.BillOfMaterialType,
                     Code = x.Code,
                     Date = x.Date,
                     Total = x.Total,

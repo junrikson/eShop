@@ -227,6 +227,28 @@ namespace eShop.Properties {
             }
         }
 
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("FG/")]
+        public string ProductionBillOfMaterialFinishedGoodCode
+        {
+            get
+            {
+                return ((string)(this["ProductionBillOfMaterialFinishedGoodCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("HFG/")]
+        public string ProductionBillOfMaterialHalfFinishedGoodCode
+        {
+            get
+            {
+                return ((string)(this["ProductionBillOfMaterialHalfFinishedGoodCode"]));
+            }
+        }
+
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

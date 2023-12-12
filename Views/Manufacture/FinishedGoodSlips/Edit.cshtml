@@ -236,6 +236,9 @@
             else if ($("#MasterRegionId").val() === "") {
                 bootbox.alert("Wilayah belum dipilih!");
             }
+            else if ($("#MasterWarehouseId").val() === "") {
+                bootbox.alert("Gudang belum dipilih!");
+            }
             else {
                 var url = $(this).attr("href") + "?finishedGoodSlipId=" + $("input#Id").val();
                 $.get(url, function (data) {

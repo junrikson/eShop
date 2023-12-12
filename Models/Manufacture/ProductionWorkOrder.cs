@@ -52,6 +52,10 @@ namespace eShop.Models
 
         [Display(Name = "Gudang")]
         public virtual MasterWarehouse MasterWarehouse { get; set; }
+
+        [Display(Name = "Type Formula")]
+        public EnumBillOfMaterialType BillOfMaterialType { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -152,6 +156,10 @@ namespace eShop.Models
         [Required(ErrorMessage = "Rate harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Type Formula")]
+        public EnumBillOfMaterialType BillOfMaterialType { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Keterangan")]
@@ -314,7 +322,8 @@ namespace eShop.Models
                     MasterRegion = x.MasterRegion,
                     Code = x.Code,
                     Date = x.Date,
-                    Notes = x.ProductionBillOfMaterial.Notes,
+                    BillOfMaterialType = x.BillOfMaterialType,
+                    Notes = x.Notes,
                     Active = x.Active,
                     Created = x.Created,
                     Updated = x.Updated,

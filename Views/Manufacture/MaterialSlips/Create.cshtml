@@ -251,6 +251,9 @@
             else if ($("#MasterRegionId").val() === "") {
                 bootbox.alert("Wilayah belum dipilih!");
             }
+            else if ($("#MasterWarehouseId").val() === "") {
+                bootbox.alert("Gudang belum dipilih!");
+            }
             else {
                 var url = $(this).attr("href") + "?materialSlipId=" + $("input#Id").val();
                 $.get(url, function (data) {
@@ -368,6 +371,7 @@
                     options.success = function (obj) {
                         document.getElementById('MasterRegionId').value = obj.MasterRegionId;
                         document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
+                        document.getElementById('BillOfMaterialType').Value = obj.BillOfMaterialType;
                         document.getElementById('Notes').value = obj.Notes;
 
                         $(document.getElementById('MasterBusinessUnitId')).trigger("change");
