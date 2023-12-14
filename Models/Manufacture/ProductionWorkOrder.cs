@@ -400,6 +400,10 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public int Quantity { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Type Formula")]
+        public EnumBillOfMaterialType BillOfMaterialType { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }

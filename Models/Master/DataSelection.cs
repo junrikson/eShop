@@ -1685,7 +1685,7 @@ namespace eShop.Models
                     Id = x.MasterItemId,
                     MasterItemCode = x.MasterItem.Code,
                     MasterItemName = x.MasterItem.Name,
-                    MasterItemNotes = x.MasterItem.Notes,
+                    //MasterItemNotes = x.MasterItem.Notes,
                     MasterRegionId = x.MasterRegion.Id,
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,

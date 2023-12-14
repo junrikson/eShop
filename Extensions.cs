@@ -236,26 +236,30 @@ namespace eShop.Extensions
             return total;
         }
 
-        //public static decimal GetTotalFinishedGoodSlip(ApplicationDbContext db, int finishedGoodSlipId, int? finishedGoodSlipDetailsId = null)
+        //public static void CreatePurchaseSale(ApplicationDbContext db, Purchase purchase)
         //{
-        //    decimal total = 0;
-        //    List<FinishedGoodSlipDetails> finishedGoodSlipDetails = null;
-
-        //    if (finishedGoodSlipDetailsId == null)
+        //    Sale sale = new Sale
         //    {
-        //        finishedGoodSlipDetails = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlipId).ToList();
-        //    }
+        //        Code = purchase.Code,
+        //        Date = purchase.Date,
+        //        MasterBusinessUnitId = purchase.MasterBusinessUnitId,
+        //        Type = EnumJournalType.Purchase,
+        //        Debit = 0,
+        //        Credit = 0,
+        //        PurchaseId = purchase.Id,
+        //        Active = purchase.Active,
+        //        Created = purchase.Created,
+        //        Updated = purchase.Updated,
+        //        UserId = purchase.UserId
+        //    };
+
+        //    if (string.IsNullOrEmpty(purchase.Notes))
+        //        journal.Notes = "PEMBELIAN NO. " + purchase.Code;
         //    else
-        //    {
-        //        finishedGoodSlipDetails = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlipId && x.Id != finishedGoodSlipDetailsId).ToList();
-        //    }
+        //        journal.Notes = purchase.Notes;
 
-        //    if (finishedGoodSlipDetails != null)
-        //    {
-        //        total = finishedGoodSlipDetails.Sum(y => y.Total);
-        //    }
-
-        //    return total;
+        //    db.Journals.Add(journal);
+        //    db.SaveChanges();
         //}
 
 

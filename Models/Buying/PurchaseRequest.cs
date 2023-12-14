@@ -15,9 +15,9 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Kode PR harus diisi.")]
+        [Required(ErrorMessage = "Nomor Purchase Request harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode PR")]
+        [Display(Name = "Nomor Purchase Request")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "PurchaseRequests", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
         public string Code { get; set; }
@@ -109,9 +109,9 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Kode PR harus diisi.")]
+        [Required(ErrorMessage = "Nomor Purchase Request harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode PR")]
+        [Display(Name = "Nomor Purchase Request")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "PurchaseRequests", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
         public string Code { get; set; }

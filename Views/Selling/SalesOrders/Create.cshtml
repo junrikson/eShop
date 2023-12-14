@@ -60,6 +60,13 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
+                                    @Html.LabelFor(model => model.PurchaseOrderId)
+                                    @Html.DatalistFor(model => model.PurchaseOrderId, new eShop.Models.OutstandingPurchaseOrderSalesOrderDatalist())
+                                    @Html.ValidationMessageFor(model => model.PurchaseOrderId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
                                     @Html.LabelFor(model => model.MasterWarehouseId)
                                     @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterBusinessRegionWarehouseDatalist(), new { @class = "datalist2" })
                                     @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
@@ -429,6 +436,46 @@
 
                 if (salesRequestId !== 0 && salesRequestId !== '') {
                     options.url = "/SalesOrders/PopulateDetails";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(data);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (obj) {
+                        document.getElementById('MasterRegionId').value = obj.MasterRegionId;
+                        document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
+                        document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
+                        document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
+                        document.getElementById('Notes').value = obj.Notes;
+                        document.getElementById('Total').value = obj.Total;
+                        document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
+
+                        $(document.getElementById('MasterBusinessUnitId')).trigger("change");
+
+                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                            new MvcDatalist(element).reload();
+                        });
+
+                        grid.reload();
+                    };
+                    options.error = function () {
+                        document.getElementById('Code').value = "";
+                        document.getElementById('MasterBusinessUnitId').value = "0";
+                        grid.reload();
+                    };
+                    $.ajax(options);
+                }
+            }).change();
+
+            $("#PurchaseOrderId").on("change", function () {
+                var purchaseOrderId = $("#PurchaseOrderId").val();
+                var salesOrderid = $("#Id").val();
+                var data = { SalesOrderid: salesOrderid, PurchaseOrderId: purchaseOrderId };
+                var options = {};
+                var grid = new MvcGrid(document.querySelector('#detail-table'));
+
+                if (purchaseOrderId !== 0 && purchaseOrderId !== '') {
+                    options.url = "/SalesOrders/PopulatePurchaseOrderDetails";
                     options.type = "POST";
                     options.headers = headers;
                     options.data = JSON.stringify(data);

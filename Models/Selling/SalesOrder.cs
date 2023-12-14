@@ -1,6 +1,7 @@
 ﻿using Datalist;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -69,6 +70,13 @@ namespace eShop.Models
 
         [Display(Name = "Kode Customer")]
         public virtual MasterCustomer MasterCustomer { get; set; }
+
+        [InverseProperty("Purchase Order")] // <- Navigation property name in EntityA
+        [Display(Name = "Purchase Order")]
+        public int? PurchaseOrderId { get; set; }
+
+        [Display(Name = "Purchase Order")]
+        public virtual ICollection<PurchaseOrder> PurchaseOrder { get; set; }
 
         [Display(Name = "Gudang")]
         [Required(ErrorMessage = "Gudang harus diisi.")]
@@ -218,21 +226,6 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [DatalistColumn]
-        [Required(ErrorMessage = "Nomor harus diisi.")]
-        [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor")]
-        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "SalesOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
-        public string Code { get; set; }
-
-        [DatalistColumn]
-        [Display(Name = "Tanggal")]
-        [Required(ErrorMessage = "Tanggal harus diisi.")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime Date { get; set; }
-
         [Display(Name = "Unit Bisnis")]
         [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
         public int MasterBusinessUnitId { get; set; }
@@ -256,19 +249,58 @@ namespace eShop.Models
         public string MasterRegionCode { get; set; }
 
         [DatalistColumn]
+        [Required(ErrorMessage = "Nomor harus diisi.")]
+        [Index("IX_Code", Order = 1, IsUnique = true)]
+        [Display(Name = "Nomor")]
+        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
+        [Remote("IsCodeExists", "SalesOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
+        public string Code { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Tanggal")]
+        [Required(ErrorMessage = "Tanggal harus diisi.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; }
+
+        [DatalistColumn]
         [Display(Name = "Customer")]
         public string MasterCustomerCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Nama Konsumen")]
+        public string MasterCustomerName { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Gudang")]
         public string MasterWarehouseCode { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
     }
 
     public class OutstandingSalesOrderPurchaseOrderDatalist : MvcDatalist<SalesOrderPurchaseOrderViewModel>
@@ -307,11 +339,14 @@ namespace eShop.Models
                     MasterRegionId = x.MasterRegionId,
                     MasterRegion = x.MasterRegion,
                     MasterCustomerCode = x.MasterCustomer.Code,
+                    MasterCustomerName = x.MasterCustomer.Name,
                     MasterWarehouseCode = x.MasterWarehouse.Code,
+                    Created = x.Created,
+                    Updated = x.Updated,
                     Code = x.Code,
                     Date = x.Date,
                     Total = x.Total,
-                    Active = x.Active,
+                    Active = x.Active
                 });
         }
     }

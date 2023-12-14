@@ -914,6 +914,172 @@ namespace eShop.Controllers
             });
         }
 
+        //[HttpPost]
+        //[ValidateJsonAntiForgeryToken]
+        //[Authorize(Roles = "SalesOrdersActive")]
+        //public JsonResult PopulatePurchaseOrderDetails(int salesOrderid, int purchaseOrderId)
+        //{
+        //    SalesOrder salesOrder = db.SalesOrders.Find(salesOrderid);
+        //    PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(purchaseOrderId);
+
+        //    if (salesOrder != null && purchaseOrder != null)
+        //    {
+        //        using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+        //        {
+        //            try
+        //            {
+        //                var remove = db.SalesOrdersDetails.Where(x => x.SalesOrderId == salesOrder.Id).ToList();
+
+        //                if (remove != null)
+        //                {
+        //                    db.SalesOrdersDetails.RemoveRange(remove);
+        //                    db.SaveChanges();
+        //                }
+
+        //                var purchaseOrderDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrder.Id).ToList();
+
+        //                if (purchaseOrderDetails != null)
+        //                {
+        //                    foreach (PurchaseOrderDetails purchaseOrderDetails in purchaseOrderDetails)
+        //                    {
+        //                        SalesOrderDetails salesOrderDetails = new SalesOrderDetails
+        //                        {
+        //                            SalesOrderId = salesOrder.Id,
+        //                            MasterItemId = purchaseOrderDetails.MasterItemId,
+        //                            MasterItemUnitId = purchaseOrderDetails.MasterItemUnitId,
+        //                            Quantity = purchaseOrderDetails.Quantity,
+        //                            Price = purchaseOrderDetails.Price,
+        //                            Total = purchaseOrderDetails.Total,
+        //                            Notes = purchaseOrderDetails.Notes,
+        //                            Created = DateTime.Now,
+        //                            Updated = DateTime.Now,
+        //                            UserId = User.Identity.GetUserId<int>()
+        //                        };
+
+        //                        db.SalesOrdersDetails.Add(salesOrderDetails);
+        //                        db.SaveChanges();
+        //                    }
+        //                }
+
+        //                salesOrder.PurchaseOrderId = purchaseOrder.Id;
+        //                salesOrder.MasterBusinessUnitId = purchaseOrder.MasterBusinessUnitId;
+        //                salesOrder.MasterRegionId = purchaseOrder.MasterRegionId;
+        //                salesOrder.MasterCurrencyId = purchaseOrder.MasterCurrencyId;
+        //                salesOrder.Rate = purchaseOrder.Rate;
+        //                // salesOrder.MasterCustomerId = purchaseOrder.MasterCustomerId;
+        //                salesOrder.MasterWarehouseId = purchaseOrder.MasterWarehouseId;
+        //                salesOrder.Notes = purchaseOrder.Notes;
+        //                salesOrder.Total = purchaseOrder.Total;
+
+        //                db.Entry(salesOrder).State = EntityState.Modified;
+        //                db.SaveChanges();
+
+        //                dbTran.Commit();
+        //            }
+        //            catch (DbEntityValidationException ex)
+        //            {
+        //                dbTran.Rollback();
+        //                throw ex;
+        //            }
+        //        }
+        //    }
+
+        //    return Json(new
+        //    {
+        //        salesOrder.MasterRegionId,
+        //        salesOrder.MasterBusinessUnitId,
+        //        salesOrder.MasterCustomerId,
+        //        salesOrder.MasterWarehouseId,
+        //        salesOrder.Notes,
+        //        Total = salesOrder.Total.ToString("N2"),
+        //        salesOrder.Date,
+        //        Currency = salesOrder.MasterCurrency.Code + " : " + salesOrder.Rate.ToString("N2")
+        //    });
+        //}
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "SalesOrdersActive")]
+        public JsonResult PopulatePurchaseOrderDetails(int salesOrderid, int purchaseOrderId)
+        {
+            SalesOrder salesOrder = db.SalesOrders.Find(salesOrderid);
+            PurchaseOrder purchaseOrder = db.PurchaseOrders.Find(purchaseOrderId);
+
+
+            if (salesOrder != null && purchaseOrder != null)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var remove = db.SalesOrdersDetails.Where(x => x.SalesOrderId == salesOrder.Id).ToList();
+
+                        if (remove != null)
+                        {
+                            db.SalesOrdersDetails.RemoveRange(remove);
+                            db.SaveChanges();
+                        }
+
+                        var purchaseOrdersDetails = db.PurchaseOrdersDetails.Where(x => x.PurchaseOrderId == purchaseOrder.Id).ToList();
+
+                        if (purchaseOrdersDetails != null)
+                        {
+                            foreach (PurchaseOrderDetails purchaseOrderDetails in purchaseOrdersDetails)
+                            {
+                                SalesOrderDetails salesOrderDetails = new SalesOrderDetails
+                                {
+                                    SalesOrderId = salesOrder.Id,
+                                    MasterItemId = purchaseOrderDetails.MasterItemId,
+                                    MasterItemUnitId = purchaseOrderDetails.MasterItemUnitId,
+                                    Quantity = purchaseOrderDetails.Quantity,
+                                    Price = purchaseOrderDetails.Price,
+                                    Total = purchaseOrderDetails.Total,
+                                    Notes = purchaseOrderDetails.Notes,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.SalesOrdersDetails.Add(salesOrderDetails);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        salesOrder.PurchaseOrderId = purchaseOrder.Id;
+                        salesOrder.MasterBusinessUnitId = purchaseOrder.MasterBusinessUnitId;
+                        salesOrder.MasterRegionId = purchaseOrder.MasterRegionId;
+                        salesOrder.MasterCurrencyId = purchaseOrder.MasterCurrencyId;
+                        salesOrder.Rate = purchaseOrder.Rate;
+                        // salesOrder.MasterCustomerId = purchaseOrder.MasterCustomerId;
+                        salesOrder.MasterWarehouseId = purchaseOrder.MasterWarehouseId;
+                        salesOrder.Notes = purchaseOrder.Notes;
+                        salesOrder.Total = purchaseOrder.Total;
+
+                        db.Entry(salesOrder).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+
+            return Json(new
+            {
+                salesOrder.MasterRegionId,
+                salesOrder.MasterBusinessUnitId,
+                salesOrder.MasterCustomerId,
+                salesOrder.MasterWarehouseId,
+                salesOrder.Notes,
+                Total = salesOrder.Total.ToString("N2"),
+                salesOrder.Date,
+                Currency = salesOrder.MasterCurrency.Code + " : " + salesOrder.Rate.ToString("N2")
+            });
+        }
 
         protected override void Dispose(bool disposing)
         {
