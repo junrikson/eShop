@@ -305,6 +305,7 @@
     <Compile Include="Controllers\Bank\ChequeInsController.cs" />
     <Compile Include="Controllers\Bank\ChequeOutsController.cs" />
     <Compile Include="Controllers\Bank\MasterBanksController.cs" />
+    <Compile Include="Controllers\Inventory\ReportStockBalancesController.cs" />
     <Compile Include="Controllers\Inventory\MasterItemsController.cs" />
     <Compile Include="Controllers\Inventory\MasterBrandsController.cs" />
     <Compile Include="Controllers\Inventory\WarehouseTransfersController.cs" />
@@ -352,6 +353,7 @@
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
     <Compile Include="Models\Accounting\Journal.cs" />
     <Compile Include="Models\Buying\GoodsReceipt.cs" />
+    <Compile Include="Models\Inventory\StockBalance.cs" />
     <Compile Include="Models\Inventory\StockCard.cs" />
     <Compile Include="Models\Inventory\WarehouseTransfer.cs" />
     <Compile Include="Models\AR\AdvanceRepayment.cs" />
@@ -7229,6 +7231,13 @@
     <Content Include="Views\Manufacture\FinishedGoodSlips\_WorkOrdersEdit.cshtml" />
     <Content Include="Views\Manufacture\MaterialSlips\_DetailsCreate.cshtml" />
     <Content Include="Views\Manufacture\MaterialSlips\_WorkOrdersEdit.cshtml" />
+    <Content Include="Views\Inventory\Reports\ReportStockBalances\_Details.cshtml" />
+    <Content Include="Views\Inventory\Reports\ReportStockBalances\_IndexGrid.cshtml" />
+    <Content Include="Views\Inventory\Reports\ReportStockBalances\Index.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\_RelationsCreate.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\_RelationsGrid.cshtml" />
+    <Content Include="Views\Masters\MasterBusinessUnits\_RelationsEdit.cshtml" />
+    <Content Include="Views\Inventory\Reports\ReportStockBalances\_DetailsGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

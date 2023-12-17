@@ -74,9 +74,20 @@ namespace eShop.Models
         [Display(Name = "Kode Customer")]
         public virtual MasterCustomer MasterCustomer { get; set; }
 
+        [Display(Name = "Referensi")]
+        public string Reference { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        [Display(Name = "Diskon Rupiah")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Discount { get; set; }
+
+        [Display(Name = "Diskon Persen")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountValue { get; set; }
 
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
@@ -141,6 +152,14 @@ namespace eShop.Models
         [Required(ErrorMessage = "Harga harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Price { get; set; }
+
+        [Display(Name = "Diskon Rupiah")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Discount { get; set; }
+
+        [Display(Name = "Diskon Persen")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountValue { get; set; }
 
         [Display(Name = "Nilai")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]

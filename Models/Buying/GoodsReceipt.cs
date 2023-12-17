@@ -15,9 +15,9 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Nomor harus diisi.")]
+        [Required(ErrorMessage = "Nomor Penerimaan harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode GR")]
+        [Display(Name = "Nomor Penerimaan")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "GoodsReceipts", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
@@ -48,6 +48,12 @@ namespace eShop.Models
         [Display(Name = "Pembelian")]
         public virtual Purchase Purchase { get; set; }
 
+        [Display(Name = "Sales Order")]
+        public int? SalesOrderId { get; set; }
+
+        [Display(Name = "Sales Order")]
+        public virtual SalesOrder SalesOrder { get; set; }
+
         [Display(Name = "Gudang")]
         [Required(ErrorMessage = "Gudang harus diisi.")]
         public int MasterWarehouseId { get; set; }
@@ -61,6 +67,9 @@ namespace eShop.Models
 
         [Display(Name = "Kode Supplier")]
         public virtual MasterSupplier MasterSupplier { get; set; }
+
+        [Display(Name = "Referensi")]
+        public string Reference { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
@@ -118,8 +127,7 @@ namespace eShop.Models
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]

@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public class StockCard
+    public class StockBalance
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -40,30 +40,10 @@ namespace eShop.Models
 
         [Display(Name = "Master Item")]
         public virtual MasterItem MasterItem { get; set; }
-
+                
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
         public int Quantity { get; set; }
-
-        [Display(Name = "Jenis Menu")]
-        public EnumMenuType MenuType { get; set; }
-
-        [Display(Name = "Penerimaan Barang")]
-        public int? GoodsReceiptDetailsId { get; set; }
-
-        [Display(Name = "Penerimaan Barang")]
-        public virtual GoodsReceiptDetails GoodsReceiptDetails { get; set; }
-
-        [Display(Name = "Penjualan")]
-        public int? SaleDetailsId { get; set; }
-
-        [Display(Name = "Penjualan")]
-        public virtual SaleDetails SaleDetails { get; set; }
-
-        [Display(Name = "Penyesuaian")]
-        public int? StockAdjustmentDetailsId { get; set; }
-
-        [Display(Name = "Penyesuaian")]
-        public virtual StockAdjustmentDetails StockAdjustmentDetails { get; set; }
     }
+
 }

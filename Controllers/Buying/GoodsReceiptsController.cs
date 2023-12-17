@@ -214,9 +214,11 @@ namespace eShop.Controllers
                             {
                                 var details = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == obj.Id).ToList();
 
-                                if (details != null)
+                                foreach (var detail in details)
                                 {
-                                    db.GoodsReceiptsDetails.RemoveRange(details);
+                                    SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.DELETE, obj.MasterBusinessUnitId, obj.MasterRegionId, obj.MasterWarehouseId, detail.MasterItemId, 0, detail.Id);
+
+                                    db.GoodsReceiptsDetails.Remove(detail);
                                     db.SaveChanges();
                                 }
 
@@ -343,9 +345,11 @@ namespace eShop.Controllers
 
                                 var details = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == obj.Id).ToList();
 
-                                if (details != null)
+                                foreach (var detail in details)
                                 {
-                                    db.GoodsReceiptsDetails.RemoveRange(details);
+                                    SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.DELETE, obj.MasterBusinessUnitId, obj.MasterRegionId, obj.MasterWarehouseId, detail.MasterItemId, 0, detail.Id);
+
+                                    db.GoodsReceiptsDetails.Remove(detail);
                                     db.SaveChanges();
                                 }
 
@@ -414,7 +418,7 @@ namespace eShop.Controllers
                         db.Entry(obj).Property("IsPrint").IsModified = true;
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Repayment, MenuId = obj.Id, MenuCode = obj.Code, Actions = EnumActions.PRINT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.GoodsReceipt, MenuId = obj.Id, MenuCode = obj.Code, Actions = EnumActions.PRINT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -473,11 +477,12 @@ namespace eShop.Controllers
         [Authorize(Roles = "GoodsReceiptsActive")]
         public ActionResult DetailsCreate([Bind(Include = "Id,GoodsReceiptId,MasterItemId,MasterItemUnitId,Quantity,Notes,Created,Updated,UserId")] GoodsReceiptDetails goodsReceiptDetails)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(goodsReceiptDetails.MasterItemUnitId);
-            
             goodsReceiptDetails.Created = DateTime.Now;
             goodsReceiptDetails.Updated = DateTime.Now;
             goodsReceiptDetails.UserId = User.Identity.GetUserId<int>();
+
+            MasterItemUnit unit = db.MasterItemUnits.Find(goodsReceiptDetails.MasterItemUnitId);
+            GoodsReceipt goodsReceipt = db.GoodsReceipts.Find(goodsReceiptDetails.GoodsReceiptId);
 
             if (!string.IsNullOrEmpty(goodsReceiptDetails.Notes)) goodsReceiptDetails.Notes = goodsReceiptDetails.Notes.ToUpper();
 
@@ -489,6 +494,8 @@ namespace eShop.Controllers
                     {
                         db.GoodsReceiptsDetails.Add(goodsReceiptDetails);
                         db.SaveChanges();
+
+                        SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.CREATE, goodsReceipt.MasterBusinessUnitId, goodsReceipt.MasterRegionId, goodsReceipt.MasterWarehouseId, goodsReceiptDetails.MasterItemId, (int)(goodsReceiptDetails.Quantity * unit.MasterUnit.Ratio), goodsReceiptDetails.Id);
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.GoodsReceiptDetails, MenuId = goodsReceiptDetails.Id, MenuCode = goodsReceiptDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
@@ -530,8 +537,8 @@ namespace eShop.Controllers
         [Authorize(Roles = "GoodsReceiptsActive")]
         public ActionResult DetailsEdit([Bind(Include = "Id,GoodsReceiptId,MasterItemId,MasterItemUnitId,Quantity,Notes,Created,Updated,UserId")] GoodsReceiptDetails goodsReceiptDetails)
         {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(goodsReceiptDetails.MasterItemUnitId);
-            
+            GoodsReceipt goodsReceipt = db.GoodsReceipts.Find(goodsReceiptDetails.GoodsReceiptId);
+
             goodsReceiptDetails.Updated = DateTime.Now;
             goodsReceiptDetails.UserId = User.Identity.GetUserId<int>();
 
@@ -552,6 +559,9 @@ namespace eShop.Controllers
                     try
                     {
                         db.SaveChanges();
+
+                        MasterItemUnit unit = db.MasterItemUnits.Find(goodsReceiptDetails.MasterItemUnitId);
+                        SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.EDIT, goodsReceipt.MasterBusinessUnitId, goodsReceipt.MasterRegionId, goodsReceipt.MasterWarehouseId, goodsReceiptDetails.MasterItemId, (int)(goodsReceiptDetails.Quantity * unit.MasterUnit.Ratio), goodsReceiptDetails.Id);
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.GoodsReceiptDetails, MenuId = goodsReceiptDetails.Id, MenuCode = goodsReceiptDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
@@ -594,6 +604,9 @@ namespace eShop.Controllers
                                 try
                                 {
                                     GoodsReceiptDetails tmp = obj;
+                                    GoodsReceipt goodsReceipt = db.GoodsReceipts.Find(obj.GoodsReceiptId);
+
+                                    SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.DELETE, goodsReceipt.MasterBusinessUnitId, goodsReceipt.MasterRegionId, goodsReceipt.MasterWarehouseId, obj.MasterItemId, 0, obj.Id);
 
                                     db.GoodsReceiptsDetails.Remove(obj);
                                     db.SaveChanges();
@@ -706,9 +719,11 @@ namespace eShop.Controllers
                     {
                         var remove = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == goodsReceipt.Id).ToList();
 
-                        if (remove != null)
+                        foreach (var obj in remove)
                         {
-                            db.GoodsReceiptsDetails.RemoveRange(remove);
+                            SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.DELETE, goodsReceipt.MasterBusinessUnitId, goodsReceipt.MasterRegionId, goodsReceipt.MasterWarehouseId, obj.MasterItemId, 0, obj.Id);
+
+                            db.GoodsReceiptsDetails.Remove(obj);
                             db.SaveChanges();
                         }
 
@@ -732,6 +747,10 @@ namespace eShop.Controllers
 
                                 db.GoodsReceiptsDetails.Add(goodsReceiptDetails);
                                 db.SaveChanges();
+
+                                MasterItemUnit unit = db.MasterItemUnits.Find(goodsReceiptDetails.MasterItemUnitId);
+
+                                SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.CREATE, goodsReceipt.MasterBusinessUnitId, goodsReceipt.MasterRegionId, goodsReceipt.MasterWarehouseId, goodsReceiptDetails.MasterItemId, (int)(goodsReceiptDetails.Quantity * unit.MasterUnit.Ratio), goodsReceiptDetails.Id);
                             }
                         }
 
@@ -764,6 +783,48 @@ namespace eShop.Controllers
                 goodsReceipt.Notes,
                 goodsReceipt.Date
             });
+        }
+
+
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "GoodsReceiptsActive")]
+        public JsonResult WarehouseChange(int goodsReceiptid, int masterWarehouseId)
+        {
+            GoodsReceipt goodsReceipt = db.GoodsReceipts.Find(goodsReceiptid);
+
+            if(goodsReceipt != null)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        goodsReceipt.MasterWarehouseId = masterWarehouseId;
+
+                        db.Entry(goodsReceipt).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        var goodsReceiptsDetails = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == goodsReceiptid);
+                        foreach (GoodsReceiptDetails goodsReceiptDetails in goodsReceiptsDetails)
+                        {
+                            MasterItemUnit unit = db.MasterItemUnits.Find(goodsReceiptDetails.MasterItemUnitId);
+                            SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.EDIT, goodsReceipt.MasterBusinessUnitId, goodsReceipt.MasterRegionId, goodsReceipt.MasterWarehouseId, goodsReceiptDetails.MasterItemId, (int)(goodsReceiptDetails.Quantity * unit.MasterUnit.Ratio), goodsReceiptDetails.Id);
+                        }
+
+                        dbTran.Commit();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+
+                return Json("success");
+            }
+
+            return Json("Penerimaan Barang tidak ditemukan!");
         }
 
         protected override void Dispose(bool disposing)

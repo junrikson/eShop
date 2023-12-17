@@ -233,9 +233,9 @@ namespace eShop.Models
         WarehouseTransferDetails = 112,
         [Display(Name = "Master Sales")]
         MasterSalesPerson = 113,
-        [Display(Name = "Adjustment")]
+        [Display(Name = "Penerimaan Barang")]
         GoodsReceipt = 114,
-        [Display(Name = "Adjustment Details")]
+        [Display(Name = "Penerimaan Barang Details")]
         GoodsReceiptDetails = 115,
         [Display(Name = "Setting Akun")]
         MasterBusinessUnitAccount = 116,

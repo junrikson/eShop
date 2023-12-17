@@ -1,0 +1,34 @@
+﻿@model IEnumerable<eShop.Models.StockBalance>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => ((User.IsInRole("ReportStockBalancesActive")) ? "<div class=\"text-center\">&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "ReportStockBalances", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
+        columns.Add(model => model.MasterBusinessUnit.Code).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Code));
+        columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));
+        columns.Add(model => model.MasterWarehouse.Code).Titled(@Html.DisplayNameFor(model => model.MasterWarehouse.Code));
+        columns.Add(model => model.MasterItem.Code).Titled(@Html.DisplayNameFor(model => model.MasterItem.Code)).InitialSort(GridSortOrder.Desc);
+        columns.Add(model => model.MasterItem.Name).Titled(@Html.DisplayNameFor(model => model.MasterItem.Name));
+        columns.Add(model => model.Quantity).Titled(@Html.DisplayNameFor(model => model.Quantity));
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)

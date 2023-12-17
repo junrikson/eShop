@@ -217,12 +217,56 @@ namespace eShop.Controllers
                         {
                             try
                             {
+                                SalesOrder relationSalesOrder = db.SalesOrders.Where(x => x.SalesOrderRelationId == obj.SalesOrderId).FirstOrDefault();
+
+                                if (relationSalesOrder != null)
+                                {
+                                    GoodsReceipt goodsReceiptRemove = db.GoodsReceipts.Where(x => x.SalesOrderId == obj.SalesOrderId).FirstOrDefault();
+
+                                    if (goodsReceiptRemove != null)
+                                    {
+                                        var goodReceiptDetails = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == goodsReceiptRemove.Id).ToList();
+
+                                        foreach (var detail in goodReceiptDetails)
+                                        {
+                                            SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.DELETE, goodsReceiptRemove.MasterBusinessUnitId, goodsReceiptRemove.MasterRegionId, goodsReceiptRemove.MasterWarehouseId, detail.MasterItemId, 0, detail.Id);
+
+                                            db.GoodsReceiptsDetails.Remove(detail);
+                                            db.SaveChanges();
+                                        }
+
+                                        db.GoodsReceipts.Remove(goodsReceiptRemove);
+                                        db.SaveChanges();
+                                    }
+
+                                    Purchase purchaseRemove = db.Purchases.Where(x => x.SalesOrderId == obj.SalesOrderId).FirstOrDefault();
+
+                                    if (purchaseRemove != null)
+                                    {
+                                        var purchasesDetails = db.PurchasesDetails.Where(x => x.PurchaseId == purchaseRemove.Id).ToList();
+
+                                        if (purchasesDetails != null)
+                                        {
+                                            db.PurchasesDetails.RemoveRange(purchasesDetails);
+                                            db.SaveChanges();
+                                        }
+
+                                        db.Purchases.Remove(purchaseRemove);
+                                        db.SaveChanges();
+                                    }
+                                }
+
                                 var details = db.SalesDetails.Where(x => x.SaleId == obj.Id).ToList();
 
                                 if (details != null)
                                 {
-                                    db.SalesDetails.RemoveRange(details);
-                                    db.SaveChanges();
+                                    foreach (var detail in details)
+                                    {
+                                        SharedFunctions.UpdateStock(db, EnumMenuType.SaleDetails, EnumActions.DELETE, obj.MasterBusinessUnitId, obj.MasterRegionId, obj.MasterWarehouseId, detail.MasterItemId, 0, detail.Id);
+
+                                        db.SalesDetails.Remove(detail);
+                                        db.SaveChanges();
+                                    }
                                 }
 
                                 db.Sales.Remove(obj);
@@ -289,7 +333,7 @@ namespace eShop.Controllers
             db.Entry(sales).Property("Date").IsModified = true;
             db.Entry(sales).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(sales).Property("MasterRegionId").IsModified = true;
-            db.Entry(sales).Property("SalesOrderId").IsModified=true;
+            db.Entry(sales).Property("SalesOrderId").IsModified = true;
             db.Entry(sales).Property("MasterCustomerId").IsModified = true;
             db.Entry(sales).Property("MasterWarehouseId").IsModified = true;
             db.Entry(sales).Property("Total").IsModified = true;
@@ -352,12 +396,56 @@ namespace eShop.Controllers
                             {
                                 Sale tmp = obj;
 
+                                SalesOrder relationSalesOrder = db.SalesOrders.Where(x => x.SalesOrderRelationId == obj.SalesOrderId).FirstOrDefault();
+
+                                if (relationSalesOrder != null)
+                                {
+                                    GoodsReceipt goodsReceiptRemove = db.GoodsReceipts.Where(x => x.SalesOrderId == obj.SalesOrderId).FirstOrDefault();
+
+                                    if (goodsReceiptRemove != null)
+                                    {
+                                        var goodReceiptDetails = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == goodsReceiptRemove.Id).ToList();
+
+                                        foreach (var detail in goodReceiptDetails)
+                                        {
+                                            SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.DELETE, goodsReceiptRemove.MasterBusinessUnitId, goodsReceiptRemove.MasterRegionId, goodsReceiptRemove.MasterWarehouseId, detail.MasterItemId, 0, detail.Id);
+
+                                            db.GoodsReceiptsDetails.Remove(detail);
+                                            db.SaveChanges();
+                                        }
+
+                                        db.GoodsReceipts.Remove(goodsReceiptRemove);
+                                        db.SaveChanges();
+                                    }
+
+                                    Purchase purchaseRemove = db.Purchases.Where(x => x.SalesOrderId == obj.SalesOrderId).FirstOrDefault();
+
+                                    if (purchaseRemove != null)
+                                    {
+                                        var purchasesDetails = db.PurchasesDetails.Where(x => x.PurchaseId == purchaseRemove.Id).ToList();
+
+                                        if (purchasesDetails != null)
+                                        {
+                                            db.PurchasesDetails.RemoveRange(purchasesDetails);
+                                            db.SaveChanges();
+                                        }
+
+                                        db.Purchases.Remove(purchaseRemove);
+                                        db.SaveChanges();
+                                    }
+                                }
+
                                 var details = db.SalesDetails.Where(x => x.SaleId == obj.Id).ToList();
 
                                 if (details != null)
                                 {
-                                    db.SalesDetails.RemoveRange(details);
-                                    db.SaveChanges();
+                                    foreach (var detail in details)
+                                    {
+                                        SharedFunctions.UpdateStock(db, EnumMenuType.SaleDetails, EnumActions.DELETE, obj.MasterBusinessUnitId, obj.MasterRegionId, obj.MasterWarehouseId, detail.MasterItemId, 0, detail.Id);
+
+                                        db.SalesDetails.Remove(detail);
+                                        db.SaveChanges();
+                                    }
                                 }
 
                                 db.Sales.Remove(obj);
@@ -513,6 +601,8 @@ namespace eShop.Controllers
                         db.Entry(sale).State = EntityState.Modified;
                         db.SaveChanges();
 
+                        SharedFunctions.UpdateStock(db, EnumMenuType.SaleDetails, EnumActions.CREATE, sale.MasterBusinessUnitId, sale.MasterRegionId, sale.MasterWarehouseId, saleDetails.MasterItemId, (int)(saleDetails.Quantity * masterItemUnit.MasterUnit.Ratio), saleDetails.Id);
+
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SaleDetails, MenuId = saleDetails.Id, MenuCode = saleDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
@@ -586,6 +676,8 @@ namespace eShop.Controllers
                         Sale sale = db.Sales.Find(saleDetails.SaleId);
                         sale.Total = SharedFunctions.GetTotalSale(db, sale.Id, saleDetails.Id) + saleDetails.Total;
 
+                        SharedFunctions.UpdateStock(db, EnumMenuType.SaleDetails, EnumActions.EDIT, sale.MasterBusinessUnitId, sale.MasterRegionId, sale.MasterWarehouseId, saleDetails.MasterItemId, (int)(saleDetails.Quantity * masterItemUnit.MasterUnit.Ratio), saleDetails.Id);
+
                         db.Entry(sale).State = EntityState.Modified;
                         db.SaveChanges();
 
@@ -637,6 +729,8 @@ namespace eShop.Controllers
 
                                     db.Entry(sale).State = EntityState.Modified;
                                     db.SaveChanges();
+
+                                    SharedFunctions.UpdateStock(db, EnumMenuType.SaleDetails, EnumActions.DELETE, sale.MasterBusinessUnitId, sale.MasterRegionId, sale.MasterWarehouseId, obj.MasterItemId, 0, obj.Id);
 
                                     db.SalesDetails.Remove(obj);
                                     db.SaveChanges();
@@ -835,9 +929,9 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "SalesActive")]
-        public JsonResult PopulateDetails(int saleid, int salesOrderId)
+        public JsonResult PopulateDetails(int saleId, int salesOrderId)
         {
-            Sale sale = db.Sales.Find(saleid);
+            Sale sale = db.Sales.Find(saleId);
             SalesOrder salesOrder = db.SalesOrders.Find(salesOrderId);
 
             if (sale != null && salesOrder != null)
@@ -848,35 +942,179 @@ namespace eShop.Controllers
                     {
                         var remove = db.SalesDetails.Where(x => x.SaleId == sale.Id).ToList();
 
-                        if (remove != null)
+                        foreach (var obj in remove)
                         {
-                            db.SalesDetails.RemoveRange(remove);
+                            SharedFunctions.UpdateStock(db, EnumMenuType.SaleDetails, EnumActions.DELETE, sale.MasterBusinessUnitId, sale.MasterRegionId, sale.MasterWarehouseId, obj.MasterItemId, 0, obj.Id);
+
+                            db.SalesDetails.Remove(obj);
                             db.SaveChanges();
+                        }
+
+                        SalesOrder salesOrderRemove = db.SalesOrders.Find(sale.SalesOrderId);
+                        if (salesOrderRemove != null)
+                        {
+                            GoodsReceipt goodsReceiptRemove = db.GoodsReceipts.Where(x => x.SalesOrderId == salesOrderRemove.Id).FirstOrDefault();
+
+                            if (goodsReceiptRemove != null)
+                            {
+                                var goodReceiptDetails = db.GoodsReceiptsDetails.Where(x => x.GoodsReceiptId == goodsReceiptRemove.Id).ToList();
+
+                                foreach (var detail in goodReceiptDetails)
+                                {
+                                    SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.DELETE, goodsReceiptRemove.MasterBusinessUnitId, goodsReceiptRemove.MasterRegionId, goodsReceiptRemove.MasterWarehouseId, detail.MasterItemId, 0, detail.Id);
+
+                                    db.GoodsReceiptsDetails.Remove(detail);
+                                    db.SaveChanges();
+                                }
+
+                                db.GoodsReceipts.Remove(goodsReceiptRemove);
+                                db.SaveChanges();
+                            }
+
+                            Purchase purchaseRemove = db.Purchases.Where(x => x.SalesOrderId == salesOrderRemove.Id).FirstOrDefault();
+
+                            if (purchaseRemove != null)
+                            {
+                                var purchasesDetails = db.PurchasesDetails.Where(x => x.PurchaseId == purchaseRemove.Id).ToList();
+
+                                if (purchasesDetails != null)
+                                {
+                                    db.PurchasesDetails.RemoveRange(purchasesDetails);
+                                    db.SaveChanges();
+                                }
+
+                                db.Purchases.Remove(purchaseRemove);
+                                db.SaveChanges();
+                            }
                         }
 
                         var salesOrdersDetails = db.SalesOrdersDetails.Where(x => x.SalesOrderId == salesOrder.Id).ToList();
 
                         if (salesOrdersDetails != null)
                         {
-                            foreach (SalesOrderDetails salesOrderDetails in salesOrdersDetails)
-                            {
-                                SaleDetails saleDetails = new SaleDetails
-                                {
-                                    SaleId = sale.Id,
-                                    MasterItemId = salesOrderDetails.MasterItemId,
-                                    MasterItemUnitId = salesOrderDetails.MasterItemUnitId,
-                                    Quantity = salesOrderDetails.Quantity,
-                                    Price = salesOrderDetails.Price,
-                                    Total = salesOrderDetails.Total,
-                                    Notes = salesOrderDetails.Notes,
-                                    Created = DateTime.Now,
-                                    Updated = DateTime.Now,
-                                    UserId = User.Identity.GetUserId<int>()
-                                };
+                            SalesOrder relationSalesOrder = db.SalesOrders.Where(x => x.SalesOrderRelationId == salesOrder.Id).FirstOrDefault();
 
-                                db.SalesDetails.Add(saleDetails);
-                                db.SaveChanges();
+                            if (relationSalesOrder != null)
+                            {
+                                Sale relationSale = db.Sales.Where(x => x.SalesOrderId == relationSalesOrder.Id).FirstOrDefault();
+                                if (relationSale != null)
+                                {
+                                    MasterBusinessUnitRelation masterBusinessUnitRelation = db.MasterBusinessUnitRelations.Where(x => x.MasterBusinessUnitId == salesOrder.MasterBusinessUnitId
+                                                                                            && x.MasterBusinessRelationId == relationSalesOrder.MasterBusinessUnitId && x.MasterRegionId == salesOrder.MasterRegionId).FirstOrDefault();
+
+                                    Purchase purchase = new Purchase
+                                    {
+                                        Code = GetPurchaseCode(salesOrder.MasterBusinessUnit, salesOrder.MasterRegion),
+                                        SalesOrderId = salesOrder.Id,
+                                        Reference = relationSale.Code,
+                                        MasterBusinessUnitId = salesOrder.MasterBusinessUnitId,
+                                        MasterRegionId = salesOrder.MasterRegionId,
+                                        MasterCurrencyId = salesOrder.MasterCurrencyId,
+                                        Rate = salesOrder.Rate,
+                                        MasterSupplierId = (int)masterBusinessUnitRelation.MasterSupplierId,
+                                        MasterWarehouseId = salesOrder.MasterWarehouseId,
+                                        Notes = salesOrder.Notes,
+                                        Total = salesOrder.Total,
+                                        Active = salesOrder.Active,
+                                        Created = DateTime.Now,
+                                        Updated = DateTime.Now,
+                                        Date = DateTime.Now,
+                                        UserId = User.Identity.GetUserId<int>()
+                                    };
+
+                                   // SharedFunctions.CreatePurchaseJournal(db, purchase);
+
+                                    db.Purchases.Add(purchase);
+                                    db.SaveChanges();
+
+                                    foreach (SalesOrderDetails salesOrderDetails in salesOrdersDetails)
+                                    {
+                                        PurchaseDetails purchaseDetails = new PurchaseDetails
+                                        {
+                                            PurchaseId = purchase.Id,
+                                            MasterItemId = salesOrderDetails.MasterItemId,
+                                            MasterItemUnitId = salesOrderDetails.MasterItemUnitId,
+                                            Quantity = salesOrderDetails.Quantity,
+                                            Price = salesOrderDetails.Price,
+                                            Total = salesOrderDetails.Total,
+                                            Notes = salesOrderDetails.Notes,
+                                            Created = DateTime.Now,
+                                            Updated = DateTime.Now,
+                                            UserId = User.Identity.GetUserId<int>()
+                                        };
+
+                                        //SharedFunctions.CreatePurchaseJournalDetails(db, purchaseDetails);
+
+                                        db.PurchasesDetails.Add(purchaseDetails);
+                                        db.SaveChanges();
+                                    }
+
+                                    GoodsReceipt goodsReceipt = new GoodsReceipt
+                                    {
+                                        Code = GetGoodsReceiptCode(salesOrder.MasterBusinessUnit, salesOrder.MasterRegion),
+                                        SalesOrderId = salesOrder.Id,
+                                        Reference = relationSale.Code,
+                                        PurchaseId = purchase.Id,
+                                        MasterBusinessUnitId = salesOrder.MasterBusinessUnitId,
+                                        MasterRegionId = salesOrder.MasterRegionId,
+                                        MasterSupplierId = (int)masterBusinessUnitRelation.MasterSupplierId,
+                                        MasterWarehouseId = salesOrder.MasterWarehouseId,
+                                        Notes = salesOrder.Notes,
+                                        Active = salesOrder.Active,
+                                        Created = DateTime.Now,
+                                        Updated = DateTime.Now,
+                                        Date = DateTime.Now,
+                                        UserId = User.Identity.GetUserId<int>()
+                                    };
+
+                                    db.GoodsReceipts.Add(goodsReceipt);
+                                    db.SaveChanges();
+
+                                    foreach (SalesOrderDetails salesOrderDetails in salesOrdersDetails)
+                                    {
+                                        GoodsReceiptDetails goodsReceiptDetails = new GoodsReceiptDetails
+                                        {
+                                            GoodsReceiptId = goodsReceipt.Id,
+                                            MasterItemId = salesOrderDetails.MasterItemId,
+                                            MasterItemUnitId = salesOrderDetails.MasterItemUnitId,
+                                            Quantity = salesOrderDetails.Quantity,
+                                            Notes = salesOrderDetails.Notes,
+                                            Created = DateTime.Now,
+                                            Updated = DateTime.Now,
+                                            UserId = User.Identity.GetUserId<int>()
+                                        };
+
+                                        db.GoodsReceiptsDetails.Add(goodsReceiptDetails);
+                                        db.SaveChanges();
+
+                                        MasterItemUnit unit = db.MasterItemUnits.Find(goodsReceiptDetails.MasterItemUnitId);
+                                        SharedFunctions.UpdateStock(db, EnumMenuType.GoodsReceiptDetails, EnumActions.CREATE, goodsReceipt.MasterBusinessUnitId, goodsReceipt.MasterRegionId, goodsReceipt.MasterWarehouseId, goodsReceiptDetails.MasterItemId, (int)(goodsReceiptDetails.Quantity * unit.MasterUnit.Ratio), goodsReceiptDetails.Id);
+                                    }
+                                }
                             }
+                        }
+
+                        foreach (SalesOrderDetails salesOrderDetails in salesOrdersDetails)
+                        {
+                            SaleDetails saleDetails = new SaleDetails
+                            {
+                                SaleId = sale.Id,
+                                MasterItemId = salesOrderDetails.MasterItemId,
+                                MasterItemUnitId = salesOrderDetails.MasterItemUnitId,
+                                Quantity = salesOrderDetails.Quantity,
+                                Price = salesOrderDetails.Price,
+                                Total = salesOrderDetails.Total,
+                                Notes = salesOrderDetails.Notes,
+                                Created = DateTime.Now,
+                                Updated = DateTime.Now,
+                                UserId = User.Identity.GetUserId<int>()
+                            };
+
+                            db.SalesDetails.Add(saleDetails);
+                            db.SaveChanges();
+
+                            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(saleDetails.MasterItemUnitId);
+                            SharedFunctions.UpdateStock(db, EnumMenuType.SaleDetails, EnumActions.CREATE, sale.MasterBusinessUnitId, sale.MasterRegionId, sale.MasterWarehouseId, saleDetails.MasterItemId, (int)(saleDetails.Quantity * masterItemUnit.MasterUnit.Ratio), saleDetails.Id);
                         }
 
                         sale.SalesOrderId = salesOrder.Id;
@@ -913,6 +1151,42 @@ namespace eShop.Controllers
                 sale.Date,
                 Currency = sale.MasterCurrency.Code + " : " + sale.Rate.ToString("N2")
             });
+        }
+
+        [Authorize(Roles = "SalesActive")]
+        private string GetGoodsReceiptCode(MasterBusinessUnit masterBusinessUnit, MasterRegion masterRegion)
+        {
+            string romanMonth = SharedFunctions.RomanNumeralFrom((int)DateTime.Now.Month);
+            string code = "/" + Settings.Default.GoodsReceiptCode + masterBusinessUnit.Code + "/" + masterRegion.Code + "/" + SharedFunctions.RomanNumeralFrom(DateTime.Now.Month) + "/" + DateTime.Now.Year.ToString().Substring(2, 2);
+
+            GoodsReceipt lastData = db.GoodsReceipts
+                .Where(x => (x.Code.Contains(code)))
+                .OrderByDescending(z => z.Code).FirstOrDefault();
+
+            if (lastData == null)
+                code = "0001" + code;
+            else
+                code = (Convert.ToInt32(lastData.Code.Substring(0, 4)) + 1).ToString("D4") + code;
+
+            return code;
+        }
+
+        [Authorize(Roles = "SalesActive")]
+        private string GetPurchaseCode(MasterBusinessUnit masterBusinessUnit, MasterRegion masterRegion)
+        {
+            string romanMonth = SharedFunctions.RomanNumeralFrom((int)DateTime.Now.Month);
+            string code = "/" + Settings.Default.PurchaseCode + masterBusinessUnit.Code + "/" + masterRegion.Code + "/" + SharedFunctions.RomanNumeralFrom(DateTime.Now.Month) + "/" + DateTime.Now.Year.ToString().Substring(2, 2);
+
+            Purchase lastData = db.Purchases
+                .Where(x => (x.Code.Contains(code)))
+                .OrderByDescending(z => z.Code).FirstOrDefault();
+
+            if (lastData == null)
+                code = "0001" + code;
+            else
+                code = (Convert.ToInt32(lastData.Code.Substring(0, 4)) + 1).ToString("D4") + code;
+
+            return code;
         }
 
         protected override void Dispose(bool disposing)

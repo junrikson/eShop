@@ -90,9 +90,20 @@ namespace eShop.Models
         [Display(Name = "Gudang")]
         public virtual MasterWarehouse MasterWarehouse { get; set; }
 
+        [Display(Name = "Referensi")]
+        public string Reference { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        [Display(Name = "Diskon Rupiah")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Discount { get; set; }
+
+        [Display(Name = "Diskon Persen")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountValue { get; set; }
 
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
@@ -196,9 +207,20 @@ namespace eShop.Models
         [Display(Name = "Gudang")]
         public string MasterWarehouseCode { get; set; }
 
+        [Display(Name = "Referensi")]
+        public string Reference { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        [Display(Name = "Diskon Rupiah")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Discount { get; set; }
+
+        [Display(Name = "Diskon Persen")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountValue { get; set; }
 
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
@@ -227,53 +249,6 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-    public class OutstandingPurchaseOrderSalesOrderDatalist : MvcDatalist<PurchaseOrderSalesOrderViewModel>
-    {
-        private DbContext Context { get; }
-
-        public OutstandingPurchaseOrderSalesOrderDatalist(DbContext context)
-        {
-            Context = context;
-
-            GetLabel = (model) => model.Code;
-        }
-        public OutstandingPurchaseOrderSalesOrderDatalist()
-        {
-            Url = "/DatalistFilters/AllOutstandingPurchaseOrderSalesOrder";
-            Title = "Purchase Order";
-            AdditionalFilters.Add("MasterBusinessUnitId");
-            AdditionalFilters.Add("MasterRegionId");
-
-            Filter.Sort = "Code";
-            Filter.Order = DatalistSortOrder.Asc;
-            Filter.Rows = 10;
-        }
-
-        public override IQueryable<PurchaseOrderSalesOrderViewModel> GetModels()
-        {
-            return Context.Set<PurchaseOrder>()
-                .Where(x => !Context.Set<SalesOrder>().Where(p => p.Active == true && p.PurchaseOrderId == x.Id).Any())
-                .Select(x => new PurchaseOrderSalesOrderViewModel
-                {
-                    Id = x.Id,
-                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
-                    MasterBusinessUnitId = x.MasterBusinessUnitId,
-                    MasterBusinessUnit = x.MasterBusinessUnit,
-                    MasterRegionCode = x.MasterRegion.Code,
-                    MasterRegionId = x.MasterRegionId,
-                    MasterRegion = x.MasterRegion,
-                    MasterCustomerCode = x.MasterCustomer.Code,
-                    MasterCustomerName = x.MasterCustomer.Name,
-                    MasterWarehouseCode = x.MasterWarehouse.Code,
-                    Created = x.Created,
-                    Updated = x.Updated,
-                    Code = x.Code,
-                    Date = x.Date,
-                    Total = x.Total,
-                    Active = x.Active
-                });
-        }
-    }
     public class PurchaseOrderViewModel
     {
         [Key]
@@ -324,6 +299,16 @@ namespace eShop.Models
         [DatalistColumn]
         [Display(Name = "Gudang")]
         public string MasterWarehouseCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Diskon Rupiah")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Discount { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Diskon Persen")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountValue { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Total")]
@@ -408,13 +393,20 @@ namespace eShop.Models
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
 
         [Display(Name = "Harga")]
         [Required(ErrorMessage = "Harga harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Price { get; set; }
+
+        [Display(Name = "Diskon Rupiah")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Discount { get; set; }
+
+        [Display(Name = "Diskon Persen")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountValue { get; set; }
 
         [Display(Name = "Nilai")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]

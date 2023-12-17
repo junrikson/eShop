@@ -36,9 +36,9 @@
                     if (User.IsInRole("MasterCurrenciesActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterCurrencies" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterCurrencies", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Mata Uang</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
-                if (User.IsInRole("MasterCategoriesActive") || User.IsInRole("MasterItemsActive") || User.IsInRole("MasterUnitsActive") || User.IsInRole("MasterBrandsActive") || User.IsInRole("StockAdjustmentsActive") || User.IsInRole("WarehouseTransfersActive"))
+                if (User.IsInRole("MasterCategoriesActive") || User.IsInRole("MasterItemsActive") || User.IsInRole("MasterUnitsActive") || User.IsInRole("MasterBrandsActive") || User.IsInRole("StockAdjustmentsActive") || User.IsInRole("WarehouseTransfersActive") || User.IsInRole("ReportStockBalancesActive"))
                 {
-                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "MasterCategories" || ViewBag.Current == "MasterItems" || ViewBag.Current == "MasterUnits" || ViewBag.Current == "MasterBrands" || ViewBag.Current == "StockAdjustments" || ViewBag.Current == "WarehouseTransfers") ? " active" : "") + "\">";
+                    messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "MasterCategories" || ViewBag.Current == "MasterItems" || ViewBag.Current == "MasterUnits" || ViewBag.Current == "MasterBrands" || ViewBag.Current == "StockAdjustments" || ViewBag.Current == "WarehouseTransfers" || ViewBag.Current == "ReportStockBalances") ? " active" : "") + "\">";
                     messages = messages + "<a href=\"#\"><i class=\"fa fa-cube\"></i><span>Inventory</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
                     if (User.IsInRole("MasterCategoriesActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterCategories" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterCategories", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Kategori</a></li>"; }
                     if (User.IsInRole("MasterBrandsActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterBrands" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterBrands", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Merek</a></li>"; }
@@ -46,6 +46,14 @@
                     if (User.IsInRole("MasterItemsActive")) { messages = messages + "<li" + (ViewBag.Current == "MasterItems" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MasterItems", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Barang</a></li>"; }
                     if (User.IsInRole("StockAdjustmentsActive")) { messages = messages + "<li" + (ViewBag.Current == "StockAdjustments" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "StockAdjustments", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Penyesuaian Stok</a></li>"; }
                     if (User.IsInRole("WarehouseTransfersActive")) { messages = messages + "<li" + (ViewBag.Current == "WarehouseTransfers" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "WarehouseTransfers", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Transfer Gudang</a></li>"; }
+                    if (User.IsInRole("ReportStockBalancesActive"))
+                    {
+                        messages = messages + "<li class=\"treeview" + ((ViewBag.Current == "ReportStockBalances") ? " active" : "") + "\">";
+                        messages = messages + "<a href=\"#\"><i class=\"fa fa-angle-right\"></i><span>Laporan</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">";
+                        if (User.IsInRole("ReportStockBalancesActive")) { messages = messages + "<li" + (ViewBag.Current == "ReportStockBalances" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "ReportStockBalances", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Stock Balance</a></li>"; }
+
+                        messages = messages + "</ul></li>";
+                    }
                     messages = messages + "</ul></li>";
                 }
                 if (User.IsInRole("FinishedGoodSlipsActive") || User.IsInRole("MaterialReturnsActive") || User.IsInRole("ProductionCostAllocationsActive") || User.IsInRole("StandardProductCostsActive") || User.IsInRole("ProductionBillOfMaterialsActive") || User.IsInRole("PackingBillOfMaterialsActive") || User.IsInRole("MaterialSlipsActive") || User.IsInRole("WorkOrdersActive"))
@@ -59,7 +67,6 @@
                     if (User.IsInRole("MaterialReturnsActive")) { messages = messages + "<li" + (ViewBag.Current == "MaterialReturns" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "MaterialReturns", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Retur Bahan Baku</a></li>"; }
                     if (User.IsInRole("FinishedGoodSlipsActive")) { messages = messages + "<li" + (ViewBag.Current == "FinishedGoodSlips" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "FinishedGoodSlips", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Penyelesaian Barang Jadi</a></li>"; }
                     if (User.IsInRole("ProductionCostAllocationsActive")) { messages = messages + "<li" + (ViewBag.Current == "ProductionCostAllocations" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "ProductionCostAllocations", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Alokasi Biaya Produksi</a></li>"; }
-                    //if (User.IsInRole("FinishedGoodSlipsActive")) { messages = messages + "<li" + (ViewBag.Current == "FinishedGoodSlips" ? " class=\"active\"" : "") + "><a href=\"" + Url.Action("Index", "FinishedGoodSlips", routeValues: null) + "\"><i class=\"fa fa-angle-right\"></i>Alokasi Biaya Barang Jadi</a></li>"; }
                     messages = messages + "</ul></li>";
                 }
                 if (User.IsInRole("MasterBanksActive") || User.IsInRole("BankInsActive") || User.IsInRole("BankOutsActive") || User.IsInRole("BankInsActive") || User.IsInRole("BankOutsActive") || User.IsInRole("BankOutsPendingActive") || User.IsInRole("ChequeInsActive") || User.IsInRole("ChequeOutsActive") || User.IsInRole("SalesDepositsActive") || User.IsInRole("ChequeCashOutActive") || User.IsInRole("ReportBankBallanceActive") || User.IsInRole("ReportBankMutationActive") || User.IsInRole("ReportBankDetailsActive") || User.IsInRole("ReportListChequesActive"))

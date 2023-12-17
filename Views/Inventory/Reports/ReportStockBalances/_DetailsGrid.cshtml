@@ -1,0 +1,36 @@
+﻿@model IEnumerable<eShop.Models.StockCard>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => model.MasterBusinessUnit.Code).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Code));
+        columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));
+        columns.Add(model => model.MasterWarehouse.Code).Titled(@Html.DisplayNameFor(model => model.MasterWarehouse.Code));
+        columns.Add(model => model.MasterItem.Code).Titled(@Html.DisplayNameFor(model => model.MasterItem.Code));
+        columns.Add(model => model.MasterItem.Name).Titled(@Html.DisplayNameFor(model => model.MasterItem.Name));
+        columns.Add(model => model.Quantity).Titled(@Html.DisplayNameFor(model => model.Quantity));
+        columns.Add(model => model.MenuType).Titled(@Html.DisplayNameFor(model => model.MenuType));
+        columns.Add(model => model.GoodsReceiptDetails.GoodsReceipt.Code).Titled(@Html.DisplayNameFor(model => model.GoodsReceiptDetails.GoodsReceipt.Code));
+        columns.Add(model => model.SaleDetails.Sale.Code).Titled(@Html.DisplayNameFor(model => model.SaleDetails.Sale.Code));
+        columns.Add(model => model.Id).Titled(@Html.DisplayNameFor(model => model.Id)).InitialSort(GridSortOrder.Desc);
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("details-table")
+)

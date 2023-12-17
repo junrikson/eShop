@@ -195,6 +195,30 @@
             var grid = new MvcGrid(document.querySelector('#accounts-table'));
             grid.reload();
         }
+
+        function RelationsCreateSuccess(data) {
+            if (data !== "success") {
+                $('#subdetailsContainer').html(data);
+                return;
+            }
+            $('#subdetailsModal').modal('hide');
+            $('#subdetailsContainer').html("");
+
+            var grid = new MvcGrid(document.querySelector('#relations-table'));
+            grid.reload();
+        }
+
+        function RelationsEditSuccess(data) {
+            if (data !== "success") {
+                $('#subdetailsContainer').html(data);
+                return;
+            }
+            $('#subdetailsModal').modal('hide');
+            $('#subdetailsContainer').html("");
+
+            var grid = new MvcGrid(document.querySelector('#relations-table'));
+            grid.reload();
+        }
     </script>
 
     <script>
@@ -309,6 +333,25 @@
                             });
                         });
 
+                        $('#btnRelationsAdd').click(function (event) {
+                            event.preventDefault();
+                            var url = $(this).attr("href");
+                            $.get(url, function (data) {
+                                $('#subdetailsContainer').html(data);
+                                $('#subdetailsModal').modal('show');
+
+                                $('form').each(function () {
+                                    var $el = $(this);
+                                    $el.data('validator', null);
+                                    $.validator.unobtrusive.parse($el);
+                                });
+
+                                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                                    new MvcDatalist(element);
+                                });
+                            });
+                        });
+
                         var token2 = $('input[name="__RequestVerificationToken"]').val();
                         var headers2 = {};
                         headers2['__RequestVerificationToken'] = token2;
@@ -386,6 +429,44 @@
                                 });
                             }
                         });
+
+                        $("#relationsBatchDelete").click(function (event) {
+                            event.preventDefault();
+                            var selectedIDs = new Array();
+                            $('#relations-table tbody tr').find('td:first :checkbox').each(function () {
+                                if ($(this).prop('checked')) {
+                                    selectedIDs.push($(this).val());
+                                }
+                            });
+
+                            if (selectedIDs.length <= 0) {
+                                bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                            }
+                            else {
+                                bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                                    if (result) {
+                                        var options = {};
+                                        options.url = "/MasterBusinessUnits/RelationsBatchDelete";
+                                        options.type = "POST";
+                                        options.headers = headers2;
+                                        options.data = JSON.stringify(selectedIDs);
+                                        options.contentType = "application/json";
+                                        options.dataType = "json";
+                                        options.success = function (msg) {
+                                            bootbox.alert(msg);
+
+                                            var grid = new MvcGrid(document.querySelector('#relations-table'));
+                                            grid.reload();
+                                        };
+                                        options.error = function () {
+                                            bootbox.alert("Terjadi kesalahan saat menghapus.");
+                                        };
+                                        $.ajax(options);
+                                    }
+                                });
+                            }
+                        });
+
                     });
                 });
 
@@ -402,6 +483,20 @@
             }
             else if (e.detail.grid.element.id == 'accounts-table') {
                 $('#accounts-table').on("click", ".edit-account", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#subdetailsContainer').html(data);
+                        $('#subdetailsModal').modal('show');
+
+                        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                            new MvcDatalist(element);
+                        });
+                    });
+                });
+            }
+            else if (e.detail.grid.element.id == 'relations-table') {
+                $('#relations-table').on("click", ".edit-relation", function (event) {
                     event.preventDefault();
                     var url = $(this).attr("href");
                     $.get(url, function (data) {

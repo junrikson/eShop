@@ -20,6 +20,7 @@
         columns.Add(model => model.MasterSupplier.Name).Titled(@Html.DisplayNameFor(model => model.MasterSupplier.Name));
         columns.Add(model => model.SalesOrder.Code).Titled(@Html.DisplayNameFor(model => model.SalesOrder.Code));
         columns.Add(model => model.SalesOrder.MasterCustomer.Name).Titled(@Html.DisplayNameFor(model => model.SalesOrder.MasterCustomer.Name));
+        columns.Add(model => model.Reference).Titled(@Html.DisplayNameFor(model => model.Reference));
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
         columns.Add(model => model.Total).Titled(@Html.DisplayNameFor(model => model.Total)).Formatted("{0:N0}");
         columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);

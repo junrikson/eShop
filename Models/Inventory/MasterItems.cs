@@ -10,13 +10,6 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public enum EnumInventoryPartType
-    {
-        [Display(Name = "Bahan Baku")]
-        RawMaterial = 1,
-        [Display(Name = "Barang Jadi")]
-        FinishedGood = 2
-    }
     public class MasterItem
     {
         [Key]
@@ -60,10 +53,6 @@ namespace eShop.Models
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
-
-        [Required(ErrorMessage = "Tipe Persediaan harus diisi.")]
-        [Display(Name = "Tipe Persediaan")]
-        public EnumInventoryPartType InventoryPartType { get; set; }
 
         [Display(Name = "Default Discount (%)")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]

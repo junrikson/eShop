@@ -62,6 +62,141 @@ namespace eShop.Extensions
 
     public static class SharedFunctions
     {
+        public static void UpdateStock(ApplicationDbContext db, EnumMenuType type, EnumActions actions, int masterBusinessUnitId, int masterRegionId, int masterWarehouseId, int masterItemId, int quantity, int transactionId)
+        {
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+            MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
+            MasterItem masterItem = db.MasterItems.Find(masterItemId);
+            MasterWarehouse masterWarehouse = db.MasterWarehouses.Find(masterWarehouseId);
+
+            UpdateStockCard(db, type, actions, masterBusinessUnit, masterRegion, masterWarehouse, masterItem, quantity, transactionId);
+            UpdateStockBallance(db, masterBusinessUnit, masterRegion, masterWarehouse, masterItem);
+        }
+
+        private static void UpdateStockCard(ApplicationDbContext db, EnumMenuType type, EnumActions actions, MasterBusinessUnit masterBusinessUnit, MasterRegion masterRegion, MasterWarehouse masterWarehouse, MasterItem masterItem, int quantity, int transactionId)
+        {
+            if(type == EnumMenuType.GoodsReceiptDetails)
+            {
+                if(actions == EnumActions.CREATE)
+                {
+                    StockCard stockCard = new StockCard
+                    {
+                        MasterBusinessUnitId = masterBusinessUnit.Id,
+                        MasterRegionId = masterRegion.Id,
+                        MasterWarehouseId = masterWarehouse.Id,
+                        MasterItemId = masterItem.Id,
+                        Quantity = quantity,
+                        MenuType = type,
+                        GoodsReceiptDetailsId = transactionId
+                    };
+
+                    db.StockCards.Add(stockCard);
+                    db.SaveChanges();
+                }
+                else if (actions == EnumActions.EDIT)
+                {
+                    StockCard stockCard = db.StockCards.Where(x => x.GoodsReceiptDetailsId == transactionId).FirstOrDefault();
+
+                    if(stockCard != null)
+                    {
+                        stockCard.MasterBusinessUnitId = masterBusinessUnit.Id;
+                        stockCard.MasterRegionId = masterRegion.Id;
+                        stockCard.MasterWarehouseId = masterWarehouse.Id;
+                        stockCard.MasterItemId = masterItem.Id;
+                        stockCard.Quantity = quantity;
+
+                        db.Entry(stockCard).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+                else if (actions == EnumActions.DELETE)
+                {
+                    StockCard stockCard = db.StockCards.Where(x => x.GoodsReceiptDetailsId == transactionId).FirstOrDefault();
+
+                    if (stockCard != null)
+                    {
+                        db.StockCards.Remove(stockCard);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            else if (type == EnumMenuType.SaleDetails)
+            {
+                if (actions == EnumActions.CREATE)
+                {
+                    StockCard stockCard = new StockCard
+                    {
+                        MasterBusinessUnitId = masterBusinessUnit.Id,
+                        MasterRegionId = masterRegion.Id,
+                        MasterWarehouseId = masterWarehouse.Id,
+                        MasterItemId = masterItem.Id,
+                        Quantity = -quantity,
+                        MenuType = type,
+                        SaleDetailsId = transactionId
+                    };
+
+                    db.StockCards.Add(stockCard);
+                    db.SaveChanges();
+                }
+                else if (actions == EnumActions.EDIT)
+                {
+                    StockCard stockCard = db.StockCards.Where(x => x.SaleDetailsId == transactionId).FirstOrDefault();
+
+                    if (stockCard != null)
+                    {
+                        stockCard.MasterBusinessUnitId = masterBusinessUnit.Id;
+                        stockCard.MasterRegionId = masterRegion.Id;
+                        stockCard.MasterWarehouseId = masterWarehouse.Id;
+                        stockCard.MasterItemId = masterItem.Id;
+                        stockCard.Quantity = -quantity;
+
+                        db.Entry(stockCard).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+                else if (actions == EnumActions.DELETE)
+                {
+                    StockCard stockCard = db.StockCards.Where(x => x.SaleDetailsId == transactionId).FirstOrDefault();
+
+                    if (stockCard != null)
+                    {
+                        db.StockCards.Remove(stockCard);
+                        db.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        private static void UpdateStockBallance(ApplicationDbContext db, MasterBusinessUnit masterBusinessUnit, MasterRegion masterRegion, MasterWarehouse masterWarehouse, MasterItem masterItem)
+        {
+            StockBalance stockBalance = db.StockBalances.Where(x => x.MasterBusinessUnitId == masterBusinessUnit.Id
+                                            && x.MasterRegionId == masterRegion.Id && x.MasterWarehouseId == masterWarehouse.Id && x.MasterItemId == masterItem.Id).FirstOrDefault();
+
+            if (stockBalance == null)
+            {
+                stockBalance = new StockBalance
+                {
+                    MasterBusinessUnitId = masterBusinessUnit.Id,
+                    MasterRegionId = masterRegion.Id,
+                    MasterWarehouseId = masterWarehouse.Id,
+                    MasterItemId = masterItem.Id,
+                    Quantity = 0
+                };
+
+                db.StockBalances.Add(stockBalance);
+                db.SaveChanges();
+            }
+
+            StockCard temp = db.StockCards.Where(x => x.MasterBusinessUnitId == masterBusinessUnit.Id && x.MasterRegionId == masterRegion.Id && x.MasterWarehouseId == masterWarehouse.Id && x.MasterItemId == masterItem.Id).FirstOrDefault();
+
+            if (temp == null)
+                stockBalance.Quantity = 0;
+            else
+                stockBalance.Quantity = db.StockCards.Where(x => x.MasterBusinessUnitId == masterBusinessUnit.Id && x.MasterRegionId == masterRegion.Id && x.MasterWarehouseId == masterWarehouse.Id && x.MasterItemId == masterItem.Id).Sum(y => y.Quantity);
+
+            db.Entry(stockBalance).State = EntityState.Modified;
+            db.SaveChanges();
+        }
 
         public static decimal GetTotalPurchaseRequest(ApplicationDbContext db, int purchaseRequestId, int? purchaseRequestDetailsId = null)
         {

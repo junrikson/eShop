@@ -1,4 +1,5 @@
-﻿using eShop.Models;
+﻿using DataTables.Mvc;
+using eShop.Models;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Data;
@@ -43,6 +44,7 @@ namespace eShop.Controllers
                 return PartialView("../Masters/MasterBusinessUnits/_OthersGrid", db.Set<MasterBusinessUnit>().AsQueryable()
                     .Where(x => x.Code.Contains(search) || x.Name.Contains(search)));
         }
+
 
         [Authorize(Roles = "MasterBusinessUnitsActive")]
         public JsonResult IsCodeExists(string Code, int? Id)
@@ -305,6 +307,83 @@ namespace eShop.Controllers
             return PartialView("../Masters/MasterBusinessUnits/_AccountsEdit", masterBusinessUnitAccount);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "MasterBusinessUnitsActive")]
+        public PartialViewResult RelationsGrid(int id)
+        {
+            return PartialView("../Masters/MasterBusinessUnits/_RelationsGrid", db.Set<MasterBusinessUnitRelation>().AsQueryable()
+                    .Where(x => x.MasterBusinessUnitId == id));
+        }
+
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult RelationsCreate(int masterBusinessUnitId)
+        {
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+            if (masterBusinessUnit == null)
+            {
+                return HttpNotFound();
+            }
+            MasterBusinessUnitRelation masterBusinessUnitRelation = new MasterBusinessUnitRelation
+            {
+                MasterBusinessUnitId = masterBusinessUnitId
+            };
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            return PartialView("../Masters/MasterBusinessUnits/_RelationsCreate", masterBusinessUnitRelation);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult RelationsCreate([Bind(Include = "MasterBusinessUnitId,MasterRegionId,MasterBusinessRelationId,MasterCustomerId,MasterSupplierId,MasterWarehouseId")] MasterBusinessUnitRelation masterBusinessUnitRelation)
+        {
+            if (ModelState.IsValid)
+            {
+                db.MasterBusinessUnitRelations.Add(masterBusinessUnitRelation);
+                db.SaveChanges();
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+            }
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            return PartialView("../Masters/MasterBusinessUnits/_RelationsCreate", masterBusinessUnitRelation);
+        }
+
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult RelationsEdit(int id)
+        {
+            MasterBusinessUnitRelation obj = db.MasterBusinessUnitRelations.Find(id);
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            return PartialView("../Masters/MasterBusinessUnits/_RelationsEdit", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult RelationsEdit([Bind(Include = "Id,MasterBusinessUnitId,MasterRegionId,MasterBusinessRelationId,MasterCustomerId,MasterSupplierId,MasterWarehouseId")] MasterBusinessUnitRelation masterBusinessUnitRelation)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(masterBusinessUnitRelation).State = EntityState.Unchanged;
+                db.Entry(masterBusinessUnitRelation).Property("MasterBusinessRelationId").IsModified = true;
+                db.Entry(masterBusinessUnitRelation).Property("MasterRegionId").IsModified = true;
+                db.Entry(masterBusinessUnitRelation).Property("MasterCustomerId").IsModified = true;
+                db.Entry(masterBusinessUnitRelation).Property("MasterSupplierId").IsModified = true;
+                db.Entry(masterBusinessUnitRelation).Property("MasterWarehouseId").IsModified = true;
+                db.SaveChanges();
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+            }
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            return PartialView("../Masters/MasterBusinessUnits/_RelationsEdit", masterBusinessUnitRelation);
+        }
+
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "MasterBusinessUnitsEdit")]
@@ -330,6 +409,34 @@ namespace eShop.Controllers
                         else
                         {
                             db.MasterBusinessUnitsAccounts.Remove(obj);
+                            db.SaveChanges();
+                        }
+                    }
+                    return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "MasterBusinessUnitsEdit")]
+        public ActionResult RelationsBatchDelete(string[] ids)
+        {
+            if (ids == null || ids.Length <= 0)
+                return Json("Pilih salah satu data yang akan dihapus.");
+            else
+            {
+                using (db)
+                {
+                    int failed = 0;
+                    foreach (string id in ids)
+                    {
+                        MasterBusinessUnitRelation obj = db.MasterBusinessUnitRelations.Find(id);
+                        if (obj == null)
+                            failed++;
+                        else
+                        {
+                            db.MasterBusinessUnitRelations.Remove(obj);
                             db.SaveChanges();
                         }
                     }

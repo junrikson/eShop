@@ -786,7 +786,6 @@ namespace eShop.Controllers
                                     MasterBusinessUnitId = obj.MasterBusinessUnitId,
                                     MasterRegionId = obj.MasterRegionId,
                                     MasterItemId = obj.MasterItemStartId,
-                                    InventoryPartType = obj.InventoryPartType,
                                     Created = DateTime.Now,
                                     UserId = User.Identity.GetUserId<int>()
                                 };
@@ -828,7 +827,6 @@ namespace eShop.Controllers
                                         MasterBusinessUnitId = obj.MasterBusinessUnitId,
                                         MasterRegionId = obj.MasterRegionId,
                                         MasterItemId = masterItem.Id,
-                                        InventoryPartType = masterItem.InventoryPartType,
                                         Created = DateTime.Now,
                                         UserId = User.Identity.GetUserId<int>()
                                     };

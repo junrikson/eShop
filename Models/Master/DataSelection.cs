@@ -187,6 +187,42 @@ namespace eShop.Models
         }
     }
 
+    public class MasterBusinessUnitRegionRelationDatalist : MvcDatalist<MasterBusinessUnitRegionViewModel>
+    {
+        private DbContext Context { get; }
+
+        public MasterBusinessUnitRegionRelationDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.MasterRegionCode + " - " + model.MasterRegionNotes;
+        }
+        public MasterBusinessUnitRegionRelationDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterBusinessUnitRegionRelation";
+            Title = "Wilayah";
+            AdditionalFilters.Add("MasterBusinessRelationId");
+
+            Filter.Sort = "MasterRegionCode";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterBusinessUnitRegionViewModel> GetModels()
+        {
+            return Context.Set<MasterBusinessUnitRegion>()
+                .Select(x => new MasterBusinessUnitRegionViewModel
+                {
+                    Id = x.MasterRegionId,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterRegionNotes = x.MasterRegion.Notes,
+                    MasterRegionActive = x.MasterRegion.Active,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code
+                });
+        }
+    }
+
     // End of MasterBusinessUnitRegion
 
     // Begin of MasterBusinessUnitSupplier
@@ -666,6 +702,45 @@ namespace eShop.Models
         }
     }
 
+    public class MasterBusinessRegionWarehouseRelationDatalist : MvcDatalist<MasterBusinessRegionWarehouseViewModel>
+    {
+        private DbContext Context { get; }
+
+        public MasterBusinessRegionWarehouseRelationDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.MasterWarehouseCode + " - " + model.MasterWarehouseName;
+        }
+        public MasterBusinessRegionWarehouseRelationDatalist()
+        {
+            Url = "/DatalistFilters/AllMasterBusinessRegionWarehouseRelation";
+            Title = "Gudang";
+            AdditionalFilters.Add("MasterBusinessRelationId");
+            AdditionalFilters.Add("MasterRegionId");
+
+            Filter.Sort = "MasterWarehouseCode";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<MasterBusinessRegionWarehouseViewModel> GetModels()
+        {
+            return Context.Set<MasterBusinessRegionWarehouse>()
+                .Select(x => new MasterBusinessRegionWarehouseViewModel
+                {
+                    Id = x.MasterWarehouseId,
+                    MasterWarehouseCode = x.MasterWarehouse.Code,
+                    MasterWarehouseName = x.MasterWarehouse.Name,
+                    MasterRegionId = x.MasterRegion.Id,
+                    MasterRegionCode = x.MasterRegion.Code,
+                    MasterBusinessUnitId = x.MasterBusinessUnitId,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code
+
+                });
+        }
+    }
+
     // End of MasterBusinessRegionWarehouse
 
     // Begin of MasterBusinessRegionAccount
@@ -841,6 +916,7 @@ namespace eShop.Models
         [Display(Name = "Master Konsumen")]
         public int MasterCustomerId { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Master Konsumen")]
         public virtual MasterCustomer MasterCustomer { get; set; }
 
@@ -1567,9 +1643,6 @@ namespace eShop.Models
         [Display(Name = "Master Barang")]
         public virtual MasterItem MasterItem { get; set; }
 
-        [Display(Name = "Tipe Persediaan")]
-        public EnumInventoryPartType InventoryPartType { get; set; }
-
         [Display(Name = "Dibuat")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
@@ -1611,8 +1684,6 @@ namespace eShop.Models
         [Display(Name = "Barang Akhir")]
         public virtual MasterItem MasterItemEnd { get; set; }
 
-        [Display(Name = "Tipe Persediaan")]
-        public EnumInventoryPartType InventoryPartType { get; set; }
     }
 
     public class MasterBusinessRegionItemViewModel
@@ -1641,10 +1712,6 @@ namespace eShop.Models
         [DatalistColumn]
         [Display(Name = "Name")]
         public string MasterItemName { get; set; }
-
-        [DatalistColumn]
-        [Display(Name = "Tipe Persediaan")]
-        public EnumInventoryPartType InventoryPartType { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Keterangan")]
@@ -1690,7 +1757,6 @@ namespace eShop.Models
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,
                     MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
-                    InventoryPartType = x.MasterItem.InventoryPartType,
                     Active = x.MasterItem.Active
 
 
@@ -1733,7 +1799,6 @@ namespace eShop.Models
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,
                     MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
-                    InventoryPartType = x.MasterItem.InventoryPartType,
                     Active = x.MasterItem.Active,
 
 
@@ -1776,7 +1841,6 @@ namespace eShop.Models
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,
                     MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
-                    InventoryPartType = x.MasterItem.InventoryPartType,
                     Active = x.MasterItem.Active
 
 

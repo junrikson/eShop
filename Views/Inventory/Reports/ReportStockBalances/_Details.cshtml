@@ -1,0 +1,28 @@
+﻿@model eShop.Models.StockBalance
+
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog modal-xl">
+    <div class="modal-content">
+        <div class="modal-body">
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box-body" style="overflow:auto; white-space: nowrap">
+                            @Html.AjaxGrid(Url.Action("DetailsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "detail-table" })
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-12 text-center">
+                        <button type="button" class="btn btn-danger btn-block btn-lg" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </section>
+        </div>
+    </div>
+</div>/div>
