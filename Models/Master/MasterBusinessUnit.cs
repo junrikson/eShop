@@ -100,6 +100,9 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
 
+        [Display(Name = "Sudah Dimulai")]
+        public bool IsStarted { get; set; }
+
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
 

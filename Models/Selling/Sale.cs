@@ -199,6 +199,51 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+    public class SaleCostDetails
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Display(Name = "Sale")]
+        [Required(ErrorMessage = "Invoice harus diisi.")]
+        public int SaleId { get; set; }
+
+        [Display(Name = "Sale")]
+        public virtual Sale Sale { get; set; }
+
+        [Display(Name = "Kode Biaya")]
+        public int MasterCostId { get; set; }
+
+        [Display(Name = "Kode Biaya")]
+        public virtual MasterCost MasterCost { get; set; }
+
+        [Display(Name = "Total (Rp)")]
+        [Required(ErrorMessage = "Total harus diisi.")]
+        public int Total { get; set; }
+
+        [AllowHtml]
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
     public class SaleDatalist : MvcDatalist<Sale>
     {
         private DbContext Context { get; }

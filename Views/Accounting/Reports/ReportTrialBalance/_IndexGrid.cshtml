@@ -1,0 +1,34 @@
+﻿@model IEnumerable<eShop.Models.TrialBalanceViewModel>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => ((User.IsInRole("ReportTrialBalanceActive")) ? "<div class=\"text-center\">&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "ReportTrialBalance", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
+        columns.Add(model => model.ChartOfAccount.Code).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Code)).InitialSort(GridSortOrder.Desc);
+        columns.Add(model => model.ChartOfAccount.Name).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Name));
+        columns.Add(model => model.BeginningBalance).Titled(@Html.DisplayNameFor(model => model.BeginningBalance)).Formatted("{0:N0}");
+        columns.Add(model => model.Debit).Titled(@Html.DisplayNameFor(model => model.Debit)).Formatted("{0:N0}");
+        columns.Add(model => model.Credit).Titled(@Html.DisplayNameFor(model => model.Credit)).Formatted("{0:N0}");
+        columns.Add(model => model.EndBalance).Titled(@Html.DisplayNameFor(model => model.EndBalance)).Formatted("{0:N0}");
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)

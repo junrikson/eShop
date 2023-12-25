@@ -9,8 +9,6 @@
     {
         columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
         columns.Add(model => ((User.IsInRole("ReportStockBalancesActive")) ? "<div class=\"text-center\">&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "ReportStockBalances", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
-        columns.Add(model => model.MasterBusinessUnit.Code).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Code));
-        columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));
         columns.Add(model => model.MasterWarehouse.Code).Titled(@Html.DisplayNameFor(model => model.MasterWarehouse.Code));
         columns.Add(model => model.MasterItem.Code).Titled(@Html.DisplayNameFor(model => model.MasterItem.Code)).InitialSort(GridSortOrder.Desc);
         columns.Add(model => model.MasterItem.Name).Titled(@Html.DisplayNameFor(model => model.MasterItem.Name));

@@ -252,6 +252,7 @@ namespace eShop.Controllers
             salesOrder.Updated = DateTime.Now;
             salesOrder.UserId = User.Identity.GetUserId<int>();
             salesOrder.Total = SharedFunctions.GetTotalSalesOrder(db, salesOrder.Id);
+            salesOrder.MasterCurrency = db.MasterCurrencies.Find(salesOrder.MasterCurrencyId);
 
             if (!string.IsNullOrEmpty(salesOrder.Code)) salesOrder.Code = salesOrder.Code.ToUpper();
             if (!string.IsNullOrEmpty(salesOrder.Notes)) salesOrder.Notes = salesOrder.Notes.ToUpper();
@@ -376,6 +377,7 @@ namespace eShop.Controllers
                                     db.SalesOrdersDetails.RemoveRange(details);
                                     db.SaveChanges();
                                 }
+
 
                                 db.SalesOrders.Remove(obj);
                                 db.SaveChanges();

@@ -7,7 +7,7 @@
     .Grid(Model)
     .Build(columns =>
     {
-        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAllrelations"));
         columns.Add(model => ((User.IsInRole("MasterBusinessUnitsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-relation\" href=\"" + @Url.Action("RelationsEdit", "MasterBusinessUnits", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") + "</div>").Encoded(false);
         columns.Add(model => model.MasterBusinessRelation.Code).Titled(@Html.DisplayNameFor(model => model.MasterBusinessRelation.Code));
         columns.Add(model => model.MasterBusinessRelation.Name).Titled(@Html.DisplayNameFor(model => model.MasterBusinessRelation.Name));

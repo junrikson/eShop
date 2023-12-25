@@ -32,14 +32,28 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "SalesActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Selling/Sales/_IndexGrid", db.Set<Sale>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Selling/Sales/_IndexGrid", db.Set<Sale>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Selling/Sales/_IndexGrid", db.Set<Sale>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Selling/Sales/_IndexGrid", db.Set<Sale>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
+
 
         public JsonResult IsCodeExists(string Code, int? Id)
         {
@@ -79,6 +93,14 @@ namespace eShop.Controllers
         public PartialViewResult ViewGrid(int Id)
         {
             return PartialView("../Selling/Sales/_ViewGrid", db.SalesDetails
+                .Where(x => x.SaleId == Id).ToList());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "SalesView")]
+        public PartialViewResult ViewCostGrid(int Id)
+        {
+            return PartialView("../Selling/Sales/_ViewCostGrid", db.SalesCostsDetails
                 .Where(x => x.SaleId == Id).ToList());
         }
 
@@ -269,6 +291,14 @@ namespace eShop.Controllers
                                     }
                                 }
 
+                                var Costs = db.SalesCostsDetails.Where(x => x.SaleId == obj.Id).ToList();
+
+                                if (Costs != null)
+                                {
+                                    db.SalesCostsDetails.RemoveRange(Costs);
+                                    db.SaveChanges();
+                                }
+
                                 db.Sales.Remove(obj);
                                 db.SaveChanges();
 
@@ -319,6 +349,7 @@ namespace eShop.Controllers
             sales.Updated = DateTime.Now;
             sales.UserId = User.Identity.GetUserId<int>();
             sales.Total = SharedFunctions.GetTotalSale(db, sales.Id);
+            sales.MasterCurrency = db.MasterCurrencies.Find(sales.MasterCurrencyId);
 
             if (!string.IsNullOrEmpty(sales.Code)) sales.Code = sales.Code.ToUpper();
             if (!string.IsNullOrEmpty(sales.Notes)) sales.Notes = sales.Notes.ToUpper();
@@ -446,6 +477,14 @@ namespace eShop.Controllers
                                         db.SalesDetails.Remove(detail);
                                         db.SaveChanges();
                                     }
+                                }
+
+                                var Costs = db.SalesCostsDetails.Where(x => x.SaleId == obj.Id).ToList();
+
+                                if (Costs != null)
+                                {
+                                    db.SalesCostsDetails.RemoveRange(Costs);
+                                    db.SaveChanges();
                                 }
 
                                 db.Sales.Remove(obj);
@@ -698,6 +737,88 @@ namespace eShop.Controllers
             return PartialView("../Selling/Sales/_DetailsEdit", saleDetails);
         }
 
+        [Authorize(Roles = "SalesActive")]
+        public ActionResult CostsCreate(int saleId)
+        {
+            Sale sale= db.Sales.Find(saleId);
+
+            if (sale == null)
+            {
+                return HttpNotFound();
+            }
+
+            SaleCostDetails saleCostDetails = new SaleCostDetails
+            {
+                SaleId = saleId
+            };
+
+            return PartialView("../Selling/Sales/_CostsCreate", saleCostDetails);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "SalesActive")]
+        public ActionResult CostsCreate([Bind(Include = "Id,SaleId,MasterCostId,Total,Notes,Created,Updated,UserId")] SaleCostDetails saleCostDetails)
+        {
+            saleCostDetails.Created = DateTime.Now;
+            saleCostDetails.Updated = DateTime.Now;
+            saleCostDetails.UserId = User.Identity.GetUserId<int>();
+
+            if (ModelState.IsValid)
+            {
+                if (!string.IsNullOrEmpty(saleCostDetails.Notes)) saleCostDetails.Notes = saleCostDetails.Notes.ToUpper();
+
+                Sale sale = db.Sales.Find(saleCostDetails.SaleId);
+                // bankTransaction.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id) + bankTransactionDetails.Total;
+
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.SalesCostsDetails.Add(saleCostDetails);
+                        db.SaveChanges();
+
+                        // SharedFunctions.CreateBankJournalDetails(db, bankTransactionDetails);
+
+                        db.Entry(saleCostDetails).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.SaleCostDetails, MenuId = saleCostDetails.Id, MenuCode = saleCostDetails.MasterCostId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+
+                        return Json("success", JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            return PartialView("../Selling/Sales/_CostsCreate", saleCostDetails);
+        }
+
+        [Authorize(Roles = "SalesActive")]
+        public ActionResult CostsEdit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            SaleCostDetails obj = db.SalesCostsDetails.Find(id);
+
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("../Selling/Sales/_CostsEdit", obj);
+        }
+
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "SalesActive")]
@@ -759,6 +880,16 @@ namespace eShop.Controllers
             return PartialView("../Selling/Sales/_DetailsGrid", db.SalesDetails
                 .Where(x => x.SaleId == Id).ToList());
         }
+
+        [HttpGet]
+        [Authorize(Roles = "SalesActive")]
+        public PartialViewResult CostsGrid(int Id)
+        {
+            return PartialView("../Selling/Sales/_CostsGrid", db.SalesCostsDetails
+                .Where(x => x.SaleId == Id).ToList());
+        }
+
+
 
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
@@ -921,9 +1052,9 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "SalesActive")]
-        public JsonResult GetTotal(int salesId)
+        public JsonResult GetTotal(int saleId)
         {
-            return Json(SharedFunctions.GetTotalSale(db, salesId).ToString("N2"));
+            return Json(SharedFunctions.GetTotalSale(db, saleId).ToString("N2"));
         }
 
         [HttpPost]

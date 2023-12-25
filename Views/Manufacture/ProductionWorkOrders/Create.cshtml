@@ -130,6 +130,15 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="tab-pane form-horizontal" id="tab_3">
+                            <div class="form-group">
+                                <div class="box-body" style="overflow:auto; white-space: nowrap">
+                                    @Html.AjaxGrid(Url.Action("CostsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "cost-table" })
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -261,6 +270,9 @@
 
             var grid2 = new MvcGrid(document.querySelector('#bom-table'));
             grid2.reload();
+
+            var grid3 = new MvcGrid(document.querySelector('#cost-table'));
+            grid3.reload();
         }
 
         function EditSuccess(data) {
@@ -276,6 +288,9 @@
 
             var grid2 = new MvcGrid(document.querySelector('#bom-table'));
             grid2.reload();
+
+            var grid3 = new MvcGrid(document.querySelector('#cost-table'));
+            grid3.reload();
         }
 
         var token = $('input[name="__RequestVerificationToken"]').val();
@@ -321,6 +336,9 @@
 
                                 var grid2 = new MvcGrid(document.querySelector('#bom-table'));
                                 grid2.reload();
+
+                                var grid3 = new MvcGrid(document.querySelector('#cost-table'));
+                                grid3.reload();
                             };
                             options.error = function ()
                             {

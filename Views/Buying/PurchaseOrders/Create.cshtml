@@ -60,13 +60,6 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    @Html.LabelFor(model => model.SalesOrderId)
-                                    @Html.DatalistFor(model => model.SalesOrderId, new eShop.Models.OutstandingSalesOrderPurchaseOrderDatalist())
-                                    @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
                                     @Html.LabelFor(model => model.MasterWarehouseId)
                                     @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterBusinessRegionWarehouseDatalist(), new { @class = "datalist2" })
                                     @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
@@ -443,7 +436,6 @@
                         document.getElementById('SalesOrderId').value = "";
                         document.getElementById('MasterRegionId').value = obj.MasterRegionId;
                         document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
-                        document.getElementById('MasterSupplierId').value = obj.MasterSupplierId;
                         document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
                         document.getElementById('Notes').value = obj.Notes;
                         document.getElementById('Total').value = obj.Total;
@@ -606,7 +598,6 @@
                         options.success = function (code) {
                             document.getElementById('Code').value = code;
                             document.getElementById('PurchaseRequestId').value = "";
-                            document.getElementById('SalesOrderId').value = "";
                             document.getElementById('MasterWarehouseId').value = "";
                             document.getElementById('Notes').value = "";
 

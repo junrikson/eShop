@@ -293,8 +293,10 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Accounting\ChartOfAccountsController.cs" />
+    <Compile Include="Controllers\Accounting\Configurations\AccountTypesController.cs" />
     <Compile Include="Controllers\Accounting\JournalsController.cs" />
     <Compile Include="Controllers\Accounting\OpeningBallanceController.cs" />
+    <Compile Include="Controllers\Accounting\ReportTrialBalanceController.cs" />
     <Compile Include="Controllers\Buying\GoodsReceiptsController.cs" />
     <Compile Include="Controllers\Buying\PurchaseReturnsController.cs" />
     <Compile Include="Controllers\Buying\Purchases.cs" />
@@ -349,9 +351,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Accounting\AccountBallance.cs" />
+    <Compile Include="Models\Accounting\Configuration\IncomeStatement.cs" />
+    <Compile Include="Models\Accounting\Configuration\BalanceSheet.cs" />
+    <Compile Include="Models\Accounting\Configuration\AccountType.cs" />
+    <Compile Include="Models\Accounting\OpeningBallance.cs" />
     <Compile Include="Models\Accounting\ChartOfAccount.cs" />
     <Compile Include="Models\Accounting\Journal.cs" />
+    <Compile Include="Models\Accounting\AccountBalance.cs" />
     <Compile Include="Models\Buying\GoodsReceipt.cs" />
     <Compile Include="Models\Inventory\StockBalance.cs" />
     <Compile Include="Models\Inventory\StockCard.cs" />
@@ -386,6 +392,7 @@
     <Compile Include="Models\Inventory\MasterItems.cs" />
     <Compile Include="Models\Master\MasterWarehouse.cs" />
     <Compile Include="Models\Buying\PurchaseOrder.cs" />
+    <Compile Include="Models\Settings\Period.cs" />
     <Compile Include="Models\Settings\AccountViewModels.cs" />
     <Compile Include="Models\Master\MasterRegion.cs" />
     <Compile Include="Models\Settings\Authorization.cs" />
@@ -7040,9 +7047,9 @@
     <Content Include="Views\Accounting\Journals\_DetailsGrid.cshtml" />
     <Content Include="Views\Accounting\Journals\_IndexGrid.cshtml" />
     <Content Include="Views\Accounting\Journals\_OthersGrid.cshtml" />
-    <Content Include="Views\Accounting\OpeningBallance\Index.cshtml" />
-    <Content Include="Views\Accounting\OpeningBallance\_Edit.cshtml" />
-    <Content Include="Views\Accounting\OpeningBallance\_IndexGrid.cshtml" />
+    <Content Include="Views\Accounting\OpeningBalance\Index.cshtml" />
+    <Content Include="Views\Accounting\OpeningBalance\_Edit.cshtml" />
+    <Content Include="Views\Accounting\OpeningBalance\_IndexGrid.cshtml" />
     <Content Include="Views\Bank\MasterBanks\Index.cshtml" />
     <Content Include="Views\Bank\MasterBanks\_Create.cshtml" />
     <Content Include="Views\Bank\MasterBanks\_Details.cshtml" />
@@ -7218,8 +7225,6 @@
     <Content Include="Views\Manufacture\StandardProductCosts\_Edit.cshtml" />
     <Content Include="Views\Manufacture\StandardProductCosts\_IndexGrid.cshtml" />
     <Content Include="Views\Manufacture\StandardProductCosts\Index.cshtml" />
-    <Content Include="Views\Manufacture\ProductionBillofMaterials\_CostsGrid.cshtml" />
-    <Content Include="Views\Manufacture\ProductionBillofMaterials\_CostsCreate.cshtml" />
     <Content Include="Views\Manufacture\StandardProductCosts\_DetailsCreate.cshtml" />
     <Content Include="Views\Manufacture\StandardProductCosts\_DetailsGrid.cshtml" />
     <Content Include="Views\Manufacture\StandardProductCosts\_ViewGrid.cshtml" />
@@ -7238,11 +7243,31 @@
     <Content Include="Views\Masters\MasterBusinessUnits\_RelationsGrid.cshtml" />
     <Content Include="Views\Masters\MasterBusinessUnits\_RelationsEdit.cshtml" />
     <Content Include="Views\Inventory\Reports\ReportStockBalances\_DetailsGrid.cshtml" />
+    <Content Include="Views\Selling\Sales\_CostsCreate.cshtml" />
+    <Content Include="Views\Selling\Sales\_CostsEdit.cshtml" />
+    <Content Include="Views\Selling\Sales\_CostsGrid.cshtml" />
+    <Content Include="Views\Selling\Sales\_ViewCostGrid.cshtml" />
+    <Content Include="Views\Manufacture\ProductionBillofMaterials\_CostsCreate.cshtml" />
+    <Content Include="Views\Manufacture\ProductionBillofMaterials\_CostsEdit.cshtml" />
+    <Content Include="Views\Manufacture\ProductionBillofMaterials\_CostsGrid.cshtml" />
+    <Content Include="Views\Manufacture\ProductionBillofMaterials\_ViewCostsGrid.cshtml" />
+    <Content Include="Views\Manufacture\ProductionWorkOrders\_CostsGrid.cshtml" />
+    <Content Include="Views\Accounting\Reports\ReportTrialBalance\_Details.cshtml" />
+    <Content Include="Views\Accounting\Reports\ReportTrialBalance\_DetailsGrid.cshtml" />
+    <Content Include="Views\Accounting\Reports\ReportTrialBalance\_IndexGrid.cshtml" />
+    <Content Include="Views\Accounting\Reports\ReportTrialBalance\Index.cshtml" />
+    <Content Include="Views\Accounting\Configurations\AccountTypes\_Create.cshtml" />
+    <Content Include="Views\Accounting\Configurations\AccountTypes\_Details.cshtml" />
+    <Content Include="Views\Accounting\Configurations\AccountTypes\_Edit.cshtml" />
+    <Content Include="Views\Accounting\Configurations\AccountTypes\_IndexGrid.cshtml" />
+    <Content Include="Views\Accounting\Configurations\AccountTypes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CrystalReports\" />
     <Folder Include="Models\AP\" />
+    <Folder Include="Views\Accounting\Configurations\BalanceSheets\" />
+    <Folder Include="Views\Accounting\Configurations\IncomeStatements\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

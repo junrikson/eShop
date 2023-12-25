@@ -1,6 +1,4 @@
 ﻿@model eShop.Models.ProductionBillOfMaterialCostDetails
-
-@{
     Layout = null;
 }
 
@@ -10,7 +8,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title">Add - Detail Biaya</h4>
+            <h4 class="modal-title">Add Biaya</h4>
         </div>
         <div class="modal-body">
             @Html.Partial("MvcDatalist/_Dialog")
@@ -19,39 +17,34 @@
                 {
                     @Html.AntiForgeryToken()
 
-                    <div class="form-horizontal">
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        @Html.HiddenFor(model => model.ProductionBillOfMaterialId)
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                @Html.LabelFor(model => model.MasterItemId)
-                                @Html.DatalistFor(model => model.MasterItemId, new eShop.Models.StandardProductCostDatalist(), new { @class = "datalist2" })
-                                @Html.ValidationMessageFor(model => model.MasterItemId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-6">
-                                @Html.LabelFor(model => model.Quantity)
-                                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control total2" } })
-                                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-6">
-                                @Html.LabelFor(model => model.MasterItemUnitId)
-                                @Html.DatalistFor(model => model.MasterItemUnitId, new eShop.Models.MasterUnitDatalist(), new { @class = "datalist2" })
-                                @Html.ValidationMessageFor(model => model.MasterItemUnitId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                @Html.LabelFor(model => model.Notes)
-                                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-12 text-right">
-                                <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
-                            </div>
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.ProductionBillOfMaterialId)
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.MasterCostId)
+                            @Html.DatalistFor(model => model.MasterCostId, new eShop.Models.MasterCostDatalist(), new { @class = "datalist2" })
+                            @Html.ValidationMessageFor(model => model.MasterCostId, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Total)
+                            @Html.TextBoxFor(model => model.Total, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Total, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Notes)
+                            @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
+                        </div>
+                    </div>
+                </div>
                 }
             </div>
         </div>

@@ -215,6 +215,8 @@ namespace eShop.Models
         Sale = 103,
         [Display(Name = "Sale Details")]
         SaleDetails = 104,
+        [Display(Name = "Sale Cost Details")]
+        SaleCostDetails = 143,
         [Display(Name = "Purchase Return")]
         PurchaseReturn = 105,
         [Display(Name = "Purchase Return Details")]
@@ -298,7 +300,9 @@ namespace eShop.Models
         [Display(Name = "Retur Bahan Baku")]
         MaterialReturn = 141,
         [Display(Name = "Retur Bahan Baku Detail")]
-        MaterialReturnDetails = 142
+        MaterialReturnDetails = 142,
+        [Display(Name = "Production Bill of Material Cost Details")]
+        ProductionBillOfMaterialCostDetails = 143,
 
 
 

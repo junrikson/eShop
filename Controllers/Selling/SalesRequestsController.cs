@@ -32,13 +32,26 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "SalesRequestsActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Selling/SalesRequests/_IndexGrid", db.Set<SalesRequest>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Selling/SalesRequests/_IndexGrid", db.Set<SalesRequest>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Selling/SalesRequests/_IndexGrid", db.Set<SalesRequest>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Selling/SalesRequests/_IndexGrid", db.Set<SalesRequest>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
 
         public JsonResult IsCodeExists(string Code, int? Id)
@@ -275,7 +288,7 @@ namespace eShop.Controllers
             salesRequest.Updated = DateTime.Now;
             salesRequest.UserId = User.Identity.GetUserId<int>();
             salesRequest.Total = SharedFunctions.GetTotalSalesRequest(db, salesRequest.Id);
-            salesRequest.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
+            salesRequest.MasterCurrency = db.MasterCurrencies.Find(salesRequest.MasterCurrencyId);
 
             if (!string.IsNullOrEmpty(salesRequest.Code)) salesRequest.Code = salesRequest.Code.ToUpper();
             if (!string.IsNullOrEmpty(salesRequest.Notes)) salesRequest.Notes = salesRequest.Notes.ToUpper();

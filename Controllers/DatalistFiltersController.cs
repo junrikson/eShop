@@ -16,6 +16,19 @@ namespace eShop.Controllers
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         [HttpGet]
+        public JsonResult AllMasterCost(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0)
+        {
+            MasterCostDatalist datalist = new MasterCostDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterBusinessUnit(DatalistFilter filter)
         {
             MasterBusinessUnitDatalist datalist = new MasterBusinessUnitDatalist(db);
@@ -77,6 +90,18 @@ namespace eShop.Controllers
             ChartOfAccountDatalist datalist = new ChartOfAccountDatalist(db);
 
             filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllAccountType(DatalistFilter filter)
+        {
+            AccountTypeDatalist datalist = new AccountTypeDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["IsHeader"] = true;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
@@ -203,11 +228,10 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        public JsonResult AllMasterItemSupplier(DatalistFilter filter, int? masterSupplierId = 0)
+        public JsonResult AllMasterItemSupplier(DatalistFilter filter)
         {
             MasterItemSupplierDatalist datalist = new MasterItemSupplierDatalist(db);
             filter.AdditionalFilters["Active"] = true;
-            filter.AdditionalFilters["MasterSupplierId"] = masterSupplierId;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);

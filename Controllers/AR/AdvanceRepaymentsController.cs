@@ -33,14 +33,29 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "AdvanceRepaymentsActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../AR/AdvanceRepayments/_IndexGrid", db.Set<AdvanceRepayment>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../AR/AdvanceRepayments/_IndexGrid", db.Set<AdvanceRepayment>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../AR/AdvanceRepayments/_IndexGrid", db.Set<AdvanceRepayment>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../AR/AdvanceRepayments/_IndexGrid", db.Set<AdvanceRepayment>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
+
+
 
         [Authorize(Roles = "AdvanceRepaymentsActive")]
         public JsonResult IsCodeExists(string Code, int? Id)

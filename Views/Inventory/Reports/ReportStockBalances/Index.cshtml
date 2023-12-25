@@ -19,6 +19,14 @@
         <h1 class="col-md-6">
             Saldo Stok
         </h1>
+        <div class="col-md-6 text-right">
+            <div class="col-md-6">
+                @Html.DropDownList("MasterBusinessUnitId", null, htmlAttributes: new { @class = "form-control" })
+            </div>
+            <div class="col-md-6">
+                @Html.DropDownList("MasterRegionId", null, htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
     </section>
 
     <!-- Main content -->
@@ -71,6 +79,82 @@
     </script>
 
     <script>
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        var headers = {};
+        headers['__RequestVerificationToken'] = token;
+
+        $(document).ready(function () {
+            $("#MasterBusinessUnitId").on("change", function () {
+                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                var masterRegionId = $("#MasterRegionId").val();
+
+                if (masterRegionId != 0 && masterRegionId != '') {
+                    var param = { MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
+                    var options = {};
+                    options.url = "/StockBalance/Generate";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(param);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (msg) {
+                        var grid = new MvcGrid(document.querySelector('#data-table'));
+                        grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                        grid.query.set('MasterRegionId', masterRegionId);
+                        grid.reload();
+                    };
+                    options.error = function () {
+                        var grid = new MvcGrid(document.querySelector('#data-table'));
+                        grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                        grid.query.set('MasterRegionId', masterRegionId);
+                        grid.reload();
+                    };
+                    $.ajax(options);
+                }
+                else {
+                    var grid = new MvcGrid(document.querySelector('#data-table'));
+                    grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                    grid.query.set('MasterRegionId', masterRegionId);
+                    grid.reload();
+                }
+            }).change();
+
+            $("#MasterRegionId").on("change", function () {
+                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                var masterRegionId = $("#MasterRegionId").val();
+
+                if (masterBusinessUnitId != 0 && masterBusinessUnitId != '') {
+                    var param = { MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
+                    var options = {};
+                    options.url = "/StockBalance/Generate";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(param);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (msg) {
+                        var grid = new MvcGrid(document.querySelector('#data-table'));
+                        grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                        grid.query.set('MasterRegionId', masterRegionId);
+                        grid.reload();
+                    };
+                    options.error = function () {
+                        var grid = new MvcGrid(document.querySelector('#data-table'));
+                        grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                        grid.query.set('MasterRegionId', masterRegionId);
+                        grid.reload();
+                    };
+                    $.ajax(options);
+                }
+                else {
+                    var grid = new MvcGrid(document.querySelector('#data-table'));
+                    grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                    grid.query.set('MasterRegionId', masterRegionId);
+                    grid.reload();
+                }
+            }).change();
+        });
+
         document.addEventListener('reloadend', function (e) {
             $('#CheckAll').click(function () {
                 var checkedStatus = this.checked;

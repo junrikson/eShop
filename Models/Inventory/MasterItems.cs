@@ -43,13 +43,6 @@ namespace eShop.Models
         [Display(Name = "Merek")]
         public virtual MasterBrand MasterBrand { get; set; }
 
-        [Display(Name = "Kode Supplier")]
-        [Required(ErrorMessage = "Kode Supplier harus diisi.")]
-        public int MasterSupplierId { get; set; }
-
-        [Display(Name = "Kode Supplier")]
-        public virtual MasterSupplier MasterSupplier { get; set; }
-
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -102,7 +95,6 @@ namespace eShop.Models
         {
             Url = "/DatalistFilters/AllMasterItemSupplier";
             Title = "Master Item";
-            AdditionalFilters.Add("MasterSupplierId");
 
             Filter.Sort = "Code";
             Filter.Order = DatalistSortOrder.Asc;
@@ -140,85 +132,6 @@ namespace eShop.Models
             return Context.Set<MasterItem>();
         }
     }
-
-    //public class MasterBusinessRegionItemFinishedGoodDatalist : MvcDatalist<MasterBusinessRegionItemFinishedGoodViewModel>
-    //{
-    //    private DbContext Context { get; }
-
-    //    public MasterBusinessRegionItemFinishedGoodDatalist(DbContext context)
-    //    {
-    //        Context = context;
-
-    //        GetLabel = (model) => model.Code + " " + model.MasterItemName;
-    //    }
-    //    public MasterBusinessRegionItemFinishedGoodDatalist()
-    //    {
-    //        Url = "/DatalistFilters/AllMasterBusinessRegionItemFinishedGood";
-    //        Title = "Master Item";
-
-    //        Filter.Sort = "Code";
-    //        Filter.Order = DatalistSortOrder.Asc;
-    //        Filter.Rows = 10;
-    //    }
-
-    //    //public override IQueryable<MasterBusinessRegionItemFinishedGoodViewModel> GetModels()
-    //    //{
-    //    //    return Context.Set<MasterBusinessRegionItemFinishedGood>()
-    //    //        .Select(x => new MasterBusinessRegionItemFinishedGoodViewModel
-    //    //        {
-    //    //            Id = x.Id,
-    //    //            MasterItemId = x.MasterItemId,
-    //    //            MasterItem = x.MasterItem,
-    //    //            MasterUnitId = x.MasterUnitId,
-    //    //            MasterUnit = x.MasterUnit,
-    //    //            MasterUnitCode = x.MasterUnit.Code,
-    //    //            MasterUnitRatio = x.MasterUnit.Ratio,
-    //    //            MasterUnitNotes = x.MasterUnit.Notes,
-    //    //            Default = x.Default,
-    //    //            Active = x.Active,
-    //    //            Created = x.Created,
-    //    //            Updated = x.Updated,
-    //    //            UserId = x.UserId
-    //    //        });
-    //    //}
-
-
-    //}
-
-    //public class MasterBusinessRegionItemRawMaterialViewModelDatalist : MvcDatalist<MasterBusinessRegionItemRawMaterialViewModel>
-    //{
-    //    private DbContext Context { get; }
-
-    //    public MasterBusinessRegionItemRawMaterialViewModelDatalist(DbContext context)
-    //    {
-    //        Context = context;
-
-    //        GetLabel = (model) => model.Code + " " + model.MasterItemName;
-    //    }
-    //    public MasterBusinessRegionItemRawMaterialViewModelDatalist()
-    //    {
-    //        Url = "/DatalistFilters/AllMasterBusinessRegionItemRawMaterial";
-    //        Title = "Master Item";
-
-    //        Filter.Sort = "Code";
-    //        Filter.Order = DatalistSortOrder.Asc;
-    //        Filter.Rows = 10;
-    //    }
-
-    //    public override IQueryable<MasterBusinessRegionItemRawMaterialViewModel> GetModels()
-    //    {
-    //        return Context.Set<MasterItem>()
-    //            .Select(x => new MasterBusinessRegionItemRawMaterialViewModel
-    //            {
-    //                Id = x.Id,
-    //                Code = x.Code,
-    //                MasterBusinessUnitId = x.MasterBusinessUnitId,
-    //                MasterRegionId = x.MasterRegionId,
-
-    //            });
-    //    }
-    //}
-
 
     public class MasterItemUnit
     {

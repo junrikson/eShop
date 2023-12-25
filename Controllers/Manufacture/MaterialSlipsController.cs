@@ -32,13 +32,26 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "MaterialSlipsActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Manufacture/MaterialSlips/_IndexGrid", db.Set<MaterialSlip>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Manufacture/MaterialSlips/_IndexGrid", db.Set<MaterialSlip>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Manufacture/MaterialSlips/_IndexGrid", db.Set<MaterialSlip>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Manufacture/MaterialSlips/_IndexGrid", db.Set<MaterialSlip>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
 
         public JsonResult IsCodeExists(string Code, int? Id)
@@ -110,10 +123,6 @@ namespace eShop.Controllers
                 Date = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
-                //MasterCurrencyId = masterCurrency.Id,
-                //HeaderMasterItemUnitId = db.MasterItemUnits.FirstOrDefault().Id,
-                //HeaderMasterItemId = db.MasterItems.FirstOrDefault().Id,
-                //Rate = masterCurrency.Rate,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
@@ -739,7 +748,6 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         MaterialSlip materialSlip = db.MaterialSlips.Find(materialSlipDetails.MaterialSlipId);
-                        //materialSlip.Total = SharedFunctions.GetTotalMaterialSlip(db, materialSlip.Id, materialSlipDetails.Id) + materialSlipDetails.Total;
 
                         db.Entry(materialSlip).State = EntityState.Modified;
                         db.SaveChanges();
@@ -778,7 +786,6 @@ namespace eShop.Controllers
             db.Entry(materialSlipDetails).Property("MasterItemUnitId").IsModified = true;
             db.Entry(materialSlipDetails).Property("QuantitySpk").IsModified = true;
             db.Entry(materialSlipDetails).Property("Quantity").IsModified = true;
-           // db.Entry(materialSlipDetails).Property("Total").IsModified = true;
             db.Entry(materialSlipDetails).Property("Notes").IsModified = true;
             db.Entry(materialSlipDetails).Property("Updated").IsModified = true;
             db.Entry(materialSlipDetails).Property("UserId").IsModified = true;
@@ -792,7 +799,6 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         MaterialSlip materialSlip = db.MaterialSlips.Find(materialSlipDetails.MaterialSlipId);
-                        //materialSlip.Total = SharedFunctions.GetTotalMaterialSlip(db, materialSlip.Id, materialSlipDetails.Id) + materialSlipDetails.Total;
 
                         db.Entry(materialSlip).State = EntityState.Modified;
                         db.SaveChanges();
@@ -857,9 +863,6 @@ namespace eShop.Controllers
                                         db.SaveChanges();
                                     }
 
-
-                                    //db.Entry(materialSlip).State = EntityState.Modified;
-                                    //db.SaveChanges();
 
                                     db.MaterialSlipsDetails.Remove(obj);
                                     db.SaveChanges();
@@ -930,8 +933,6 @@ namespace eShop.Controllers
             ChangeCurrency obj = new ChangeCurrency
             {
                 Id = materialSlip.Id,
-                //MasterCurrencyId = materialSlip.MasterCurrencyId,
-                //Rate = materialSlip.Rate
             };
 
             if (obj == null)

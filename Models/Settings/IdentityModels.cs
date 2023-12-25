@@ -164,6 +164,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrder> ProductionWorkOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderBillOfMaterial> ProductionWorkOrderBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderDetails> ProductionWorkOrdersDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderCostDetails> ProductionWorkOrdersCostsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlip> MaterialSlips { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlipBillOfMaterial> MaterialSlipsBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlipProductionWorkOrder> MaterialSlipProductionWorkOrders { get; set; }
@@ -200,6 +201,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.SalesOrderDetails> SalesOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Sale> Sales { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleDetails> SalesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SaleCostDetails> SalesCostsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GoodsDelivery> GoodsDeliveries { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GoodsDeliveryDetails> GoodsDeliveriesDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesReturn> SalesReturns { get; set; }
@@ -209,8 +211,12 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.Repayment> Repayments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.RepaymentDetailsHeader> RepaymentsDetailsHeader { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.RepaymentDetails> RepaymentsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.AccountType> AccountTypes { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BalanceSheet> BalanceSheets { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.IncomeStatement> IncomeStatements { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ChartOfAccount> ChartOfAccounts { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.AccountBallance> AccountBallances { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.OpeningBalance> OpeningBalances { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.AccountBalance> AccountBalances { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Journal> Journals { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.JournalDetails> JournalsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SystemLog> SystemLogs { get; set; }
@@ -322,7 +328,9 @@ namespace eShop.Models
             modelBuilder.Entity<BankTransaction>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<BankTransactionDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<BankTransactionDetailsHeader>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<AccountBallance>().Property(x => x.BeginningBallance).HasPrecision(18, 2);
+            modelBuilder.Entity<OpeningBalance>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<AccountBalance>().Property(x => x.Debit).HasPrecision(18, 2);
+            modelBuilder.Entity<AccountBalance>().Property(x => x.Credit).HasPrecision(18, 2);
             modelBuilder.Entity<JournalDetails>().Property(x => x.Debit).HasPrecision(18, 2);
             modelBuilder.Entity<JournalDetails>().Property(x => x.Credit).HasPrecision(18, 2);
             modelBuilder.Entity<Journal>().Property(x => x.Debit).HasPrecision(18, 2);

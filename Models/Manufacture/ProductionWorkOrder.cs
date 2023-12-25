@@ -484,5 +484,57 @@ namespace eShop.Models
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
     }
+
+    public class ProductionWorkOrderCostDetails
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Display(Name = "Production WorkOrder Material")]
+        [Required(ErrorMessage = "Nomor SPK harus diisi.")]
+        public int ProductionWorkOrderId { get; set; }
+
+        [Display(Name = "Production Bill of Material")]
+        public virtual ProductionWorkOrder ProductionWorkOrder { get; set; }
+
+        [Display(Name = "Production Bill Of Material")]
+        [Required(ErrorMessage = "Production Bill Of Material harus diisi.")]
+        public int ProductionWorkOrderBillOfMaterialId { get; set; }
+
+        [Display(Name = "Production Bill of Material")]
+        public virtual ProductionWorkOrderBillOfMaterial ProductionWorkOrderBillOfMaterial { get; set; }
+
+        [Display(Name = "Kode Biaya")]
+        public int MasterCostId { get; set; }
+
+        [Display(Name = "Kode Biaya")]
+        public virtual MasterCost MasterCost { get; set; }
+
+        [Display(Name = "Total (Rp)")]
+        [Required(ErrorMessage = "Total harus diisi.")]
+        public int Total { get; set; }
+
+        [AllowHtml]
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
 }
 

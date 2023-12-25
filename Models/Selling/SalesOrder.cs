@@ -1,5 +1,6 @@
 ﻿using Datalist;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -142,21 +143,6 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [DatalistColumn]
-        [Required(ErrorMessage = "Nomor harus diisi.")]
-        [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Nomor")]
-        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "SalesOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
-        public string Code { get; set; }
-
-        [DatalistColumn]
-        [Display(Name = "Tanggal")]
-        [Required(ErrorMessage = "Tanggal harus diisi.")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime Date { get; set; }
-
         [Display(Name = "Unit Bisnis")]
         [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
         public int MasterBusinessUnitId { get; set; }
@@ -178,6 +164,21 @@ namespace eShop.Models
         [DatalistColumn]
         [Display(Name = "Wilayah")]
         public string MasterRegionCode { get; set; }
+
+        [DatalistColumn]
+        [Required(ErrorMessage = "Nomor harus diisi.")]
+        [Index("IX_Code", Order = 1, IsUnique = true)]
+        [Display(Name = "Nomor")]
+        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
+        [Remote("IsCodeExists", "SalesOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
+        public string Code { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Tanggal")]
+        [Required(ErrorMessage = "Tanggal harus diisi.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Customer")]
@@ -363,4 +364,5 @@ namespace eShop.Models
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
     }
+
 }

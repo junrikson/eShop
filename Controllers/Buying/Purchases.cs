@@ -9,11 +9,14 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Web.Mvc;
 
 
@@ -32,13 +35,26 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "PurchasesActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Buying/Purchases/_IndexGrid", db.Set<Purchase>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Buying/Purchases/_IndexGrid", db.Set<Purchase>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Buying/Purchases/_IndexGrid", db.Set<Purchase>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Buying/Purchases/_IndexGrid", db.Set<Purchase>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
 
         public JsonResult IsCodeExists(string Code, int? Id)
@@ -144,13 +160,13 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchasesAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,PurchaseOrderId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterCurrencyId,MasterWarehouseId,PurchaseOrderId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
         {
             purchase.Created = DateTime.Now;
             purchase.Updated = DateTime.Now;
             purchase.UserId = User.Identity.GetUserId<int>();
             purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id);
-            purchase.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
+            purchase.MasterCurrency = db.MasterCurrencies.Find(purchase.MasterCurrencyId);
 
             if (!string.IsNullOrEmpty(purchase.Code)) purchase.Code = purchase.Code.ToUpper();
             if (!string.IsNullOrEmpty(purchase.Notes)) purchase.Notes = purchase.Notes.ToUpper();
@@ -279,11 +295,12 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchasesEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,PurchaseOrderId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterCurrencyId,MasterWarehouseId,PurchaseOrderId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
         {
             purchase.Updated = DateTime.Now;
             purchase.UserId = User.Identity.GetUserId<int>();
             purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id);
+            purchase.MasterCurrency = db.MasterCurrencies.Find(purchase.MasterCurrencyId);
 
             if (!string.IsNullOrEmpty(purchase.Code)) purchase.Code = purchase.Code.ToUpper();
             if (!string.IsNullOrEmpty(purchase.Notes)) purchase.Notes = purchase.Notes.ToUpper();

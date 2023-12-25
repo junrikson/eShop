@@ -59,13 +59,6 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            @Html.LabelFor(model => model.PackingWorkOrderId)
-                                            @Html.EditorFor(model => model.PackingWorkOrder.Code, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                                            @Html.ValidationMessageFor(model => model.PackingWorkOrderId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
                                             @Html.LabelFor(model => model.MasterWarehouseId)
                                             @Html.TextBoxFor(model => model.MasterWarehouse.Code, new { disabled = "disabled", @class = "form-control" })
                                             @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
@@ -76,27 +69,6 @@
                                             @Html.LabelFor(model => model.Date)
                                             @Html.EditorFor(model => model.Date, new { htmlAttributes = new { disabled = "disabled", @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.HeaderMasterItemId)
-                                            @Html.TextBoxFor(model => model.HeaderMasterItemId, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.HeaderMasterItemId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.HeaderMasterItemUnitId)
-                                            @Html.TextBoxFor(model => model.HeaderMasterItemUnitId, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.HeaderMasterItemUnitId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.HeaderQuantity)
-                                            @Html.TextBoxFor(model => model.HeaderQuantity, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.HeaderQuantity, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -121,12 +93,6 @@
                                     <i class="fa fa-info"></i>
 
                                     <h3 class="box-title">Details</h3>
-                                </div>
-                                <div class="text-right col-md-10">
-                                    <label style="font-weight: bold">Currency :</label>
-                                    <input type="text" id="Rate" value="@Model.Rate.ToString("N2")" disabled="disabled" style="text-align:right;" />
-                                    <label style="font-weight: bold">TOTAL :</label>
-                                    <input type="text" id="Total" value="@Model.Total.ToString("N2")" disabled="disabled" style="text-align:right;" />
                                 </div>
                             </div>
                             <!-- /.box-header -->

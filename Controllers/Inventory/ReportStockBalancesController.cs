@@ -20,18 +20,19 @@ namespace eShop.Controllers
         [Authorize(Roles = "ReportStockBalancesActive")]
         public ActionResult Index()
         {
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
+            ViewBag.MasterRegionId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegion).Distinct(), "Id", "Notes");
             return View("../Inventory/Reports/ReportStockBalances/Index");
         }
 
         [HttpGet]
         [Authorize(Roles = "ReportStockBalancesActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(int masterBusinessUnitId = 0, int masterRegionId = 0)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Inventory/Reports/ReportStockBalances/_IndexGrid", db.Set<StockBalance>().AsQueryable());
-            else
-                return PartialView("../Inventory/Reports/ReportStockBalances/_IndexGrid", db.Set<StockBalance>().AsQueryable()
-                    .Where(x => x.MasterItem.Code.Contains(search)));
+
+                return PartialView("../Inventory/Reports/ReportStockBalances/_IndexGrid", db.Set<StockBalance>().Where(x => x.MasterBusinessUnitId == masterBusinessUnitId && x.MasterRegionId == masterRegionId).AsQueryable());
         }
 
         // GET: MasterBrands/Details/

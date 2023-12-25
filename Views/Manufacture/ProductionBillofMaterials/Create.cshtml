@@ -298,7 +298,7 @@
                             });
                         };
                         options.error = function () {
-                            document.getElementById('MasterItemUnitId').value = 0;
+                            document.getElementById('MasterUnitId').value = 0;
 
                             [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
                                 new MvcDatalist(element).reload();
@@ -319,6 +319,9 @@
             else if ($("#MasterRegionId").val() === "") {
                 bootbox.alert("Wilayah belum dipilih!");
             }
+            else if ($("#MasterWarehouseId").val() === "") {
+                bootbox.alert("Gudang belum dipilih!");
+            }
             else {
                 var url = $(this).attr("href") + "?productionBillOfMaterialId=" + $("input#Id").val();
                 $.get(url, function (data) {
@@ -335,36 +338,8 @@
                         $.validator.unobtrusive.parse($el);
                     });
 
-                    Inputmask("myNum3").mask("#Quantity");
-                    Inputmask("myNum").mask("#Price");
+                    Inputmask("myNum").mask("#Total");
 
-                    $("#MasterItemId").on("change", function () {
-                        var Id = $("#MasterItemId").val();
-                        var data = { id: Id };
-                        var options = {};
-
-                        options.url = "/ProductionBillOfMaterials/GetMasterUnit";
-                        options.type = "POST";
-                        options.headers = headers;
-                        options.data = JSON.stringify(data);
-                        options.contentType = "application/json";
-                        options.dataType = "json";
-                        options.success = function (msg) {
-                            document.getElementById('MasterItemUnitId').value = msg;
-
-                            [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                new MvcDatalist(element).reload();
-                            });
-                        };
-                        options.error = function () {
-                            document.getElementById('MasterItemUnitId').value = 0;
-
-                            [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                new MvcDatalist(element).reload();
-                            });
-                        };
-                        $.ajax(options);
-                    }).change();
 
                 });
             }
@@ -384,19 +359,6 @@
             var grid2 = new MvcGrid(document.querySelector('#cost-table'));
             grid2.reload();
 
-            //var param = { productionBillOfMaterialId: $("#Id").val() };
-            //var options = {};
-
-            //options.url = "/ProductionBillOfMaterials/GetTotal";
-            //options.type = "POST";
-            //options.headers = headers;
-            //options.data = JSON.stringify(param);
-            //options.contentType = "application/json";
-            //options.dataType = "json";
-            //options.success = function (msg) {
-            //    document.getElementById('Total').value = msg;
-            //};
-            //$.ajax(options);
         }
 
         function EditSuccess(data) {
@@ -412,20 +374,6 @@
 
             var grid2 = new MvcGrid(document.querySelector('#cost-table'));
             grid2.reload();
-
-            //var param = { productionBillOfMaterialId: $("#Id").val() };
-            //var options = {};
-
-            //options.url = "/ProductionBillOfMaterials/GetTotal";
-            //options.type = "POST";
-            //options.headers = headers;
-            //options.data = JSON.stringify(param);
-            //options.contentType = "application/json";
-            //options.dataType = "json";
-            //options.success = function (msg) {
-            //    document.getElementById('Total').value = msg;
-            //};
-            //$.ajax(options);
         }
 
         var token = $('input[name="__RequestVerificationToken"]').val();
@@ -434,7 +382,7 @@
 
         $(document).ready(function ()
         {
-            $("#DetailsBatchDelete").click(function ()
+            $("#btnItemsBatchDelete").click(function ()
             {
                 var selectedIDs = new Array();
                 $('#detail-table tbody tr').find('td:first :checkbox').each(function ()
@@ -469,9 +417,6 @@
                                 var grid = new MvcGrid(document.querySelector('#detail-table'));
                                 grid.reload();
 
-                                var grid2 = new MvcGrid(document.querySelector('#cost-table'));
-                                grid2.reload();
-
                                 var param = { productionBillOfMaterialId: $("#Id").val() };
                                 var options2 = {};
 
@@ -489,6 +434,56 @@
                             };
                             options.error = function ()
                             {
+                                bootbox.alert("Terjadi kesalahan saat menghapus.");
+                            };
+                            $.ajax(options);
+                        }
+                    });
+                }
+            });
+
+            $("#btnCostsBatchDelete").click(function () {
+                var selectedIDs = new Array();
+                $('#cost-table tbody tr').find('td:first :checkbox').each(function () {
+                    if ($(this).prop('checked')) {
+                        selectedIDs.push($(this).val());
+                    }
+                });
+
+                if (selectedIDs.length <= 0) {
+                    bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                }
+                else {
+                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                        if (result) {
+                            var options = {};
+                            options.url = "/ProductionBillOfMaterials/CostsBatchDelete";
+                            options.type = "POST";
+                            options.headers = headers;
+                            options.data = JSON.stringify(selectedIDs);
+                            options.contentType = "application/json";
+                            options.dataType = "json";
+                            options.success = function (msg) {
+                                bootbox.alert(msg);
+
+                                var grid2 = new MvcGrid(document.querySelector('#cost-table'));
+                                grid2.reload();
+
+                                //var param = { productionBillOfMaterialId: $("#Id").val() };
+                                //var options2 = {};
+
+                                //options2.url = "/ProductionBillOfMaterials/GetTotal";
+                                //options2.type = "POST";
+                                //options2.headers = headers;
+                                //options2.data = JSON.stringify(param);
+                                //options2.contentType = "application/json";
+                                //options2.dataType = "json";
+                                //options2.success = function (msg) {
+                                //    document.getElementById('Total').value = msg;
+                                //};
+                                //$.ajax(options2);
+                            };
+                            options.error = function () {
                                 bootbox.alert("Terjadi kesalahan saat menghapus.");
                             };
                             $.ajax(options);
@@ -607,11 +602,12 @@
 
                         Inputmask("myNum3").mask("#Quantity");
                         Inputmask("myNum").mask("#Price");
+                        Inputmask("myNum").mask("#Total");
                     });
                 });
 
                 $('.fix-table').tableHeadFixer({ left: 2 });
             }
-        });
+                   });
     </script>
 }

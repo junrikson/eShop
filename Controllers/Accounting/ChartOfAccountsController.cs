@@ -81,10 +81,8 @@ namespace eShop.Controllers
             {
                 Active = true,
                 IsHeader = false,
-                Position = EnumDefaultEntry.Debit
             };
 
-            ViewBag.Level = new SelectList(levelList, "Value", "Text", obj.Level);
             return PartialView("../Accounting/ChartOfAccounts/_Create", obj);
         }
 
@@ -94,11 +92,8 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ChartOfAccountsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,Position,IsHeader,Level,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,IsHeader,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
         {
-            if (chartOfAccount.IsHeader == false)
-                chartOfAccount.Level = 6;
-
             if (ModelState.IsValid)
             {
                 if (!string.IsNullOrEmpty(chartOfAccount.Code)) chartOfAccount.Code = chartOfAccount.Code.ToUpper();
@@ -116,7 +111,6 @@ namespace eShop.Controllers
 
                 return Json("success", JsonRequestBehavior.AllowGet);
             }
-            ViewBag.Level = new SelectList(levelList, "Value", "Text", chartOfAccount.Level);
             return PartialView("../Accounting/ChartOfAccounts/_Create", chartOfAccount);
         }
 
@@ -133,7 +127,6 @@ namespace eShop.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Level = new SelectList(levelList, "Value", "Text", chartOfAccount.Level);
             return PartialView("../Accounting/ChartOfAccounts/_Edit", chartOfAccount);
         }
 
@@ -143,13 +136,10 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ChartOfAccountsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,Position,IsHeader,Level,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,IsHeader,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
         {
             chartOfAccount.Updated = DateTime.Now;
             chartOfAccount.UserId = User.Identity.GetUserId<int>();
-
-            if (chartOfAccount.IsHeader == false)
-                chartOfAccount.Level = 6;
 
             if (ModelState.IsValid)
             {
@@ -160,9 +150,7 @@ namespace eShop.Controllers
                 db.Entry(chartOfAccount).State = EntityState.Unchanged;
                 db.Entry(chartOfAccount).Property("Code").IsModified = true;
                 db.Entry(chartOfAccount).Property("Name").IsModified = true;
-                db.Entry(chartOfAccount).Property("Position").IsModified = true;
                 db.Entry(chartOfAccount).Property("IsHeader").IsModified = true;
-                db.Entry(chartOfAccount).Property("Level").IsModified = true;
                 db.Entry(chartOfAccount).Property("Notes").IsModified = true;
                 db.Entry(chartOfAccount).Property("Active").IsModified = true;
                 db.Entry(chartOfAccount).Property("Updated").IsModified = true;
@@ -174,7 +162,7 @@ namespace eShop.Controllers
 
                 return Json("success", JsonRequestBehavior.AllowGet);
             }
-            ViewBag.Level = new SelectList(levelList, "Value", "Text", chartOfAccount.Level);
+
             return PartialView("../Accounting/ChartOfAccounts/_Edit", chartOfAccount);
         }
 

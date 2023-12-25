@@ -63,6 +63,7 @@
     </div>
 </div>
 
+
 @section Scripts {
     @Scripts.Render("~/bundles/mvcgrid")
     @Scripts.Render("~/bundles/jqueryval")
@@ -85,6 +86,11 @@
     <script>
         [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
             new MvcGrid(element);
+        });
+
+
+        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+            new MvcDatalist(element);
         });
 
         Inputmask.extendAliases({
@@ -145,30 +151,6 @@
             $('#detailsContainer').html("");
 
             var grid = new MvcGrid(document.querySelector('#data-table'));
-            grid.reload();
-        }
-
-        function CostsCreateSuccess(data) {
-            if (data !== "success") {
-                $('#subdetailsContainer').html(data);
-                return;
-            }
-            $('#subdetailsModal').modal('hide');
-            $('#subdetailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#costs-table'));
-            grid.reload();
-        }
-
-        function CostsEditSuccess(data) {
-            if (data !== "success") {
-                $('#subdetailsContainer').html(data);
-                return;
-            }
-            $('#subdetailsModal').modal('hide');
-            $('#subdetailsContainer').html("");
-
-            var grid = new MvcGrid(document.querySelector('#costs-table'));
             grid.reload();
         }
 
@@ -266,6 +248,7 @@
 
         document.addEventListener('reloadend', function (e) {
             if (e.detail.grid.element.id == 'data-table') {
+                //Check All Grid Depan
                 $('#CheckAll').click(function () {
                     var checkedStatus = this.checked;
                     $('#data-table tbody tr').find('td:first :checkbox').each(function () {
@@ -294,25 +277,6 @@
                         Inputmask("myNum2").mask("#FCLLoadFee");
                         Inputmask("myNum2").mask("#LCLLoadFee");
                         Inputmask("myNum2").mask("#EmptyLoadFee");
-
-                        $('#btnCostsAdd').click(function (event) {
-                            event.preventDefault();
-                            var url = $(this).attr("href");
-                            $.get(url, function (data) {
-                                $('#subdetailsContainer').html(data);
-                                $('#subdetailsModal').modal('show');
-
-                                $('form').each(function () {
-                                    var $el = $(this);
-                                    $el.data('validator', null);
-                                    $.validator.unobtrusive.parse($el);
-                                });
-
-                                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                                    new MvcDatalist(element);
-                                });
-                            });
-                        });
 
                         $('#btnAccountsAdd').click(function (event) {
                             event.preventDefault();
@@ -355,43 +319,6 @@
                         var token2 = $('input[name="__RequestVerificationToken"]').val();
                         var headers2 = {};
                         headers2['__RequestVerificationToken'] = token2;
-
-                        $("#costsBatchDelete").click(function (event) {
-                            event.preventDefault();
-                            var selectedIDs = new Array();
-                            $('#costs-table tbody tr').find('td:first :checkbox').each(function () {
-                                if ($(this).prop('checked')) {
-                                    selectedIDs.push($(this).val());
-                                }
-                            });
-
-                            if (selectedIDs.length <= 0) {
-                                bootbox.alert("Pilih salah satu data yang akan dihapus.");
-                            }
-                            else {
-                                bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
-                                    if (result) {
-                                        var options = {};
-                                        options.url = "/MasterBusinessUnits/CostsBatchDelete";
-                                        options.type = "POST";
-                                        options.headers = headers2;
-                                        options.data = JSON.stringify(selectedIDs);
-                                        options.contentType = "application/json";
-                                        options.dataType = "json";
-                                        options.success = function (msg) {
-                                            bootbox.alert(msg);
-
-                                            var grid = new MvcGrid(document.querySelector('#costs-table'));
-                                            grid.reload();
-                                        };
-                                        options.error = function () {
-                                            bootbox.alert("Terjadi kesalahan saat menghapus.");
-                                        };
-                                        $.ajax(options);
-                                    }
-                                });
-                            }
-                        });
 
                         $("#accountsBatchDelete").click(function (event) {
                             event.preventDefault();
@@ -482,7 +409,14 @@
                 $('.fix-table').tableHeadFixer({ left: 3 });
             }
             else if (e.detail.grid.element.id == 'accounts-table') {
-                $('#accounts-table').on("click", ".edit-account", function (event) {
+                $('#CheckAllaccounts').click(function () {
+                    var checkedStatus = this.checked;
+                    $('#accounts-table tbody tr').find('td:first :checkbox').each(function () {
+                        $(this).prop('checked', checkedStatus);
+                    });
+                });
+
+                $('#accounts-table').on("click", ".edit-accounts", function (event) {
                     event.preventDefault();
                     var url = $(this).attr("href");
                     $.get(url, function (data) {
@@ -492,11 +426,26 @@
                         [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
                             new MvcDatalist(element);
                         });
+
+                        $('form').each(function () {
+                            var $el = $(this);
+                            $el.data('validator', null);
+                            $.validator.unobtrusive.parse($el);
+                        });
+
                     });
                 });
             }
             else if (e.detail.grid.element.id == 'relations-table') {
-                $('#relations-table').on("click", ".edit-relation", function (event) {
+                $('#CheckAllrelations').click(function () {
+                    var checkedStatus = this.checked;
+                    $('#relations-table tbody tr').find('td:first :checkbox').each(function () {
+                        $(this).prop('checked', checkedStatus);
+                    });
+                });
+                $('.fix-table').tableHeadFixer({ left: 2 });
+
+                $('#relations-table').on("click", ".edit-relations", function (event) {
                     event.preventDefault();
                     var url = $(this).attr("href");
                     $.get(url, function (data) {
@@ -506,23 +455,19 @@
                         [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
                             new MvcDatalist(element);
                         });
-                    });
-                });
-            }
-            else if (e.detail.grid.element.id == 'costs-table') {
-                $('#costs-table').on("click", ".edit-cost", function (event) {
-                    event.preventDefault();
-                    var url = $(this).attr("href");
-                    $.get(url, function (data) {
-                        $('#subdetailsContainer').html(data);
-                        $('#subdetailsModal').modal('show');
 
-                        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
-                            new MvcDatalist(element);
+                        $('form').each(function () {
+                            var $el = $(this);
+                            $el.data('validator', null);
+                            $.validator.unobtrusive.parse($el);
                         });
                     });
-                });
+                }); 
+               
+                $('.fix-table').tableHeadFixer({ left: 2 });
             }
+           
         });
     </script>
 }
+

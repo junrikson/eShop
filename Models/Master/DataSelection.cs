@@ -830,10 +830,6 @@ namespace eShop.Models
         [Display(Name = "Nama Akun")]
         public string Name { get; set; }
 
-        [DatalistColumn]
-        [Display(Name = "Posisi")]
-        public EnumDefaultEntry Position { get; set; }
-
         [Display(Name = "Header")]
         public bool IsHeader { get; set; }
 
@@ -882,9 +878,7 @@ namespace eShop.Models
                     MasterBusinessUnitId = x.MasterBusinessUnitId,
                     Code = x.ChartOfAccount.Code,
                     Name = x.ChartOfAccount.Name,
-                    Position = x.ChartOfAccount.Position,
                     IsHeader = x.ChartOfAccount.IsHeader,
-                    Level = x.ChartOfAccount.Level,
                     Notes = x.ChartOfAccount.Notes,
                     Active = x.ChartOfAccount.Active
                 });
