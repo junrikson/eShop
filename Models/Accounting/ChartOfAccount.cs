@@ -36,10 +36,10 @@ namespace eShop.Models
         [Display(Name = "Jenis Akun")]
         public virtual AccountType AccountType { get; set; }
 
-        [Display(Name = "Jenis Akun")]
+        [Display(Name = "Sub Akun")]
         public int? SubChartOfAccountId { get; set; }
 
-        [Display(Name = "Jenis Akun")]
+        [Display(Name = "Sub Akun")]
         public virtual ChartOfAccount SubChartOfAccount { get; set; }
 
         [Display(Name = "Header")]
@@ -110,6 +110,41 @@ namespace eShop.Models
         public ChartOfAccountDatalist()
         {
             Url = "/DatalistFilters/AllChartOfAccount";
+            Title = "Bagan Akun";
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<ChartOfAccountDatalistViewModel> GetModels()
+        {
+            return Context.Set<ChartOfAccount>()
+                .Select(x => new ChartOfAccountDatalistViewModel
+                {
+                    Id = x.Id,
+                    Code = x.Code,
+                    Name = x.Name,
+                    IsHeader = x.IsHeader,
+                    Notes = x.Notes,
+                    Active = x.Active
+                });
+        }
+    }
+
+    public class ChartOfAccountHeaderDatalist : MvcDatalist<ChartOfAccountDatalistViewModel>
+    {
+        private DbContext Context { get; }
+
+        public ChartOfAccountHeaderDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code + " - " + model.Name;
+        }
+        public ChartOfAccountHeaderDatalist()
+        {
+            Url = "/DatalistFilters/AllChartOfAccountHeader";
             Title = "Bagan Akun";
 
             Filter.Sort = "Code";

@@ -11,11 +11,11 @@ namespace eShop.Models
 {
     public class BalanceSheet
     {
-        [Key]
-        [Display(Name = "User")]
-        public int AccountTypeId { get; set; }
+        [Key,ForeignKey("AccountType")]
+        [Display(Name = "Jenis Akun")]
+        public int Id { get; set; }
 
-        [Display(Name = "User")]
+        [Display(Name = "Jenis Akun")]
         public virtual AccountType AccountType { get; set; }
     }
 }

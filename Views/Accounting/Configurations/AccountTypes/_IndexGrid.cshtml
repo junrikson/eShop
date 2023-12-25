@@ -20,7 +20,7 @@
         columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated));
         columns.Add(model => model.User.UserName).Titled("User");
     })
-    .RowAttributed(model => new { @class = model.IsHeader == true ? "grid-column-red" : "" })
+    .RowAttributed(model => new { @class = model.Active ? "" : "grid-column-red" })
     .Empty("Tidak ada data.")
     .Pageable(pager =>
     {

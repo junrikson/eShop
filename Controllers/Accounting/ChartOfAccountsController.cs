@@ -14,15 +14,6 @@ namespace eShop.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        readonly List<SelectListItem> levelList = new List<SelectListItem>
-        {
-            new SelectListItem{Text = "1", Value = "1" },
-            new SelectListItem{Text = "2", Value = "2" },
-            new SelectListItem{Text = "3", Value = "3" },
-            new SelectListItem{Text = "4", Value = "4" },
-            new SelectListItem{Text = "5", Value = "5" }
-        };
-
         // GET: ChartOfAccounts
         [Authorize(Roles = "ChartOfAccountsActive")]
         public ActionResult Index()
@@ -92,7 +83,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ChartOfAccountsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,IsHeader,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,IsHeader,SubChartOfAccountId,AccountTypeId,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
         {
             if (ModelState.IsValid)
             {
@@ -136,7 +127,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ChartOfAccountsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,IsHeader,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,IsHeader,SubChartOfAccountId,AccountTypeId,Notes,Active,Created,Updated,UserId")] ChartOfAccount chartOfAccount)
         {
             chartOfAccount.Updated = DateTime.Now;
             chartOfAccount.UserId = User.Identity.GetUserId<int>();
@@ -151,6 +142,8 @@ namespace eShop.Controllers
                 db.Entry(chartOfAccount).Property("Code").IsModified = true;
                 db.Entry(chartOfAccount).Property("Name").IsModified = true;
                 db.Entry(chartOfAccount).Property("IsHeader").IsModified = true;
+                db.Entry(chartOfAccount).Property("SubChartOfAccountId").IsModified = true;
+                db.Entry(chartOfAccount).Property("AccountTypeId").IsModified = true;
                 db.Entry(chartOfAccount).Property("Notes").IsModified = true;
                 db.Entry(chartOfAccount).Property("Active").IsModified = true;
                 db.Entry(chartOfAccount).Property("Updated").IsModified = true;

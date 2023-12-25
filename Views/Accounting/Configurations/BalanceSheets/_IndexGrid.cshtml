@@ -1,0 +1,32 @@
+﻿@model IEnumerable<eShop.Models.BalanceSheet>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => ((User.IsInRole("BalanceSheetsView")) ? "<div><a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "BalanceSheet", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
+        columns.Add(model => model.AccountType.Code).Titled(@Html.DisplayNameFor(model => model.AccountType.Code)).Sortable(true).InitialSort(GridSortOrder.Asc);
+        columns.Add(model => model.AccountType.Name).Titled(@Html.DisplayNameFor(model => model.AccountType.Name));
+        columns.Add(model => model.AccountType.SubAccountType.Code).Titled(@Html.DisplayNameFor(model => model.AccountType.SubAccountType.Code));
+        columns.Add(model => model.AccountType.Notes).Titled(@Html.DisplayNameFor(model => model.AccountType.Notes));        
+
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 0;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)

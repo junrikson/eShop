@@ -76,7 +76,33 @@ namespace eShop.Models
         public AccountTypeDatalist()
         {
             Url = "/DatalistFilters/AllAccountType";
-            Title = "Bagan Akun";
+            Title = "Jenis Akun";
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<AccountType> GetModels()
+        {
+            return Context.Set<AccountType>();
+        }
+    }
+
+    public class AccountTypeDetailsDatalist : MvcDatalist<AccountType>
+    {
+        private DbContext Context { get; }
+
+        public AccountTypeDetailsDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code + " - " + model.Name;
+        }
+        public AccountTypeDetailsDatalist()
+        {
+            Url = "/DatalistFilters/AllAccountTypeDetails";
+            Title = "Jenis Akun";
 
             Filter.Sort = "Code";
             Filter.Order = DatalistSortOrder.Asc;

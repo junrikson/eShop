@@ -1,8 +1,8 @@
-﻿@model IEnumerable<eShop.Models.AccountType>
+﻿@model IEnumerable<eShop.Models.BalanceSheet>
 
 @{
-    ViewBag.Title = "Jenis Akun";
-    ViewBag.Current = "AccountTypes";
+    ViewBag.Title = "Neraca";
+    ViewBag.Current = "BalanceSheets";
 }
 
 @section Styles {
@@ -25,16 +25,16 @@
 <div class="content-wrapper">
     <section class="content-header-fixed">
         <h1 class="col-md-6">
-            Jenis Akun
+            Neraca
         </h1>
         <div class="col-md-6 text-right">
-            @if (User.IsInRole("AccountTypesAdd"))
+            @if (User.IsInRole("BalanceSheetsAdd"))
             {
-                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "AccountTypes")">
+                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("Create", "BalanceSheets")">
                     <i class="fa fa-plus"></i> Add
                 </button>
             }
-            @if (User.IsInRole("AccountTypesDelete"))
+            @if (User.IsInRole("BalanceSheetsDelete"))
             {
                 <button id="batchDelete" class="btn btn-danger mx-1">
                     <i class="fa fa-trash"></i> Delete
@@ -150,7 +150,7 @@
                     bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
                         if (result) {
                             var options = {};
-                            options.url = "/AccountTypes/BatchDelete";
+                            options.url = "/BalanceSheets/BatchDelete";
                             options.type = "POST";
                             options.headers = headers;
                             options.data = JSON.stringify(selectedIDs);

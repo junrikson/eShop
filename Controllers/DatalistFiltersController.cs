@@ -96,12 +96,36 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllChartOfAccountHeader(DatalistFilter filter)
+        {
+            ChartOfAccountHeaderDatalist datalist = new ChartOfAccountHeaderDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["IsHeader"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllAccountType(DatalistFilter filter)
         {
             AccountTypeDatalist datalist = new AccountTypeDatalist(db);
 
             filter.AdditionalFilters["Active"] = true;
             filter.AdditionalFilters["IsHeader"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllAccountTypeDetails(DatalistFilter filter)
+        {
+            AccountTypeDetailsDatalist datalist = new AccountTypeDetailsDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["IsHeader"] = false;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
