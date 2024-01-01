@@ -1,0 +1,41 @@
+﻿@model eShop.Models.BuyingPriceSupplier
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Add - Supplier</h4>
+        </div>
+        <div class="modal-body">
+            @Html.Partial("MvcDatalist/_Dialog")
+            <div id="divEmp">
+                @using (Ajax.BeginForm("DetailsCreate", "BuyingPrices", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.BuyingPriceId)
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.MasterSupplierId)
+                            @Html.DatalistFor(model => model.MasterSupplierId, new eShop.Models.MasterBusinessRegionSupplierDatalist(), new { @class = "datalist2" })
+                            @Html.ValidationMessageFor(model => model.MasterSupplierId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 text-right">
+                            <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

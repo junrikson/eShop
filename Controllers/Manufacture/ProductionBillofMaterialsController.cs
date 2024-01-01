@@ -594,14 +594,14 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionBillOfMaterialsActive")]
-        public ActionResult CostsCreate([Bind(Include = "Id,ProductionBillOfMaterialId,MasterCostId,Total,Notes,Created,Updated,UserId")] ProductionBillOfMaterialCostDetails productionBillOfMaterialCostDetails)
+        public ActionResult CostsCreate([Bind(Include = "Id,ProductionBillOfMaterialId,MasterCostId,Total,Notes,Created,Updated,UserId")] ProductionBillOfMaterialCostDetails obj)
         {
-            productionBillOfMaterialCostDetails.Total = 0;
-            productionBillOfMaterialCostDetails.Created = DateTime.Now;
-            productionBillOfMaterialCostDetails.Updated = DateTime.Now;
-            productionBillOfMaterialCostDetails.UserId = User.Identity.GetUserId<int>();
+            obj.Total = 0;
+            obj.Created = DateTime.Now;
+            obj.Updated = DateTime.Now;
+            obj.UserId = User.Identity.GetUserId<int>();
 
-            if (!string.IsNullOrEmpty(productionBillOfMaterialCostDetails.Notes)) productionBillOfMaterialCostDetails.Notes = productionBillOfMaterialCostDetails.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
@@ -609,16 +609,16 @@ namespace eShop.Controllers
                 {
                     try
                     {
-                        db.ProductionBillOfMaterialsCostsDetails.Add(productionBillOfMaterialCostDetails);
+                        db.ProductionBillOfMaterialsCostsDetails.Add(obj);
                         db.SaveChanges();
 
-                        ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(productionBillOfMaterialCostDetails.ProductionBillOfMaterialId);
-                        productionBillOfMaterial.Total = SharedFunctions.GetTotalCostProductionBillOfMaterial(db, productionBillOfMaterial.Id, productionBillOfMaterialCostDetails.Id) + productionBillOfMaterialCostDetails.Total;
+                        ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(obj.ProductionBillOfMaterialId);
+                        productionBillOfMaterial.Total = SharedFunctions.GetTotalCostProductionBillOfMaterial(db, productionBillOfMaterial.Id, obj.Id) + obj.Total;
 
                         db.Entry(productionBillOfMaterial).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionBillOfMaterialDetails, MenuId = productionBillOfMaterialCostDetails.Id, MenuCode = productionBillOfMaterialCostDetails.MasterCost.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionBillOfMaterialCostDetails, MenuId = obj.Id, MenuCode = obj.MasterCost.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -633,7 +633,7 @@ namespace eShop.Controllers
                 }
             }
 
-            return PartialView("../Manufacture/ProductionBillOfMaterials/_CostsCreate", productionBillOfMaterialCostDetails);
+            return PartialView("../Manufacture/ProductionBillOfMaterials/_CostsCreate", obj);
         }
 
         [Authorize(Roles = "ProductionBillOfMaterialsActive")]

@@ -64,6 +64,19 @@ namespace eShop.Models
         [Display(Name = "Kode Customer")]
         public virtual MasterCustomer MasterCustomer { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Kode Salesman")]
+        public int? MasterSalesPersonId { get; set; }
+
+        [Display(Name = "Kode Salesman")]
+        public virtual MasterSalesPerson MasterSalesPerson { get; set; }
+
+        [Display(Name = "Top")]
+        public int Top { get; set; }
+
+        [Display(Name = "Topx")]
+        public int Topx { get; set; }
+
         [Display(Name = "Gudang")]
         [Required(ErrorMessage = "Gudang harus diisi.")]
         public int MasterWarehouseId { get; set; }

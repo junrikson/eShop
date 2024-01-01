@@ -59,6 +59,16 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterDestination(DatalistFilter filter)
+        {
+            MasterDestinationDatalist datalist = new MasterDestinationDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterBusinessUnitRegion(DatalistFilter filter, int MasterBusinessUnitId = 0)
         {
             MasterBusinessUnitRegionDatalist datalist = new MasterBusinessUnitRegionDatalist(db);

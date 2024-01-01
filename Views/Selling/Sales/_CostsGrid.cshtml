@@ -23,8 +23,7 @@
             pager.CurrentPage = 1;
             pager.RowsPerPage = 10;
         })
-        .UsingFilterMode(GridFilterMode.Row)
-        .Filterable()
+        .Empty("Tidak ada data.")
         .Sortable()
         .AppendCss("tablegrid-hover table-striped fix-table")
         .Id("cost-table")

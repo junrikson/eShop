@@ -215,8 +215,6 @@ namespace eShop.Models
         Sale = 103,
         [Display(Name = "Sale Details")]
         SaleDetails = 104,
-        [Display(Name = "Sale Cost Details")]
-        SaleCostDetails = 143,
         [Display(Name = "Purchase Return")]
         PurchaseReturn = 105,
         [Display(Name = "Purchase Return Details")]
@@ -298,11 +296,41 @@ namespace eShop.Models
         [Display(Name = "Penyelesaian Barang Jadi Detail")]
         FinishedGoodSlipDetails = 144,
         [Display(Name = "Retur Bahan Baku")]
-        MaterialReturn = 141,
+        MaterialReturn = 145,
         [Display(Name = "Retur Bahan Baku Detail")]
-        MaterialReturnDetails = 142,
+        MaterialReturnDetails = 146,
         [Display(Name = "Production Bill of Material Cost Details")]
-        ProductionBillOfMaterialCostDetails = 143,
+        ProductionBillOfMaterialCostDetails = 147,
+        [Display(Name = "Sale Cost Details")]
+        SaleCostDetails = 148,
+        [Display(Name = "Purchase Cost Details")]
+        PurchaseCostDetails = 149,
+        [Display(Name = "Selling Price")]
+        SellingPrices = 150,
+        [Display(Name = "Selling Price Customer")]
+        SellingPricesCustomers = 151,
+        [Display(Name = "Selling Price Item")]
+        SellingPricesItems= 152,
+        [Display(Name = "Buying Price")]
+        BuyingPrices = 153,
+        [Display(Name = "Buying Price Supplier")]
+        BuyingPricesSuppliers = 154,
+        [Display(Name = "Buying Price Item")]
+        BuyingPricesItems = 155,
+        [Display(Name = "Term")]
+        Terms = 156,
+        [Display(Name = "Term Sales")]
+        TermSalesPersons = 157,
+        [Display(Name = "Term Customer")]
+        TermCustomers = 158,
+        [Display(Name = "Fixed Asset")]
+        FixedAssetsCategory = 159,
+        [Display(Name = "Fixed Asset")]
+        MasterDestination = 160,
+        [Display(Name = "Biaya Pengiriman")]
+        ShippingFees = 160,
+        [Display(Name = "Aktiva")]
+        FixedAssets = 161
 
 
 

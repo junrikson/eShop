@@ -101,7 +101,7 @@ namespace eShop.Controllers
         [HttpPost]
         [Authorize(Roles = "MasterCustomersAdd")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,Birthday,CustomerType,ContactPerson,CompanyType,Gender,Address,City,SourceCity,Postal,Phone1,Phone2,Mobile,Fax,TOP,Email,IDCard,TaxID,TaxName,TaxAddress,TaxID2,TaxName2,TaxAddress2,TaxID3,TaxName3,TaxAddress3,Notes,Active,Created,Updated")] MasterCustomer masterCustomer)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,Birthday,CustomerType,ContactPerson,CompanyType,Gender,Address,City,SourceCity,Postal,Phone1,Phone2,Mobile,Fax,TOP,Email,IDCard,TaxID,TaxName,TaxAddress,TaxID2,TaxName2,TaxAddress2,TaxID3,TaxName3,TaxAddress3,MasterDestinationId,Notes,Active,Created,Updated")] MasterCustomer masterCustomer)
         {
             if (ModelState.IsValid)
             {
@@ -122,6 +122,8 @@ namespace eShop.Controllers
                 if (!string.IsNullOrEmpty(masterCustomer.TaxName3)) masterCustomer.TaxName3 = masterCustomer.TaxName3.ToUpper();
                 if (!string.IsNullOrEmpty(masterCustomer.TaxAddress3)) masterCustomer.TaxAddress3 = masterCustomer.TaxAddress3.ToUpper();
                 if (!string.IsNullOrEmpty(masterCustomer.Notes)) masterCustomer.Notes = masterCustomer.Notes.ToUpper();
+                masterCustomer.MasterDestinationId = masterCustomer.MasterDestinationId;
+                
 
                 if (masterCustomer.CustomerType == EnumCustomerType.Company)
                     masterCustomer.FullName = masterCustomer.CompanyType.ToString() + ". " + masterCustomer.Name;
@@ -164,7 +166,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterCustomersEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,Birthday,CustomerType,ContactPerson,CompanyType,Gender,Address,City,SourceCity,Postal,Phone1,Phone2,Mobile,Fax,TOP,Email,IDCard,TaxID,TaxName,TaxAddress,TaxID2,TaxName2,TaxAddress2,TaxID3,TaxName3,TaxAddress3,Notes,Active")] MasterCustomer masterCustomer)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,Birthday,CustomerType,ContactPerson,CompanyType,Gender,Address,City,SourceCity,Postal,Phone1,Phone2,Mobile,Fax,TOP,Email,IDCard,TaxID,TaxName,TaxAddress,TaxID2,TaxName2,TaxAddress2,TaxID3,TaxName3,TaxAddress3,MasterDestinationId,Notes,Active")] MasterCustomer masterCustomer)
         {
             masterCustomer.Updated = DateTime.Now;
 
@@ -187,6 +189,7 @@ namespace eShop.Controllers
                 if (!string.IsNullOrEmpty(masterCustomer.TaxName3)) masterCustomer.TaxName3 = masterCustomer.TaxName3.ToUpper();
                 if (!string.IsNullOrEmpty(masterCustomer.TaxAddress3)) masterCustomer.TaxAddress3 = masterCustomer.TaxAddress3.ToUpper();
                 if (!string.IsNullOrEmpty(masterCustomer.Notes)) masterCustomer.Notes = masterCustomer.Notes.ToUpper();
+                masterCustomer.MasterDestinationId = masterCustomer.MasterDestinationId;
 
                 if (masterCustomer.CustomerType == EnumCustomerType.Company)
                     masterCustomer.FullName = masterCustomer.CompanyType.ToString() + ". " + masterCustomer.Name;
@@ -223,6 +226,7 @@ namespace eShop.Controllers
                 db.Entry(masterCustomer).Property("TaxName3").IsModified = true;
                 db.Entry(masterCustomer).Property("TaxAddress3").IsModified = true;
                 db.Entry(masterCustomer).Property("Notes").IsModified = true;
+                db.Entry(masterCustomer).Property("MasterDestinationId").IsModified = true;
                 db.Entry(masterCustomer).Property("Active").IsModified = true;
                 db.Entry(masterCustomer).Property("Updated").IsModified = true;
                 db.SaveChanges();

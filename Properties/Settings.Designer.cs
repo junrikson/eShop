@@ -304,5 +304,61 @@ namespace eShop.Properties {
                 return ((string)(this["StandardProductCostCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SP/")]
+        public string SellingPriceCode
+        {
+            get
+            {
+                return ((string)(this["SellingPriceCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BP/")]
+        public string BuyingPriceCode
+        {
+            get
+            {
+                return ((string)(this["BuyingPriceCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("TERM/")]
+        public string TermCode
+        {
+            get
+            {
+                return ((string)(this["TermCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SPF/")]
+        public string ShippingFeeCode
+        {
+            get
+            {
+                return ((string)(this["ShippingFeeCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AST/")]
+        public string FixedAssetCode
+        {
+            get
+            {
+                return ((string)(this["FixedAssetCode"]));
+            }
+        }
+
     }
 }

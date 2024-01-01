@@ -62,6 +62,105 @@ namespace eShop.Extensions
 
     public static class SharedFunctions
     {
+        public static decimal GetSellingPrice(ApplicationDbContext db, int masterBusinessUnitId, int masterRegionId, int masterItemId, int masterItemUnitId, int masterCustomerId)
+        {
+            decimal price = 0;
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+            MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
+            MasterItem masterItem = db.MasterItems.Find(masterItemId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(masterItemUnitId);
+            MasterCustomer masterCustomer = db.MasterCustomers.Find(masterCustomerId);
+
+            if(masterBusinessUnit  != null && masterRegion != null && masterItem != null && masterCustomer != null)
+            {
+                var sellingPrices = db.SellingPricesItems.Where(x => x.SellingPrice.MasterBusinessUnitId == masterBusinessUnitId
+                                            && x.SellingPrice.MasterRegionId == masterRegionId && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).Select(y => y.SellingPrice).ToList();
+
+                var sellingPricesCustomer = sellingPrices.Where(x => !x.AllCustomer);
+                SellingPrice sellingPriceAllCustomer = sellingPrices.Where(x => x.AllCustomer).FirstOrDefault();
+
+                if (sellingPricesCustomer.Any())
+                {
+                    var sellingPriceIds = sellingPricesCustomer.Select(x => x.Id);
+                    SellingPriceCustomer sellingPriceCustomer = db.SellingPricesCustomers.Where(x => sellingPriceIds.Contains(x.SellingPriceId)).FirstOrDefault();
+
+                    if(sellingPriceCustomer != null)
+                    {
+                        decimal? tempPrice = db.SellingPricesItems.Where(x => x.SellingPriceId == sellingPriceCustomer.SellingPriceId && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                        if (tempPrice != null)
+                            price = (decimal)tempPrice;
+                    }
+                    else if(sellingPriceAllCustomer != null)
+                    {
+                        decimal? tempPrice = db.SellingPricesItems.Where(x => x.SellingPriceId == sellingPriceAllCustomer.Id && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                        if (tempPrice != null)
+                            price = (decimal)tempPrice;
+                    }
+                }
+                else if (sellingPriceAllCustomer != null)
+                {
+                    decimal? tempPrice = db.SellingPricesItems.Where(x => x.SellingPriceId == sellingPriceAllCustomer.Id && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                    if (tempPrice != null)
+                        price = (decimal)tempPrice;
+                }
+            }
+
+            return price;
+        }
+        public static decimal GetBuyingPrice(ApplicationDbContext db, int masterBusinessUnitId, int masterRegionId, int masterItemId, int masterItemUnitId, int masterSupplierId)
+        {
+            decimal price = 0;
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+            MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
+            MasterItem masterItem = db.MasterItems.Find(masterItemId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(masterItemUnitId);
+            MasterSupplier masterSupplier = db.MasterSuppliers.Find(masterSupplierId);
+
+            if (masterBusinessUnit != null && masterRegion != null && masterItem != null && masterSupplier != null)
+            {
+                var buyingPrices = db.BuyingPricesItems.Where(x => x.BuyingPrice.MasterBusinessUnitId == masterBusinessUnitId
+                                            && x.BuyingPrice.MasterRegionId == masterRegionId && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).Select(y => y.BuyingPrice).ToList();
+
+                var buyingPricesSupplier = buyingPrices.Where(x => !x.AllSupplier);
+                BuyingPrice buyingPricesAllSupplier = buyingPrices.Where(x => x.AllSupplier).FirstOrDefault();
+
+                if (buyingPricesSupplier.Any())
+                {
+                    var buyingPriceIds = buyingPricesSupplier.Select(x => x.Id);
+                    BuyingPriceSupplier buyingPriceSupplier = db.BuyingPricesSuppliers.Where(x => buyingPriceIds.Contains(x.BuyingPriceId)).FirstOrDefault();
+
+                    if (buyingPriceSupplier != null)
+                    {
+                        decimal? tempPrice = db.BuyingPricesItems.Where(x => x.BuyingPriceId == buyingPriceSupplier.BuyingPriceId && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                        if (tempPrice != null)
+                            price = (decimal)tempPrice;
+                    }
+                    else if (buyingPricesAllSupplier != null)
+                    {
+                        decimal? tempPrice = db.BuyingPricesItems.Where(x => x.BuyingPriceId == buyingPricesAllSupplier.Id && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                        if (tempPrice != null)
+                            price = (decimal)tempPrice;
+                    }
+                }
+                else if (buyingPricesAllSupplier != null)
+                {
+                    decimal? tempPrice = db.BuyingPricesItems.Where(x => x.BuyingPriceId == buyingPricesAllSupplier.Id && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                    if (tempPrice != null)
+                        price = (decimal)tempPrice;
+                }
+            }
+
+            return price;
+        }
+
         public static void UpdateStock(ApplicationDbContext db, EnumMenuType type, EnumActions actions, int masterBusinessUnitId, int masterRegionId, int masterWarehouseId, int masterItemId, int quantity, int transactionId)
         {
             MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);

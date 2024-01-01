@@ -1707,7 +1707,6 @@ namespace eShop.Models
         [Display(Name = "Name")]
         public string MasterItemName { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Keterangan")]
         public string MasterItemNotes { get; set; }
 
@@ -1746,7 +1745,6 @@ namespace eShop.Models
                     Id = x.MasterItemId,
                     MasterItemCode = x.MasterItem.Code,
                     MasterItemName = x.MasterItem.Name,
-                    //MasterItemNotes = x.MasterItem.Notes,
                     MasterRegionId = x.MasterRegion.Id,
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,

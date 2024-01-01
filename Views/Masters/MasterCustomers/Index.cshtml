@@ -7,6 +7,7 @@
 
 @section Styles {
     @Styles.Render("~/style/mvcgrid")
+    @Styles.Render("~/style/MvcDatalist")
 }
 
 <style>
@@ -14,6 +15,9 @@
         background-color: rgba(0, 0, 0, 0.1);
     }
 </style>
+
+@Html.Partial("MvcDatalist/_Dialog")
+
 <div class="content-wrapper">
     <section class="content-header-fixed">
         <h1 class="col-md-6">
@@ -64,16 +68,22 @@
     </div>
 </div>
 
+
 @section Scripts {
     @Scripts.Render("~/bundles/mvcgrid")
     @Scripts.Render("~/script/tableHeadFixer")
     @Scripts.Render("~/script/InputMask")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/unobtrusive")
+    @Scripts.Render("~/bundles/MvcDatalist")
 
     <script>
         [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
             new MvcGrid(element);
+        });
+
+        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+            new MvcDatalist(element);
         });
 
         $('#btnAdd').click(function (event) {
@@ -81,10 +91,9 @@
             var url = $(this).attr("href");
             $.get(url, function (data) {
                 $('#addContainer').html(data);
-                $('#addModal').modal('show');        
+                $('#addModal').modal('show');
 
-                $('form').each(function ()
-                {
+                $('form').each(function () {
                     var $el = $(this);
                     $el.data('validator', null);
                     $.validator.unobtrusive.parse($el);
@@ -105,6 +114,10 @@
                             $("#gender").show();
                         }
                     }).change();
+                });
+
+                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                    new MvcDatalist(element);
                 });
             });
         });
@@ -198,10 +211,9 @@
                 var url = $(this).attr("href");
                 $.get(url, function (data) {
                     $('#editContainer').html(data);
-                    $('#editModal').modal('show');        
+                    $('#editModal').modal('show');
 
-                    $('form').each(function ()
-                    {
+                    $('form').each(function () {
                         var $el = $(this);
                         $el.data('validator', null);
                         $.validator.unobtrusive.parse($el);
@@ -222,6 +234,10 @@
                                 $("#gender").show();
                             }
                         }).change();
+                    });
+
+                    [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                        new MvcDatalist(element);
                     });
                 });
             });

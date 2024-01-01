@@ -158,31 +158,36 @@
 </div>
 
 <script>
-    // Menggabungkan nilai Code dan Name saat halaman dimuat
-    $(document).ready(function () {
+        // Menggabungkan nilai Code dan Name saat halaman dimuat
+         $(document).ready(function () {
         var codeValue = '@Model.MasterWarehouse.Code';
         var nameValue = '@Model.MasterWarehouse.Name';
         var combinedValue = codeValue + ' - ' + nameValue;
 
-        // Mengatur nilai TextBox
         $('#combinedTextBoxWarehouse').val(combinedValue);
     });
 
-        $(document).ready(function () {
+          $(document).ready(function () {
         var codeValue = '@Model.MasterRegion.Code';
         var nameValue = '@Model.MasterRegion.Notes';
         var combinedValue = codeValue + ' - ' + nameValue;
 
-        // Mengatur nilai TextBox
             $('#combinedTextBoxRegion').val(combinedValue);
-        });
+    });
 
-            $(document).ready(function () {
-        var codeValue = '@Model.MasterBusinessUnit.Code';
-        var nameValue = '@Model.MasterBusinessUnit.Name';
-        var combinedValue = codeValue + ' - ' + nameValue;
+          $(document).ready(function () {
+    var codeValue = '@Model.MasterBusinessUnit.Code';
+    var nameValue = '@Model.MasterBusinessUnit.Name';
+    var combinedValue = codeValue + ' - ' + nameValue;
 
-        // Mengatur nilai TextBox
-                $('#combinedTextBoxBusinessUnit').val(combinedValue);
+             $('#combinedTextBoxBusinessUnit').val(combinedValue);
+    });
+
+         $(document).ready(function () {
+    var codeValue = '@Model.MasterSalesPerson.Code';
+    var nameValue = '@Model.MasterSalesPerson.Name';
+    var combinedValue = codeValue + ' - ' + nameValue;
+
+             $('#combinedTextBoxMasterSalesPerson').val(combinedValue);
     });
 </script>

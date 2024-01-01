@@ -173,6 +173,12 @@ namespace eShop.Models
         [Display(Name = "TOP")]
         public int? TOP { get; set; }
 
+        [Display(Name = "Kota Tujuan")]
+        public int? MasterDestinationId { get; set; }
+
+        [Display(Name = "Kota Tujuan")]
+        public virtual MasterDestination MasterDestination { get; set; }
+
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
 

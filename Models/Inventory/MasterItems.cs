@@ -47,17 +47,17 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Display(Name = "Default Discount (%)")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal DefaultDiscountPercentage { get; set; }
+        //[Display(Name = "Default Discount (%)")]
+        //[DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        //public decimal DefaultDiscountPercentage { get; set; }
 
-        [Display(Name = "Harga Beli")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal PurchasePrice { get; set; }
+        //[Display(Name = "Harga Beli")]
+        //[DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        //public decimal PurchasePrice { get; set; }
 
-        [Display(Name = "Pajak Penjualan dan Pembelian")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Vat { get; set; }
+        //[Display(Name = "Pajak Penjualan dan Pembelian")]
+        //[DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        //public decimal Vat { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }

@@ -114,12 +114,16 @@ namespace eShop.Controllers
             {
                 Code = "temp/" + Guid.NewGuid().ToString(),
                 Date = DateTime.Now,
+                DeliveryDate = DateTime.Now,
+                DueDate = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
                 MasterCurrencyId = masterCurrency.Id,
                 Rate = masterCurrency.Rate,
                 MasterCustomerId = db.MasterCustomers.FirstOrDefault().Id,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
+                MasterSalesPersonId = db.MasterSalesPersons.FirstOrDefault().Id,
+                MasterDestinationId = db.MasterDestinations.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -142,6 +146,8 @@ namespace eShop.Controllers
                     sale.MasterRegionId = 0;
                     sale.MasterCustomerId = 0;
                     sale.MasterWarehouseId = 0;
+                    sale.MasterSalesPersonId = 0;
+                    sale.MasterDestinationId = 0;   
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -164,12 +170,13 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SalesAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,SalesOrderId,MasterCustomerId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] Sale sale)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,DeliveryDate,DueDate,MasterBusinessUnitId,MasterRegionId,SalesOrderId,MasterCustomerId,MasterSalesPersonId,MasterWarehouseId,MasterDestinationId,Notes,MasterCurrencyId,Rate,Active,Created,Updated,UserId")] Sale sale)
         {
             sale.Created = DateTime.Now;
             sale.Updated = DateTime.Now;
             sale.UserId = User.Identity.GetUserId<int>();
             sale.Total = SharedFunctions.GetTotalSale(db, sale.Id);
+            sale.MasterCurrency = db.MasterCurrencies.Find(sale.MasterCurrencyId);
 
             if (!string.IsNullOrEmpty(sale.Code)) sale.Code = sale.Code.ToUpper();
             if (!string.IsNullOrEmpty(sale.Notes)) sale.Notes = sale.Notes.ToUpper();
@@ -182,15 +189,19 @@ namespace eShop.Controllers
             db.Entry(sale).State = EntityState.Unchanged;
             db.Entry(sale).Property("Code").IsModified = true;
             db.Entry(sale).Property("Date").IsModified = true;
+            db.Entry(sale).Property("DeliveryDate").IsModified = true;
+            db.Entry(sale).Property("DueDate").IsModified = true;
             db.Entry(sale).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(sale).Property("MasterRegionId").IsModified = true;
             db.Entry(sale).Property("SalesOrderId").IsModified = true;
             db.Entry(sale).Property("MasterCustomerId").IsModified = true;
+            db.Entry(sale).Property("MasterSalesPersonId").IsModified = true;
             db.Entry(sale).Property("MasterWarehouseId").IsModified = true;
+            db.Entry(sale).Property("MasterDestinationId").IsModified = true;
             db.Entry(sale).Property("Total").IsModified = true;
             db.Entry(sale).Property("Notes").IsModified = true;
             db.Entry(sale).Property("Active").IsModified = true;
-            db.Entry(sale).Property("Updated").IsModified = true;
+            db.Entry(sale).Property("Updated").IsModified = true; 
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -344,33 +355,37 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SalesEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,SalesOrderId,MasterCustomerId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] Sale sales)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,DeliveryDate,DueDate,MasterBusinessUnitId,MasterRegionId,SalesOrderId,MasterCustomerId,MasterSalesPersonId,MasterWarehouseId,MasterDestinationId,Notes,Active,Created,Updated,UserId")] Sale obj)
         {
-            sales.Updated = DateTime.Now;
-            sales.UserId = User.Identity.GetUserId<int>();
-            sales.Total = SharedFunctions.GetTotalSale(db, sales.Id);
-            sales.MasterCurrency = db.MasterCurrencies.Find(sales.MasterCurrencyId);
+            obj.Updated = DateTime.Now;
+            obj.UserId = User.Identity.GetUserId<int>();
+            obj.Total = SharedFunctions.GetTotalSale(db, obj.Id);
+            obj.MasterCurrency = db.MasterCurrencies.Find(obj.MasterCurrencyId);
 
-            if (!string.IsNullOrEmpty(sales.Code)) sales.Code = sales.Code.ToUpper();
-            if (!string.IsNullOrEmpty(sales.Notes)) sales.Notes = sales.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(obj.Code)) obj.Code = obj.Code.ToUpper();
+            if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
 
             if (ModelState.IsValid)
             {
-                sales = GetModelState(sales);
+                obj = GetModelState(obj);
             }
 
-            db.Entry(sales).State = EntityState.Unchanged;
-            db.Entry(sales).Property("Code").IsModified = true;
-            db.Entry(sales).Property("Date").IsModified = true;
-            db.Entry(sales).Property("MasterBusinessUnitId").IsModified = true;
-            db.Entry(sales).Property("MasterRegionId").IsModified = true;
-            db.Entry(sales).Property("SalesOrderId").IsModified = true;
-            db.Entry(sales).Property("MasterCustomerId").IsModified = true;
-            db.Entry(sales).Property("MasterWarehouseId").IsModified = true;
-            db.Entry(sales).Property("Total").IsModified = true;
-            db.Entry(sales).Property("Notes").IsModified = true;
-            db.Entry(sales).Property("Active").IsModified = true;
-            db.Entry(sales).Property("Updated").IsModified = true;
+            db.Entry(obj).State = EntityState.Unchanged;
+            db.Entry(obj).Property("Code").IsModified = true;
+            db.Entry(obj).Property("Date").IsModified = true;
+            db.Entry(obj).Property("DeliveryDate").IsModified = true;
+            db.Entry(obj).Property("DueDate").IsModified = true;
+            db.Entry(obj).Property("MasterBusinessUnitId").IsModified = true;
+            db.Entry(obj).Property("MasterRegionId").IsModified = true;
+            db.Entry(obj).Property("SalesOrderId").IsModified = true;
+            db.Entry(obj).Property("MasterCustomerId").IsModified = true; 
+            db.Entry(obj).Property("MasterSalesPersonId").IsModified = true;
+            db.Entry(obj).Property("MasterWarehouseId").IsModified = true;
+            db.Entry(obj).Property("MasterDestinationId").IsModified = true;
+            db.Entry(obj).Property("Total").IsModified = true;
+            db.Entry(obj).Property("Notes").IsModified = true;
+            db.Entry(obj).Property("Active").IsModified = true;
+            db.Entry(obj).Property("Updated").IsModified = true;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -380,7 +395,7 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Sale, MenuId = sales.Id, MenuCode = sales.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.Sale, MenuId = obj.Id, MenuCode = obj.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -396,10 +411,10 @@ namespace eShop.Controllers
 
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
-                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", sales.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalSale(db, sales.Id).ToString("N2");
+                ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", obj.MasterBusinessUnitId);
+                ViewBag.Total = SharedFunctions.GetTotalSale(db, obj.Id).ToString("N2");
 
-                return View("../Selling/Sales/Edit", sales);
+                return View("../Selling/Sales/Edit", obj);
             }
         }
 
@@ -917,6 +932,25 @@ namespace eShop.Controllers
             return Json(masterItemUnitId);
         }
 
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "SalesActive")]
+        public JsonResult GetMasterDestination(int id)
+        {
+            int masterDestinationId = 0;
+            MasterCustomer masterCustomer = db.MasterCustomers.Find(id);
+
+            if (masterCustomer != null)
+            {
+                MasterDestination masterDestination = db.MasterDestinations.Where(x => x.Id == masterCustomer.Id).FirstOrDefault();
+
+                if (masterDestination != null)
+                    masterDestinationId = masterDestination.Id;
+            }
+
+            return Json(masterDestinationId);
+        }
+
         [Authorize(Roles = "SalesActive")]
         public ActionResult ChangeCurrency(int? salesId)
         {
@@ -1047,6 +1081,14 @@ namespace eShop.Controllers
                 code = (Convert.ToInt32(lastData.Code.Substring(0, 4)) + 1).ToString("D4") + code;
 
             return code;
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "SalesActive")]
+        public JsonResult GetPrice(int masterBusinessUnitId, int masterRegionId, int masterItemId, int masterItemUnitId, int masterCustomerId)
+        {
+            return Json(SharedFunctions.GetSellingPrice(db, masterBusinessUnitId, masterRegionId, masterItemId, masterItemUnitId, masterCustomerId));
         }
 
         [HttpPost]
@@ -1254,6 +1296,7 @@ namespace eShop.Controllers
                         sale.MasterCurrencyId = salesOrder.MasterCurrencyId;
                         sale.Rate = salesOrder.Rate;
                         sale.MasterCustomerId = salesOrder.MasterCustomerId;
+                        sale.MasterSalesPersonId = salesOrder.MasterSalesPersonId;
                         sale.MasterWarehouseId = salesOrder.MasterWarehouseId;
                         sale.Notes = salesOrder.Notes;
                         sale.Total = salesOrder.Total;
@@ -1277,6 +1320,7 @@ namespace eShop.Controllers
                 sale.MasterBusinessUnitId,
                 sale.MasterCustomerId,
                 sale.MasterWarehouseId,
+                sale.MasterSalesPersonId,
                 sale.Notes,
                 Total = sale.Total.ToString("N2"),
                 sale.Date,

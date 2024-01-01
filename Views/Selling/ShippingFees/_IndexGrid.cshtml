@@ -1,0 +1,41 @@
+﻿@model IEnumerable<eShop.Models.ShippingFee>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => ((User.IsInRole("ShippingFeesEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "ShippingFees", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("ShippingFeesView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "ShippingFees", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
+        ((User.IsInRole("ShippingFeesAdd")) ? "&nbsp;<a class=\"btn btn-warning btn-xs copy-data\" href=\"" + model.Id + "\"><i class=\"fa fa-copy\"></i> Copy</a>" : "") + "</div>").Encoded(false);
+        columns.Add(model => model.MasterBusinessUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Name));
+        columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));
+        columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
+        columns.Add(model => model.MasterDestination.Name).Titled(@Html.DisplayNameFor(model => model.MasterDestination.Name));
+        columns.Add(model => model.MasterCost.Name).Titled(@Html.DisplayNameFor(model => model.MasterCost.Name));
+        columns.Add(model => model.Total).Titled(@Html.DisplayNameFor(model => model.Total)).Formatted("{0:N2}");
+        columns.Add(model => model.AllCustomer).Titled(@Html.DisplayNameFor(model => model.AllCustomer));
+        columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
+        columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));
+        columns.Add(model => model.User.FullName).Titled(@Html.DisplayNameFor(model => model.User.FullName));
+        columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated)).InitialSort(GridSortOrder.Desc);
+    })
+    .RowAttributed(model => new { @class = (model.Active == true ? "" : "grid-column-red") })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)

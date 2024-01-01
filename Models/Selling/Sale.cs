@@ -30,6 +30,20 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Tanggal Pengiriman")]
+        [Required(ErrorMessage = "Tanggal Pengiriman harus diisi.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DeliveryDate { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Tanggal Jatuh Tempo")]
+        [Required(ErrorMessage = "Tanggal Jatuh Tempo harus diisi.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DueDate { get; set; }
+
         [Display(Name = "Unit Bisnis")]
         [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
         public int MasterBusinessUnitId { get; set; }
@@ -69,6 +83,26 @@ namespace eShop.Models
 
         [Display(Name = "Kode Customer")]
         public virtual MasterCustomer MasterCustomer { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kode Salesman")]
+        public int? MasterSalesPersonId { get; set; }
+
+        [Display(Name = "Kode Salesman")]
+        public virtual MasterSalesPerson MasterSalesPerson { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kota Tujuan")]
+        public int? MasterDestinationId { get; set; }
+
+        [Display(Name = "Kota Tujuan")]
+        public virtual MasterDestination MasterDestination { get; set; }
+
+        [Display(Name = "Top")]
+        public int Top { get; set; }
+
+        [Display(Name = "Topx")]
+        public int Topx { get; set; }
 
         [Display(Name = "Gudang")]
         [Required(ErrorMessage = "Gudang harus diisi.")]

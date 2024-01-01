@@ -155,7 +155,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseOrdersAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,SalesOrderId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,Rate,MasterCurrencyId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
         {
             purchaseOrder.Created = DateTime.Now;
             purchaseOrder.Updated = DateTime.Now;
@@ -179,7 +179,6 @@ namespace eShop.Controllers
             db.Entry(purchaseOrder).Property("PurchaseRequestId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterSupplierId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterWarehouseId").IsModified = true;
-            db.Entry(purchaseOrder).Property("SalesOrderId").IsModified = true;
             db.Entry(purchaseOrder).Property("Total").IsModified = true;
             db.Entry(purchaseOrder).Property("Notes").IsModified = true;
             db.Entry(purchaseOrder).Property("Active").IsModified = true;
@@ -837,6 +836,14 @@ namespace eShop.Controllers
                 code = (Convert.ToInt32(lastData.Code.Substring(0, 4)) + 1).ToString("D4") + code;
 
             return code;
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "PurchaseOrdersActive")]
+        public JsonResult GetPrice(int masterBusinessUnitId, int masterRegionId, int masterItemId, int masterItemUnitId, int masterCustomerId)
+        {
+            return Json(SharedFunctions.GetSellingPrice(db, masterBusinessUnitId, masterRegionId, masterItemId, masterItemUnitId, masterCustomerId));
         }
 
         [HttpPost]

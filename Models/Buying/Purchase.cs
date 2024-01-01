@@ -384,7 +384,52 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
-        public class PurchaseDatalist : MvcDatalist<Purchase>
+    public class PurchaseCostDetails
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Display(Name = "Purchase")]
+        [Required(ErrorMessage = "Purchase harus diisi.")]
+        public int PurchaseId { get; set; }
+
+        [Display(Name = "Purchase")]
+        public virtual Purchase Purchase { get; set; }
+
+        [Display(Name = "Kode Biaya")]
+        public int MasterCostId { get; set; }
+
+        [Display(Name = "Kode Biaya")]
+        public virtual MasterCost MasterCost { get; set; }
+
+        [Display(Name = "Total (Rp)")]
+        [Required(ErrorMessage = "Total harus diisi.")]
+        public int Total { get; set; }
+
+        [AllowHtml]
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
+    public class PurchaseDatalist : MvcDatalist<Purchase>
     {
         private DbContext Context { get; }
 

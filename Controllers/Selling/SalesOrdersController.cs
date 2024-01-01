@@ -107,12 +107,15 @@ namespace eShop.Controllers
             {
                 Code = "temp/" + Guid.NewGuid().ToString(),
                 Date = DateTime.Now,
+                DeliveryDate = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
                 MasterCurrencyId = masterCurrency.Id,
                 Rate = masterCurrency.Rate,
                 MasterCustomerId = db.MasterCustomers.FirstOrDefault().Id,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
+                MasterBusinessUnitRelationId = db.MasterBusinessUnitRelations.FirstOrDefault().Id,
+                MasterDestinationId = db.MasterDestinations.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -135,6 +138,7 @@ namespace eShop.Controllers
                     salesOrder.MasterRegionId = 0;
                     salesOrder.MasterCustomerId = 0;
                     salesOrder.MasterWarehouseId = 0;
+                    salesOrder.MasterDestinationId = 0;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -157,7 +161,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SalesOrdersAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,SalesRequestId,MasterCurrencyId,Rate,MasterWarehouseId,MasterCustomerId,MasterBusinessUnitRelationId,SalesOrderRelationId,Notes,Active,Created,Updated,UserId")] SalesOrder salesOrder)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,DeliveryDate,MasterBusinessUnitId,MasterRegionId,SalesRequestId,MasterCurrencyId,Rate,MasterWarehouseId,MasterCustomerId,MasterBusinessUnitRelationId,SalesOrderRelationId,MasterDestinationId,Notes,Active,Created,Updated,UserId")] SalesOrder salesOrder)
         {
             salesOrder.Created = DateTime.Now;
             salesOrder.Updated = DateTime.Now;
@@ -176,13 +180,15 @@ namespace eShop.Controllers
             db.Entry(salesOrder).State = EntityState.Unchanged;
             db.Entry(salesOrder).Property("Code").IsModified = true;
             db.Entry(salesOrder).Property("Date").IsModified = true;
+            db.Entry(salesOrder).Property("DeliveryDate").IsModified = true;
             db.Entry(salesOrder).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(salesOrder).Property("MasterRegionId").IsModified = true;
             db.Entry(salesOrder).Property("SalesRequestId").IsModified = true;
             db.Entry(salesOrder).Property("MasterCustomerId").IsModified = true;
             db.Entry(salesOrder).Property("MasterWarehouseId").IsModified = true;
             db.Entry(salesOrder).Property("MasterBusinessUnitRelationId").IsModified = true;
-            db.Entry(salesOrder).Property("SalesOrderRelationId").IsModified = true;
+            db.Entry(salesOrder).Property("SalesOrderRelationId").IsModified = true; 
+            db.Entry(salesOrder).Property("MasterDestinationId").IsModified = true;
             db.Entry(salesOrder).Property("Total").IsModified = true;
             db.Entry(salesOrder).Property("Notes").IsModified = true;
             db.Entry(salesOrder).Property("Active").IsModified = true;
@@ -247,7 +253,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SalesOrdersEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,SalesRequestId,MasterWarehouseId,MasterCustomerId,MasterBusinessUnitRelationId,SalesOrderRelationId,Notes,Active,Created,Updated,UserId")] SalesOrder salesOrder)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,DeliveryDate,MasterBusinessUnitId,MasterRegionId,SalesRequestId,MasterWarehouseId,MasterCustomerId,MasterBusinessUnitRelationId,SalesOrderRelationId,MasterDestinationId,Notes,Active,Created,Updated,UserId")] SalesOrder salesOrder)
         {
             salesOrder.Updated = DateTime.Now;
             salesOrder.UserId = User.Identity.GetUserId<int>();
@@ -263,12 +269,14 @@ namespace eShop.Controllers
             }
 
             db.Entry(salesOrder).State = EntityState.Unchanged;
-            db.Entry(salesOrder).Property("Code").IsModified = true;
+            db.Entry(salesOrder).Property("Code").IsModified = true; 
             db.Entry(salesOrder).Property("Date").IsModified = true;
+            db.Entry(salesOrder).Property("DeliveryDate").IsModified = true;
             db.Entry(salesOrder).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(salesOrder).Property("MasterRegionId").IsModified = true;
             db.Entry(salesOrder).Property("MasterWarehouseId").IsModified = true;
             db.Entry(salesOrder).Property("MasterCustomerId").IsModified = true;
+            db.Entry(salesOrder).Property("MasterDestinationId").IsModified = true;
             db.Entry(salesOrder).Property("Total").IsModified = true;
             db.Entry(salesOrder).Property("Notes").IsModified = true;
             db.Entry(salesOrder).Property("Active").IsModified = true;
@@ -711,6 +719,25 @@ namespace eShop.Controllers
             return Json(masterItemUnitId);
         }
 
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "SalesOrdersActive")]
+        public JsonResult GetMasterDestination(int id)
+        {
+            int masterDestinationId = 0;
+            MasterCustomer masterCustomer = db.MasterCustomers.Find(id);
+
+            if (masterCustomer != null)
+            {
+                MasterDestination masterDestination = db.MasterDestinations.Where(x => x.Id == masterCustomer.Id ).FirstOrDefault();
+
+                if (masterDestination != null)
+                    masterDestinationId = masterDestination.Id;
+            }
+
+            return Json(masterDestinationId);
+        }
+
         [Authorize(Roles = "SalesOrdersActive")]
         public ActionResult ChangeCurrency(int? salesOrderId)
         {
@@ -801,7 +828,6 @@ namespace eShop.Controllers
             return Json(db.MasterCurrencies.Find(id).Rate);
         }
 
-
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "SalesOrdersActive")]
@@ -841,6 +867,14 @@ namespace eShop.Controllers
                 code = (Convert.ToInt32(lastData.Code.Substring(0, 4)) + 1).ToString("D4") + code;
 
             return code;
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "SalesOrdersActive")]
+        public JsonResult GetPrice(int masterBusinessUnitId, int masterRegionId, int masterItemId, int masterItemUnitId, int masterCustomerId)
+        {
+            return Json(SharedFunctions.GetSellingPrice(db, masterBusinessUnitId, masterRegionId, masterItemId, masterItemUnitId, masterCustomerId));
         }
 
         [HttpPost]
@@ -991,6 +1025,7 @@ namespace eShop.Controllers
                         if (masterBusinessUnitRelation != null && masterBusinessUnitRelation.MasterCustomerId != null)
                         {
                             salesOrder.MasterCustomerId = (int)masterBusinessUnitRelation.MasterCustomerId;
+
                         }
 
                         db.Entry(salesOrder).State = EntityState.Modified;

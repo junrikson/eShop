@@ -157,7 +157,11 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterCustomer> MasterCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterSupplier> MasterSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterWarehouse> MasterWarehouses { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterSalesPerson> MasterSalesPersons { get; set; }        
+        public System.Data.Entity.DbSet<eShop.Models.MasterSalesPerson> MasterSalesPersons { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterDestination> MasterDestinations { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.Term> Terms { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.TermSalesPerson> TermSalesPersons { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.TermCustomer> TermCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterial> ProductionBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterialDetails> ProductionBillOfMaterialsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterialCostDetails> ProductionBillOfMaterialsCostsDetails { get; set; }
@@ -177,6 +181,12 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustment> StockAdjustments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustmentDetails> StockAdjustmentsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.WarehouseTransfer> WarehouseTransfers { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SellingPrice> SellingPrices { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SellingPriceCustomer> SellingPricesCustomers { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SellingPriceItem> SellingPricesItems { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BuyingPrice> BuyingPrices { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BuyingPriceSupplier> BuyingPricesSuppliers { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BuyingPriceItem> BuyingPricesItems { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.WarehouseTransferDetails> WarehouseTransfersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockCard> StockCards { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockBalance> StockBalances { get; set; }
@@ -191,6 +201,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrderDetails> PurchaseOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Purchase> Purchases { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseDetails> PurchasesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.PurchaseCostDetails> PurchasesCostsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GoodsReceipt> GoodsReceipts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GoodsReceiptDetails> GoodsReceiptsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseReturn> PurchaseReturns { get; set; }
@@ -202,6 +213,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.Sale> Sales { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleDetails> SalesDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleCostDetails> SalesCostsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ShippingFee> ShippingFees { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ShippingFeeCustomer> ShippingFeeCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GoodsDelivery> GoodsDeliveries { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GoodsDeliveryDetails> GoodsDeliveriesDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesReturn> SalesReturns { get; set; }
@@ -211,6 +224,8 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.Repayment> Repayments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.RepaymentDetailsHeader> RepaymentsDetailsHeader { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.RepaymentDetails> RepaymentsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.FixedAssetCategory> FixedAssetCategories { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.FixedAsset> FixedAssets { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.AccountType> AccountTypes { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.BalanceSheet> BalanceSheets { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.IncomeStatement> IncomeStatements { get; set; }
