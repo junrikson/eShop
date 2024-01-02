@@ -30,6 +30,20 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Tanggal Pengiriman")]
+        [Required(ErrorMessage = "Tanggal Pengiriman harus diisi.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DeliveryDate { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Tanggal Jatuh Tempo")]
+        [Required(ErrorMessage = "Tanggal Jatuh Tempo harus diisi.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DueDate { get; set; }
+
         [Display(Name = "Unit Bisnis")]
         [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
         public int MasterBusinessUnitId { get; set; }
@@ -70,6 +84,26 @@ namespace eShop.Models
         [Display(Name = "Kode Customer")]
         public virtual MasterCustomer MasterCustomer { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Kode Salesman")]
+        public int? MasterSalesPersonId { get; set; }
+
+        [Display(Name = "Kode Salesman")]
+        public virtual MasterSalesPerson MasterSalesPerson { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Kota Tujuan")]
+        public int? MasterDestinationId { get; set; }
+
+        [Display(Name = "Kota Tujuan")]
+        public virtual MasterDestination MasterDestination { get; set; }
+
+        [Display(Name = "Top")]
+        public int Top { get; set; }
+
+        [Display(Name = "Topx")]
+        public int Topx { get; set; }
+
         [Display(Name = "Gudang")]
         [Required(ErrorMessage = "Gudang harus diisi.")]
         public int MasterWarehouseId { get; set; }
@@ -77,9 +111,24 @@ namespace eShop.Models
         [Display(Name = "Gudang")]
         public virtual MasterWarehouse MasterWarehouse { get; set; }
 
+        [Display(Name = "Referensi")]
+        public string Reference { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        [Display(Name = "Diskon Rupiah")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Discount { get; set; }
+
+        [Display(Name = "Diskon Persen")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountValue { get; set; }
+
+        [Display(Name = "PPN")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Tax { get; set; }
 
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
@@ -137,18 +186,77 @@ namespace eShop.Models
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
 
         [Display(Name = "Harga")]
         [Required(ErrorMessage = "Harga harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Price { get; set; }
 
+        [Display(Name = "Diskon Rupiah")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Discount { get; set; }
+
+        [Display(Name = "Diskon Persen")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountValue { get; set; }
+
+        [Display(Name = "PPN")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Tax { get; set; }
+
         [Display(Name = "Nilai")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Total { get; set; }
 
+        [Display(Name = "Referensi")]
+        public string Reference { get; set; }
+
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
+    public class SaleCostDetails
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Display(Name = "Sale")]
+        [Required(ErrorMessage = "Invoice harus diisi.")]
+        public int SaleId { get; set; }
+
+        [Display(Name = "Sale")]
+        public virtual Sale Sale { get; set; }
+
+        [Display(Name = "Kode Biaya")]
+        public int MasterCostId { get; set; }
+
+        [Display(Name = "Kode Biaya")]
+        public virtual MasterCost MasterCost { get; set; }
+
+        [Display(Name = "Total (Rp)")]
+        [Required(ErrorMessage = "Total harus diisi.")]
+        public int Total { get; set; }
+
+        [AllowHtml]
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }

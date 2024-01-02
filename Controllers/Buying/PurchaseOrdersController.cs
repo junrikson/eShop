@@ -32,13 +32,26 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "PurchaseOrdersActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Buying/PurchaseOrders/_IndexGrid", db.Set<PurchaseOrder>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Buying/PurchaseOrders/_IndexGrid", db.Set<PurchaseOrder>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Buying/PurchaseOrders/_IndexGrid", db.Set<PurchaseOrder>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Buying/PurchaseOrders/_IndexGrid", db.Set<PurchaseOrder>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
 
         public JsonResult IsCodeExists(string Code, int? Id)
@@ -142,13 +155,13 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseOrdersAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,SalesOrderId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,PurchaseRequestId,MasterSupplierId,MasterWarehouseId,Rate,MasterCurrencyId,Notes,Active,Created,Updated,UserId")] PurchaseOrder purchaseOrder)
         {
             purchaseOrder.Created = DateTime.Now;
             purchaseOrder.Updated = DateTime.Now;
             purchaseOrder.UserId = User.Identity.GetUserId<int>();
             purchaseOrder.Total = SharedFunctions.GetTotalPurchaseOrder(db, purchaseOrder.Id);
-            purchaseOrder.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
+            purchaseOrder.MasterCurrency = db.MasterCurrencies.Find(purchaseOrder.MasterCurrencyId);
 
             if (!string.IsNullOrEmpty(purchaseOrder.Code)) purchaseOrder.Code = purchaseOrder.Code.ToUpper();
             if (!string.IsNullOrEmpty(purchaseOrder.Notes)) purchaseOrder.Notes = purchaseOrder.Notes.ToUpper();
@@ -166,7 +179,6 @@ namespace eShop.Controllers
             db.Entry(purchaseOrder).Property("PurchaseRequestId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterSupplierId").IsModified = true;
             db.Entry(purchaseOrder).Property("MasterWarehouseId").IsModified = true;
-            db.Entry(purchaseOrder).Property("SalesOrderId").IsModified = true;
             db.Entry(purchaseOrder).Property("Total").IsModified = true;
             db.Entry(purchaseOrder).Property("Notes").IsModified = true;
             db.Entry(purchaseOrder).Property("Active").IsModified = true;
@@ -824,6 +836,14 @@ namespace eShop.Controllers
                 code = (Convert.ToInt32(lastData.Code.Substring(0, 4)) + 1).ToString("D4") + code;
 
             return code;
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "PurchaseOrdersActive")]
+        public JsonResult GetPrice(int masterBusinessUnitId, int masterRegionId, int masterItemId, int masterItemUnitId, int masterCustomerId)
+        {
+            return Json(SharedFunctions.GetSellingPrice(db, masterBusinessUnitId, masterRegionId, masterItemId, masterItemUnitId, masterCustomerId));
         }
 
         [HttpPost]

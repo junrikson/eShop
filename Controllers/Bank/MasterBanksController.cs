@@ -23,13 +23,26 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "MasterBanksActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Bank/MasterBanks/_IndexGrid", db.Set<MasterBank>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Bank/MasterBanks/_IndexGrid", db.Set<MasterBank>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Bank/MasterBanks/_IndexGrid", db.Set<MasterBank>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Bank/MasterBanks/_IndexGrid", db.Set<MasterBank>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
 
         [Authorize(Roles = "MasterBanksActive")]

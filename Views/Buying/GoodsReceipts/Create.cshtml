@@ -293,7 +293,7 @@
                 var options = {};
                 var grid = new MvcGrid(document.querySelector('#detail-table'));
 
-                if (purchaseId !== 0 && purchaseId !== '') {
+                if (purchaseId != 0 && purchaseId !== '') {
                     options.url = "/GoodsReceipts/PopulateDetails";
                     options.type = "POST";
                     options.headers = headers;
@@ -318,6 +318,38 @@
                     options.error = function () {
                         document.getElementById('Code').value = "";
                         document.getElementById('MasterBusinessUnitId').value = "0";
+                        grid.reload();
+                    };
+                    $.ajax(options);
+                }
+            }).change();
+
+            $("#MasterWarehouseId").on("change", function () {
+                var masterWarehouseId = $("#MasterWarehouseId").val();
+                var goodsReceiptid = $("#Id").val();
+                var data = { GoodsReceiptid: goodsReceiptid, MasterWarehouseId: masterWarehouseId };
+                var options = {};
+                var grid = new MvcGrid(document.querySelector('#detail-table'));
+
+                if (masterWarehouseId != 0 && masterWarehouseId !== '') {
+                    options.url = "/GoodsReceipts/WarehouseChange";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(data);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (notes) {
+                        if (notes !== 'success') {
+                            bootbox.alert(notes);
+                        }
+
+                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                            new MvcDatalist(element).reload();
+                        });
+
+                        grid.reload();
+                    };
+                    options.error = function () {
                         grid.reload();
                     };
                     $.ajax(options);
@@ -394,7 +426,7 @@
                 var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
                 var options = {};
 
-                if (masterRegionId !== 0 && masterRegionId !== '') {
+                if (masterRegionId != 0 && masterRegionId !== '') {
                     if ($("#MasterBusinessUnitId").val() === "") {
                         bootbox.alert("Unit Bisnis belum dipilih!");
                         document.getElementById('MasterRegionId').value = "0";
@@ -429,7 +461,7 @@
                 var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
                 var options = {};
 
-                if (masterRegionId !== 0 && masterRegionId !== '') {
+                if (masterRegionId != 0 && masterRegionId !== '') {
                     options.url = "/GoodsReceipts/GetCode";
                     options.type = "POST";
                     options.headers = headers;

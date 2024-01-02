@@ -14,10 +14,10 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [Display(Name = "Unit Bisnis")]
-        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        [Required(ErrorMessage = "Gudang harus diisi.")]
         public int MasterBusinessUnitId { get; set; }
 
-        [Display(Name = "Unit Bisnis")]
+        [Display(Name = "MasterBusinessUnit")]
         public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
 
         [Display(Name = "Wilayah")]
@@ -41,23 +41,18 @@ namespace eShop.Models
         [Display(Name = "Master Item")]
         public virtual MasterItem MasterItem { get; set; }
 
-        [Display(Name = "Satuan")]
-        [Required(ErrorMessage = "Master Item harus diisi.")]
-        public int MasterItemUnitId { get; set; }
-
-        [Display(Name = "Satuan")]
-        public virtual MasterItemUnit MasterItemUnit { get; set; }
-
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
 
-        [Display(Name = "Pembelian")]
-        public int? PurchaseDetailsId { get; set; }
+        [Display(Name = "Jenis Menu")]
+        public EnumMenuType MenuType { get; set; }
 
-        [Display(Name = "Pembelian")]
-        public virtual PurchaseDetails PurchaseDetails { get; set; }
+        [Display(Name = "Penerimaan Barang")]
+        public int? GoodsReceiptDetailsId { get; set; }
+
+        [Display(Name = "Penerimaan Barang")]
+        public virtual GoodsReceiptDetails GoodsReceiptDetails { get; set; }
 
         [Display(Name = "Penjualan")]
         public int? SaleDetailsId { get; set; }
@@ -71,5 +66,4 @@ namespace eShop.Models
         [Display(Name = "Penyesuaian")]
         public virtual StockAdjustmentDetails StockAdjustmentDetails { get; set; }
     }
-
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eShop.Models.PurchaseRequest>
+﻿@model IEnumerable<eShop.Models.StandardProductCost>
 @{
     Layout = null;
 }
@@ -8,23 +8,20 @@
     .Build(columns =>
     {
         columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
-        columns.Add(model => ((User.IsInRole("PurchaseRequestsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "PurchaseRequests", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
-        ((User.IsInRole("PurchaseRequestsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "PurchaseRequests", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
-        ((User.IsInRole("PurchaseRequestsPrint")) ? "&nbsp;<a class=\"btn btn-info btn-xs print-data\" target=\"_blank\" href=\"" + @Url.Action("Print", "PurchaseRequests", new { id = model.Id }) + "\"><i class=\"fa fa-print\"></i> Print</a>" : "") + "</div>").Encoded(false);
-        columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
+        columns.Add(model => ((User.IsInRole("StandardProductCostsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "StandardProductCosts", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("StandardProductCostsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "StandardProductCosts", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
         columns.Add(model => model.MasterBusinessUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Name));
-        columns.Add(model => model.MasterSupplier.Name).Titled(@Html.DisplayNameFor(model => model.MasterSupplier.Name));
+        columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));
+        columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code)).Sortable(true).InitialSort(GridSortOrder.Desc);
+        columns.Add(model => model.Name).Titled(@Html.DisplayNameFor(model => model.Name));
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
-        columns.Add(model => model.Total).Titled(@Html.DisplayNameFor(model => model.Total)).Formatted("{0:N0}");
         columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
         columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));
-        columns.Add(model => model.User.UserName).Titled(@Html.DisplayNameFor(model => model.User.UserName));
-        columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated)).InitialSort(GridSortOrder.Desc);
+        columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated));
+        columns.Add(model => model.User.UserName).Titled("User");
     })
-    .RowAttributed(model => new { @class = model.IsPrint == true ? "grid-column-green" : (model.Active == true ? "" : "grid-column-red") })
     .Empty("Tidak ada data.")
     .Pageable(pager =>
-
     {
         pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
         pager.ShowPageSizes = true;

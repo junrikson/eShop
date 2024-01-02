@@ -7,16 +7,20 @@
 
 @section Styles {
     @Styles.Render("~/style/mvcgrid")
+    @Styles.Render("~/style/MvcDatalist")
 }
 
 <style>
     .tablegrid-hover tbody tr:hover {
         background-color: rgba(0, 0, 0, 0.1);
     }
+
     .grid-column-red {
         color: #EE0000;
     }
 </style>
+
+@Html.Partial("MvcDatalist/_Dialog")
 <div class="content-wrapper">
     <section class="content-header-fixed">
         <h1 class="col-md-6">
@@ -84,24 +88,13 @@
     @Scripts.Render("~/script/tableHeadFixer")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/unobtrusive")
+    @Scripts.Render("~/bundles/MvcDatalist")
 
     <script>
         [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
             new MvcGrid(element);
         });
-        
-        function showMe (box) {
-            var chboxs = document.getElementsByName("IsHeader");
-            var vis = "none";
-            for(var i=0;i<chboxs.length;i++) { 
-                if(chboxs[i].checked){
-                    vis = "block";
-                    break;
-                }
-            }
-            document.getElementById(box).style.display = vis;
-        }
-        
+
         $('#btnAdd').click(function (event) {
             event.preventDefault();
             var url = $(this).attr("href");
@@ -109,13 +102,15 @@
                 $('#addContainer').html(data);
                 $('#addModal').modal('show');
 
-                $('form').each(function() {
+                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                    new MvcDatalist(element);
+                });
+
+                $('form').each(function () {
                     var $el = $(this);
                     $el.data('validator', null);
                     $.validator.unobtrusive.parse($el);
                 });
-
-                showMe('DivLevel');
             });
         });
 
@@ -141,7 +136,7 @@
             }
             $('#editModal').modal('hide');
             $('#editContainer').html("");
-        
+
             var grid = new MvcGrid(document.querySelector('#data-table'));
             grid.reload();
 
@@ -218,13 +213,15 @@
                         $('#editContainer').html(data);
                         $('#editModal').modal('show');
 
-                        $('form').each(function() {
+                        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                            new MvcDatalist(element);
+                        });
+
+                        $('form').each(function () {
                             var $el = $(this);
                             $el.data('validator', null);
                             $.validator.unobtrusive.parse($el);
                         });
-
-                        showMe('DivLevel');
                     });
                 });
 
@@ -235,7 +232,7 @@
                         $('#viewContainer').html(data);
                         $('#viewModal').modal('show');
                     });
-                });            
+                });
             }
             else if (e.detail.grid.element.id == 'other-table') {
                 $('#OtherCheckAll').click(function () {
@@ -252,13 +249,15 @@
                         $('#editContainer').html(data);
                         $('#editModal').modal('show');
 
-                        $('form').each(function() {
+                        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                            new MvcDatalist(element);
+                        });
+
+                        $('form').each(function () {
                             var $el = $(this);
                             $el.data('validator', null);
                             $.validator.unobtrusive.parse($el);
                         });
-
-                        showMe('DivLevel');
                     });
                 });
 

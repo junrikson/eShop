@@ -35,67 +35,89 @@
                         {
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(model => model.Id)
-                            <div class="form-horizontal">
+                        <div class="form-horizontal">
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#tab_1" data-toggle="tab">General</a></li>
+                                    <li><a href="#tab_2" data-toggle="tab">Other</a></li>
+
+                                </ul>
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.MasterBusinessUnitId)
-                                        @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
-                                        @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.MasterRegionId)
-                                        @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist(), new { @class = "datalist2" })
-                                        @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-10">
-                                        @Html.LabelFor(model => model.Code)
-                                        @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                        @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="col-md-2 text-center">
-                                        @Html.LabelFor(model => model.Active)
-                                        <div class="checkbox text-center">
-                                            @Html.CheckBoxFor(model => model.Active)
-                                            @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                            <div class="tab-content">
+                                <div class="tab-pane active form-horizontal" id="tab_1">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            @Html.LabelFor(model => model.MasterBusinessUnitId)
+                                            @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.Date)
-                                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            @Html.LabelFor(model => model.MasterRegionId)
+                                            @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist(), new { @class = "datalist2" })
+                                            @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.HeaderMasterItemId)
-                                        @Html.DatalistFor(model => model.HeaderMasterItemId, new eShop.Models.MasterBusinessRegionItemDatalist())
-                                        @Html.ValidationMessageFor(model => model.HeaderMasterItemId, "", new { @class = "text-danger" })
+                                    <div class="form-group">
+                                        <div class="col-md-10">
+                                            @Html.LabelFor(model => model.Code)
+                                            @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                            @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            @Html.LabelFor(model => model.Active)
+                                            <div class="checkbox text-center">
+                                                @Html.CheckBoxFor(model => model.Active)
+                                                @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            @Html.LabelFor(model => model.Date)
+                                            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            @Html.LabelFor(model => model.BillOfMaterialType)
+                                            @Html.EnumDropDownListFor(model => model.BillOfMaterialType, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.BillOfMaterialType, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.MasterItemUnitId)
-                                        @Html.DatalistFor(model => model.MasterItemUnitId, new eShop.Models.HeaderMasterItemUnitDatalist())
-                                        @Html.ValidationMessageFor(model => model.MasterItemUnitId, "", new { @class = "text-danger" })
+
+                                <div class="tab-pane form-horizontal" id="tab_2">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            @Html.LabelFor(model => model.HeaderMasterItemId)
+                                            @Html.DatalistFor(model => model.HeaderMasterItemId, new eShop.Models.MasterBusinessRegionItemDatalist())
+                                            @Html.ValidationMessageFor(model => model.HeaderMasterItemId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            @Html.LabelFor(model => model.MasterItemUnitId)
+                                            @Html.DatalistFor(model => model.MasterItemUnitId, new eShop.Models.HeaderMasterItemUnitDatalist())
+                                            @Html.ValidationMessageFor(model => model.MasterItemUnitId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            @Html.LabelFor(model => model.Notes)
+                                            @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                            @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        @Html.LabelFor(model => model.Notes)
-                                        @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="col-md-12">
                                         <div class="col-md-6 text-left">
-                                            <a href="#" id="cancel" class="btn btn-danger" style="margin-top:10px">
+                                            <a href="@Url.Action("Index")" id="cancel" class="btn btn-danger" style="margin-top:10px">
                                                 Cancel
                                             </a>
                                         </div>
@@ -104,9 +126,13 @@
                                         </div>
                                     </div>
                                 </div>
+
+
                             </div>
-                        }
-                    </div>
+                                    </div>
+                                </div>
+                                }
+                            </div>
                     <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
@@ -116,16 +142,16 @@
             <div class="col-md-8">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab_1" data-toggle="tab">Material</a></li>
-                        <li><a href="#tab_2" data-toggle="tab">Biaya</a></li>
+                        <li class="active"><a href="#tab_3" data-toggle="tab">Material</a></li>
+                        <li><a href="#tab_4" data-toggle="tab">Biaya</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane active form-horizontal" id="tab_1">
+                        <div class="tab-pane active form-horizontal" id="tab_3">
                             <div class="text-right col-md-12">
                                 <label style="font-weight: bold">TOTAL :</label>
                                 <input type="text" id="TotalItems" value="@ViewBag.TotalItems" disabled="disabled" style="text-align:right;" />
-                                <button id="btnItemAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "ProductionBillOfMaterials")">
-                                    <i class="fa fa-plus"></i> Add
+                                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "ProductionBillOfMaterials")">
+                                    <i class="fa fa-plus"></i> Add Item
                                 </button>
                                 <button id="btnItemsBatchDelete" class="btn btn-danger mx-1">
                                     <i class="fa fa-trash"></i> Delete
@@ -139,12 +165,12 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane form-horizontal" id="tab_2">
+                        <div class="tab-pane form-horizontal" id="tab_4">
                             <div class="text-right col-md-12">
-                                <label style="font-weight: bold">TOTAL :</label>
+                                <label style="font-weight: bold">TOTAL COST :</label>
                                 <input type="text" id="TotalCost" value="@ViewBag.TotalCost" disabled="disabled" style="text-align:right;" />
                                 <button id="btnCostAdd" class="btn btn-success mx-1" href="@Url.Action("CostsCreate", "ProductionBillOfMaterials")">
-                                    <i class="fa fa-plus"></i> Add
+                                    <i class="fa fa-plus"></i> Add Biaya
                                 </button>
                                 <button id="btnCostsBatchDelete" class="btn btn-danger mx-1">
                                     <i class="fa fa-trash"></i> Delete
@@ -153,13 +179,16 @@
 
                             <div class="form-group">
                                 <div class="box-body" style="overflow:auto; white-space: nowrap">
-                                    @Html.AjaxGrid(Url.Action("CostsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "detail-table" })
+                                    @Html.AjaxGrid(Url.Action("CostsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "cost-table" })
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
+
+
         </div>
     </section>
 </div>
@@ -283,7 +312,7 @@
                         options.contentType = "application/json";
                         options.dataType = "json";
                         options.success = function (msg) {
-                            document.getElementById('MasterUnitId').value = msg;
+                            document.getElementById('MasterItemUnitId').value = msg;
 
                             [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
                                 new MvcDatalist(element).reload();
@@ -303,6 +332,40 @@
             }
         });
 
+        $('#btnCostAdd').click(function (event) {
+            event.preventDefault();
+            if ($("#MasterBusinessUnitId").val() === "") {
+                bootbox.alert("Unit Bisnis belum dipilih!");
+            }
+            else if ($("#MasterRegionId").val() === "") {
+                bootbox.alert("Wilayah belum dipilih!");
+            }
+            else if ($("#MasterWarehouseId").val() === "") {
+                bootbox.alert("Gudang belum dipilih!");
+            }
+            else {
+                var url = $(this).attr("href") + "?productionBillOfMaterialId=" + $("input#Id").val();
+                $.get(url, function (data) {
+                    $('#detailsContainer').html(data);
+                    $('#detailsModal').modal('show');
+
+                    [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                        new MvcDatalist(element);
+                    });
+
+                    $('form').each(function () {
+                        var $el = $(this);
+                        $el.data('validator', null);
+                        $.validator.unobtrusive.parse($el);
+                    });
+
+                    Inputmask("myNum").mask("#Total");
+
+
+                });
+            }
+        });
+
         function CreateSuccess(data) {
             if (data !== "success") {
                 $('#detailsContainer').html(data);
@@ -314,19 +377,9 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { productionBillOfMaterialId: $("#Id").val() };
-            var options = {};
+            var grid2 = new MvcGrid(document.querySelector('#cost-table'));
+            grid2.reload();
 
-            options.url = "/ProductionBillOfMaterials/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
         }
 
         function EditSuccess(data) {
@@ -340,19 +393,8 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
-            var param = { productionBillOfMaterialId: $("#Id").val() };
-            var options = {};
-
-            options.url = "/ProductionBillOfMaterials/GetTotal";
-            options.type = "POST";
-            options.headers = headers;
-            options.data = JSON.stringify(param);
-            options.contentType = "application/json";
-            options.dataType = "json";
-            options.success = function (msg) {
-                document.getElementById('Total').value = msg;
-            };
-            $.ajax(options);
+            var grid2 = new MvcGrid(document.querySelector('#cost-table'));
+            grid2.reload();
         }
 
         var token = $('input[name="__RequestVerificationToken"]').val();
@@ -361,7 +403,7 @@
 
         $(document).ready(function ()
         {
-            $("#DetailsBatchDelete").click(function ()
+            $("#btnItemsBatchDelete").click(function ()
             {
                 var selectedIDs = new Array();
                 $('#detail-table tbody tr').find('td:first :checkbox').each(function ()
@@ -421,6 +463,56 @@
                 }
             });
 
+            $("#btnCostsBatchDelete").click(function () {
+                var selectedIDs = new Array();
+                $('#cost-table tbody tr').find('td:first :checkbox').each(function () {
+                    if ($(this).prop('checked')) {
+                        selectedIDs.push($(this).val());
+                    }
+                });
+
+                if (selectedIDs.length <= 0) {
+                    bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                }
+                else {
+                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result) {
+                        if (result) {
+                            var options = {};
+                            options.url = "/ProductionBillOfMaterials/CostsBatchDelete";
+                            options.type = "POST";
+                            options.headers = headers;
+                            options.data = JSON.stringify(selectedIDs);
+                            options.contentType = "application/json";
+                            options.dataType = "json";
+                            options.success = function (msg) {
+                                bootbox.alert(msg);
+
+                                var grid2 = new MvcGrid(document.querySelector('#cost-table'));
+                                grid2.reload();
+
+                                //var param = { productionBillOfMaterialId: $("#Id").val() };
+                                //var options2 = {};
+
+                                //options2.url = "/ProductionBillOfMaterials/GetTotal";
+                                //options2.type = "POST";
+                                //options2.headers = headers;
+                                //options2.data = JSON.stringify(param);
+                                //options2.contentType = "application/json";
+                                //options2.dataType = "json";
+                                //options2.success = function (msg) {
+                                //    document.getElementById('Total').value = msg;
+                                //};
+                                //$.ajax(options2);
+                            };
+                            options.error = function () {
+                                bootbox.alert("Terjadi kesalahan saat menghapus.");
+                            };
+                            $.ajax(options);
+                        }
+                    });
+                }
+            });
+
             $("#cancel").click(function () {
                 var data = { id: $("input#Id").val() };
                 var options = {};
@@ -449,7 +541,7 @@
                 if (masterRegionId != 0 && masterRegionId !== '') {
                     if ($("#MasterBusinessUnitId").val() === "") {
                         bootbox.alert("Unit Bisnis belum dipilih!");
-                        document.getElementById('MasterRegionId').value = "0";
+                        document.getElementById('MasterRegionId').value = 0;
                     }
                     else {
                         options.url = "/ProductionBillOfMaterials/GetCode";
@@ -481,7 +573,7 @@
                 var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
                 var options = {};
 
-                if (masterRegionId !== 0 && masterRegionId !== '') {
+                if (masterRegionId != 0 && masterRegionId !== '') {
                     options.url = "/ProductionBillOfMaterials/GetCode";
                     options.type = "POST";
                     options.headers = headers;
@@ -531,11 +623,12 @@
 
                         Inputmask("myNum3").mask("#Quantity");
                         Inputmask("myNum").mask("#Price");
+                        Inputmask("myNum").mask("#Total");
                     });
                 });
 
                 $('.fix-table').tableHeadFixer({ left: 2 });
             }
-        });
+                   });
     </script>
 }

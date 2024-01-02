@@ -32,13 +32,26 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "MaterialReturnsActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Manufacture/MaterialReturns/_IndexGrid", db.Set<MaterialReturn>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Manufacture/MaterialReturns/_IndexGrid", db.Set<MaterialReturn>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Manufacture/MaterialReturns/_IndexGrid", db.Set<MaterialReturn>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Manufacture/MaterialReturns/_IndexGrid", db.Set<MaterialReturn>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
 
         public JsonResult IsCodeExists(string Code, int? Id)
@@ -861,7 +874,7 @@ namespace eShop.Controllers
                                     MasterItemId = materialSlipDetails.MasterItemId,
                                     MasterItemUnitId = materialSlipDetails.MasterItemUnitId,
                                     Quantity = materialSlipDetails.Quantity,
-                                    Price = materialSlipDetails.Price,
+                                    //Price = materialSlipDetails.Price,
                                     Total = materialSlipDetails.Total,
                                     Notes = materialSlipDetails.Notes,
                                     Created = DateTime.Now,
@@ -877,8 +890,8 @@ namespace eShop.Controllers
                         materialReturn.MaterialSlipId = materialSlip.Id;
                         materialReturn.MasterBusinessUnitId = materialSlip.MasterBusinessUnitId;
                         materialReturn.MasterRegionId = materialSlip.MasterRegionId;
-                        materialReturn.MasterCurrencyId = materialSlip.MasterCurrencyId;
-                        materialReturn.Rate = materialSlip.Rate;
+                        //materialReturn.MasterCurrencyId = materialSlip.MasterCurrencyId;
+                        //materialReturn.Rate = materialSlip.Rate;
                         materialReturn.Notes = materialSlip.Notes;
                         materialReturn.Total = materialSlip.Total;
 

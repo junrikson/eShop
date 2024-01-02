@@ -32,13 +32,26 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "MaterialSlipsActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Manufacture/MaterialSlips/_IndexGrid", db.Set<MaterialSlip>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Manufacture/MaterialSlips/_IndexGrid", db.Set<MaterialSlip>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Manufacture/MaterialSlips/_IndexGrid", db.Set<MaterialSlip>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Manufacture/MaterialSlips/_IndexGrid", db.Set<MaterialSlip>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
 
         public JsonResult IsCodeExists(string Code, int? Id)
@@ -82,6 +95,22 @@ namespace eShop.Controllers
                 .Where(x => x.MaterialSlipId == Id).ToList());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "MaterialSlipsActive")]
+        public PartialViewResult BoMGrid(int Id)
+        {
+            return PartialView("../Manufacture/MaterialSlips/_BoMGrid", db.MaterialSlipsBillOfMaterials
+                .Where(x => x.MaterialSlipId == Id).ToList());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "MaterialSlipsActive")]
+        public PartialViewResult WoGrid(int Id)
+        {
+            return PartialView("../Manufacture/MaterialSlips/_WoGrid", db.MaterialSlipProductionWorkOrders
+                .Where(x => x.MaterialSlipId == Id).ToList());
+        }
+
         // GET: MaterialSlips/Create
         [Authorize(Roles = "MaterialSlipsAdd")]
         public ActionResult Create()
@@ -94,10 +123,6 @@ namespace eShop.Controllers
                 Date = DateTime.Now,
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
                 MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
-                MasterCurrencyId = masterCurrency.Id,
-                HeaderMasterItemUnitId = db.MasterItemUnits.FirstOrDefault().Id,
-                HeaderMasterItemId = db.MasterItems.FirstOrDefault().Id,
-                Rate = masterCurrency.Rate,
                 MasterWarehouseId = db.MasterWarehouses.FirstOrDefault().Id,
                 IsPrint = false,
                 Active = false,
@@ -119,8 +144,6 @@ namespace eShop.Controllers
                     materialSlip.Active = true;
                     materialSlip.MasterBusinessUnitId = 0;
                     materialSlip.MasterRegionId = 0;
-                    materialSlip.HeaderMasterItemId = 0;
-                    materialSlip.HeaderMasterItemUnitId = 0;
                     materialSlip.MasterWarehouseId = 0;
                 }
                 catch (DbEntityValidationException ex)
@@ -144,7 +167,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MaterialSlipsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,ProductionWorkOrderId,MasterWarehouseId,HeaderQuantity,HeaderMasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] MaterialSlip materialSlip)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,ProductionWorkOrderId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] MaterialSlip materialSlip)
         {
             materialSlip.Created = DateTime.Now;
             materialSlip.Updated = DateTime.Now;
@@ -165,9 +188,6 @@ namespace eShop.Controllers
             db.Entry(materialSlip).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(materialSlip).Property("MasterRegionId").IsModified = true;
             db.Entry(materialSlip).Property("ProductionWorkOrderId").IsModified = true;
-            db.Entry(materialSlip).Property("HeaderMasterItemUnitId").IsModified = true;
-            db.Entry(materialSlip).Property("HeaderMasterItemId").IsModified = true;
-            db.Entry(materialSlip).Property("HeaderQuantity").IsModified = true;
             db.Entry(materialSlip).Property("MasterWarehouseId").IsModified = true;
             db.Entry(materialSlip).Property("Total").IsModified = true;
             db.Entry(materialSlip).Property("Notes").IsModified = true;
@@ -229,6 +249,22 @@ namespace eShop.Controllers
                                     db.SaveChanges();
                                 }
 
+                                var productionWorkOrders = db.MaterialSlipProductionWorkOrders.Where(x => x.MaterialSlipId == obj.Id).ToList();
+
+                                if (productionWorkOrders != null)
+                                {
+                                    db.MaterialSlipProductionWorkOrders.RemoveRange(productionWorkOrders);
+                                    db.SaveChanges();
+                                }
+
+                                var billOfMaterials = db.MaterialSlipsBillOfMaterials.Where(x => x.MaterialSlipId == obj.Id).ToList();
+
+                                if (billOfMaterials != null)
+                                {
+                                    db.MaterialSlipsBillOfMaterials.RemoveRange(billOfMaterials);
+                                    db.SaveChanges();
+                                }
+
                                 db.MaterialSlips.Remove(obj);
                                 db.SaveChanges();
 
@@ -274,7 +310,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MaterialSlipsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,MasterCustomerId,HeaderQuantity,HeaderMasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] MaterialSlip materialSlip)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] MaterialSlip materialSlip)
         {
             materialSlip.Updated = DateTime.Now;
             materialSlip.UserId = User.Identity.GetUserId<int>();
@@ -293,9 +329,6 @@ namespace eShop.Controllers
             db.Entry(materialSlip).Property("Date").IsModified = true;
             db.Entry(materialSlip).Property("MasterBusinessUnitId").IsModified = true;
             db.Entry(materialSlip).Property("MasterRegionId").IsModified = true;
-            db.Entry(materialSlip).Property("MasterWarehouseId").IsModified = true;
-            db.Entry(materialSlip).Property("HeaderMasterItemId").IsModified = true;
-            db.Entry(materialSlip).Property("HeaderQuantity").IsModified = true;
             db.Entry(materialSlip).Property("MasterWarehouseId").IsModified = true;
             db.Entry(materialSlip).Property("Total").IsModified = true;
             db.Entry(materialSlip).Property("Notes").IsModified = true;
@@ -362,6 +395,22 @@ namespace eShop.Controllers
                                 if (details != null)
                                 {
                                     db.MaterialSlipsDetails.RemoveRange(details);
+                                    db.SaveChanges();
+                                }
+
+                                var productionWorkOrders = db.MaterialSlipProductionWorkOrders.Where(x => x.MaterialSlipId == obj.Id).ToList();
+
+                                if (productionWorkOrders != null)
+                                {
+                                    db.MaterialSlipProductionWorkOrders.RemoveRange(productionWorkOrders);
+                                    db.SaveChanges();
+                                }
+
+                                var billOfMaterials = db.MaterialSlipsBillOfMaterials.Where(x => x.MaterialSlipId == obj.Id).ToList();
+
+                                if (billOfMaterials != null)
+                                {
+                                    db.MaterialSlipsBillOfMaterials.RemoveRange(billOfMaterials);
                                     db.SaveChanges();
                                 }
 
@@ -468,6 +517,178 @@ namespace eShop.Controllers
         }
 
         [Authorize(Roles = "MaterialSlipsActive")]
+        public ActionResult WorkOrdersCreate(int materialSlipId)
+        {
+            MaterialSlip materialSlip = db.MaterialSlips.Find(materialSlipId);
+
+            if (materialSlip == null)
+            {
+                return HttpNotFound();
+            }
+
+            MaterialSlipProductionWorkOrder materialSlipProductionWorkOrder = new MaterialSlipProductionWorkOrder
+            {
+                MaterialSlipId = materialSlipId
+            };
+
+            return PartialView("../Manufacture/MaterialSlips/_WorkOrdersCreate", materialSlipProductionWorkOrder);
+        }
+
+        [Authorize(Roles = "MaterialSlipsActive")]
+        public ActionResult WorkOrdersEdit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            MaterialSlipProductionWorkOrder obj = db.MaterialSlipProductionWorkOrders.Find(id);
+
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("../Manufacture/MaterialSlips/_WorkOrdersEdit", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ProductionWorkOrdersActive")]
+        public ActionResult WorkOrdersCreate([Bind(Include = "Id,MaterialSlipId,ProductionWorkOrderId,Notes,Created,Updated,UserId")] MaterialSlipProductionWorkOrder obj)
+        {
+            var productionWorkOrder = db.ProductionWorkOrders.Find(obj.ProductionWorkOrderId);
+            if (productionWorkOrder != null)
+            {
+                obj.Created = productionWorkOrder.Created;
+                obj.Updated = productionWorkOrder.Updated;
+            }
+
+            obj.UserId = User.Identity.GetUserId<int>();
+
+            if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
+
+            if (ModelState.IsValid)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.MaterialSlipProductionWorkOrders.Add(obj);
+                        db.SaveChanges();
+
+                        var productionWorkOrderBillOfMaterials = db.ProductionWorkOrderBillOfMaterials
+                        .Where(p => p.ProductionWorkOrderId == obj.ProductionWorkOrderId)
+                        .ToList();
+
+                        if (productionWorkOrderBillOfMaterials.Count > 0)
+                        {
+                            foreach (var productionWorkOrderBillOfMaterial in productionWorkOrderBillOfMaterials)
+                            {
+                                MaterialSlipBillOfMaterial materialSlipBillOfMaterial = new MaterialSlipBillOfMaterial
+                                {
+                                    MaterialSlipId = obj.MaterialSlipId,
+                                    ProductionBillOfMaterialId = productionWorkOrderBillOfMaterial.ProductionBillOfMaterialId,
+                                    Quantity = productionWorkOrderBillOfMaterial.Quantity,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.MaterialSlipsBillOfMaterials.Add(materialSlipBillOfMaterial);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        var productionWorkOrdersDetails = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderId == obj.ProductionWorkOrderId).ToList();
+                        if (productionWorkOrdersDetails.Count > 0)
+                        {
+                            foreach (ProductionWorkOrderDetails productionWorkOrderDetails in productionWorkOrdersDetails)
+                            {
+                                MaterialSlipDetails materialSlipDetails = new MaterialSlipDetails
+                                {
+                                    MaterialSlipId = obj.MaterialSlipId,
+                                    MaterialSlipProductionWorkOrderId = obj.Id,
+                                    MasterItemId = productionWorkOrderDetails.MasterItemId,
+                                    MasterItemUnitId = productionWorkOrderDetails.MasterItemUnitId,
+                                    Quantity = productionWorkOrderDetails.Quantity,
+                                    QuantitySpk = productionWorkOrderDetails.Quantity,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.MaterialSlipsDetails.Add(materialSlipDetails);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionWorkOrderDetails, MenuId = obj.Id, MenuCode = obj.ProductionWorkOrderId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+
+                        return Json("success", JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+
+            return PartialView("../Manufacture/ProductionWorkOrders/_WorkOrdersCreate", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "MaterialSlipsActive")]
+        public ActionResult WorkOrdersEdit([Bind(Include = "Id,MaterialSlipId,ProductionWorkOrderId,Created,Updated,UserId")] MaterialSlipProductionWorkOrder materialSlipProductionWorkOrder)
+        {
+
+            materialSlipProductionWorkOrder.Updated = DateTime.Now;
+            materialSlipProductionWorkOrder.Created = DateTime.Now;
+            materialSlipProductionWorkOrder.UserId = User.Identity.GetUserId<int>();
+
+            db.Entry(materialSlipProductionWorkOrder).State = EntityState.Unchanged;
+            db.Entry(materialSlipProductionWorkOrder).Property("ProductionWorkOrderId").IsModified = true;
+            db.Entry(materialSlipProductionWorkOrder).Property("Updated").IsModified = true;
+            db.Entry(materialSlipProductionWorkOrder).Property("Created").IsModified = true;
+            db.Entry(materialSlipProductionWorkOrder).Property("UserId").IsModified = true;
+
+            if (ModelState.IsValid)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.SaveChanges();
+
+                        MaterialSlip materialSlip = db.MaterialSlips.Find(materialSlipProductionWorkOrder.MaterialSlipId);
+
+                        db.Entry(materialSlipProductionWorkOrder).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MaterialSlipDetails, MenuId = materialSlipProductionWorkOrder.Id, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+
+                        return Json("success", JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+
+
+            return PartialView("../Manufacture/MaterialSlips/_WorkOrdersEdit", materialSlipProductionWorkOrder);
+        }
+
+        [Authorize(Roles = "MaterialSlipsActive")]
         public ActionResult DetailsCreate(int materialSlipId)
         {
             MaterialSlip materialSlip = db.MaterialSlips.Find(materialSlipId);
@@ -485,56 +706,6 @@ namespace eShop.Controllers
             return PartialView("../Manufacture/MaterialSlips/_DetailsCreate", materialSlipDetails);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "MaterialSlipsActive")]
-        public ActionResult DetailsCreate([Bind(Include = "Id,MaterialSlipId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] MaterialSlipDetails materialSlipDetails)
-        {
-            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(materialSlipDetails.MasterItemUnitId);
-
-            if (masterItemUnit == null)
-                materialSlipDetails.Total = 0;
-            else
-                materialSlipDetails.Total = materialSlipDetails.Quantity * materialSlipDetails.Price * masterItemUnit.MasterUnit.Ratio;
-
-            materialSlipDetails.Created = DateTime.Now;
-            materialSlipDetails.Updated = DateTime.Now;
-            materialSlipDetails.UserId = User.Identity.GetUserId<int>();
-
-            if (!string.IsNullOrEmpty(materialSlipDetails.Notes)) materialSlipDetails.Notes = materialSlipDetails.Notes.ToUpper();
-
-            if (ModelState.IsValid)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        db.MaterialSlipsDetails.Add(materialSlipDetails);
-                        db.SaveChanges();
-
-                        MaterialSlip materialSlip = db.MaterialSlips.Find(materialSlipDetails.MaterialSlipId);
-                        materialSlip.Total = SharedFunctions.GetTotalMaterialSlip(db, materialSlip.Id, materialSlipDetails.Id) + materialSlipDetails.Total;
-
-                        db.Entry(materialSlip).State = EntityState.Modified;
-                        db.SaveChanges();
-
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MaterialSlipDetails, MenuId = materialSlipDetails.Id, MenuCode = materialSlipDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
-                        db.SaveChanges();
-
-                        dbTran.Commit();
-
-                        return Json("success", JsonRequestBehavior.AllowGet);
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-
-            return PartialView("../Manufacture/MaterialSlips/_DetailsCreate", materialSlipDetails);
-        }
 
         [Authorize(Roles = "MaterialSlipsActive")]
         public ActionResult DetailsEdit(int? id)
@@ -556,14 +727,54 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MaterialSlipsActive")]
-        public ActionResult DetailsEdit([Bind(Include = "Id,MaterialSlipId,MasterItemId,MasterItemUnitId,Quantity,Price,Notes,Created,Updated,UserId")] MaterialSlipDetails materialSlipDetails)
+        public ActionResult DetailsCreate([Bind(Include = "Id,MaterialSlipId,MasterItemId,MasterItemUnitId,QuantitySpk,Quantity,Notes,Created,Updated,UserId")] MaterialSlipDetails materialSlipDetails)
+        {
+
+            materialSlipDetails.Created = DateTime.Now;
+            materialSlipDetails.Updated = DateTime.Now;
+            materialSlipDetails.UserId = User.Identity.GetUserId<int>();
+            materialSlipDetails.Notes = string.IsNullOrEmpty(materialSlipDetails.Notes) ? "" : materialSlipDetails.Notes.ToUpper();
+            materialSlipDetails.MasterItemUnitId = materialSlipDetails.MasterItemUnitId;
+            materialSlipDetails.MasterItemId = materialSlipDetails.MasterItemId;
+            materialSlipDetails.Quantity = materialSlipDetails.Quantity;
+            materialSlipDetails.QuantitySpk = materialSlipDetails.QuantitySpk;
+
+            if (ModelState.IsValid)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.SaveChanges();
+
+                        MaterialSlip materialSlip = db.MaterialSlips.Find(materialSlipDetails.MaterialSlipId);
+
+                        db.Entry(materialSlip).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MaterialSlipDetails, MenuId = materialSlipDetails.Id, MenuCode = materialSlipDetails.MasterItemUnit.MasterUnit.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+
+                        return Json("success", JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            return PartialView("../Manufacture/MaterialSlips/_DetailsCreate", materialSlipDetails);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "MaterialSlipsActive")]
+        public ActionResult DetailsEdit([Bind(Include = "Id,MaterialSlipId,MasterItemId,MasterItemUnitId,QuantitySpk,Quantity,Notes,Created,Updated,UserId")] MaterialSlipDetails materialSlipDetails)
         {
             MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(materialSlipDetails.MasterItemUnitId);
-
-            if (masterItemUnit == null)
-                materialSlipDetails.Total = 0;
-            else
-                materialSlipDetails.Total = materialSlipDetails.Quantity * materialSlipDetails.Price * masterItemUnit.MasterUnit.Ratio;
 
             materialSlipDetails.Updated = DateTime.Now;
             materialSlipDetails.UserId = User.Identity.GetUserId<int>();
@@ -573,9 +784,8 @@ namespace eShop.Controllers
             db.Entry(materialSlipDetails).State = EntityState.Unchanged;
             db.Entry(materialSlipDetails).Property("MasterItemId").IsModified = true;
             db.Entry(materialSlipDetails).Property("MasterItemUnitId").IsModified = true;
+            db.Entry(materialSlipDetails).Property("QuantitySpk").IsModified = true;
             db.Entry(materialSlipDetails).Property("Quantity").IsModified = true;
-            db.Entry(materialSlipDetails).Property("Price").IsModified = true;
-            db.Entry(materialSlipDetails).Property("Total").IsModified = true;
             db.Entry(materialSlipDetails).Property("Notes").IsModified = true;
             db.Entry(materialSlipDetails).Property("Updated").IsModified = true;
             db.Entry(materialSlipDetails).Property("UserId").IsModified = true;
@@ -589,7 +799,6 @@ namespace eShop.Controllers
                         db.SaveChanges();
 
                         MaterialSlip materialSlip = db.MaterialSlips.Find(materialSlipDetails.MaterialSlipId);
-                        materialSlip.Total = SharedFunctions.GetTotalMaterialSlip(db, materialSlip.Id, materialSlipDetails.Id) + materialSlipDetails.Total;
 
                         db.Entry(materialSlip).State = EntityState.Modified;
                         db.SaveChanges();
@@ -638,10 +847,22 @@ namespace eShop.Controllers
 
                                     MaterialSlip materialSlip = db.MaterialSlips.Find(tmp.MaterialSlipId);
 
-                                    materialSlip.Total = SharedFunctions.GetTotalMaterialSlip(db, materialSlip.Id, tmp.Id);
+                                    var billOfMaterials = db.MaterialSlipsBillOfMaterials.Where(x => x.MaterialSlipId == obj.Id).ToList();
 
-                                    db.Entry(materialSlip).State = EntityState.Modified;
-                                    db.SaveChanges();
+                                    if (billOfMaterials != null)
+                                    {
+                                        db.MaterialSlipsBillOfMaterials.RemoveRange(billOfMaterials);
+                                        db.SaveChanges();
+                                    }
+
+                                    var productionWorkOrders = db.MaterialSlipProductionWorkOrders.Where(x => x.MaterialSlipId == obj.Id).ToList();
+
+                                    if (productionWorkOrders != null)
+                                    {
+                                        db.MaterialSlipProductionWorkOrders.RemoveRange(productionWorkOrders);
+                                        db.SaveChanges();
+                                    }
+
 
                                     db.MaterialSlipsDetails.Remove(obj);
                                     db.SaveChanges();
@@ -662,6 +883,8 @@ namespace eShop.Controllers
                 }
             }
         }
+
+
 
         [HttpGet]
         [Authorize(Roles = "MaterialSlipsActive")]
@@ -710,8 +933,6 @@ namespace eShop.Controllers
             ChangeCurrency obj = new ChangeCurrency
             {
                 Id = materialSlip.Id,
-                MasterCurrencyId = materialSlip.MasterCurrencyId,
-                Rate = materialSlip.Rate
             };
 
             if (obj == null)
@@ -720,63 +941,6 @@ namespace eShop.Controllers
             }
 
             return PartialView("../Manufacture/MaterialSlips/_ChangeCurrency", obj);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "MaterialSlipsActive")]
-        public ActionResult ChangeCurrency([Bind(Include = "Id,MasterCurrencyId,Rate")] ChangeCurrency changeCurrency)
-        {
-            MasterCurrency masterCurrency = db.MasterCurrencies.Find(changeCurrency.MasterCurrencyId);
-
-            MaterialSlip materialSlip = db.MaterialSlips.Find(changeCurrency.Id);
-            materialSlip.MasterCurrencyId = changeCurrency.MasterCurrencyId;
-            materialSlip.Rate = changeCurrency.Rate;
-
-            if (ModelState.IsValid)
-            {
-                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var materialSlipsDetails = db.MaterialSlipsDetails.Where(x => x.MaterialSlipId == materialSlip.Id).ToList();
-
-                        foreach (MaterialSlipDetails materialSlipDetails in materialSlipsDetails)
-                        {
-                            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(materialSlipDetails.MasterItemUnitId);
-
-                            if (masterItemUnit == null)
-                                materialSlipDetails.Total = 0;
-                            else
-                                materialSlipDetails.Total = materialSlipDetails.Quantity * materialSlipDetails.Price * masterItemUnit.MasterUnit.Ratio * materialSlip.Rate;
-
-                            db.Entry(materialSlipDetails).State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
-
-                        materialSlip.Total = SharedFunctions.GetTotalSalesRequest(db, materialSlip.Id);
-                        db.Entry(materialSlip).State = EntityState.Modified;
-                        db.SaveChanges();
-
-                        dbTran.Commit();
-
-                        var returnObject = new
-                        {
-                            Status = "success",
-                            Message = masterCurrency.Code + " : " + materialSlip.Rate.ToString("N2")
-                        };
-
-                        return Json(returnObject, JsonRequestBehavior.AllowGet);
-                    }
-                    catch (DbEntityValidationException ex)
-                    {
-                        dbTran.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-
-            return PartialView("../Manufacture/MaterialSlips/_ChangeCurrency", changeCurrency);
         }
 
         [HttpPost]
@@ -871,8 +1035,6 @@ namespace eShop.Controllers
                                     MasterItemId = productionWorkOrderDetails.MasterItemId,
                                     MasterItemUnitId = productionWorkOrderDetails.MasterItemUnitId,
                                     Quantity = productionWorkOrderDetails.Quantity,
-                                    //Price = productionWorkOrderDetails.Price,
-                                    //Total = productionWorkOrderDetails.Total,
                                     Notes = productionWorkOrderDetails.Notes,
                                     Created = DateTime.Now,
                                     Updated = DateTime.Now,
@@ -907,14 +1069,14 @@ namespace eShop.Controllers
             {
                 materialSlip.MasterRegionId,
                 materialSlip.MasterBusinessUnitId,
-                materialSlip.MasterWarehouseId,
-                materialSlip.HeaderQuantity,
-                materialSlip.HeaderMasterItemUnitId,
-                materialSlip.HeaderMasterItemId,
+                //materialSlip.MasterWarehouseId,
+                //materialSlip.HeaderQuantity,
+                //materialSlip.HeaderMasterItemUnitId,
+                //materialSlip.HeaderMasterItemId,
                 materialSlip.Notes,
-                Total = materialSlip.Total.ToString("N2"),
+                //Total = materialSlip.Total.ToString("N2"),
                 materialSlip.Date,
-                Currency = materialSlip.MasterCurrency.Code + " : " + materialSlip.Rate.ToString("N2")
+                //Currency = materialSlip.MasterCurrency.Code + " : " + materialSlip.Rate.ToString("N2")
             });
         }
 

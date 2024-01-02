@@ -105,9 +105,7 @@ namespace eShop.Controllers
                 Name = "",
                 MasterCategoryId = db.MasterCategories.FirstOrDefault().Id,
                 MasterBrandId = db.MasterBrands.FirstOrDefault().Id,
-                MasterSupplierId = db.MasterSuppliers.FirstOrDefault().Id,
-                InventoryPartType = EnumInventoryPartType.RawMaterial,
-            Notes = "",
+                Notes = "",
                 Active = false,
                 Created = DateTime.Now,
                 Updated = DateTime.Now,
@@ -150,7 +148,6 @@ namespace eShop.Controllers
                     masterItem.Active = true;
                     masterItem.MasterCategoryId = 0;
                     masterItem.MasterBrandId = 0;
-                    masterItem.MasterSupplierId = 0;
 
                 }
                 catch (DbEntityValidationException ex)
@@ -169,7 +166,7 @@ namespace eShop.Controllers
         [HttpPost]
         [Authorize(Roles = "MasterItemsAdd")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,MasterCategoryId,MasterBrandId,MasterSupplierId,ItemType,InventoryPartType,Notes,Active,Created,Updated,UserId")] MasterItem masterItem)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,MasterCategoryId,MasterBrandId,ItemType,Notes,Active,Created,Updated,UserId")] MasterItem masterItem)
         {
             masterItem.UserId = User.Identity.GetUserId<int>();
             masterItem.Created = DateTime.Now;
@@ -274,7 +271,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterItemsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,MasterCategoryId,MasterBrandId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] MasterItem masterItem)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,MasterCategoryId,MasterBrandId,Notes,Active,Created,Updated,UserId")] MasterItem masterItem)
         {
             masterItem.Updated = DateTime.Now;
             masterItem.UserId = User.Identity.GetUserId<int>();
@@ -288,7 +285,6 @@ namespace eShop.Controllers
             db.Entry(masterItem).Property("Name").IsModified = true;
             db.Entry(masterItem).Property("MasterCategoryId").IsModified = true;
             db.Entry(masterItem).Property("MasterBrandId").IsModified = true;
-            db.Entry(masterItem).Property("MasterSupplierId").IsModified = true;
             db.Entry(masterItem).Property("Notes").IsModified = true;
             db.Entry(masterItem).Property("Active").IsModified = true;
             db.Entry(masterItem).Property("Updated").IsModified = true;
@@ -344,7 +340,6 @@ namespace eShop.Controllers
                     Name = obj.Name,
                     MasterCategoryId = obj.MasterCategoryId,
                     MasterBrandId = obj.MasterBrandId,
-                    MasterSupplierId = obj.MasterSupplierId,
                     Notes = obj.Notes,
                     Active = false,
                     Created = DateTime.Now,

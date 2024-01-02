@@ -129,6 +129,7 @@ namespace eShop.Models
 
         public IEnumerable ApplicationUsers { get; internal set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnit> MasterBusinessUnits { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitRelation> MasterBusinessUnitRelations { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitAccount> MasterBusinessUnitsAccounts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitRegion> MasterBusinessUnitRegions { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBusinessUnitSupplier> MasterBusinessUnitSuppliers { get; set; }
@@ -156,24 +157,39 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.MasterCustomer> MasterCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterSupplier> MasterSuppliers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterWarehouse> MasterWarehouses { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.MasterSalesPerson> MasterSalesPersons { get; set; }        
-        public System.Data.Entity.DbSet<eShop.Models.StandardProductCost> StandardProductCosts { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterSalesPerson> MasterSalesPersons { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MasterDestination> MasterDestinations { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.Term> Terms { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.TermSalesPerson> TermSalesPersons { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.TermCustomer> TermCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterial> ProductionBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterialDetails> ProductionBillOfMaterialsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ProductionBillOfMaterialCostDetails> ProductionBillOfMaterialsCostsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrder> ProductionWorkOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderBillOfMaterial> ProductionWorkOrderBillOfMaterials { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderDetails> ProductionWorkOrdersDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ProductionWorkOrderCostDetails> ProductionWorkOrdersCostsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlip> MaterialSlips { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MaterialSlipBillOfMaterial> MaterialSlipsBillOfMaterials { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.MaterialSlipProductionWorkOrder> MaterialSlipProductionWorkOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialSlipDetails> MaterialSlipsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlip> FinishedGoodSlips { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlipProductionWorkOrder> FinishedGoodSlipProductionWorkOrders { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.FinishedGoodSlipDetails> FinishedGoodSlipsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialReturn> MaterialReturns { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MaterialReturnDetails> MaterialReturnsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustment> StockAdjustments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockAdjustmentDetails> StockAdjustmentsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.WarehouseTransfer> WarehouseTransfers { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SellingPrice> SellingPrices { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SellingPriceCustomer> SellingPricesCustomers { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SellingPriceItem> SellingPricesItems { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BuyingPrice> BuyingPrices { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BuyingPriceSupplier> BuyingPricesSuppliers { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BuyingPriceItem> BuyingPricesItems { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.WarehouseTransferDetails> WarehouseTransfersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.StockCard> StockCards { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.StockBalance> StockBalances { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Cheque> Cheques { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.MasterBank> MasterBanks { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.BankTransaction> BankTransactions { get; set; }
@@ -185,6 +201,7 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.PurchaseOrderDetails> PurchaseOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Purchase> Purchases { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseDetails> PurchasesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.PurchaseCostDetails> PurchasesCostsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GoodsReceipt> GoodsReceipts { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GoodsReceiptDetails> GoodsReceiptsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.PurchaseReturn> PurchaseReturns { get; set; }
@@ -195,6 +212,9 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.SalesOrderDetails> SalesOrdersDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Sale> Sales { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SaleDetails> SalesDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.SaleCostDetails> SalesCostsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ShippingFee> ShippingFees { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.ShippingFeeCustomer> ShippingFeeCustomers { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GoodsDelivery> GoodsDeliveries { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.GoodsDeliveryDetails> GoodsDeliveriesDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SalesReturn> SalesReturns { get; set; }
@@ -204,8 +224,14 @@ namespace eShop.Models
         public System.Data.Entity.DbSet<eShop.Models.Repayment> Repayments { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.RepaymentDetailsHeader> RepaymentsDetailsHeader { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.RepaymentDetails> RepaymentsDetails { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.FixedAssetCategory> FixedAssetCategories { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.FixedAsset> FixedAssets { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.AccountType> AccountTypes { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.BalanceSheet> BalanceSheets { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.IncomeStatement> IncomeStatements { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.ChartOfAccount> ChartOfAccounts { get; set; }
-        public System.Data.Entity.DbSet<eShop.Models.AccountBallance> AccountBallances { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.OpeningBalance> OpeningBalances { get; set; }
+        public System.Data.Entity.DbSet<eShop.Models.AccountBalance> AccountBalances { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.Journal> Journals { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.JournalDetails> JournalsDetails { get; set; }
         public System.Data.Entity.DbSet<eShop.Models.SystemLog> SystemLogs { get; set; }
@@ -228,50 +254,85 @@ namespace eShop.Models
             modelBuilder.Entity<MasterCurrency>().Property(x => x.Rate).HasPrecision(18, 10);
             modelBuilder.Entity<PurchaseRequest>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseRequest>().Property(x => x.Rate).HasPrecision(18, 10);
-            modelBuilder.Entity<PurchaseRequestDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseRequest>().Property(x => x.Discount).HasPrecision(18, 10);
+            modelBuilder.Entity<PurchaseRequest>().Property(x => x.DiscountValue).HasPrecision(18, 10);
             modelBuilder.Entity<PurchaseRequestDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseRequestDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseRequestDetails>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseRequestDetails>().Property(x => x.DiscountValue).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseOrder>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseOrder>().Property(x => x.Rate).HasPrecision(18, 10);
-            modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseOrder>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseOrder>().Property(x => x.DiscountValue).HasPrecision(18, 10);
             modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseOrderDetails>().Property(x => x.DiscountValue).HasPrecision(18, 2);
             modelBuilder.Entity<Purchase>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<Purchase>().Property(x => x.Rate).HasPrecision(18, 10);
-            modelBuilder.Entity<PurchaseDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<Purchase>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<Purchase>().Property(x => x.DiscountValue).HasPrecision(18, 10);
+            modelBuilder.Entity<Purchase>().Property(x => x.Tax).HasPrecision(18, 10);
             modelBuilder.Entity<PurchaseDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseDetails>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<GoodsReceiptDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseDetails>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseDetails>().Property(x => x.DiscountValue).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseDetails>().Property(x => x.Tax).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseReturn>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseReturn>().Property(x => x.Rate).HasPrecision(18, 10);
-            modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseReturn>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseReturn>().Property(x => x.DiscountValue).HasPrecision(18, 10);
+            modelBuilder.Entity<PurchaseReturn>().Property(x => x.Tax).HasPrecision(18, 10);
             modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.DiscountValue).HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseReturnDetails>().Property(x => x.Tax).HasPrecision(18, 2);
             modelBuilder.Entity<SalesRequest>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<SalesRequest>().Property(x => x.Rate).HasPrecision(18, 10);
-            modelBuilder.Entity<SalesRequestDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesRequest>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesRequest>().Property(x => x.DiscountValue).HasPrecision(18, 10);
             modelBuilder.Entity<SalesRequestDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<SalesRequestDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesRequestDetails>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesRequestDetails>().Property(x => x.DiscountValue).HasPrecision(18, 2);
             modelBuilder.Entity<SalesOrder>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<SalesOrder>().Property(x => x.Rate).HasPrecision(18, 10);
-            modelBuilder.Entity<SalesOrderDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesOrder>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesOrder>().Property(x => x.DiscountValue).HasPrecision(18, 10);
             modelBuilder.Entity<SalesOrderDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<SalesOrderDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesOrderDetails>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesOrderDetails>().Property(x => x.DiscountValue).HasPrecision(18, 2);
             modelBuilder.Entity<Sale>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<Sale>().Property(x => x.Rate).HasPrecision(18, 10);
-            modelBuilder.Entity<SaleDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<Sale>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<Sale>().Property(x => x.DiscountValue).HasPrecision(18, 10);
+            modelBuilder.Entity<Sale>().Property(x => x.Tax).HasPrecision(18, 10);
             modelBuilder.Entity<SaleDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<SaleDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SaleDetails>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<SaleDetails>().Property(x => x.DiscountValue).HasPrecision(18, 2);
+            modelBuilder.Entity<SaleDetails>().Property(x => x.Tax).HasPrecision(18, 2);
             modelBuilder.Entity<GoodsDelivery>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<GoodsDelivery>().Property(x => x.Rate).HasPrecision(18, 10);
+            modelBuilder.Entity<GoodsDelivery>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsDelivery>().Property(x => x.DiscountValue).HasPrecision(18, 10);
             modelBuilder.Entity<GoodsDeliveryDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
             modelBuilder.Entity<GoodsDeliveryDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<GoodsDeliveryDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsDeliveryDetails>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<GoodsDeliveryDetails>().Property(x => x.DiscountValue).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturn>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturn>().Property(x => x.Rate).HasPrecision(18, 10);
-            modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesReturn>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesReturn>().Property(x => x.DiscountValue).HasPrecision(18, 10);
+            modelBuilder.Entity<SalesReturn>().Property(x => x.Tax).HasPrecision(18, 10);
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Discount).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesReturnDetails>().Property(x => x.DiscountValue).HasPrecision(18, 2);
+            modelBuilder.Entity<SalesReturnDetails>().Property(x => x.Tax).HasPrecision(18, 2);
             modelBuilder.Entity<AdvanceRepayment>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<AdvanceRepaymentDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<Repayment>().Property(x => x.Total).HasPrecision(18, 2);
@@ -282,13 +343,17 @@ namespace eShop.Models
             modelBuilder.Entity<BankTransaction>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<BankTransactionDetails>().Property(x => x.Total).HasPrecision(18, 2);
             modelBuilder.Entity<BankTransactionDetailsHeader>().Property(x => x.Total).HasPrecision(18, 2);
-            modelBuilder.Entity<AccountBallance>().Property(x => x.BeginningBallance).HasPrecision(18, 2);
+            modelBuilder.Entity<OpeningBalance>().Property(x => x.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<AccountBalance>().Property(x => x.Debit).HasPrecision(18, 2);
+            modelBuilder.Entity<AccountBalance>().Property(x => x.Credit).HasPrecision(18, 2);
             modelBuilder.Entity<JournalDetails>().Property(x => x.Debit).HasPrecision(18, 2);
             modelBuilder.Entity<JournalDetails>().Property(x => x.Credit).HasPrecision(18, 2);
             modelBuilder.Entity<Journal>().Property(x => x.Debit).HasPrecision(18, 2);
             modelBuilder.Entity<Journal>().Property(x => x.Credit).HasPrecision(18, 2);
             modelBuilder.Entity<ProductionBillOfMaterialDetails>().Property(x => x.Quantity).HasPrecision(18, 10);
             modelBuilder.Entity<ProductionWorkOrderDetails>().Property(x => x.Quantity).HasPrecision(18, 10);
+            modelBuilder.Entity<MaterialSlipDetails>().Property(x => x.Quantity).HasPrecision(18, 10);
+            modelBuilder.Entity<MaterialSlipDetails>().Property(x => x.QuantitySpk).HasPrecision(18, 10);
         }
     }
 }

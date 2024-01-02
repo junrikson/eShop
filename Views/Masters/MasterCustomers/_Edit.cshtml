@@ -116,6 +116,13 @@
                                         @Html.ValidationMessageFor(model => model.TOP, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(model => model.MasterDestinationId)
+                                        @Html.DatalistFor(model => model.MasterDestinationId, new eShop.Models.MasterDestinationDatalist())
+                                        @Html.ValidationMessageFor(model => model.MasterDestinationId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="tab-pane form-horizontal" id="tab_2">

@@ -21,75 +21,101 @@
                             <!-- /.box-header -->
                             <div class="box-body">
                                 <div class="form-horizontal">
-                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.MasterBusinessUnitId)
-                                            @Html.TextBoxFor(model => model.MasterBusinessUnit.Name, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.MasterRegionId)
-                                            @Html.TextBoxFor(model => model.MasterRegion.Code, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @*@Html.LabelFor(model => model.SalesRequestId)
-                                            @Html.DatalistFor(model => model.SalesRequestId, new eShop.Models.OutstandingSalesRequestDatalist())
-                                            @Html.ValidationMessageFor(model => model.SalesRequestId, "", new { @class = "text-danger" })*@
-                                            @Html.LabelFor(model => model.SalesRequestId)
-                                            @Html.TextBoxFor(model => model.SalesRequest.Code, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.SalesRequestId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.MasterWarehouseId)
-                                            @Html.TextBoxFor(model => model.MasterWarehouse.Code, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-10">
-                                            @Html.LabelFor(model => model.Code)
-                                            @Html.TextBoxFor(model => model.Code, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div class="col-md-2 text-center">
-                                            @Html.LabelFor(model => model.Active)
-                                            <div class="checkbox text-center">
-                                                @Html.CheckBoxFor(model => model.Active)
-                                                @Html.CheckBoxFor(model => model.Active, new { disabled = "disabled" })
+                                    <div class="nav-tabs-custom">
+                                        <ul class="nav nav-tabs">
+                                            <li class="active"><a href="#tab_1" data-toggle="tab">General</a></li>
+                                            <li><a href="#tab_2" data-toggle="tab">Relasi</a></li>
+
+                                        </ul>
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="tab-content">
+                                        <div class="tab-pane active form-horizontal" id="tab_1">
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterBusinessUnitId)
+                                                    @Html.TextBoxFor(model => model.MasterBusinessUnit.Code, new { disabled = "disabled", @class = "form-control", id = "combinedTextBoxBusinessUnit" })
+                                                    @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterRegionId)
+                                                    @Html.TextBoxFor(model => model.MasterRegion.Code, new { disabled = "disabled", @class = "form-control", id = "combinedTextBoxRegion" })
+                                                    @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.SalesRequestId)
+                                                    @Html.TextBoxFor(model => model.SalesRequest.Code, new { disabled = "disabled", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.SalesRequestId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                             <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterWarehouse.Code)
+                                                    @Html.TextBoxFor(model => model.MasterWarehouse.Code, new { disabled = "disabled", @class = "form-control", id = "combinedTextBoxWarehouse" })
+                                                    @Html.ValidationMessageFor(model => model.MasterWarehouse.Code, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-10">
+                                                    @Html.LabelFor(model => model.Code)
+                                                    @Html.TextBoxFor(model => model.Code, new { disabled = "disabled", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-2 text-center">
+                                                    @Html.LabelFor(model => model.Active)
+                                                    <div class="checkbox text-center">
+                                                        @Html.CheckBoxFor(model => model.Active)
+                                                        @Html.CheckBoxFor(model => model.Active, new { disabled = "disabled" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.Date)
+                                                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { disabled = "disabled", @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterCustomerId)
+                                                    @Html.TextBoxFor(model => model.MasterCustomer.Code, new { disabled = "disabled", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.Notes)
+                                                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                                                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                                </div>
                                             </div>
                                         </div>
+
+                                        <div class="tab-pane form-horizontal" id="tab_2">
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterBusinessUnitRelationId)
+                                                    @Html.TextBoxFor(model => model.MasterBusinessUnitRelationId, new { disabled = "disabled", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.MasterBusinessUnitRelationId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.SalesOrderRelationId)
+                                                    @Html.TextBoxFor(model => model.SalesOrderRelation.Code, new { disabled = "disabled", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.SalesOrderRelationId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.Date)
-                                            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { disabled = "disabled", @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                                    </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.MasterCustomerId)
-                                            @Html.TextBoxFor(model => model.MasterCustomer.Code, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            @Html.LabelFor(model => model.Notes)
-                                            @Html.TextBoxFor(model => model.Notes, new { disabled = "disabled", @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <!-- /.box-body -->
                         </div>
                         <!-- /.box -->
@@ -131,3 +157,37 @@
     </div>
 </div>
 
+<script>
+        // Menggabungkan nilai Code dan Name saat halaman dimuat
+         $(document).ready(function () {
+        var codeValue = '@Model.MasterWarehouse.Code';
+        var nameValue = '@Model.MasterWarehouse.Name';
+        var combinedValue = codeValue + ' - ' + nameValue;
+
+        $('#combinedTextBoxWarehouse').val(combinedValue);
+    });
+
+          $(document).ready(function () {
+        var codeValue = '@Model.MasterRegion.Code';
+        var nameValue = '@Model.MasterRegion.Notes';
+        var combinedValue = codeValue + ' - ' + nameValue;
+
+            $('#combinedTextBoxRegion').val(combinedValue);
+    });
+
+          $(document).ready(function () {
+    var codeValue = '@Model.MasterBusinessUnit.Code';
+    var nameValue = '@Model.MasterBusinessUnit.Name';
+    var combinedValue = codeValue + ' - ' + nameValue;
+
+             $('#combinedTextBoxBusinessUnit').val(combinedValue);
+    });
+
+         $(document).ready(function () {
+    var codeValue = '@Model.MasterSalesPerson.Code';
+    var nameValue = '@Model.MasterSalesPerson.Name';
+    var combinedValue = codeValue + ' - ' + nameValue;
+
+             $('#combinedTextBoxMasterSalesPerson').val(combinedValue);
+    });
+</script>

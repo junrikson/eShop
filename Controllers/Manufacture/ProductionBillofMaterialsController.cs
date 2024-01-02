@@ -32,15 +32,27 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "ProductionBillOfMaterialsActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Manufacture/ProductionBillOfMaterials/_IndexGrid", db.Set<ProductionBillOfMaterial>().AsQueryable());
-            else
-                return PartialView("../Manufacture/ProductionBillOfMaterials/_IndexGrid", db.Set<ProductionBillOfMaterial>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
-        }
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
 
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Manufacture/ProductionBillOfMaterials/_IndexGrid", db.Set<ProductionBillOfMaterial>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
+            else
+            {
+                return PartialView("../Manufacture/ProductionBillOfMaterials/_IndexGrid", db.Set<ProductionBillOfMaterial>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
+        }
         public JsonResult IsCodeExists(string Code, int? Id)
         {
             return Json(!IsAnyCode(Code, Id), JsonRequestBehavior.AllowGet);
@@ -82,6 +94,14 @@ namespace eShop.Controllers
                 .Where(x => x.ProductionBillOfMaterialId == Id).ToList());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "ProductionBillOfMaterialsView")]
+        public PartialViewResult ViewCostGrid(int Id)
+        {
+            return PartialView("../Manufacture/ProductionBillOfMaterials/_ViewCostGrid", db.ProductionBillOfMaterialsCostsDetails
+                .Where(x => x.ProductionBillOfMaterialId == Id).ToList());
+        }
+
         // GET: SalesRequests/Create
         [Authorize(Roles = "ProductionBillOfMaterialsAdd")]
         public ActionResult Create()
@@ -97,6 +117,7 @@ namespace eShop.Controllers
                 Rate = masterCurrency.Rate,
                 MasterItemId = db.MasterItems.FirstOrDefault().Id,
                 MasterItemUnitId = db.MasterItemUnits.FirstOrDefault().Id,
+                BillOfMaterialType = EnumBillOfMaterialType.FinishedGood,
                 IsPrint = false,
                 Active = false,
                 Created = DateTime.Now,
@@ -113,7 +134,8 @@ namespace eShop.Controllers
                 MasterBusinessUnitId = 0,
                 MasterRegionId = 0,
                 MasterItemUnitId = 0,
-                HeaderMasterItemId = 0
+                HeaderMasterItemId = 0,
+                BillOfMaterialType = EnumBillOfMaterialType.FinishedGood,
             };
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
@@ -148,7 +170,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionBillOfMaterialsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterItemUnitId,HeaderMasterItemId,Notes,Active,Created,Updated,UserId")] ProductionBillOfMaterialViewModel obj)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterItemUnitId,HeaderMasterItemId,BillOfMaterialType,Notes,Active,Created,Updated,UserId")] ProductionBillOfMaterialViewModel obj)
         {
             ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(obj.Id);
 
@@ -167,6 +189,7 @@ namespace eShop.Controllers
             productionBillOfMaterial.MasterRegionId = obj.MasterRegionId;
             productionBillOfMaterial.MasterItemUnitId = obj.MasterItemUnitId;
             productionBillOfMaterial.MasterItemId = obj.HeaderMasterItemId;
+            productionBillOfMaterial.BillOfMaterialType = obj.BillOfMaterialType;
             productionBillOfMaterial.Active = obj.Active;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
@@ -195,6 +218,7 @@ namespace eShop.Controllers
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionBillOfMaterial.MasterBusinessUnitId);
                 ViewBag.Total = SharedFunctions.GetTotalProductionBillOfMaterial(db, productionBillOfMaterial.Id).ToString("N2");
+                ViewBag.TotalCost = SharedFunctions.GetTotalCostProductionBillOfMaterial(db, productionBillOfMaterial.Id).ToString("N3");
 
                 return View("../Manufacture/ProductionBillOfMaterials/Create", obj);
             }
@@ -250,7 +274,22 @@ namespace eShop.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(id);
-            if (productionBillOfMaterial == null)
+
+            ProductionBillOfMaterialViewModel obj = new ProductionBillOfMaterialViewModel
+            {
+                Id = productionBillOfMaterial.Id,
+                Code = productionBillOfMaterial.Code,
+                Date = productionBillOfMaterial.Date,
+                Active = productionBillOfMaterial.Active,
+                MasterBusinessUnitId = productionBillOfMaterial.MasterBusinessUnitId,
+                MasterRegionId = productionBillOfMaterial.MasterRegionId,
+                MasterItemUnitId = productionBillOfMaterial.MasterItemUnitId,
+                HeaderMasterItemId = productionBillOfMaterial.MasterItemId,
+                BillOfMaterialType = productionBillOfMaterial.BillOfMaterialType,
+                Notes = productionBillOfMaterial.Notes
+            };
+
+            if (obj == null)
             {
                 return HttpNotFound();
             }
@@ -259,8 +298,9 @@ namespace eShop.Controllers
 
             ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionBillOfMaterial.MasterBusinessUnitId);
             ViewBag.Total = SharedFunctions.GetTotalProductionBillOfMaterial(db, productionBillOfMaterial.Id).ToString("N2");
+            ViewBag.TotalCost = SharedFunctions.GetTotalCostProductionBillOfMaterial(db, productionBillOfMaterial.Id).ToString("N3");
 
-            return View("../Manufacture/ProductionBillOfMaterials/Edit", productionBillOfMaterial);
+            return View("../Manufacture/ProductionBillOfMaterials/Edit", obj);
         }
 
         // POST: PurchaseRequests/Edit/5
@@ -269,31 +309,26 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionBillOfMaterialsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,Quantity,MasterUnitId,MasterItemId,Notes,Active,Created,Updated,UserId")] ProductionBillOfMaterial productionBillOfMaterial)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterItemUnitId,HeaderMasterItemId,BillOfMaterialType,Notes,Active,Created,Updated,UserId")] ProductionBillOfMaterialViewModel obj)
         {
-            productionBillOfMaterial.Updated = DateTime.Now;
-            productionBillOfMaterial.UserId = User.Identity.GetUserId<int>();
-            productionBillOfMaterial.Total = SharedFunctions.GetTotalProductionBillOfMaterial(db, productionBillOfMaterial.Id);
-
-            if (!string.IsNullOrEmpty(productionBillOfMaterial.Code)) productionBillOfMaterial.Code = productionBillOfMaterial.Code.ToUpper();
-            if (!string.IsNullOrEmpty(productionBillOfMaterial.Notes)) productionBillOfMaterial.Notes = productionBillOfMaterial.Notes.ToUpper();
+            ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(obj.Id);
 
             if (ModelState.IsValid)
             {
                 productionBillOfMaterial = GetModelState(productionBillOfMaterial);
             }
 
-            db.Entry(productionBillOfMaterial).State = EntityState.Unchanged;
-            db.Entry(productionBillOfMaterial).Property("Code").IsModified = true;
-            db.Entry(productionBillOfMaterial).Property("Date").IsModified = true;
-            db.Entry(productionBillOfMaterial).Property("MasterBusinessUnitId").IsModified = true;
-            db.Entry(productionBillOfMaterial).Property("MasterRegionId").IsModified = true;
-            db.Entry(productionBillOfMaterial).Property("MasterUnitId").IsModified = true;
-            db.Entry(productionBillOfMaterial).Property("MasterItemId").IsModified = true;
-            db.Entry(productionBillOfMaterial).Property("Quantity").IsModified = true;
-            db.Entry(productionBillOfMaterial).Property("Notes").IsModified = true;
-            db.Entry(productionBillOfMaterial).Property("Active").IsModified = true;
-            db.Entry(productionBillOfMaterial).Property("Updated").IsModified = true;
+            productionBillOfMaterial.Updated = DateTime.Now;
+            productionBillOfMaterial.UserId = User.Identity.GetUserId<int>();
+            productionBillOfMaterial.Code = obj.Code.ToUpper();
+            productionBillOfMaterial.Notes = string.IsNullOrEmpty(obj.Notes) ? "" : obj.Notes.ToUpper();
+            productionBillOfMaterial.Date = obj.Date;
+            productionBillOfMaterial.MasterBusinessUnitId = obj.MasterBusinessUnitId;
+            productionBillOfMaterial.MasterRegionId = obj.MasterRegionId;
+            productionBillOfMaterial.MasterItemUnitId = obj.MasterItemUnitId;
+            productionBillOfMaterial.MasterItemId = obj.HeaderMasterItemId;
+            productionBillOfMaterial.BillOfMaterialType = obj.BillOfMaterialType;
+            productionBillOfMaterial.Active = obj.Active;
 
             using (DbContextTransaction dbTran = db.Database.BeginTransaction())
             {
@@ -320,9 +355,10 @@ namespace eShop.Controllers
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
 
                 ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", productionBillOfMaterial.MasterBusinessUnitId);
-                ViewBag.Total = SharedFunctions.GetTotalProductionBillOfMaterial(db, productionBillOfMaterial.Id).ToString("N2");
+                ViewBag.Total = SharedFunctions.GetTotalProductionBillOfMaterial(db, obj.Id).ToString("N2");
+                ViewBag.TotalCost = SharedFunctions.GetTotalCostProductionBillOfMaterial(db, productionBillOfMaterial.Id).ToString("N3");
 
-                return View("../Manufacture/ProductionBillOfMaterials/Edit", productionBillOfMaterial);
+                return View("../Manufacture/ProductionBillOfMaterials/Edit", obj);
             }
         }
 
@@ -355,6 +391,14 @@ namespace eShop.Controllers
                                 if (details != null)
                                 {
                                     db.ProductionBillOfMaterialsDetails.RemoveRange(details);
+                                    db.SaveChanges();
+                                }
+
+                                var Costs = db.ProductionBillOfMaterialsCostsDetails.Where(x => x.ProductionBillOfMaterialId == obj.Id).ToList();
+
+                                if (Costs != null)
+                                {
+                                    db.ProductionBillOfMaterialsCostsDetails.RemoveRange(Costs);
                                     db.SaveChanges();
                                 }
 
@@ -478,6 +522,24 @@ namespace eShop.Controllers
             return PartialView("../Manufacture/ProductionBillOfMaterials/_DetailsCreate", productionBillOfMaterialDetails);
         }
 
+        [Authorize(Roles = "ProductionBillOfMaterialsActive")]
+        public ActionResult CostsCreate(int productionBillOfMaterialId)
+        {
+            ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(productionBillOfMaterialId);
+
+            if (productionBillOfMaterial == null)
+            {
+                return HttpNotFound();
+            }
+
+            ProductionBillOfMaterialCostDetails productionBillOfMaterialCostDetails = new ProductionBillOfMaterialCostDetails
+            {
+                ProductionBillOfMaterialId = productionBillOfMaterialId
+            };
+
+            return PartialView("../Manufacture/ProductionBillOfMaterials/_CostsCreate", productionBillOfMaterialCostDetails);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProductionBillOfMaterialsActive")]
@@ -529,6 +591,51 @@ namespace eShop.Controllers
             return PartialView("../Manufacture/ProductionBillOfMaterials/_DetailsCreate", productionBillOfMaterialDetails);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ProductionBillOfMaterialsActive")]
+        public ActionResult CostsCreate([Bind(Include = "Id,ProductionBillOfMaterialId,MasterCostId,Total,Notes,Created,Updated,UserId")] ProductionBillOfMaterialCostDetails obj)
+        {
+            obj.Total = 0;
+            obj.Created = DateTime.Now;
+            obj.Updated = DateTime.Now;
+            obj.UserId = User.Identity.GetUserId<int>();
+
+            if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
+
+            if (ModelState.IsValid)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.ProductionBillOfMaterialsCostsDetails.Add(obj);
+                        db.SaveChanges();
+
+                        ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(obj.ProductionBillOfMaterialId);
+                        productionBillOfMaterial.Total = SharedFunctions.GetTotalCostProductionBillOfMaterial(db, productionBillOfMaterial.Id, obj.Id) + obj.Total;
+
+                        db.Entry(productionBillOfMaterial).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionBillOfMaterialCostDetails, MenuId = obj.Id, MenuCode = obj.MasterCost.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+
+                        return Json("success", JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+
+            return PartialView("../Manufacture/ProductionBillOfMaterials/_CostsCreate", obj);
+        }
+
         [Authorize(Roles = "ProductionBillOfMaterialsActive")]
         public ActionResult DetailsEdit(int? id)
         {
@@ -544,6 +651,23 @@ namespace eShop.Controllers
                 return HttpNotFound();
             }
             return PartialView("../Manufacture/ProductionBillOfMaterials/_DetailsEdit", obj);
+        }
+
+        [Authorize(Roles = "ProductionBillOfMaterialsActive")]
+        public ActionResult CostsEdit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            ProductionBillOfMaterialCostDetails obj = db.ProductionBillOfMaterialsCostsDetails.Find(id);
+
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("../Manufacture/ProductionBillOfMaterials/_CostsEdit", obj);
         }
 
         [HttpPost]
@@ -605,6 +729,56 @@ namespace eShop.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ProductionBillOfMaterialsActive")]
+        public ActionResult CostsEdit([Bind(Include = "Id,ProductionBillOfMaterialId,MasterCostId,Total,Notes,Updated,UserId")] ProductionBillOfMaterialCostDetails productionBillOfMaterialCostDetails)
+        {
+
+            productionBillOfMaterialCostDetails.Updated = DateTime.Now;
+            productionBillOfMaterialCostDetails.UserId = User.Identity.GetUserId<int>();
+
+            if (!string.IsNullOrEmpty(productionBillOfMaterialCostDetails.Notes)) productionBillOfMaterialCostDetails.Notes = productionBillOfMaterialCostDetails.Notes.ToUpper();
+
+            db.Entry(productionBillOfMaterialCostDetails).State = EntityState.Unchanged;
+            db.Entry(productionBillOfMaterialCostDetails).Property("ProductionBillOfMaterialId").IsModified = true;
+            db.Entry(productionBillOfMaterialCostDetails).Property("MasterCostId").IsModified = true;
+            db.Entry(productionBillOfMaterialCostDetails).Property("Total").IsModified = true;
+            db.Entry(productionBillOfMaterialCostDetails).Property("Notes").IsModified = true;
+            db.Entry(productionBillOfMaterialCostDetails).Property("Updated").IsModified = true;
+            db.Entry(productionBillOfMaterialCostDetails).Property("UserId").IsModified = true;
+
+            if (ModelState.IsValid)
+            {
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.SaveChanges();
+
+                        ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(productionBillOfMaterialCostDetails.ProductionBillOfMaterialId);
+                       // productionBillOfMaterial.Total = SharedFunctions.GetTotalProductionBillOfMaterial(db, productionBillOfMaterial.Id, productionBillOfMaterialDetails.Id) + productionBillOfMaterialDetails.Total;
+
+                        db.Entry(productionBillOfMaterial).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionBillOfMaterialDetails, MenuId = productionBillOfMaterialCostDetails.Id, MenuCode = productionBillOfMaterialCostDetails.MasterCost.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+
+                        return Json("success", JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            return PartialView("../Manufacture/ProductionBillOfMaterials/_CostsEdit", productionBillOfMaterialCostDetails);
+        }
+
+        [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "ProductionBillOfMaterialsActive")]
         public ActionResult DetailsBatchDelete(int[] ids)
@@ -656,11 +830,71 @@ namespace eShop.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "ProductionBillOfMaterialsActive")]
+        public ActionResult CostsBatchDelete(int[] ids)
+        {
+            if (ids == null || ids.Length <= 0)
+                return Json("Pilih salah satu data yang akan dihapus.");
+            else
+            {
+                using (db)
+                {
+                    int failed = 0;
+                    foreach (int id in ids)
+                    {
+                        ProductionBillOfMaterialCostDetails obj = db.ProductionBillOfMaterialsCostsDetails.Find(id);
+                        if (obj == null)
+                            failed++;
+                        else
+                        {
+                            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                            {
+                                try
+                                {
+                                    ProductionBillOfMaterialCostDetails tmp = obj;
+
+                                    ProductionBillOfMaterial productionBillOfMaterial = db.ProductionBillOfMaterials.Find(tmp.ProductionBillOfMaterialId);
+
+                                    //productionBillOfMaterial.Total = SharedFunctions.GetTotalProductionBillOfMaterial(db, productionBillOfMaterial.Id, tmp.Id);
+
+                                    db.Entry(productionBillOfMaterial).State = EntityState.Modified;
+                                    db.SaveChanges();
+
+                                    db.ProductionBillOfMaterialsCostsDetails.Remove(obj);
+                                    db.SaveChanges();
+
+                                    db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionBillOfMaterialCostDetails, MenuId = tmp.Id, MenuCode = tmp.Id.ToString(), Actions = EnumActions.DELETE, UserId = User.Identity.GetUserId<int>() });
+                                    db.SaveChanges();
+                                    dbTran.Commit();
+                                }
+                                catch (DbEntityValidationException ex)
+                                {
+                                    dbTran.Rollback();
+                                    throw ex;
+                                }
+                            }
+                        }
+                    }
+                    return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
+                }
+            }
+        }
+
         [HttpGet]
         [Authorize(Roles = "ProductionBillOfMaterialsActive")]
         public PartialViewResult DetailsGrid(int Id)
         {
             return PartialView("../Manufacture/ProductionBillOfMaterials/_DetailsGrid", db.ProductionBillOfMaterialsDetails
+                .Where(x => x.ProductionBillOfMaterialId == Id).ToList());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "ProductionBillOfMaterialsActive")]
+        public PartialViewResult CostsGrid(int Id)
+        {
+            return PartialView("../Manufacture/ProductionBillOfMaterials/_CostsGrid", db.ProductionBillOfMaterialsCostsDetails
                 .Where(x => x.ProductionBillOfMaterialId == Id).ToList());
         }
 
@@ -746,6 +980,14 @@ namespace eShop.Controllers
         public JsonResult GetTotal(int productionBillOfMaterialId)
         {
             return Json(SharedFunctions.GetTotalProductionBillOfMaterial(db, productionBillOfMaterialId).ToString("N2"));
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "ProductionBillOfMaterialsActive")]
+        public JsonResult GetTotalCost(int productionBillOfMaterialId)
+        {
+            return Json(SharedFunctions.GetTotalCostProductionBillOfMaterial(db, productionBillOfMaterialId).ToString("N3"));
         }
 
         protected override void Dispose(bool disposing)

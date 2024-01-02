@@ -226,7 +226,7 @@ namespace eShop.Controllers
                 {
                     if (userBusinessUnitRegions.Contains(obj.MasterBusinessUnitId.ToString() + "&" + obj.MasterRegionId.ToString()))
                     {
-                        userToUpdate.ApplicationUserMasterBusinessUnitRegions.Remove(new ApplicationUserMasterBusinessUnitRegion { MasterBusinessUnitId = obj.MasterBusinessUnitId, MasterRegionId = obj.MasterRegionId, UserId = userToUpdate.Id });
+                        userToUpdate.ApplicationUserMasterBusinessUnitRegions.Remove(userToUpdate.ApplicationUserMasterBusinessUnitRegions.Where(x => x.MasterBusinessUnitId == obj.MasterBusinessUnitId && x.MasterRegionId == obj.MasterRegionId).FirstOrDefault());
                     }
                 }
             }

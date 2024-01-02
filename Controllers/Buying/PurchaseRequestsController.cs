@@ -33,13 +33,26 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "PurchaseRequestsActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Buying/PurchaseRequests/_IndexGrid", db.Set<PurchaseRequest>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Buying/PurchaseRequests/_IndexGrid", db.Set<PurchaseRequest>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Buying/PurchaseRequests/_IndexGrid", db.Set<PurchaseRequest>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Buying/PurchaseRequests/_IndexGrid", db.Set<PurchaseRequest>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
 
         [HttpGet]
@@ -154,7 +167,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseRequestsAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterSupplierId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] PurchaseRequest purchaseRequest)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterSupplierId,MasterWarehouseId,Rate,MasterCurrencyId,Notes,Active,Created,Updated,UserId")] PurchaseRequest purchaseRequest)
         {
             purchaseRequest.Created = DateTime.Now;
             purchaseRequest.Updated = DateTime.Now;
@@ -282,12 +295,12 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchaseRequestsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterSupplierId,MasterWarehouseId,Notes,Active,Created,Updated,UserId")] PurchaseRequest purchaseRequest)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterSupplierId,MasterWarehouseId,Rate,MasterCurrencyId,Notes,Active,Created,Updated,UserId")] PurchaseRequest purchaseRequest)
         {
             purchaseRequest.Updated = DateTime.Now;
             purchaseRequest.UserId = User.Identity.GetUserId<int>();
             purchaseRequest.Total = SharedFunctions.GetTotalPurchaseRequest(db, purchaseRequest.Id);
-            purchaseRequest.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
+            //purchaseRequest.MasterCurrency = db.MasterCurrencies.Find(purchaseRequest.MasterCurrencyId);
 
             if (!string.IsNullOrEmpty(purchaseRequest.Code)) purchaseRequest.Code = purchaseRequest.Code.ToUpper();
             if (!string.IsNullOrEmpty(purchaseRequest.Notes)) purchaseRequest.Notes = purchaseRequest.Notes.ToUpper();
@@ -304,6 +317,8 @@ namespace eShop.Controllers
             db.Entry(purchaseRequest).Property("MasterRegionId").IsModified = true;
             db.Entry(purchaseRequest).Property("MasterSupplierId").IsModified = true;
             db.Entry(purchaseRequest).Property("MasterWarehouseId").IsModified = true;
+            db.Entry(purchaseRequest).Property("Rate").IsModified = true;
+            db.Entry(purchaseRequest).Property("MasterCurrencyId").IsModified = true;
             db.Entry(purchaseRequest).Property("Total").IsModified = true;
             db.Entry(purchaseRequest).Property("Notes").IsModified = true;
             db.Entry(purchaseRequest).Property("Active").IsModified = true;
@@ -832,6 +847,14 @@ namespace eShop.Controllers
                 code = (Convert.ToInt32(lastData.Code.Substring(0, 4)) + 1).ToString("D4") + code;
 
             return code;
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "PurchaseRequestsActive")]
+        public JsonResult GetPrice(int masterBusinessUnitId, int masterRegionId, int masterItemId, int masterItemUnitId, int masterCustomerId)
+        {
+            return Json(SharedFunctions.GetSellingPrice(db, masterBusinessUnitId, masterRegionId, masterItemId, masterItemUnitId, masterCustomerId));
         }
 
         [HttpPost]

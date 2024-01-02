@@ -32,13 +32,26 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "ProductionWorkOrdersActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Manufacture/ProductionWorkOrders/_IndexGrid", db.Set<ProductionWorkOrder>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Manufacture/ProductionWorkOrders/_IndexGrid", db.Set<ProductionWorkOrder>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Manufacture/ProductionWorkOrders/_IndexGrid", db.Set<ProductionWorkOrder>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Manufacture/ProductionWorkOrders/_IndexGrid", db.Set<ProductionWorkOrder>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
 
         public JsonResult IsCodeExists(string Code, int? Id)
@@ -205,6 +218,14 @@ namespace eShop.Controllers
                         {
                             try
                             {
+                                var Costs = db.ProductionWorkOrdersCostsDetails.Where(x => x.ProductionWorkOrderId == obj.Id).ToList();
+
+                                if (Costs != null)
+                                {
+                                    db.ProductionWorkOrdersCostsDetails.RemoveRange(Costs);
+                                    db.SaveChanges();
+                                }
+
                                 var details = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderId == obj.Id).ToList();
 
                                 if (details != null)
@@ -341,6 +362,14 @@ namespace eShop.Controllers
                             else
                             {
                                 ProductionWorkOrder tmp = obj;
+
+                                var Costs = db.ProductionWorkOrdersCostsDetails.Where(x => x.ProductionWorkOrderId == obj.Id).ToList();
+
+                                if (Costs != null)
+                                {
+                                    db.ProductionWorkOrdersCostsDetails.RemoveRange(Costs);
+                                    db.SaveChanges();
+                                }
 
                                 var details = db.ProductionWorkOrdersDetails.Where(x => x.ProductionWorkOrderId == obj.Id).ToList();
 
@@ -487,6 +516,7 @@ namespace eShop.Controllers
             obj.Updated = DateTime.Now;
             obj.UserId = User.Identity.GetUserId<int>();
 
+
             if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
 
             if (ModelState.IsValid)
@@ -510,6 +540,7 @@ namespace eShop.Controllers
                                     MasterItemId = productionBillOfMaterialDetails.MasterItemId,
                                     MasterItemUnitId = productionBillOfMaterialDetails.MasterItemUnitId,
                                     Quantity = productionBillOfMaterialDetails.Quantity * obj.Quantity,
+                                    Notes = obj.Notes,
                                     Created = DateTime.Now,
                                     Updated = DateTime.Now,
                                     UserId = User.Identity.GetUserId<int>()
@@ -518,6 +549,30 @@ namespace eShop.Controllers
                                 db.ProductionWorkOrdersDetails.Add(productionWorkOrderDetails);
                                 db.SaveChanges();
                             }
+
+                        }
+
+                        var productionBillOfMaterialsCostDetails = db.ProductionBillOfMaterialsCostsDetails.Where(x => x.ProductionBillOfMaterialId == obj.ProductionBillOfMaterialId).ToList();
+                        if (productionBillOfMaterialsCostDetails.Count > 0)
+                        {
+                            foreach (ProductionBillOfMaterialCostDetails productionBillOfMaterialCostDetails in productionBillOfMaterialsCostDetails)
+                            {
+                                ProductionWorkOrderCostDetails productionWorkOrderCostDetails = new ProductionWorkOrderCostDetails
+                                {
+                                    ProductionWorkOrderId = obj.ProductionWorkOrderId,
+                                    ProductionWorkOrderBillOfMaterialId = obj.Id,
+                                    MasterCostId = productionBillOfMaterialCostDetails.MasterCostId,
+                                    Total = productionBillOfMaterialCostDetails.Total,
+                                    Notes = obj.Notes,
+                                    Created = DateTime.Now,
+                                    Updated = DateTime.Now,
+                                    UserId = User.Identity.GetUserId<int>()
+                                };
+
+                                db.ProductionWorkOrdersCostsDetails.Add(productionWorkOrderCostDetails);
+                                db.SaveChanges();
+                            }
+
                         }
 
                         db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.ProductionWorkOrderDetails, MenuId = obj.Id, MenuCode = obj.ProductionBillOfMaterialId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
@@ -599,6 +654,7 @@ namespace eShop.Controllers
                                     MasterItemId = productionBillOfMaterialDetails.MasterItemId,
                                     MasterItemUnitId = productionBillOfMaterialDetails.MasterItemUnitId,
                                     Quantity = productionBillOfMaterialDetails.Quantity * obj.Quantity,
+                                    Notes = productionBillOfMaterialDetails.Notes,
                                     Created = DateTime.Now,
                                     Updated = DateTime.Now,
                                     UserId = User.Identity.GetUserId<int>()
@@ -691,6 +747,14 @@ namespace eShop.Controllers
         public PartialViewResult BoMGrid(int Id)
         {
             return PartialView("../Manufacture/ProductionWorkOrders/_BoMGrid", db.ProductionWorkOrderBillOfMaterials
+                .Where(x => x.ProductionWorkOrderId == Id).ToList());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "ProductionWorkOrdersActive")]
+        public PartialViewResult CostsGrid(int Id)
+        {
+            return PartialView("../Manufacture/ProductionWorkOrders/_CostsGrid", db.ProductionWorkOrdersCostsDetails
                 .Where(x => x.ProductionWorkOrderId == Id).ToList());
         }
 

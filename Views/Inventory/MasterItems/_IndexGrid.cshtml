@@ -15,8 +15,6 @@
         columns.Add(model => model.Name).Titled(@Html.DisplayNameFor(model => model.Name));
         columns.Add(model => model.MasterCategory.Name).Titled(@Html.DisplayNameFor(model => model.MasterCategory.Name));
         columns.Add(model => model.MasterBrand.Name).Titled(@Html.DisplayNameFor(model => model.MasterBrand.Name));
-        columns.Add(model => model.MasterSupplier.Name).Titled(@Html.DisplayNameFor(model => model.MasterSupplier.Name));
-        columns.Add(model => model.InventoryPartType).Titled(@Html.DisplayNameFor(model => model.InventoryPartType));
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
         columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
         columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));

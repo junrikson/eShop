@@ -15,17 +15,6 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Kode Biaya harus diisi.")]
-        [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode Biaya")]
-        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "MasterCosts", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
-        public string Code { get; set; }
-
-        [Display(Name = "Nama Biaya")]
-        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        public string Name { get; set; }
-
         [Display(Name = "Unit Bisnis")]
         [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
         public int MasterBusinessUnitId { get; set; }
@@ -39,6 +28,17 @@ namespace eShop.Models
 
         [Display(Name = "Wilayah")]
         public virtual MasterRegion MasterRegion { get; set; }
+
+        [Required(ErrorMessage = "Kode Biaya harus diisi.")]
+        [Index("IX_Code", Order = 1, IsUnique = true)]
+        [Display(Name = "Kode Biaya")]
+        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
+        [Remote("IsCodeExists", "MasterCosts", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
+        public string Code { get; set; }
+
+        [Display(Name = "Nama Biaya")]
+        [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
+        public string Name { get; set; }
 
         [Display(Name = "Nomor Akun")]
         [Required(ErrorMessage = "Nomor Akun harus diisi.")]
@@ -76,6 +76,28 @@ namespace eShop.Models
         [Key]
         public int Id { get; set; }
 
+        [Display(Name = "Unit Bisnis")]
+        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
+        public int MasterBusinessUnitId { get; set; }
+
+        [Display(Name = "Unit Bisnis")]
+        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Unit Bisnis")]
+        public string MasterBusinessUnitCode { get; set; }
+
+        [Display(Name = "Wilayah")]
+        [Required(ErrorMessage = "Wilayah harus diisi.")]
+        public int MasterRegionId { get; set; }
+
+        [Display(Name = "Wilayah")]
+        public virtual MasterRegion MasterRegion { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Wilayah")]
+        public string MasterRegionCode { get; set; }
+
         [DatalistColumn]
         [Display(Name = "Kode Biaya")]
         public string Code { get; set; }
@@ -84,27 +106,6 @@ namespace eShop.Models
         [Display(Name = "Nama Biaya")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         public string Name { get; set; }
-
-        [DatalistColumn]
-        [Display(Name = "Unit Bisnis")]
-        public string MasterBusinessUnitName { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        //[Required(ErrorMessage = "Unit Bisnis harus diisi.")]
-        public int? MasterBusinessUnitId { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
-
-        [DatalistColumn]
-        [Display(Name = "Wilayah")]
-        public string MasterRegionCode { get; set; }
-
-        [Display(Name = "Wilayah")]
-        public int? MasterRegionId { get; set; }
-
-        [Display(Name = "Wilayah")]
-        public virtual MasterRegion MasterRegion { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Nomor Akun")]
@@ -159,9 +160,8 @@ namespace eShop.Models
                 {
                     Id = x.Id,
                     Code = x.Code,
-                    MasterBusinessUnitName = x.MasterBusinessUnit.Name,
+                    MasterBusinessUnitCode = x.MasterBusinessUnit.Code,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,
-                    MasterBusinessUnit = x.MasterBusinessUnit,
                     MasterRegionCode = x.MasterRegion.Code,
                     MasterRegionId = x.MasterRegionId,
                     MasterRegion = x.MasterRegion,
@@ -204,7 +204,6 @@ namespace eShop.Models
                 {
                     Id = x.Id,
                     Code = x.Code,
-                    MasterBusinessUnitName = x.MasterBusinessUnit.Name,
                     MasterBusinessUnitId = x.MasterBusinessUnitId,
                     MasterBusinessUnit = x.MasterBusinessUnit,
                     MasterRegionCode = x.MasterRegion.Code,

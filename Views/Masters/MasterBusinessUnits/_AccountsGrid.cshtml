@@ -7,7 +7,7 @@
     .Grid(Model)
     .Build(columns =>
     {
-        columns.Add(model => Html.CheckBox(model.MasterBusinessUnitId.ToString() + "_" + model.MasterRegionId.ToString() + "_" + model.Type.ToString(), new { id = model.MasterBusinessUnitId.ToString() + "_" + model.MasterRegionId.ToString() + "_" + model.Type.ToString(), value = model.MasterBusinessUnitId.ToString() + "_" + model.MasterRegionId.ToString() + "_" + model.Type.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => Html.CheckBox(model.MasterBusinessUnitId.ToString() + "_" + model.MasterRegionId.ToString() + "_" + model.Type.ToString(), new { id = model.MasterBusinessUnitId.ToString() + "_" + model.MasterRegionId.ToString() + "_" + model.Type.ToString(), value = model.MasterBusinessUnitId.ToString() + "_" + model.MasterRegionId.ToString() + "_" + model.Type.ToString() })).Titled(Html.CheckBox("CheckAllaccounts"));
         columns.Add(model => ((User.IsInRole("MasterBusinessUnitsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-account\" href=\"" + @Url.Action("AccountsEdit", "MasterBusinessUnits", new { masterBusinessUnitId = model.MasterBusinessUnitId, masterRegionId = model.MasterRegionId, type = model.Type }) + "\"><i class=\"fa fa-edit\"></i> Edit</a></div>" : "")).Encoded(false);
         columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code)).Sortable(true).InitialSort(GridSortOrder.Asc);
         columns.Add(model => model.Type).Titled(@Html.DisplayNameFor(model => model.Type));

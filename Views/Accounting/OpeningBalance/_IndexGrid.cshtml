@@ -1,0 +1,27 @@
+﻿@model IEnumerable<eShop.Models.OpeningBalance>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => ((User.IsInRole("OpeningBalanceEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "OpeningBalance", new { id = (model.ChartOfAccountId.ToString() + '_' + model.MasterBusinessUnitId.ToString() + '_' + model.MasterRegionId.ToString()) }) + "\"><i class=\"fa fa-edit\"></i> Edit</a></div>" : "")).Encoded(false);
+        columns.Add(model => model.ChartOfAccount.Code).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Code)).InitialSort(GridSortOrder.Asc);
+        columns.Add(model => model.ChartOfAccount.Name).Titled(@Html.DisplayNameFor(model => model.ChartOfAccount.Name));
+        columns.Add(model => model.Total).Titled(@Html.DisplayNameFor(model => model.Total)).Formatted("{0:N2}");
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 0;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 0;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)

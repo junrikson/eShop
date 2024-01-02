@@ -767,7 +767,7 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MasterItemsAdd")]
-        public ActionResult AddMasterItems([Bind(Include = "MasterBusinessUnitId, MasterRegionId, MasterItemStartId, MasterItemEndId")] MasterBusinessRegionItemSelection obj)
+        public ActionResult AddMasterItems([Bind(Include = "MasterBusinessUnitId, MasterRegionId, MasterItemStartId, MasterItemEndId,InventoryPartType")] MasterBusinessRegionItemSelection obj)
         {
             if (ModelState.IsValid)
             {

@@ -10,13 +10,6 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public enum EnumInventoryPartType
-    {
-        [Display(Name = "Bahan Baku")]
-        RawMaterial = 1,
-        [Display(Name = "Barang Jadi")]
-        FinishedGood = 2
-    }
     public class MasterItem
     {
         [Key]
@@ -50,32 +43,21 @@ namespace eShop.Models
         [Display(Name = "Merek")]
         public virtual MasterBrand MasterBrand { get; set; }
 
-        [Display(Name = "Kode Supplier")]
-        [Required(ErrorMessage = "Kode Supplier harus diisi.")]
-        public int MasterSupplierId { get; set; }
-
-        [Display(Name = "Kode Supplier")]
-        public virtual MasterSupplier MasterSupplier { get; set; }
-
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Required(ErrorMessage = "Tipe Persediaan harus diisi.")]
-        [Display(Name = "Tipe Persediaan")]
-        public EnumInventoryPartType InventoryPartType { get; set; }
+        //[Display(Name = "Default Discount (%)")]
+        //[DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        //public decimal DefaultDiscountPercentage { get; set; }
 
-        [Display(Name = "Default Discount (%)")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal DefaultDiscountPercentage { get; set; }
+        //[Display(Name = "Harga Beli")]
+        //[DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        //public decimal PurchasePrice { get; set; }
 
-        [Display(Name = "Harga Beli")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal PurchasePrice { get; set; }
-
-        [Display(Name = "Pajak Penjualan dan Pembelian")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Vat { get; set; }
+        //[Display(Name = "Pajak Penjualan dan Pembelian")]
+        //[DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        //public decimal Vat { get; set; }
 
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
@@ -97,6 +79,8 @@ namespace eShop.Models
         public virtual ApplicationUser User { get; set; }
     }
 
+
+
     public class MasterItemSupplierDatalist : MvcDatalist<MasterItem>
     {
         private DbContext Context { get; }
@@ -111,7 +95,6 @@ namespace eShop.Models
         {
             Url = "/DatalistFilters/AllMasterItemSupplier";
             Title = "Master Item";
-            AdditionalFilters.Add("MasterSupplierId");
 
             Filter.Sort = "Code";
             Filter.Order = DatalistSortOrder.Asc;
@@ -149,7 +132,6 @@ namespace eShop.Models
             return Context.Set<MasterItem>();
         }
     }
-
 
     public class MasterItemUnit
     {
@@ -250,6 +232,8 @@ namespace eShop.Models
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
     }
+
+
 
     public class MasterItemUnitDatalist : MvcDatalist<MasterItemUnitViewModel>
     {

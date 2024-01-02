@@ -1,0 +1,43 @@
+﻿@model IEnumerable<eShop.Models.Term>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
+        columns.Add(model => ((User.IsInRole("TermsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "Terms", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("TermsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "Terms", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
+        ((User.IsInRole("TermsAdd")) ? "&nbsp;<a class=\"btn btn-warning btn-xs copy-data\" href=\"" + model.Id + "\"><i class=\"fa fa-copy\"></i> Copy</a>" : "") + "</div>").Encoded(false);
+        columns.Add(model => model.MasterBusinessUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Name));
+        columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));
+        columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
+        columns.Add(model => model.Top).Titled(@Html.DisplayNameFor(model => model.Top));
+        columns.Add(model => model.Topx).Titled(@Html.DisplayNameFor(model => model.Topx));
+        columns.Add(model => model.CreditLimit).Titled(@Html.DisplayNameFor(model => model.CreditLimit)).Formatted("{0:N0}");
+        columns.Add(model => model.InvoiceLimit).Titled(@Html.DisplayNameFor(model => model.InvoiceLimit)).Formatted("{0:N0}");
+        columns.Add(model => model.AllCustomer).Titled(@Html.DisplayNameFor(model => model.AllCustomer));
+        columns.Add(model => model.AllSalesPerson).Titled(@Html.DisplayNameFor(model => model.AllSalesPerson));
+        columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
+        columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));
+        columns.Add(model => model.User.UserName).Titled(@Html.DisplayNameFor(model => model.User.UserName));
+        columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated)).InitialSort(GridSortOrder.Desc);
+    })
+    .RowAttributed(model => new { @class = (model.Active == true ? "" : "grid-column-red") })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("data-table")
+)

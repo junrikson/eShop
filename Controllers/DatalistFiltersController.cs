@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using static eShop.Models.MasterBusinessRegionItemDatalist;
 
 namespace eShop.Controllers
 {
@@ -15,9 +16,52 @@ namespace eShop.Controllers
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         [HttpGet]
+        public JsonResult AllMasterCost(DatalistFilter filter, int MasterBusinessUnitId = 0, int MasterRegionId = 0)
+        {
+            MasterCostDatalist datalist = new MasterCostDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterBusinessUnit(DatalistFilter filter)
+        {
+            MasterBusinessUnitDatalist datalist = new MasterBusinessUnitDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AllMasterBusinessUnitRelation(DatalistFilter filter, int MasterBusinessUnitId = 0)
+        {
+            MasterBusinessUnitRelationDatalist datalist = new MasterBusinessUnitRelationDatalist(db);
+
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllMasterRegion(DatalistFilter filter)
         {
             MasterRegionDatalist datalist = new MasterRegionDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterDestination(DatalistFilter filter)
+        {
+            MasterDestinationDatalist datalist = new MasterDestinationDatalist(db);
             filter.AdditionalFilters["Active"] = true;
             datalist.Filter = filter;
 
@@ -38,11 +82,60 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
+        public JsonResult AllMasterBusinessUnitRegionRelation(DatalistFilter filter, int masterBusinessRelationId = 0)
+        {
+            MasterBusinessUnitRegionDatalist datalist = new MasterBusinessUnitRegionDatalist(db);
+
+
+            filter.AdditionalFilters["MasterRegionActive"] = true;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = masterBusinessRelationId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult AllChartOfAccount(DatalistFilter filter)
         {
             ChartOfAccountDatalist datalist = new ChartOfAccountDatalist(db);
 
             filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllChartOfAccountHeader(DatalistFilter filter)
+        {
+            ChartOfAccountHeaderDatalist datalist = new ChartOfAccountHeaderDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["IsHeader"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllAccountType(DatalistFilter filter)
+        {
+            AccountTypeDatalist datalist = new AccountTypeDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["IsHeader"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllAccountTypeDetails(DatalistFilter filter)
+        {
+            AccountTypeDetailsDatalist datalist = new AccountTypeDetailsDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["IsHeader"] = false;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
@@ -169,11 +262,10 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        public JsonResult AllMasterItemSupplier(DatalistFilter filter, int? masterSupplierId = 0)
+        public JsonResult AllMasterItemSupplier(DatalistFilter filter)
         {
             MasterItemSupplierDatalist datalist = new MasterItemSupplierDatalist(db);
             filter.AdditionalFilters["Active"] = true;
-            filter.AdditionalFilters["MasterSupplierId"] = masterSupplierId;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
@@ -184,6 +276,33 @@ namespace eShop.Controllers
         {
             AllMasterItemDatalist datalist = new AllMasterItemDatalist(db);
             filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterBusinessRegionItemRawMaterial(DatalistFilter filter, int? InventoryPartType = 1, int MasterBusinessUnitId = 0, int MasterRegionId = 0)
+        {
+            MasterBusinessRegionItemRawMaterialDatalist datalist = new MasterBusinessRegionItemRawMaterialDatalist(db);
+
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
+            filter.AdditionalFilters["InventoryPartType"] = InventoryPartType;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterBusinessRegionItemFinishedGood(DatalistFilter filter, int? InventoryPartType = 2, int MasterBusinessUnitId = 0, int MasterRegionId = 0)
+        {
+            MasterBusinessRegionItemFinishedGoodDatalist datalist = new MasterBusinessRegionItemFinishedGoodDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
+            filter.AdditionalFilters["InventoryPartType"] = InventoryPartType;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
@@ -262,6 +381,18 @@ namespace eShop.Controllers
             MasterBusinessRegionWarehouseDatalist datalist = new MasterBusinessRegionWarehouseDatalist(db);
 
             filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessUnitId;
+            filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult AllMasterBusinessRegionWarehouseRelation(DatalistFilter filter, int MasterBusinessRelationId = 0, int MasterRegionId = 0)
+        {
+            MasterBusinessRegionWarehouseDatalist datalist = new MasterBusinessRegionWarehouseDatalist(db);
+
+            filter.AdditionalFilters["MasterBusinessUnitId"] = MasterBusinessRelationId;
             filter.AdditionalFilters["MasterRegionId"] = MasterRegionId;
             datalist.Filter = filter;
 
@@ -373,12 +504,13 @@ namespace eShop.Controllers
         }
 
         [HttpGet]
-        public JsonResult AllOutstandingSalesOrderPurchaseOrder(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitId = 0)
+        public JsonResult AllOutstandingSalesOrderRelation(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitRelationId = 0)
         {
-            OutstandingSalesOrderPurchaseOrderDatalist datalist = new OutstandingSalesOrderPurchaseOrderDatalist(db);
+            OutstandingSalesOrderRelationDatalist datalist = new OutstandingSalesOrderRelationDatalist(db);
+
             filter.AdditionalFilters["Active"] = true;
             filter.AdditionalFilters["MasterRegionId"] = masterRegionId;
-            filter.AdditionalFilters["MasterBusinessUnitId"] = masterBusinessUnitId;
+            filter.AdditionalFilters["MasterBusinessUnitId"] = masterBusinessUnitRelationId;
             datalist.Filter = filter;
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
@@ -393,6 +525,16 @@ namespace eShop.Controllers
 
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
         }
+
+        //[HttpGet]
+        //public JsonResult AllStandardProductCost(DatalistFilter filter)
+        //{
+        //    StandardProductCostDatalist datalist = new StandardProductCostDatalist(db);
+        //    filter.AdditionalFilters["Active"] = true;
+        //    datalist.Filter = filter;
+
+        //    return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        //}
 
         [HttpGet]
         public JsonResult AllProductionBillOfMaterial(DatalistFilter filter, int? masterRegionId = 0, int? masterBusinessUnitId = 0)

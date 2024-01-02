@@ -1,0 +1,32 @@
+﻿@model IEnumerable<eShop.Models.JournalDetails>
+@{
+    Layout = null;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => model.Journal.Code).Titled(@Html.DisplayNameFor(model => model.Journal.Code)).InitialSort(GridSortOrder.Desc);
+        columns.Add(model => model.Journal.Date).Titled(@Html.DisplayNameFor(model => model.Journal.Date));
+        columns.Add(model => model.Debit).Titled(@Html.DisplayNameFor(model => model.Debit));
+        columns.Add(model => model.Credit).Titled(@Html.DisplayNameFor(model => model.Credit));
+        columns.Add(model => model.Journal.Type).Titled(@Html.DisplayNameFor(model => model.Journal.Type));
+        columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
+    })
+    .Empty("Tidak ada data.")
+    .Pageable(pager =>
+
+    {
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 5;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 10;
+    })
+    .UsingFilterMode(GridFilterMode.Row)
+    .Filterable()
+    .Sortable()
+    .AppendCss("tablegrid-hover table-striped fix-table")
+    .Id("details-table")
+)

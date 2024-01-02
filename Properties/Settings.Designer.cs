@@ -218,7 +218,7 @@ namespace eShop.Properties {
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BOMPD/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("BOM/")]
         public string ProductionBillOfMaterialCode
         {
             get
@@ -229,29 +229,30 @@ namespace eShop.Properties {
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BOMPK/")]
-        public string PackingBillOfMaterialCode
+        [global::System.Configuration.DefaultSettingValueAttribute("FG/")]
+        public string ProductionBillOfMaterialFinishedGoodCode
         {
             get
             {
-                return ((string)(this["PackingBillOfMaterialCode"]));
+                return ((string)(this["ProductionBillOfMaterialFinishedGoodCode"]));
             }
         }
 
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SPKPK/")]
-        public string PackingWorkOrderCode
+        [global::System.Configuration.DefaultSettingValueAttribute("HFG/")]
+        public string ProductionBillOfMaterialHalfFinishedGoodCode
         {
             get
             {
-                return ((string)(this["PackingWorkOrderCode"]));
+                return ((string)(this["ProductionBillOfMaterialHalfFinishedGoodCode"]));
             }
         }
 
+
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SPKPD/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SPK/")]
         public string ProductionWorkOrderCode
         {
             get
@@ -292,5 +293,72 @@ namespace eShop.Properties {
                 return ((string)(this["MaterialReturnCode"]));
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SPC/")]
+        public string StandardProductCostCode
+        {
+            get
+            {
+                return ((string)(this["StandardProductCostCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SP/")]
+        public string SellingPriceCode
+        {
+            get
+            {
+                return ((string)(this["SellingPriceCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BP/")]
+        public string BuyingPriceCode
+        {
+            get
+            {
+                return ((string)(this["BuyingPriceCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("TERM/")]
+        public string TermCode
+        {
+            get
+            {
+                return ((string)(this["TermCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SPF/")]
+        public string ShippingFeeCode
+        {
+            get
+            {
+                return ((string)(this["ShippingFeeCode"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AST/")]
+        public string FixedAssetCode
+        {
+            get
+            {
+                return ((string)(this["FixedAssetCode"]));
+            }
+        }
+
     }
 }

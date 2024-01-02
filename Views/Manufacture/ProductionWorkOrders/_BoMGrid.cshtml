@@ -7,9 +7,8 @@
         .Grid(Model)
         .Build(columns =>
         {
-            columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
-            columns.Add(model => ((User.IsInRole("ProductionWorkOrdersEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success edit-data btn-xs\" href=\"" + @Url.Action("DetailsEdit", "ProductionWorkOrders", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") + "</div>").Encoded(false);
             columns.Add(model => model.ProductionBillOfMaterial.Code).Titled(@Html.DisplayNameFor(model => model.ProductionBillOfMaterial.Code));
+            columns.Add(model => model.ProductionBillOfMaterial.BillOfMaterialType).Titled(@Html.DisplayNameFor(model => model.ProductionWorkOrder.ProductionBillOfMaterial.BillOfMaterialType));
             columns.Add(model => model.ProductionBillOfMaterial.MasterItem.Name).Titled(@Html.DisplayNameFor(model => model.ProductionBillOfMaterial.MasterItem.Name));
             columns.Add(model => model.ProductionBillOfMaterial.MasterItemUnit.MasterUnit.Code).Titled(@Html.DisplayNameFor(model => model.ProductionBillOfMaterial.MasterItemUnit.MasterUnit.Code));
             columns.Add(model => model.Quantity).Titled(@Html.DisplayNameFor(model => model.Quantity)).Formatted("{0:N0}");

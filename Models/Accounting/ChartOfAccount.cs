@@ -9,14 +9,6 @@ using System.Web.Mvc;
 
 namespace eShop.Models
 {
-    public enum EnumDefaultEntry
-    {
-        [Display(Name = "Debet")]
-        Debit = 1,
-        [Display(Name = "Kredit")]
-        Credit = 2
-    }
-
     public class ChartOfAccount
     {
         [Key]
@@ -37,16 +29,21 @@ namespace eShop.Models
         [Required(ErrorMessage = "Nama Akun harus diisi.")]
         public string Name { get; set; }
 
-        [DatalistColumn]
-        [Display(Name = "Posisi")]
-        [Required(ErrorMessage = "Posisi harus diisi.")]
-        public EnumDefaultEntry Position { get; set; }
+        [Display(Name = "Jenis Akun")]
+        [Required(ErrorMessage = "Jenis Akun harus diisi.")]
+        public int AccountTypeId { get; set; }
+
+        [Display(Name = "Jenis Akun")]
+        public virtual AccountType AccountType { get; set; }
+
+        [Display(Name = "Sub Akun")]
+        public int? SubChartOfAccountId { get; set; }
+
+        [Display(Name = "Sub Akun")]
+        public virtual ChartOfAccount SubChartOfAccount { get; set; }
 
         [Display(Name = "Header")]
         public bool IsHeader { get; set; }
-
-        [Display(Name = "Level")]
-        public int Level { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Keterangan")]
@@ -85,10 +82,6 @@ namespace eShop.Models
         [DatalistColumn]
         [Display(Name = "Nama Akun")]
         public string Name { get; set; }
-
-        [DatalistColumn]
-        [Display(Name = "Posisi")]
-        public EnumDefaultEntry Position { get; set; }
 
         [Display(Name = "Header")]
         public bool IsHeader { get; set; }
@@ -132,9 +125,42 @@ namespace eShop.Models
                     Id = x.Id,
                     Code = x.Code,
                     Name = x.Name,
-                    Position = x.Position,
                     IsHeader = x.IsHeader,
-                    Level = x.Level,
+                    Notes = x.Notes,
+                    Active = x.Active
+                });
+        }
+    }
+
+    public class ChartOfAccountHeaderDatalist : MvcDatalist<ChartOfAccountDatalistViewModel>
+    {
+        private DbContext Context { get; }
+
+        public ChartOfAccountHeaderDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code + " - " + model.Name;
+        }
+        public ChartOfAccountHeaderDatalist()
+        {
+            Url = "/DatalistFilters/AllChartOfAccountHeader";
+            Title = "Bagan Akun";
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<ChartOfAccountDatalistViewModel> GetModels()
+        {
+            return Context.Set<ChartOfAccount>()
+                .Select(x => new ChartOfAccountDatalistViewModel
+                {
+                    Id = x.Id,
+                    Code = x.Code,
+                    Name = x.Name,
+                    IsHeader = x.IsHeader,
                     Notes = x.Notes,
                     Active = x.Active
                 });

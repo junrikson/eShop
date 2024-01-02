@@ -52,6 +52,10 @@ namespace eShop.Models
 
         [Display(Name = "Gudang")]
         public virtual MasterWarehouse MasterWarehouse { get; set; }
+
+        [Display(Name = "Type Formula")]
+        public EnumBillOfMaterialType BillOfMaterialType { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -115,7 +119,6 @@ namespace eShop.Models
         [Remote("IsCodeExists", "ProductionWorkOrders", AdditionalFields = "Id", ErrorMessage = "Nomor ini sudah dipakai.")]
         public string Code { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Kode Produk")]
         [Required(ErrorMessage = "Kode Produk harus diisi.")]
         public int HeaderMasterItemId { get; set; }
@@ -130,7 +133,6 @@ namespace eShop.Models
         [Display(Name = "Satuan")]
         public virtual MasterItemUnit HeaderMasterItemUnit { get; set; }
 
-        [DatalistColumn]
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
@@ -155,6 +157,11 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##########}", ApplyFormatInEditMode = true)]
         public decimal Rate { get; set; }
 
+        [DatalistColumn]
+        [Display(Name = "Type Formula")]
+        public EnumBillOfMaterialType BillOfMaterialType { get; set; }
+
+        [DatalistColumn]
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -162,8 +169,28 @@ namespace eShop.Models
         [Display(Name = "Print")]
         public bool IsPrint { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Aktif")]
         public bool Active { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+       // [DatalistColumn]
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
     }
 
     public class ProductionWorkOrderFinishedGoodSlipViewModel
@@ -271,7 +298,7 @@ namespace eShop.Models
         public OutstandingProductionWorkOrderDatalist()
         {
             Url = "/DatalistFilters/AllOutstandingProductionWorkOrder";
-            Title = "Perintah Kerja Barang Jadi";
+            Title = "Perintah Kerja Produksi";
             AdditionalFilters.Add("MasterBusinessUnitId");
             AdditionalFilters.Add("MasterRegionId");
 
@@ -295,7 +322,12 @@ namespace eShop.Models
                     MasterRegion = x.MasterRegion,
                     Code = x.Code,
                     Date = x.Date,
+                    BillOfMaterialType = x.BillOfMaterialType,
+                    Notes = x.Notes,
                     Active = x.Active,
+                    Created = x.Created,
+                    Updated = x.Updated,
+                    
                 });
         }
     }
@@ -326,7 +358,7 @@ namespace eShop.Models
         public override IQueryable<ProductionWorkOrderFinishedGoodSlipViewModel> GetModels()
         {
             return Context.Set<ProductionWorkOrder>()
-                .Where(x => !Context.Set<FinishedGoodSlip>().Where(p => p.Active == true && p.ProductionWorkOrderId == x.Id).Any())
+               // .Where(x => !Context.Set<FinishedGoodSlip>().Where(p => p.Active == true && p.ProductionWorkOrderId == x.Id).Any())
                 .Select(x => new ProductionWorkOrderFinishedGoodSlipViewModel
                 {
                     Id = x.Id,
@@ -367,6 +399,10 @@ namespace eShop.Models
         [Required(ErrorMessage = "Quantity harus diisi.")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public int Quantity { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Type Formula")]
+        public EnumBillOfMaterialType BillOfMaterialType { get; set; }
 
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
@@ -428,6 +464,58 @@ namespace eShop.Models
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal Quantity { get; set; }
 
+        [Display(Name = "Keterangan")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
+        [Display(Name = "Dibuat")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Created { get; set; }
+
+        [Display(Name = "Diubah")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        public DateTime Updated { get; set; }
+
+        [Display(Name = "User")]
+        public int UserId { get; set; }
+
+        [Display(Name = "User")]
+        public virtual ApplicationUser User { get; set; }
+    }
+
+    public class ProductionWorkOrderCostDetails
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Display(Name = "Production WorkOrder Material")]
+        [Required(ErrorMessage = "Nomor SPK harus diisi.")]
+        public int ProductionWorkOrderId { get; set; }
+
+        [Display(Name = "Production Bill of Material")]
+        public virtual ProductionWorkOrder ProductionWorkOrder { get; set; }
+
+        [Display(Name = "Production Bill Of Material")]
+        [Required(ErrorMessage = "Production Bill Of Material harus diisi.")]
+        public int ProductionWorkOrderBillOfMaterialId { get; set; }
+
+        [Display(Name = "Production Bill of Material")]
+        public virtual ProductionWorkOrderBillOfMaterial ProductionWorkOrderBillOfMaterial { get; set; }
+
+        [Display(Name = "Kode Biaya")]
+        public int MasterCostId { get; set; }
+
+        [Display(Name = "Kode Biaya")]
+        public virtual MasterCost MasterCost { get; set; }
+
+        [Display(Name = "Total (Rp)")]
+        [Required(ErrorMessage = "Total harus diisi.")]
+        public int Total { get; set; }
+
+        [AllowHtml]
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }

@@ -13,6 +13,7 @@
         columns.Add(model => model.FullName).Titled(@Html.DisplayNameFor(model => model.FullName));
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
         columns.Add(model => model.CustomerType).Titled(@Html.DisplayNameFor(model => model.CustomerType));
+        columns.Add(model => model.MasterDestination.Name).Titled(@Html.DisplayNameFor(model => model.MasterDestination.Name));
         columns.Add(model => model.ContactPerson).Titled(@Html.DisplayNameFor(model => model.ContactPerson));
         columns.Add(model => model.Birthday).Titled(@Html.DisplayNameFor(model => model.Birthday)).Formatted("{0:d}");
         columns.Add(model => model.Phone1).Titled(@Html.DisplayNameFor(model => model.Phone1));

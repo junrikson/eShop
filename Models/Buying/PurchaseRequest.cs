@@ -15,9 +15,9 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Kode PR harus diisi.")]
+        [Required(ErrorMessage = "Nomor Purchase Request harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode PR")]
+        [Display(Name = "Nomor Purchase Request")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "PurchaseRequests", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
         public string Code { get; set; }
@@ -68,13 +68,20 @@ namespace eShop.Models
         [Display(Name = "Gudang")]
         public virtual MasterWarehouse MasterWarehouse { get; set; }
 
+        [Display(Name = "Referensi")]
+        public string Reference { get; set; }
+
         [Display(Name = "Keterangan")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Display(Name = "DiscountGlobal")]
+        [Display(Name = "Diskon Rupiah")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal DiscountGlobal { get; set; }
+        public decimal Discount { get; set; }
+
+        [Display(Name = "Diskon Persen")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountValue { get; set; }
 
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
@@ -109,9 +116,9 @@ namespace eShop.Models
         public int Id { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Kode PR harus diisi.")]
+        [Required(ErrorMessage = "Nomor Purchase Request harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode PR")]
+        [Display(Name = "Nomor Purchase Request")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         [Remote("IsCodeExists", "PurchaseRequests", AdditionalFields = "Id", ErrorMessage = "Kode ini sudah dipakai.")]
         public string Code { get; set; }
@@ -152,6 +159,16 @@ namespace eShop.Models
         [DatalistColumn]
         [Display(Name = "Gudang")]
         public string MasterWarehouseCode { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Diskon Rupiah")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal Discount { get; set; }
+
+        [DatalistColumn]
+        [Display(Name = "Diskon Persen")]
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        public decimal DiscountValue { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Total")]
@@ -236,8 +253,7 @@ namespace eShop.Models
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity harus diisi.")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
 
         [Display(Name = "Harga")]
         [Required(ErrorMessage = "Harga harus diisi.")]
@@ -248,13 +264,13 @@ namespace eShop.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Display(Name = "PercentageDiscount")]
+        [Display(Name = "Diskon Rupiah")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal PercentageDiscount { get; set; }
+        public decimal Discount { get; set; }
 
-        [Display(Name = "CashDiscount")]
+        [Display(Name = "Diskon Persen")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal CashDiscount { get; set; }
+        public decimal DiscountValue { get; set; }
 
         [Display(Name = "Nilai")]
         [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]

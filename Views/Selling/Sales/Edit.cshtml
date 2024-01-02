@@ -35,82 +35,130 @@
                         {
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(model => model.Id)
-                        <div class="form-horizontal">
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.MasterBusinessUnitId)
-                                    @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.MasterRegionId)
-                                    @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist(), new { @class = "datalist2" })
-                                    @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.SalesOrderId)
-                                    @Html.DatalistFor(model => model.SalesOrderId, new eShop.Models.OutstandingSalesOrderDatalist(), new { @class = "datalist2" })
-                                    @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.MasterWarehouseId)
-                                    @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterBusinessRegionWarehouseDatalist(), new { @class = "datalist2" })
-                                    @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.LabelFor(model => model.Code)
-                                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
-                                </div>
-                                <div class="col-md-2 text-center">
-                                    @Html.LabelFor(model => model.Active)
-                                    <div class="checkbox text-center">
-                                        @Html.CheckBoxFor(model => model.Active)
-                                        @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.MasterCurrencyId)
+                            @Html.HiddenFor(model => model.Rate)
+                            <div class="form-horizontal">
+                                <div class="nav-tabs-custom">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a href="#tab_1" data-toggle="tab">General</a></li>
+                                        <li><a href="#tab_2" data-toggle="tab">Other</a></li>
+
+                                    </ul>
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="tab-content">
+                                        <div class="tab-pane active form-horizontal" id="tab_1">
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterBusinessUnitId)
+                                                    @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterRegionId)
+                                                    @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist(), new { @class = "datalist2" })
+                                                    @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.SalesOrderId)
+                                                    @Html.DatalistFor(model => model.SalesOrderId, new eShop.Models.OutstandingSalesOrderDatalist(), new { @class = "datalist2" })
+                                                    @Html.ValidationMessageFor(model => model.SalesOrderId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterWarehouseId)
+                                                    @Html.DatalistFor(model => model.MasterWarehouseId, new eShop.Models.MasterBusinessRegionWarehouseDatalist(), new { @class = "datalist2" })
+                                                    @Html.ValidationMessageFor(model => model.MasterWarehouseId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-10">
+                                                    @Html.LabelFor(model => model.Code)
+                                                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-2 text-center">
+                                                    @Html.LabelFor(model => model.Active)
+                                                    <div class="checkbox text-center">
+                                                        @Html.CheckBoxFor(model => model.Active)
+                                                        @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.Date)
+                                                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane form-horizontal" id="tab_2">
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterCustomerId)
+                                                    @Html.DatalistFor(model => model.MasterCustomerId, new eShop.Models.MasterBusinessRegionCustomerDatalist())
+                                                    @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterSalesPersonId)
+                                                    @Html.DatalistFor(model => model.MasterSalesPersonId, new eShop.Models.MasterBusinessRegionSalesPersonDatalist())
+                                                    @Html.ValidationMessageFor(model => model.MasterSalesPersonId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.MasterDestinationId)
+                                                    @Html.DatalistFor(model => model.MasterDestinationId, new eShop.Models.MasterDestinationDatalist())
+                                                    @Html.ValidationMessageFor(model => model.MasterDestinationId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.DeliveryDate)
+                                                    @Html.EditorFor(model => model.DeliveryDate, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.DeliveryDate, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.DueDate)
+                                                    @Html.EditorFor(model => model.DueDate, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.DueDate, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.LabelFor(model => model.Notes)
+                                                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6 text-left">
+                                                    <a href="@Url.Action("Index")" id="cancel" class="btn btn-danger" style="margin-top:10px">
+                                                        Cancel
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6 text-right">
+                                                    <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.Date)
-                                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.MasterCustomerId)
-                                    @Html.DatalistFor(model => model.MasterCustomerId, new eShop.Models.MasterBusinessRegionCustomerDatalist())
-                                    @Html.ValidationMessageFor(model => model.MasterCustomerId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    @Html.LabelFor(model => model.Notes)
-                                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
-                                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-6 text-left">
-                                        <a href="@Url.Action("Index")" id="cancel" class="btn btn-danger" style="margin-top:10px">
-                                            Cancel
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <input type="submit" value="Save" class="btn btn-primary" style="margin-top:10px" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         }
                     </div>
                     <!-- /.box-body -->
@@ -155,6 +203,10 @@
     </div>
 </div>
 
+
+
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/mvcgrid")
     @Scripts.Render("~/bundles/jqueryval")
@@ -176,7 +228,6 @@
     </script>
 
     <script>
-
         [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
             new MvcDatalist(element);
         });
@@ -202,6 +253,36 @@
             }
         });
 
+        Inputmask.extendAliases({
+            'myNum2': {
+                alias: 'currency',
+                digits: 2,
+                digitsOptional: false,
+                integerDigits: 12,
+                prefix: '',
+                groupSeparator: '.',
+                radixPoint: ',',
+                groupSize: 3,
+                rightAlign: false,
+                autoUnmask: true
+            }
+        });
+
+        Inputmask.extendAliases({
+            'myNum10': {
+                alias: 'currency',
+                digits: 10,
+                digitsOptional: false,
+                integerDigits: 12,
+                prefix: '',
+                groupSeparator: '.',
+                radixPoint: ',',
+                groupSize: 3,
+                rightAlign: false,
+                autoUnmask: true
+            }
+        });
+
         $('#btnAdd').click(function (event) {
             event.preventDefault();
             if ($("#MasterBusinessUnitId").val() === "") {
@@ -211,7 +292,7 @@
                 bootbox.alert("Wilayah belum dipilih!");
             }
             else {
-                var url = $(this).attr("href") + "?salesOrderId=" + $("input#Id").val();
+                var url = $(this).attr("href") + "?saleId=" + $("input#Id").val();
                 $.get(url, function (data) {
                     $('#detailsContainer').html(data);
                     $('#detailsModal').modal('show');
@@ -228,6 +309,7 @@
 
                     Inputmask("myNum").mask("#Quantity");
                     Inputmask("myNum").mask("#Price");
+                    Inputmask("myNum").mask("#Total");
 
                     $("#MasterItemId").on("change", function () {
                         var Id = $("#MasterItemId").val();
@@ -256,9 +338,115 @@
                         };
                         $.ajax(options);
                     }).change();
+
+                    $("#MasterItemUnitId").on("change", function () {
+                        var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                        var masterRegionId = $("#MasterRegionId").val();
+                        var masterItemId = $("#MasterItemId").val();
+                        var masterItemUnitId = $("#MasterItemUnitId").val();
+                        var masterCustomerId = $("#MasterCustomerId").val();
+                        var data = { MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId, MasterItemId: masterItemId, MasterItemUnitId: masterItemUnitId, MasterCustomerId: masterCustomerId };
+                        var options = {};
+
+                        options.url = "/Sales/GetPrice";
+                        options.type = "POST";
+                        options.headers = headers;
+                        options.data = JSON.stringify(data);
+                        options.contentType = "application/json";
+                        options.dataType = "json";
+                        options.success = function (msg) {
+                            document.getElementById('Price').value = msg;
+                        };
+                        options.error = function () {
+                            document.getElementById('Price').value = 0;
+                        };
+                        $.ajax(options);
+                    }).change();
+
                 });
             }
         });
+
+        $('#btnCostAdd').click(function (event) {
+            event.preventDefault();
+            if ($("#MasterBusinessUnitId").val() === "") {
+                bootbox.alert("Unit Bisnis belum dipilih!");
+            }
+            else if ($("#MasterRegionId").val() === "") {
+                bootbox.alert("Wilayah belum dipilih!");
+            }
+            else if ($("#MasterWarehouseId").val() === "") {
+                bootbox.alert("Gudang belum dipilih!");
+            }
+            else if ($("#MasterCustomerId").val() === "") {
+                bootbox.alert("Konsumen belum dipilih!");
+            }
+            else {
+                var url = $(this).attr("href") + "?saleId=" + $("input#Id").val();
+                $.get(url, function (data) {
+                    $('#detailsContainer').html(data);
+                    $('#detailsModal').modal('show');
+
+                    [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                        new MvcDatalist(element);
+                    });
+
+                    $('form').each(function () {
+                        var $el = $(this);
+                        $el.data('validator', null);
+                        $.validator.unobtrusive.parse($el);
+                    });
+
+                    Inputmask("myNum").mask("#Quantity");
+                    Inputmask("myNum").mask("#Discount");
+                    Inputmask("myNum").mask("#Price");
+                    Inputmask("myNum").mask("#Total");
+
+
+                });
+            }
+        });
+
+        $('#btnChangeCurrency').click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr("href") + "?saleId=" + $("input#Id").val();
+            $.get(url, function (data) {
+                $('#detailsContainer').html(data);
+                $('#detailsModal').modal('show');
+
+                [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                    new MvcDatalist(element);
+                });
+
+                $('form').each(function () {
+                    var $el = $(this);
+                    $el.data('validator', null);
+                    $.validator.unobtrusive.parse($el);
+                });
+
+                $("#MasterCurrencyId").on("change", function () {
+                    var id = $("#MasterCurrencyId").val();
+                    var data = { Id: id };
+                    var options = {};
+
+                    options.url = "/Sales/GetCurrencyRate";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(data);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (rate) {
+                        document.getElementById('Rate').value = rate;
+                    };
+                    options.error = function () {
+                    };
+                    $.ajax(options);
+                }).change();
+
+                Inputmask("myNum10").mask("#Rate");
+            });
+        });
+
 
         function CreateSuccess(data) {
             if (data !== "success") {
@@ -270,6 +458,9 @@
 
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
+
+            var grid1 = new MvcGrid(document.querySelector('#cost-table'));
+            grid1.reload();
 
             var param = { saleId: $("#Id").val() };
             var options = {};
@@ -297,6 +488,9 @@
             var grid = new MvcGrid(document.querySelector('#detail-table'));
             grid.reload();
 
+            var grid1 = new MvcGrid(document.querySelector('#cost-table'));
+            grid1.reload();
+
             var param = { saleId: $("#Id").val() };
             var options = {};
 
@@ -312,14 +506,149 @@
             $.ajax(options);
         }
 
+        function ChangeCurrencySuccess(data) {
+            if (data.Status !== "success") {
+                $('#detailsContainer').html(data);
+                return;
+            }
+            $('#detailsModal').modal('hide');
+            $('#detailsContainer').html("");
+
+            var grid = new MvcGrid(document.querySelector('#detail-table'));
+            grid.reload();
+
+            var grid1 = new MvcGrid(document.querySelector('#cost-table'));
+            grid1.reload();
+
+            document.querySelector('#btnChangeCurrency').innerHTML = data.Message;
+
+            var param = { saleId: $("#Id").val() };
+            var options = {};
+
+            options.url = "/Sales/GetTotal";
+            options.type = "POST";
+            options.headers = headers;
+            options.data = JSON.stringify(param);
+            options.contentType = "application/json";
+            options.dataType = "json";
+            options.success = function (msg) {
+                document.getElementById('Total').value = msg;
+            };
+            $.ajax(options);
+        }
+
+
         var token = $('input[name="__RequestVerificationToken"]').val();
         var headers = {};
         headers['__RequestVerificationToken'] = token;
 
-        $(document).ready(function () {
-            $("#DetailsBatchDelete").click(function () {
+        $(document).ready(function ()
+        {
+            $("#SalesOrderId").on("change", function () {
+                var salesOrderId = $("#SalesOrderId").val();
+                var saleid = $("#Id").val();
+                var data = { Saleid: saleid, SalesOrderId: salesOrderId };
+                var options = {};
+                var grid = new MvcGrid(document.querySelector('#detail-table'));
+
+                if (salesOrderId !== 0 && salesOrderId !== '') {
+                    options.url = "/Sales/PopulateDetails";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(data);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (obj) {
+                        document.getElementById('MasterRegionId').value = obj.MasterRegionId;
+                        document.getElementById('MasterBusinessUnitId').value = obj.MasterBusinessUnitId;
+                        document.getElementById('MasterCustomerId').value = obj.MasterCustomerId;
+                        document.getElementById('MasterSalesPersonId').value = obj.MasterSalesPersonId;
+                        document.getElementById('MasterWarehouseId').value = obj.MasterWarehouseId;
+                        document.getElementById('Notes').value = obj.Notes;
+                        document.getElementById('Total').value = obj.Total;
+                        document.querySelector('#btnChangeCurrency').innerHTML = obj.Currency;
+
+                        $(document.getElementById('MasterBusinessUnitId')).trigger("change");
+
+                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                            new MvcDatalist(element).reload();
+                        });
+
+                        grid.reload();
+                    };
+                    options.error = function () {
+                        document.getElementById('Code').value = "";
+                        document.getElementById('MasterBusinessUnitId').value = "0";
+                        grid.reload();
+                    };
+                    $.ajax(options);
+                }
+            }).change();
+
+            $("#DetailsBatchDelete").click(function ()
+            {
                 var selectedIDs = new Array();
-                $('#detail-table tbody tr').find('td:first :checkbox').each(function () {
+                $('#detail-table tbody tr').find('td:first :checkbox').each(function ()
+                {
+                    if ($(this).prop('checked'))
+                    {
+                        selectedIDs.push($(this).val());
+                    }
+                });
+
+                if (selectedIDs.length <= 0)
+                {
+                    bootbox.alert("Pilih salah satu data yang akan dihapus.");
+                }
+                else
+                {
+                    bootbox.confirm("Apakah anda yakin akan menghapus " + selectedIDs.length + " data?", function (result)
+                    {
+                        if (result)
+                        {
+                            var options = {};
+                            options.url = "/Sales/DetailsBatchDelete";
+                            options.type = "POST";
+                            options.headers = headers;
+                            options.data = JSON.stringify(selectedIDs);
+                            options.contentType = "application/json";
+                            options.dataType = "json";
+                            options.success = function (msg)
+                            {
+                                bootbox.alert(msg);
+
+                                var grid = new MvcGrid(document.querySelector('#detail-table'));
+                                grid.reload();
+
+                                var param = { salesId: $("#Id").val() };
+                                var options2 = {};
+
+                                options2.url = "/Sales/GetTotal";
+                                options2.type = "POST";
+                                options2.headers = headers;
+                                options2.data = JSON.stringify(param);
+                                options2.contentType = "application/json";
+                                options2.dataType = "json";
+                                options2.success = function (msg)
+                                {
+                                    document.getElementById('Total').value = msg;
+                                };
+                                $.ajax(options2);
+                            };
+                            options.error = function ()
+                            {
+                                bootbox.alert("Terjadi kesalahan saat menghapus.");
+                            };
+                            $.ajax(options);
+                        }
+                    });
+                }
+            });
+
+
+            $("#btnCostsBatchDelete").click(function () {
+                var selectedIDs = new Array();
+                $('#cost-table tbody tr').find('td:first :checkbox').each(function () {
                     if ($(this).prop('checked')) {
                         selectedIDs.push($(this).val());
                     }
@@ -341,10 +670,10 @@
                             options.success = function (msg) {
                                 bootbox.alert(msg);
 
-                                var grid = new MvcGrid(document.querySelector('#detail-table'));
+                                var grid = new MvcGrid(document.querySelector('#cost-table'));
                                 grid.reload();
 
-                                var param = { saleId: $("#Id").val() };
+                                var param = { salesId: $("#Id").val() };
                                 var options2 = {};
 
                                 options2.url = "/Sales/GetTotal";
@@ -366,6 +695,116 @@
                     });
                 }
             });
+
+
+            $("#cancel").click(function () {
+                var data = { id: $("input#Id").val() };
+                var options = {};
+                options.url = "/Sales/Cancel";
+                options.type = "POST";
+                options.headers = headers;
+                options.data = JSON.stringify(data);
+                options.contentType = "application/json";
+                options.dataType = "json";
+                options.success = function (msg) {
+                    window.location.href = '@Url.Action("Index", "Sales")';
+                };
+                options.error = function () {
+                    window.location.href = '@Url.Action("Index", "Sales")';
+                };
+                $.ajax(options);
+            });
+
+            $("#MasterRegionId").on("change", function () {
+                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                var masterRegionId = $("#MasterRegionId").val();
+                var id = $("#Id").val();
+                var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
+                var options = {};
+
+                if (masterRegionId != 0 && masterRegionId !== '') {
+                    if ($("#MasterBusinessUnitId").val() === "") {
+                        bootbox.alert("Unit Bisnis belum dipilih!");
+                        document.getElementById('MasterRegionId').value = "0";
+                    }
+                    else {
+                        options.url = "/Sales/GetCode";
+                        options.type = "POST";
+                        options.headers = headers;
+                        options.data = JSON.stringify(data);
+                        options.contentType = "application/json";
+                        options.dataType = "json";
+                        options.success = function (code) {
+                            document.getElementById('Code').value = code;
+
+                            [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                                new MvcDatalist(element).reload();
+                            });
+                        };
+                        options.error = function () {
+                            document.getElementById('Code').value = "";
+                            grid.reload();
+                        };
+                        $.ajax(options);
+                    }
+                }
+            }).change();
+
+            $("#MasterBusinessUnitId").on("change", function () {
+                var id = $("#Id").val();
+                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                var masterRegionId = $("#MasterRegionId").val();
+                var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
+                var options = {};
+
+                if (masterRegionId != 0 && masterRegionId !== '') {
+                    options.url = "/Sales/GetCode";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(data);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (code) {
+                        document.getElementById('Code').value = code;
+
+                        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                            new MvcDatalist(element).reload();
+                        });
+                    };
+                    options.error = function () {
+                        document.getElementById('Code').value = "";
+                    };
+                    $.ajax(options);
+                }
+            }).change();
+
+            $("#MasterCustomerId").on("change", function () {
+                var Id = $("#MasterCustomerId").val();
+                var data = { id: Id };
+                var options = {};
+
+                options.url = "/SalesOrders/GetMasterDestination";
+                options.type = "POST";
+                options.headers = headers;
+                options.data = JSON.stringify(data);
+                options.contentType = "application/json";
+                options.dataType = "json";
+                options.success = function (msg) {
+                    document.getElementById('MasterDestinationId').value = msg;
+
+                    [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                        new MvcDatalist(element).reload();
+                    });
+                };
+                options.error = function () {
+                    document.getElementById('MasterDestinationId').value = 0;
+
+                    [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                        new MvcDatalist(element).reload();
+                    });
+                };
+                $.ajax(options);
+            }).change();
         });
 
         document.addEventListener('reloadend', function (e) {
@@ -396,6 +835,9 @@
 
                         Inputmask("myNum").mask("#Quantity");
                         Inputmask("myNum").mask("#Price");
+                        Inputmask("myNum").mask("#Total");
+
+
 
                         $("#MasterItemId").on("change", function () {
                             var Id = $("#MasterItemId").val();
@@ -423,7 +865,65 @@
                                 });
                             };
                             $.ajax(options);
+
+                            $("#MasterItemUnitId").on("change", function () {
+                                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                                var masterRegionId = $("#MasterRegionId").val();
+                                var masterItemId = $("#MasterItemId").val();
+                                var masterItemUnitId = $("#MasterItemUnitId").val();
+                                var masterCustomerId = $("#MasterCustomerId").val();
+                                var data = { MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId, MasterItemId: masterItemId, MasterItemUnitId: masterItemUnitId, MasterCustomerId: masterCustomerId };
+                                var options = {};
+
+                                options.url = "/Sales/GetPrice";
+                                options.type = "POST";
+                                options.headers = headers;
+                                options.data = JSON.stringify(data);
+                                options.contentType = "application/json";
+                                options.dataType = "json";
+                                options.success = function (msg) {
+                                    document.getElementById('Price').value = msg;
+                                };
+                                options.error = function () {
+                                    document.getElementById('Price').value = 0;
+                                };
+                                $.ajax(options);
+                            }).change();
+
+
+
                         }).change();
+
+                    });
+                });
+
+                $('.fix-table').tableHeadFixer({ left: 2 });
+            }
+            else if (e.detail.grid.element.id == 'cost-table') {
+                $('#CheckAllCost').click(function () {
+                    var checkedStatus = this.checked;
+                    $('#cost-table tbody tr').find('td:first :checkbox').each(function () {
+                        $(this).prop('checked', checkedStatus);
+                    });
+                });
+                $('.fix-table').tableHeadFixer({ left: 2 });
+
+                $('#cost-table').on("click", ".edit-cost", function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("href");
+                    $.get(url, function (data) {
+                        $('#subdetailsContainer').html(data);
+                        $('#subdetailsModal').modal('show');
+
+                        [].forEach.call(document.getElementsByClassName('datalist2'), function (element) {
+                            new MvcDatalist(element);
+                        });
+
+                        $('form').each(function () {
+                            var $el = $(this);
+                            $el.data('validator', null);
+                            $.validator.unobtrusive.parse($el);
+                        });
                     });
                 });
 
@@ -432,3 +932,5 @@
         });
     </script>
 }
+
+

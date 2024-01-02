@@ -9,11 +9,14 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Web.Mvc;
 
 
@@ -32,13 +35,26 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "PurchasesActive")]
-        public PartialViewResult IndexGrid(String search)
+        public PartialViewResult IndexGrid(string search)
         {
-            if (String.IsNullOrEmpty(search))
-                return PartialView("../Buying/Purchases/_IndexGrid", db.Set<Purchase>().AsQueryable());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
+            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+
+            if (string.IsNullOrEmpty(search))
+            {
+                return PartialView("../Buying/Purchases/_IndexGrid", db.Set<Purchase>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
+            }
             else
-                return PartialView("../Buying/Purchases/_IndexGrid", db.Set<Purchase>().AsQueryable()
-                    .Where(x => x.Code.Contains(search)));
+            {
+                return PartialView("../Buying/Purchases/_IndexGrid", db.Set<Purchase>().Where(x =>
+                        masterRegions.Contains(x.MasterRegionId) &&
+                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
+                        .Where(x => x.Code.Contains(search)));
+
+            }
         }
 
         public JsonResult IsCodeExists(string Code, int? Id)
@@ -79,6 +95,14 @@ namespace eShop.Controllers
         public PartialViewResult ViewGrid(int Id)
         {
             return PartialView("../Buying/Purchases/_ViewGrid", db.PurchasesDetails
+                .Where(x => x.PurchaseId == Id).ToList());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "PurchasesView")]
+        public PartialViewResult ViewCostGrid(int Id)
+        {
+            return PartialView("../Buying/Purchases/_ViewGrid", db.PurchasesCostsDetails
                 .Where(x => x.PurchaseId == Id).ToList());
         }
 
@@ -144,13 +168,13 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchasesAdd")]
-        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,PurchaseOrderId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
+        public ActionResult Create([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterCurrencyId,MasterWarehouseId,PurchaseOrderId,MasterSupplierId,Rate,MasterCurrencyId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
         {
             purchase.Created = DateTime.Now;
             purchase.Updated = DateTime.Now;
             purchase.UserId = User.Identity.GetUserId<int>();
             purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id);
-            purchase.MasterCurrencyId = db.MasterCurrencies.Where(x => x.Active && x.Default).FirstOrDefault().Id;
+            purchase.MasterCurrency = db.MasterCurrencies.Find(purchase.MasterCurrencyId);
 
             if (!string.IsNullOrEmpty(purchase.Code)) purchase.Code = purchase.Code.ToUpper();
             if (!string.IsNullOrEmpty(purchase.Notes)) purchase.Notes = purchase.Notes.ToUpper();
@@ -279,11 +303,12 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PurchasesEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterWarehouseId,PurchaseOrderId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
+        public ActionResult Edit([Bind(Include = "Id,Code,Date,MasterBusinessUnitId,MasterRegionId,MasterCurrencyId,MasterWarehouseId,PurchaseOrderId,MasterSupplierId,Notes,Active,Created,Updated,UserId")] Purchase purchase)
         {
             purchase.Updated = DateTime.Now;
             purchase.UserId = User.Identity.GetUserId<int>();
             purchase.Total = SharedFunctions.GetTotalPurchase(db, purchase.Id);
+            purchase.MasterCurrency = db.MasterCurrencies.Find(purchase.MasterCurrencyId);
 
             if (!string.IsNullOrEmpty(purchase.Code)) purchase.Code = purchase.Code.ToUpper();
             if (!string.IsNullOrEmpty(purchase.Notes)) purchase.Notes = purchase.Notes.ToUpper();
@@ -625,6 +650,88 @@ namespace eShop.Controllers
             return PartialView("../Buying/Purchases/_DetailsEdit", purchaseDetails);
         }
 
+        [Authorize(Roles = "PurchasesActive")]
+        public ActionResult CostsCreate(int purchaseId)
+        {
+            Purchase purchase = db.Purchases.Find(purchaseId);
+
+            if (purchase == null)
+            {
+                return HttpNotFound();
+            }
+
+            PurchaseCostDetails purchaseCostDetails = new PurchaseCostDetails
+            {
+                PurchaseId = purchaseId
+            };
+
+            return PartialView("../Buying/Purchases/_CostsCreate", purchaseCostDetails);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PurchasesActive")]
+        public ActionResult CostsCreate([Bind(Include = "Id,PurchaseId,MasterCostId,Total,Notes,Created,Updated,UserId")] PurchaseCostDetails purchaseCostDetails)
+        {
+            purchaseCostDetails.Created = DateTime.Now;
+            purchaseCostDetails.Updated = DateTime.Now;
+            purchaseCostDetails.UserId = User.Identity.GetUserId<int>();
+
+            if (ModelState.IsValid)
+            {
+                if (!string.IsNullOrEmpty(purchaseCostDetails.Notes)) purchaseCostDetails.Notes = purchaseCostDetails.Notes.ToUpper();
+
+                Purchase purchase = db.Purchases.Find(purchaseCostDetails.PurchaseId);
+                // bankTransaction.Total = SharedFunctions.GetTotalBankTransactionDetails(db, bankTransaction.Id) + bankTransactionDetails.Total;
+
+                using (DbContextTransaction dbTran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.PurchasesCostsDetails.Add(purchaseCostDetails);
+                        db.SaveChanges();
+
+                        // SharedFunctions.CreateBankJournalDetails(db, bankTransactionDetails);
+
+                        db.Entry(purchaseCostDetails).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.PurchaseCostDetails, MenuId = purchaseCostDetails.Id, MenuCode = purchaseCostDetails.MasterCostId.ToString(), Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SaveChanges();
+
+                        dbTran.Commit();
+
+                        return Json("success", JsonRequestBehavior.AllowGet);
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        dbTran.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+
+            return PartialView("../Buying/Purchases/_CostsCreate", purchaseCostDetails);
+        }
+
+        [Authorize(Roles = "PurchasesActive")]
+        public ActionResult CostsEdit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            PurchaseCostDetails obj = db.PurchasesCostsDetails.Find(id);
+
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("../Buying/Purchases/_CostsEdit", obj);
+        }
+
         [HttpPost]
         [ValidateJsonAntiForgeryToken]
         [Authorize(Roles = "PurchasesActive")]
@@ -684,6 +791,14 @@ namespace eShop.Controllers
         public PartialViewResult DetailsGrid(int Id)
         {
             return PartialView("../Buying/Purchases/_DetailsGrid", db.PurchasesDetails
+                .Where(x => x.PurchaseId == Id).ToList());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "PurchasesActive")]
+        public PartialViewResult CostsGrid(int Id)
+        {
+            return PartialView("../Buying/Purchases/_CostsGrid", db.PurchasesCostsDetails
                 .Where(x => x.PurchaseId == Id).ToList());
         }
 
@@ -848,6 +963,14 @@ namespace eShop.Controllers
                 code = (Convert.ToInt32(lastData.Code.Substring(0, 4)) + 1).ToString("D4") + code;
 
             return code;
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "PurchasesActive")]
+        public JsonResult GetPrice(int masterBusinessUnitId, int masterRegionId, int masterItemId, int masterItemUnitId, int masterCustomerId)
+        {
+            return Json(SharedFunctions.GetSellingPrice(db, masterBusinessUnitId, masterRegionId, masterItemId, masterItemUnitId, masterCustomerId));
         }
 
         [HttpPost]

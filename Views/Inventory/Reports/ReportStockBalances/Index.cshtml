@@ -1,0 +1,182 @@
+﻿@model IEnumerable<eShop.Models.StockBalance>
+
+@{
+    ViewBag.Title = "Saldo Stok";
+    ViewBag.Current = "ReportStockBalances";
+}
+
+@section Styles {
+    @Styles.Render("~/style/mvcgrid")
+}
+
+<style>
+    .tablegrid-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+</style>
+<div class="content-wrapper">
+    <section class="content-header-fixed">
+        <h1 class="col-md-6">
+            Saldo Stok
+        </h1>
+        <div class="col-md-6 text-right">
+            <div class="col-md-6">
+                @Html.DropDownList("MasterBusinessUnitId", null, htmlAttributes: new { @class = "form-control" })
+            </div>
+            <div class="col-md-6">
+                @Html.DropDownList("MasterRegionId", null, htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" style="margin-top:30px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-body" style="overflow:auto; white-space: nowrap">
+                        @Html.AjaxGrid(Url.Action("IndexGrid"), new { id = "data-table" })
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div id="addContainer">
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div id="editContainer">
+    </div>
+</div>
+
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div id="viewContainer">
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/mvcgrid")
+    @Scripts.Render("~/script/tableHeadFixer")
+    @Scripts.Render("~/script/InputMask")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/unobtrusive")
+
+    <script>
+        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+            new MvcGrid(element);
+        });
+
+        $(document).on('keyup', '.mvc-grid-search', function () {
+            var grid = new MvcGrid(document.querySelector('#data-table'));
+            grid.query.set('search', this.value);
+
+            grid.reload();
+        });
+    </script>
+
+    <script>
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        var headers = {};
+        headers['__RequestVerificationToken'] = token;
+
+        $(document).ready(function () {
+            $("#MasterBusinessUnitId").on("change", function () {
+                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                var masterRegionId = $("#MasterRegionId").val();
+
+                if (masterRegionId != 0 && masterRegionId != '') {
+                    var param = { MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
+                    var options = {};
+                    options.url = "/StockBalance/Generate";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(param);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (msg) {
+                        var grid = new MvcGrid(document.querySelector('#data-table'));
+                        grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                        grid.query.set('MasterRegionId', masterRegionId);
+                        grid.reload();
+                    };
+                    options.error = function () {
+                        var grid = new MvcGrid(document.querySelector('#data-table'));
+                        grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                        grid.query.set('MasterRegionId', masterRegionId);
+                        grid.reload();
+                    };
+                    $.ajax(options);
+                }
+                else {
+                    var grid = new MvcGrid(document.querySelector('#data-table'));
+                    grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                    grid.query.set('MasterRegionId', masterRegionId);
+                    grid.reload();
+                }
+            }).change();
+
+            $("#MasterRegionId").on("change", function () {
+                var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                var masterRegionId = $("#MasterRegionId").val();
+
+                if (masterBusinessUnitId != 0 && masterBusinessUnitId != '') {
+                    var param = { MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
+                    var options = {};
+                    options.url = "/StockBalance/Generate";
+                    options.type = "POST";
+                    options.headers = headers;
+                    options.data = JSON.stringify(param);
+                    options.contentType = "application/json";
+                    options.dataType = "json";
+                    options.success = function (msg) {
+                        var grid = new MvcGrid(document.querySelector('#data-table'));
+                        grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                        grid.query.set('MasterRegionId', masterRegionId);
+                        grid.reload();
+                    };
+                    options.error = function () {
+                        var grid = new MvcGrid(document.querySelector('#data-table'));
+                        grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                        grid.query.set('MasterRegionId', masterRegionId);
+                        grid.reload();
+                    };
+                    $.ajax(options);
+                }
+                else {
+                    var grid = new MvcGrid(document.querySelector('#data-table'));
+                    grid.query.set('MasterBusinessUnitId', masterBusinessUnitId);
+                    grid.query.set('MasterRegionId', masterRegionId);
+                    grid.reload();
+                }
+            }).change();
+        });
+
+        document.addEventListener('reloadend', function (e) {
+            $('#CheckAll').click(function () {
+                var checkedStatus = this.checked;
+                $('#data-table tbody tr').find('td:first :checkbox').each(function () {
+                    $(this).prop('checked', checkedStatus);
+                });
+            });
+
+            $('#data-table').on("click", ".view-data", function (event) {
+                event.preventDefault();
+                var url = $(this).attr("href");
+                $.get(url, function (data) {
+                    $('#viewContainer').html(data);
+                    $('#viewModal').modal('show');
+
+                    [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                        new MvcGrid(element);
+                    });
+                });
+            });
+
+            $('.fix-table').tableHeadFixer({ left: 3 });
+        });
+    </script>
+}

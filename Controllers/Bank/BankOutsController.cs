@@ -36,7 +36,7 @@ namespace eShop.Controllers
         public PartialViewResult IndexGrid(String search)
         {
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
-            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
+            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
             var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
 
             if (String.IsNullOrEmpty(search))

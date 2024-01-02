@@ -11,9 +11,11 @@
         columns.Add(model => ((User.IsInRole("ChartOfAccountsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "ChartOfAccounts", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
         ((User.IsInRole("ChartOfAccountsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "ChartOfAccounts", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code)).Sortable(true).InitialSort(GridSortOrder.Asc);
-        columns.Add(model => model.Level).Titled(@Html.DisplayNameFor(model => model.Level));
         columns.Add(model => model.Name).Titled(@Html.DisplayNameFor(model => model.Name));
-        columns.Add(model => model.Position).Titled(@Html.DisplayNameFor(model => model.Position));
+        columns.Add(model => model.AccountType.Code).Titled(@Html.DisplayNameFor(model => model.AccountType.Code));
+        columns.Add(model => model.AccountType.Name).Titled(@Html.DisplayNameFor(model => model.AccountType.Name));
+        columns.Add(model => model.SubChartOfAccount.Code).Titled(@Html.DisplayNameFor(model => model.SubChartOfAccount.Code));
+        columns.Add(model => model.SubChartOfAccount.Name).Titled(@Html.DisplayNameFor(model => model.SubChartOfAccount.Name));
         columns.Add(model => model.Notes).Titled(@Html.DisplayNameFor(model => model.Notes));
         columns.Add(model => model.Active).Titled(@Html.DisplayNameFor(model => model.Active)).RenderedAs(model => model.Active == true ? "&#x2713;" : "&#x2717;").Encoded(false);
         columns.Add(model => model.Created).Titled(@Html.DisplayNameFor(model => model.Created));
@@ -24,7 +26,7 @@
     .Empty("Tidak ada data.")
     .Pageable(pager =>
     {
-        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 100, "100" } };
+        pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 50, "50" }, { 100, "100" } };
         pager.ShowPageSizes = true;
         pager.PagesToDisplay = 5;
         pager.CurrentPage = 1;

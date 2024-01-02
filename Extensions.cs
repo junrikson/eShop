@@ -62,6 +62,240 @@ namespace eShop.Extensions
 
     public static class SharedFunctions
     {
+        public static decimal GetSellingPrice(ApplicationDbContext db, int masterBusinessUnitId, int masterRegionId, int masterItemId, int masterItemUnitId, int masterCustomerId)
+        {
+            decimal price = 0;
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+            MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
+            MasterItem masterItem = db.MasterItems.Find(masterItemId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(masterItemUnitId);
+            MasterCustomer masterCustomer = db.MasterCustomers.Find(masterCustomerId);
+
+            if(masterBusinessUnit  != null && masterRegion != null && masterItem != null && masterCustomer != null)
+            {
+                var sellingPrices = db.SellingPricesItems.Where(x => x.SellingPrice.MasterBusinessUnitId == masterBusinessUnitId
+                                            && x.SellingPrice.MasterRegionId == masterRegionId && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).Select(y => y.SellingPrice).ToList();
+
+                var sellingPricesCustomer = sellingPrices.Where(x => !x.AllCustomer);
+                SellingPrice sellingPriceAllCustomer = sellingPrices.Where(x => x.AllCustomer).FirstOrDefault();
+
+                if (sellingPricesCustomer.Any())
+                {
+                    var sellingPriceIds = sellingPricesCustomer.Select(x => x.Id);
+                    SellingPriceCustomer sellingPriceCustomer = db.SellingPricesCustomers.Where(x => sellingPriceIds.Contains(x.SellingPriceId)).FirstOrDefault();
+
+                    if(sellingPriceCustomer != null)
+                    {
+                        decimal? tempPrice = db.SellingPricesItems.Where(x => x.SellingPriceId == sellingPriceCustomer.SellingPriceId && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                        if (tempPrice != null)
+                            price = (decimal)tempPrice;
+                    }
+                    else if(sellingPriceAllCustomer != null)
+                    {
+                        decimal? tempPrice = db.SellingPricesItems.Where(x => x.SellingPriceId == sellingPriceAllCustomer.Id && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                        if (tempPrice != null)
+                            price = (decimal)tempPrice;
+                    }
+                }
+                else if (sellingPriceAllCustomer != null)
+                {
+                    decimal? tempPrice = db.SellingPricesItems.Where(x => x.SellingPriceId == sellingPriceAllCustomer.Id && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                    if (tempPrice != null)
+                        price = (decimal)tempPrice;
+                }
+            }
+
+            return price;
+        }
+        public static decimal GetBuyingPrice(ApplicationDbContext db, int masterBusinessUnitId, int masterRegionId, int masterItemId, int masterItemUnitId, int masterSupplierId)
+        {
+            decimal price = 0;
+
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+            MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
+            MasterItem masterItem = db.MasterItems.Find(masterItemId);
+            MasterItemUnit masterItemUnit = db.MasterItemUnits.Find(masterItemUnitId);
+            MasterSupplier masterSupplier = db.MasterSuppliers.Find(masterSupplierId);
+
+            if (masterBusinessUnit != null && masterRegion != null && masterItem != null && masterSupplier != null)
+            {
+                var buyingPrices = db.BuyingPricesItems.Where(x => x.BuyingPrice.MasterBusinessUnitId == masterBusinessUnitId
+                                            && x.BuyingPrice.MasterRegionId == masterRegionId && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).Select(y => y.BuyingPrice).ToList();
+
+                var buyingPricesSupplier = buyingPrices.Where(x => !x.AllSupplier);
+                BuyingPrice buyingPricesAllSupplier = buyingPrices.Where(x => x.AllSupplier).FirstOrDefault();
+
+                if (buyingPricesSupplier.Any())
+                {
+                    var buyingPriceIds = buyingPricesSupplier.Select(x => x.Id);
+                    BuyingPriceSupplier buyingPriceSupplier = db.BuyingPricesSuppliers.Where(x => buyingPriceIds.Contains(x.BuyingPriceId)).FirstOrDefault();
+
+                    if (buyingPriceSupplier != null)
+                    {
+                        decimal? tempPrice = db.BuyingPricesItems.Where(x => x.BuyingPriceId == buyingPriceSupplier.BuyingPriceId && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                        if (tempPrice != null)
+                            price = (decimal)tempPrice;
+                    }
+                    else if (buyingPricesAllSupplier != null)
+                    {
+                        decimal? tempPrice = db.BuyingPricesItems.Where(x => x.BuyingPriceId == buyingPricesAllSupplier.Id && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                        if (tempPrice != null)
+                            price = (decimal)tempPrice;
+                    }
+                }
+                else if (buyingPricesAllSupplier != null)
+                {
+                    decimal? tempPrice = db.BuyingPricesItems.Where(x => x.BuyingPriceId == buyingPricesAllSupplier.Id && x.MasterItemId == masterItemId && x.MasterItemUnitId == masterItemUnitId).FirstOrDefault().Price;
+
+                    if (tempPrice != null)
+                        price = (decimal)tempPrice;
+                }
+            }
+
+            return price;
+        }
+
+        public static void UpdateStock(ApplicationDbContext db, EnumMenuType type, EnumActions actions, int masterBusinessUnitId, int masterRegionId, int masterWarehouseId, int masterItemId, int quantity, int transactionId)
+        {
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+            MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
+            MasterItem masterItem = db.MasterItems.Find(masterItemId);
+            MasterWarehouse masterWarehouse = db.MasterWarehouses.Find(masterWarehouseId);
+
+            UpdateStockCard(db, type, actions, masterBusinessUnit, masterRegion, masterWarehouse, masterItem, quantity, transactionId);
+            UpdateStockBallance(db, masterBusinessUnit, masterRegion, masterWarehouse, masterItem);
+        }
+
+        private static void UpdateStockCard(ApplicationDbContext db, EnumMenuType type, EnumActions actions, MasterBusinessUnit masterBusinessUnit, MasterRegion masterRegion, MasterWarehouse masterWarehouse, MasterItem masterItem, int quantity, int transactionId)
+        {
+            if(type == EnumMenuType.GoodsReceiptDetails)
+            {
+                if(actions == EnumActions.CREATE)
+                {
+                    StockCard stockCard = new StockCard
+                    {
+                        MasterBusinessUnitId = masterBusinessUnit.Id,
+                        MasterRegionId = masterRegion.Id,
+                        MasterWarehouseId = masterWarehouse.Id,
+                        MasterItemId = masterItem.Id,
+                        Quantity = quantity,
+                        MenuType = type,
+                        GoodsReceiptDetailsId = transactionId
+                    };
+
+                    db.StockCards.Add(stockCard);
+                    db.SaveChanges();
+                }
+                else if (actions == EnumActions.EDIT)
+                {
+                    StockCard stockCard = db.StockCards.Where(x => x.GoodsReceiptDetailsId == transactionId).FirstOrDefault();
+
+                    if(stockCard != null)
+                    {
+                        stockCard.MasterBusinessUnitId = masterBusinessUnit.Id;
+                        stockCard.MasterRegionId = masterRegion.Id;
+                        stockCard.MasterWarehouseId = masterWarehouse.Id;
+                        stockCard.MasterItemId = masterItem.Id;
+                        stockCard.Quantity = quantity;
+
+                        db.Entry(stockCard).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+                else if (actions == EnumActions.DELETE)
+                {
+                    StockCard stockCard = db.StockCards.Where(x => x.GoodsReceiptDetailsId == transactionId).FirstOrDefault();
+
+                    if (stockCard != null)
+                    {
+                        db.StockCards.Remove(stockCard);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            else if (type == EnumMenuType.SaleDetails)
+            {
+                if (actions == EnumActions.CREATE)
+                {
+                    StockCard stockCard = new StockCard
+                    {
+                        MasterBusinessUnitId = masterBusinessUnit.Id,
+                        MasterRegionId = masterRegion.Id,
+                        MasterWarehouseId = masterWarehouse.Id,
+                        MasterItemId = masterItem.Id,
+                        Quantity = -quantity,
+                        MenuType = type,
+                        SaleDetailsId = transactionId
+                    };
+
+                    db.StockCards.Add(stockCard);
+                    db.SaveChanges();
+                }
+                else if (actions == EnumActions.EDIT)
+                {
+                    StockCard stockCard = db.StockCards.Where(x => x.SaleDetailsId == transactionId).FirstOrDefault();
+
+                    if (stockCard != null)
+                    {
+                        stockCard.MasterBusinessUnitId = masterBusinessUnit.Id;
+                        stockCard.MasterRegionId = masterRegion.Id;
+                        stockCard.MasterWarehouseId = masterWarehouse.Id;
+                        stockCard.MasterItemId = masterItem.Id;
+                        stockCard.Quantity = -quantity;
+
+                        db.Entry(stockCard).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+                else if (actions == EnumActions.DELETE)
+                {
+                    StockCard stockCard = db.StockCards.Where(x => x.SaleDetailsId == transactionId).FirstOrDefault();
+
+                    if (stockCard != null)
+                    {
+                        db.StockCards.Remove(stockCard);
+                        db.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        private static void UpdateStockBallance(ApplicationDbContext db, MasterBusinessUnit masterBusinessUnit, MasterRegion masterRegion, MasterWarehouse masterWarehouse, MasterItem masterItem)
+        {
+            StockBalance stockBalance = db.StockBalances.Where(x => x.MasterBusinessUnitId == masterBusinessUnit.Id
+                                            && x.MasterRegionId == masterRegion.Id && x.MasterWarehouseId == masterWarehouse.Id && x.MasterItemId == masterItem.Id).FirstOrDefault();
+
+            if (stockBalance == null)
+            {
+                stockBalance = new StockBalance
+                {
+                    MasterBusinessUnitId = masterBusinessUnit.Id,
+                    MasterRegionId = masterRegion.Id,
+                    MasterWarehouseId = masterWarehouse.Id,
+                    MasterItemId = masterItem.Id,
+                    Quantity = 0
+                };
+
+                db.StockBalances.Add(stockBalance);
+                db.SaveChanges();
+            }
+
+            StockCard temp = db.StockCards.Where(x => x.MasterBusinessUnitId == masterBusinessUnit.Id && x.MasterRegionId == masterRegion.Id && x.MasterWarehouseId == masterWarehouse.Id && x.MasterItemId == masterItem.Id).FirstOrDefault();
+
+            if (temp == null)
+                stockBalance.Quantity = 0;
+            else
+                stockBalance.Quantity = db.StockCards.Where(x => x.MasterBusinessUnitId == masterBusinessUnit.Id && x.MasterRegionId == masterRegion.Id && x.MasterWarehouseId == masterWarehouse.Id && x.MasterItemId == masterItem.Id).Sum(y => y.Quantity);
+
+            db.Entry(stockBalance).State = EntityState.Modified;
+            db.SaveChanges();
+        }
 
         public static decimal GetTotalPurchaseRequest(ApplicationDbContext db, int purchaseRequestId, int? purchaseRequestDetailsId = null)
         {
@@ -192,6 +426,25 @@ namespace eShop.Extensions
             return total;
         }
 
+        public static decimal GetTotalCostProductionBillOfMaterial(ApplicationDbContext db, int productionBillofMaterialId, int? productionBillofMaterialCostDetailsId = null)
+        {
+            int totalCost = 0;
+            List<ProductionBillOfMaterialCostDetails> productionBillofMaterialCostDetails = null;
+            if (productionBillofMaterialCostDetailsId == null)
+            {
+                productionBillofMaterialCostDetails = db.ProductionBillOfMaterialsCostsDetails.Where(x => x.ProductionBillOfMaterialId == productionBillofMaterialId).ToList();
+            }
+            else
+            {
+                productionBillofMaterialCostDetails = db.ProductionBillOfMaterialsCostsDetails.Where(x => x.ProductionBillOfMaterialId == productionBillofMaterialId && x.Id != productionBillofMaterialCostDetailsId).ToList();
+            }
+            if (productionBillofMaterialCostDetails != null)
+            {
+                totalCost = productionBillofMaterialCostDetails.Sum(y => y.Total);
+            }
+            return totalCost;
+        }
+
         public static decimal GetTotalMaterialSlip(ApplicationDbContext db, int materialSlipId, int? materialSlipDetailsId = null)
         {
             decimal total = 0;
@@ -236,28 +489,67 @@ namespace eShop.Extensions
             return total;
         }
 
-        public static decimal GetTotalFinishedGoodSlip(ApplicationDbContext db, int finishedGoodSlipId, int? finishedGoodSlipDetailsId = null)
+        public static void UpdateAccountBallance(ApplicationDbContext db, int masterBusinessUnitId, int masterRegionId, int chartOfAccountId, int year, int month)
         {
-            decimal total = 0;
-            List<FinishedGoodSlipDetails> finishedGoodSlipDetails = null;
+            MasterBusinessUnit masterBusinessUnit = db.MasterBusinessUnits.Find(masterBusinessUnitId);
+            MasterRegion masterRegion = db.MasterRegions.Find(masterRegionId);
+            ChartOfAccount chartOfAccount = db.ChartOfAccounts.Find(chartOfAccountId);
 
-            if (finishedGoodSlipDetailsId == null)
+            if(masterBusinessUnit != null && masterRegion != null && chartOfAccount != null && year > 0 && month > 0 && month < 13)
             {
-                finishedGoodSlipDetails = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlipId).ToList();
-            }
-            else
-            {
-                finishedGoodSlipDetails = db.FinishedGoodSlipsDetails.Where(x => x.FinishedGoodSlipId == finishedGoodSlipId && x.Id != finishedGoodSlipDetailsId).ToList();
-            }
+                AccountBalance accountBalance = db.AccountBalances.Where(x => x.ChartOfAccountId == chartOfAccount.Id 
+                                                && x.MasterBusinessUnitId == masterBusinessUnit.Id && x.MasterRegionId == masterRegion.Id
+                                                && x.Year == year && x.Month == month).FirstOrDefault();
 
-            if (finishedGoodSlipDetails != null)
-            {
-                total = finishedGoodSlipDetails.Sum(y => y.Total);
-            }
+                if(accountBalance == null)
+                {
+                    AccountBalance obj = new AccountBalance
+                    {
+                        MasterBusinessUnitId = masterBusinessUnitId,
+                        MasterRegionId = masterRegionId,
+                        ChartOfAccountId = chartOfAccountId,
+                        Year = year,
+                        Month = month,
+                        Credit = 0,
+                        Debit = 0
+                    };
 
-            return total;
+                    var journalsDetails = db.JournalsDetails.Where(x => x.Journal.MasterBusinessUnitId == masterBusinessUnit.Id
+                                   && x.MasterRegionId == masterRegion.Id && x.ChartOfAccountId == chartOfAccount.Id
+                                   && x.Journal.Date.Year == year && x.Journal.Date.Month == month).ToList();
+
+                    if(journalsDetails.Any())
+                    {
+                        obj.Credit = journalsDetails.Sum(y => y.Credit);
+                        obj.Debit = journalsDetails.Sum(y => y.Debit);
+                    }
+
+                    db.AccountBalances.Add(obj);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    db.Entry(accountBalance).State = EntityState.Modified;
+
+                    var journalsDetails = db.JournalsDetails.Where(x => x.Journal.MasterBusinessUnitId == masterBusinessUnit.Id
+                                   && x.MasterRegionId == masterRegion.Id && x.ChartOfAccountId == chartOfAccount.Id
+                                   && x.Journal.Date.Year == year && x.Journal.Date.Month == month).ToList();
+
+                    if (journalsDetails.Any())
+                    {
+                        accountBalance.Credit = journalsDetails.Sum(y => y.Credit);
+                        accountBalance.Debit = journalsDetails.Sum(y => y.Debit);
+                    }
+                    else
+                    {
+                        accountBalance.Credit = 0;
+                        accountBalance.Debit = 0;
+                    }
+
+                    db.SaveChanges();
+                }    
+            }
         }
-
 
         public static void CreatePurchaseJournal(ApplicationDbContext db, Purchase purchase)
         {
@@ -287,14 +579,15 @@ namespace eShop.Extensions
 
         public static void UpdatePurchaseJournal(ApplicationDbContext db, Purchase purchase)
         {
+            // tracking before update
+
+            Journal journalBefore = db.Journals.AsNoTracking().FirstOrDefault(x => x.Type == EnumJournalType.Purchase && x.PurchaseId == purchase.Id);
+            var journalsDetailsBefore = db.JournalsDetails.AsNoTracking().Where(x => x.JournalId == journalBefore.Id).ToList();
+
+            // end tracking before update
+
             Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.Purchase && x.PurchaseId == purchase.Id).FirstOrDefault();
-
-            var purchasesDetails = db.PurchasesDetails.Where(x => x.PurchaseId == purchase.Id).ToList();
-            foreach(PurchaseDetails purchaseDetails in purchasesDetails)
-            {
-                UpdatePurchaseJournalDetails(db, purchaseDetails);
-            }
-
+            
             db.Entry(journal).State = EntityState.Modified;
 
             journal.Code = purchase.Code;
@@ -310,6 +603,21 @@ namespace eShop.Extensions
                 journal.Notes = purchase.Notes;
 
             db.SaveChanges();
+
+            var purchasesDetails = db.PurchasesDetails.Where(x => x.PurchaseId == purchase.Id).ToList();
+            foreach (PurchaseDetails purchaseDetails in purchasesDetails)
+            {
+                UpdatePurchaseJournalDetails(db, purchaseDetails);
+            }
+
+            // recalculate before update
+
+            foreach (JournalDetails journalDetailsBefore in journalsDetailsBefore)
+            {
+                UpdateAccountBallance(db, journalBefore.MasterBusinessUnitId, journalDetailsBefore.MasterRegionId, journalDetailsBefore.ChartOfAccountId, journalBefore.Date.Year, journalBefore.Date.Month);
+            }
+
+            // end recalculate before update
         }
 
         public static void DeletePurchaseJournals(ApplicationDbContext db, Purchase purchase)
@@ -320,10 +628,14 @@ namespace eShop.Extensions
             {
                 var journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
 
-                if (journalsDetails != null && journalsDetails.Count > 0)
+                foreach(JournalDetails journalDetails in journalsDetails)
                 {
-                    db.JournalsDetails.RemoveRange(journalsDetails);
+                    JournalDetails temp = journalDetails;
+
+                    db.JournalsDetails.Remove(journalDetails);
                     db.SaveChanges();
+
+                    UpdateAccountBallance(db, journal.MasterBusinessUnitId, temp.MasterRegionId, temp.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
                 }
 
                 db.Journals.Remove(journal);
@@ -356,6 +668,8 @@ namespace eShop.Extensions
             db.JournalsDetails.Add(journalDetails);
             db.SaveChanges();
 
+            UpdateAccountBallance(db, journal.MasterBusinessUnitId, journalDetails.MasterRegionId, journalDetails.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
+
             JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged && x.ChartOfAccountId == APAccount.Id).FirstOrDefault();
             if (JournalDetailsCredit != null)
             {
@@ -370,6 +684,8 @@ namespace eShop.Extensions
                 JournalDetailsCredit.UserId = purchaseDetails.UserId;
                 db.Entry(JournalDetailsCredit).State = EntityState.Modified;
                 db.SaveChanges();
+
+                UpdateAccountBallance(db, journal.MasterBusinessUnitId, JournalDetailsCredit.MasterRegionId, JournalDetailsCredit.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
             }
             else
             {
@@ -389,6 +705,8 @@ namespace eShop.Extensions
 
                 db.JournalsDetails.Add(JournalDetailsCredit);
                 db.SaveChanges();
+
+                UpdateAccountBallance(db, journal.MasterBusinessUnitId, JournalDetailsCredit.MasterRegionId, JournalDetailsCredit.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
             }
 
             journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
@@ -406,6 +724,14 @@ namespace eShop.Extensions
             JournalDetails journalDetails = db.JournalsDetails.Where(x => x.Journal.Type == EnumJournalType.Purchase && x.PurchaseDetailsId == purchaseDetails.Id).FirstOrDefault();
             Journal journal = db.Journals.Find(journalDetails.JournalId);
 
+            // tracking before update
+
+            JournalDetails journalDetailsBefore = db.JournalsDetails.AsNoTracking().Where(x => x.Journal.Type == EnumJournalType.Purchase && x.PurchaseDetailsId == purchaseDetails.Id).FirstOrDefault();
+            Journal journalBefore = db.Journals.AsNoTracking().FirstOrDefault(x => x.Id == journalDetailsBefore.JournalId);
+            JournalDetails journalDetailsCreditBefore = db.JournalsDetails.AsNoTracking().Where(x => x.JournalId == journalBefore.Id && x.isMerged).FirstOrDefault();
+
+            // end tracking before update
+
             db.Entry(journalDetails).State = EntityState.Modified;
             journalDetails.MasterRegionId = purchase.MasterRegionId;
             journalDetails.ChartOfAccountId = purchaseAccount.Id;
@@ -416,7 +742,9 @@ namespace eShop.Extensions
             journalDetails.Notes = "PEMBELIAN BARANG " + purchaseDetails.Quantity.ToString("N0") + " x " + masterItem.Code;
             db.SaveChanges();
 
-            JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged && x.ChartOfAccountId == APAccount.Id).FirstOrDefault();
+            UpdateAccountBallance(db, journal.MasterBusinessUnitId, journalDetails.MasterRegionId, journalDetails.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
+
+            JournalDetails JournalDetailsCredit = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.isMerged).FirstOrDefault();
 
             JournalDetailsCredit.Debit = 0;
             JournalDetailsCredit.Credit = GetTotalPurchase(db, purchase.Id, purchaseDetails.Id) + purchaseDetails.Total;
@@ -429,6 +757,15 @@ namespace eShop.Extensions
             JournalDetailsCredit.UserId = purchaseDetails.UserId;
             db.Entry(JournalDetailsCredit).State = EntityState.Modified;
             db.SaveChanges();
+
+            UpdateAccountBallance(db, journal.MasterBusinessUnitId, JournalDetailsCredit.MasterRegionId, JournalDetailsCredit.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
+
+            // recalculate before update
+
+            UpdateAccountBallance(db, journalBefore.MasterBusinessUnitId, journalDetailsBefore.MasterRegionId, journalDetailsBefore.ChartOfAccountId, journalBefore.Date.Year, journalBefore.Date.Month);
+            UpdateAccountBallance(db, journalBefore.MasterBusinessUnitId, journalDetailsCreditBefore.MasterRegionId, journalDetailsCreditBefore.ChartOfAccountId, journalBefore.Date.Year, journalBefore.Date.Month);
+
+            // end recalculate before update
 
             journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
             journal.Credit = journal.Debit;
@@ -453,10 +790,16 @@ namespace eShop.Extensions
 
                 db.Entry(JournalDetailsCredit).State = EntityState.Modified;
                 db.SaveChanges();
+
+                UpdateAccountBallance(db, journal.MasterBusinessUnitId, JournalDetailsCredit.MasterRegionId, JournalDetailsCredit.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
             }
+
+            JournalDetails temp = journalDetails;
 
             db.JournalsDetails.Remove(journalDetails);
             db.SaveChanges();
+
+            UpdateAccountBallance(db, journal.MasterBusinessUnitId, temp.MasterRegionId, temp.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
         }
 
         // End of Purchase
@@ -650,19 +993,14 @@ namespace eShop.Extensions
 
         public static void UpdateBankJournal(ApplicationDbContext db, BankTransaction bankTransaction)
         {
+            // tracking before update
+
+            Journal journalBefore = db.Journals.AsNoTracking().Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransaction.Id).FirstOrDefault();
+            var journalsDetailsBefore = db.JournalsDetails.AsNoTracking().Where(x => x.JournalId == journalBefore.Id).ToList();
+
+            // end tracking before update
+
             Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransaction.Id).FirstOrDefault();
-
-            var bankTransactionsDetails = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
-            foreach (BankTransactionDetails bankTransactionDetails in bankTransactionsDetails)
-            {
-                UpdateBankJournalDetails(db, bankTransactionDetails);
-            }
-
-            var bankTransactionsDetailsHeader = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
-            foreach (BankTransactionDetailsHeader bankTransactionDetailsHeader in bankTransactionsDetailsHeader)
-            {
-                UpdateBankJournalDetailsHeader(db, bankTransactionDetailsHeader);
-            }
 
             db.Entry(journal).State = EntityState.Modified;
             journal.Code = bankTransaction.Code;
@@ -684,22 +1022,53 @@ namespace eShop.Extensions
                 journal.Notes = bankTransaction.Notes;
 
             db.SaveChanges();
+
+            var bankTransactionsDetails = db.BankTransactionsDetails.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
+            foreach (BankTransactionDetails bankTransactionDetails in bankTransactionsDetails)
+            {
+                UpdateBankJournalDetails(db, bankTransactionDetails);
+            }
+
+            var bankTransactionsDetailsHeader = db.BankTransactionsDetailsHeader.Where(x => x.BankTransactionId == bankTransaction.Id).ToList();
+            foreach (BankTransactionDetailsHeader bankTransactionDetailsHeader in bankTransactionsDetailsHeader)
+            {
+                UpdateBankJournalDetailsHeader(db, bankTransactionDetailsHeader);
+            }
+
+            // recalculate before update
+
+            foreach (JournalDetails journalDetailsBefore in journalsDetailsBefore)
+            {
+                UpdateAccountBallance(db, journalBefore.MasterBusinessUnitId, journalDetailsBefore.MasterRegionId, journalDetailsBefore.ChartOfAccountId, journalBefore.Date.Year, journalBefore.Date.Month);
+            }
+
+            // end recalculate before update
         }
 
         public static void DeleteBankJournals(ApplicationDbContext db, BankTransaction bankTransaction)
         {
             Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransaction.Id).FirstOrDefault();
 
-            var journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
-
-            if (journalsDetails != null)
+            if (journal != null)
             {
-                db.JournalsDetails.RemoveRange(journalsDetails);
+                var journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id).ToList();
+
+                if (journalsDetails != null)
+                {
+                    foreach (JournalDetails journalDetails in journalsDetails)
+                    {
+                        JournalDetails temp = journalDetails;
+
+                        db.JournalsDetails.Remove(journalDetails);
+                        db.SaveChanges();
+
+                        UpdateAccountBallance(db, journal.MasterBusinessUnitId, temp.MasterRegionId, temp.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
+                    }
+                }
+
+                db.Journals.Remove(journal);
                 db.SaveChanges();
             }
-
-            db.Journals.Remove(journal);
-            db.SaveChanges();
         }
 
         public static void CreateBankJournalDetails(ApplicationDbContext db, BankTransactionDetails bankTransactionDetails)
@@ -758,6 +1127,8 @@ namespace eShop.Extensions
             db.JournalsDetails.Add(journalDetails);
             db.SaveChanges();
 
+            UpdateAccountBallance(db, journal.MasterBusinessUnitId, journalDetails.MasterRegionId, journalDetails.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
+
             journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
             journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
             db.Entry(journal).State = EntityState.Modified;
@@ -771,6 +1142,13 @@ namespace eShop.Extensions
 
             if (journalDetails != null)
             {
+                // tracking before update
+
+                JournalDetails journalDetailsBefore = db.JournalsDetails.AsNoTracking().Where(x => x.Journal.Type == EnumJournalType.BankTransaction && x.BankTransactionDetailsId == bankTransactionDetails.Id).FirstOrDefault();
+                Journal journalBefore = db.Journals.AsNoTracking().FirstOrDefault(x => x.Id == journalDetailsBefore.JournalId);
+                
+                // end tracking before update
+
                 Journal journal = db.Journals.Find(journalDetails.JournalId);
 
                 db.Entry(journalDetails).State = EntityState.Modified;
@@ -823,30 +1201,48 @@ namespace eShop.Extensions
                 journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
                 db.Entry(journal).State = EntityState.Modified;
                 db.SaveChanges();
+
+                UpdateAccountBallance(db, journal.MasterBusinessUnitId, journalDetails.MasterRegionId, journalDetails.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
+
+                // recalculate before update
+
+                UpdateAccountBallance(db, journalBefore.MasterBusinessUnitId, journalDetailsBefore.MasterRegionId, journalDetailsBefore.ChartOfAccountId, journalBefore.Date.Year, journalBefore.Date.Month);
+
+                // end recalculate before update
             }
         }
 
         public static void RemoveBankJournalDetails(ApplicationDbContext db, BankTransactionDetails bankTransactionDetails)
         {
             Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransactionDetails.BankTransactionId).FirstOrDefault();            
-            List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.BankTransactionDetailsId == bankTransactionDetails.Id).ToList();
+            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.BankTransactionDetailsId == bankTransactionDetails.Id).FirstOrDefault();
 
-            foreach (JournalDetails journalDetails in journalsDetails)
-            {
-                if (journalDetails.Credit == 0)
-                    journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
-                else
-                    journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id);
-            }
+            // tracking before update
+
+            Journal journalBefore = db.Journals.AsNoTracking().Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransactionDetails.BankTransactionId).FirstOrDefault();
+            JournalDetails journalDetailsBefore = db.JournalsDetails.AsNoTracking().Where(x => x.JournalId == journalBefore.Id && x.BankTransactionDetailsId == bankTransactionDetails.Id).FirstOrDefault();
+
+            // end tracking before update
+
+            if (journalDetails.Credit == 0)
+                journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
+            else
+                journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id);
 
             db.Entry(journal).State = EntityState.Modified;
             db.SaveChanges();
 
-            if (journalsDetails != null)
+            if (journalDetails != null)
             {
-                db.JournalsDetails.RemoveRange(journalsDetails);
+                db.JournalsDetails.Remove(journalDetails);
                 db.SaveChanges();
             }
+
+            // recalculate before update
+
+            UpdateAccountBallance(db, journalBefore.MasterBusinessUnitId, journalDetailsBefore.MasterRegionId, journalDetailsBefore.ChartOfAccountId, journalBefore.Date.Year, journalBefore.Date.Month);
+
+            // end recalculate before update
         }
 
         public static void CreateBankJournalDetailsHeader(ApplicationDbContext db, BankTransactionDetailsHeader bankTransactionDetailsHeader)
@@ -906,6 +1302,8 @@ namespace eShop.Extensions
             db.JournalsDetails.Add(journalDetails);
             db.SaveChanges();
 
+            UpdateAccountBallance(db, journal.MasterBusinessUnitId, journalDetails.MasterRegionId, journalDetails.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
+
             journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id) + journalDetails.Debit;
             journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
             db.Entry(journal).State = EntityState.Modified;
@@ -922,6 +1320,13 @@ namespace eShop.Extensions
             if (journalDetails != null)
             {
                 Journal journal = db.Journals.Find(journalDetails.JournalId);
+
+                // tracking before update
+
+                JournalDetails journalDetailsBefore = db.JournalsDetails.AsNoTracking().Where(x => x.Journal.Type == EnumJournalType.BankTransaction && x.BankTransactionDetailsHeaderId == bankTransactionDetailsHeader.Id).FirstOrDefault();
+                Journal journalBefore = db.Journals.AsNoTracking().FirstOrDefault(x => x.Id == journalDetailsBefore.JournalId);
+
+                // end tracking before update
 
                 db.Entry(journalDetails).State = EntityState.Modified;
 
@@ -973,30 +1378,48 @@ namespace eShop.Extensions
                 journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id) + journalDetails.Credit;
                 db.Entry(journal).State = EntityState.Modified;
                 db.SaveChanges();
+
+                UpdateAccountBallance(db, journal.MasterBusinessUnitId, journalDetails.MasterRegionId, journalDetails.ChartOfAccountId, journal.Date.Year, journal.Date.Month);
+
+                // recalculate before update
+
+                UpdateAccountBallance(db, journalBefore.MasterBusinessUnitId, journalDetailsBefore.MasterRegionId, journalDetailsBefore.ChartOfAccountId, journalBefore.Date.Year, journalBefore.Date.Month);
+
+                // end recalculate before update
             }
         }
 
         public static void RemoveBankJournalDetailsHeader(ApplicationDbContext db, BankTransactionDetailsHeader bankTransactionDetailsHeader)
         {
             Journal journal = db.Journals.Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransactionDetailsHeader.BankTransactionId).FirstOrDefault();
-            List<JournalDetails> journalsDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.BankTransactionDetailsHeaderId == bankTransactionDetailsHeader.Id).ToList();
+            JournalDetails journalDetails = db.JournalsDetails.Where(x => x.JournalId == journal.Id && x.BankTransactionDetailsHeaderId == bankTransactionDetailsHeader.Id).FirstOrDefault();
 
-            foreach (JournalDetails journalDetails in journalsDetails)
-            {
-                if (journalDetails.Credit == 0)
-                    journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
-                else
-                    journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id);
-            }
+            // tracking before update
+
+            Journal journalBefore = db.Journals.AsNoTracking().Where(x => x.Type == EnumJournalType.BankTransaction && x.BankTransactionId == bankTransactionDetailsHeader.BankTransactionId).FirstOrDefault();
+            JournalDetails journalDetailsBefore = db.JournalsDetails.AsNoTracking().Where(x => x.JournalId == journalBefore.Id && x.BankTransactionDetailsHeaderId == bankTransactionDetailsHeader.Id).FirstOrDefault();
+
+            // end tracking before update
+
+            if (journalDetails.Credit == 0)
+                journal.Debit = GetTotalJournalDebit(db, journal.Id, journalDetails.Id);
+            else
+                journal.Credit = GetTotalJournalCredit(db, journal.Id, journalDetails.Id);
 
             db.Entry(journal).State = EntityState.Modified;
             db.SaveChanges();
 
-            if (journalsDetails != null)
+            if (journalDetails != null)
             {
-                db.JournalsDetails.RemoveRange(journalsDetails);
+                db.JournalsDetails.Remove(journalDetails);
                 db.SaveChanges();
             }
+
+            // recalculate before update
+
+            UpdateAccountBallance(db, journalBefore.MasterBusinessUnitId, journalDetailsBefore.MasterRegionId, journalDetailsBefore.ChartOfAccountId, journalBefore.Date.Year, journalBefore.Date.Month);
+
+            // end recalculate before update
         }
 
         // End of Bank 
