@@ -106,7 +106,7 @@ namespace eShop.Controllers
         public ActionResult Create()
         {
 
-            ShippingFee shippingFee = new ShippingFee
+            ShippingFee obj = new ShippingFee
             {
                 Code = "temp/" + Guid.NewGuid().ToString(),
                 MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
@@ -125,17 +125,17 @@ namespace eShop.Controllers
             {
                 try
                 {
-                    db.ShippingFees.Add(shippingFee);
+                    db.ShippingFees.Add(obj);
                     db.SaveChanges();
 
                     dbTran.Commit();
 
-                    shippingFee.Code = "";
-                    shippingFee.Active = true;
-                    shippingFee.MasterBusinessUnitId = 0;
-                    shippingFee.MasterRegionId = 0;
-                    shippingFee.MasterDestinationId = 0;
-                    shippingFee.MasterCostId = 0;
+                    obj.Code = "";
+                    obj.Active = true;
+                    obj.MasterBusinessUnitId = 0;
+                    obj.MasterRegionId = 0;
+                    obj.MasterDestinationId = 0;
+                    obj.MasterCostId = 0;
 
                 }
 
@@ -148,7 +148,7 @@ namespace eShop.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
             ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
-            return View("../Selling/ShippingFees/Create", shippingFee);
+            return View("../Selling/ShippingFees/Create", obj);
         }
 
         // POST: MasterItems/Create

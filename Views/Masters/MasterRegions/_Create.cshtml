@@ -14,11 +14,11 @@
         </div>
         <div class="modal-body">
             <div id="divEmp">
-                @using (Ajax.BeginForm("Create", "MasterRegions", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
-                {
+               @using (Ajax.BeginForm("Create", "MasterRegions", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
+               {
                     @Html.AntiForgeryToken()
 
-                <div class="form-horizontal">
+                  <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
                         <div class="col-md-8">

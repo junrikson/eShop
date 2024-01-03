@@ -56,8 +56,8 @@ namespace eShop.Models
         public bool AllCustomer{ get; set; }
 
         [Display(Name = "Total (Rp)")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
-        public decimal Total { get; set; }
+        [Required(ErrorMessage = "Total (Rp) harus diisi.")]
+        public int Total { get; set; }
 
         [DatalistColumn]
         [Display(Name = "Keterangan")]

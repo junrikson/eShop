@@ -172,39 +172,62 @@
 
                         }
                     </div>
-                    <!-- /.box-body -->
                 </div>
-                <!-- /.box -->
             </div>
-            <!-- /.col -->
 
             <div class="col-md-8">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <div class="col-md-2">
                             <i class="fa fa-info"></i>
-
                             <h3 class="box-title">Details</h3>
                         </div>
                         <div class="text-right col-md-10">
-                            <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "SalesOrders")" ">
-                                @Model.MasterCurrency.Code : @Model.Rate.ToString("N2")
-                            </button>
-                            <label style="font-weight: bold">TOTAL :</label>
-                            <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
-                            <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "SalesOrders")">
-                                <i class="fa fa-plus"></i> Add
-                            </button>
-                            <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
-                                <i class="fa fa-trash"></i> Delete
-                            </button>
+                            <div class="text-right">
+                                <button id="btnChangeCurrency" class="btn btn-default mx-6" href="@Url.Action("ChangeCurrency", "SalesOrders")">
+                                    @Model.MasterCurrency.Code : @Model.Rate.ToString("N2")
+                                </button>
+                                <button id="btnAdd" class="btn btn-success mx-1" href="@Url.Action("DetailsCreate", "SalesOrders")">
+                                    <i class="fa fa-plus"></i> Add
+                                </button>
+                                <button id="DetailsBatchDelete" class="btn btn-danger mx-1">
+                                    <i class="fa fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                        <div class="box-body" style="overflow:auto; white-space: nowrap">
+                            @Html.AjaxGrid(Url.Action("DetailsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "detail-table" })
                         </div>
                     </div>
-                    <div class="box-body" style="overflow:auto; white-space: nowrap">
-                        @Html.AjaxGrid(Url.Action("DetailsGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "detail-table" })
+                    </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <div class="text-right col-md-12">
+                            <div class="text-right">
+                                <label style="font-weight: bold">Sub Total :</label>
+                                <input type="text" id="SubTotal" value="@ViewBag.SubTotal" disabled="disabled" style="text-align:right;" />
+                            </div>
+                            <div class="text-right">
+                                <label style="font-weight: bold">Discount :</label>
+                                <input type="text" id="Discount" value="@ViewBag.Discount" disabled="disabled" style="text-align:right;" />
+                            </div>
+                            <div class="text-right">
+                                <label style="font-weight: bold">PPN :</label>
+                                <input type="text" id="PPN" value="@ViewBag.PPN" disabled="disabled" style="text-align:right;" />
+                            </div>
+                            <div class="text-right">
+                                <label style="font-weight: bold">Total :</label>
+                                <input type="text" id="Total" value="@ViewBag.Total" disabled="disabled" style="text-align:right;" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+
 
         </div>
     </section>

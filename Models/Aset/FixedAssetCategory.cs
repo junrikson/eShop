@@ -16,31 +16,17 @@ namespace eShop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Display(Name = "Unit Bisnis")]
-        [Required(ErrorMessage = "Unit Bisnis harus diisi.")]
-        public int MasterBusinessUnitId { get; set; }
-
-        [Display(Name = "Unit Bisnis")]
-        public virtual MasterBusinessUnit MasterBusinessUnit { get; set; }
-
-        [Display(Name = "Wilayah")]
-        [Required(ErrorMessage = "Wilayah harus diisi.")]
-        public int MasterRegionId { get; set; }
-
-        [Display(Name = "Wilayah")]
-        public virtual MasterRegion MasterRegion { get; set; }
-
         [DatalistColumn]
-        [Required(ErrorMessage = "Kode Kategori Aset Tetap harus diisi.")]
+        [Required(ErrorMessage = "Kode Kategori Aktiva harus diisi.")]
         [Index("IX_Code", Order = 1, IsUnique = true)]
-        [Display(Name = "Kode Kategori Aset Tetap")]
+        [Display(Name = "Kode Kategori Aktiva")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
-        [Remote("IsCodeExists", "FixedAssetCategories", AdditionalFields = "Id", ErrorMessage = "This code has been used.")]
+        [Remote("IsCodeExists", "FixedAssetsCategories", AdditionalFields = "Id", ErrorMessage = "This code has been used.")]
         public string Code { get; set; }
 
         [DatalistColumn]
-        [Required(ErrorMessage = "Nama Kategori  Aset Tetap harus diisi.")]
-        [Display(Name = "Nama Kategori  Aset Tetap")]
+        [Required(ErrorMessage = "Kode Kategori Aktiva Tetap harus diisi.")]
+        [Display(Name = "Nama Kategori Aktiva")]
         [StringLength(256, ErrorMessage = "Maksimal 128 huruf.")]
         public string Name { get; set; }
 
@@ -67,6 +53,32 @@ namespace eShop.Models
 
         [Display(Name = "User")]
         public virtual ApplicationUser User { get; set; }
+    }
+
+    public class FixedAssetCategoryDatalist : MvcDatalist<FixedAssetCategory>
+    {
+        private DbContext Context { get; }
+
+        public FixedAssetCategoryDatalist(DbContext context)
+        {
+            Context = context;
+
+            GetLabel = (model) => model.Code + " - " + model.Name;
+        }
+        public FixedAssetCategoryDatalist()
+        {
+            Url = "/DatalistFilters/AllFixedAssetCategory";
+            Title = "Kategori Aktiva";
+
+            Filter.Sort = "Code";
+            Filter.Order = DatalistSortOrder.Asc;
+            Filter.Rows = 10;
+        }
+
+        public override IQueryable<FixedAssetCategory> GetModels()
+        {
+            return Context.Set<FixedAssetCategory>();
+        }
     }
 
 

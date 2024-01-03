@@ -1,0 +1,153 @@
+﻿    @model eShop.Models.FixedAsset
+
+    @{
+        Layout = null;
+    }
+
+    @section Styles {
+        @Styles.Render("~/style/mvcgrid")
+        @Styles.Render("~/style/MvcDatalist")
+        @Styles.Render("~/style/Select2")
+    }
+
+    <style>
+        .tablegrid-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+    @Html.Partial("MvcDatalist/_Dialog")
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Add - Aktiva</h4>
+            </div>
+            <div class="modal-body">
+                <div id="divEmp">
+                    @using (Ajax.BeginForm("Create", "FixedAssets", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp", OnSuccess = "CreateSuccess" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.Id)
+
+                   <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab_1" data-toggle="tab">General</a></li>
+                            <li><a href="#tab_2" data-toggle="tab">Account</a></li>
+                        </ul>
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                   <div class="tab-content">
+                       <div class="tab-pane active form-horizontal" id="tab_1">
+                           <div class="form-group">
+                               <div class="col-md-6">
+                                   @Html.LabelFor(model => model.MasterBusinessUnitId)
+                                   @Html.DropDownList("MasterBusinessUnitId", null, "- Pilih Unit Bisnis -", htmlAttributes: new { @class = "form-control" })
+                                   @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
+                               </div>
+                               <div class="col-md-6">
+                                   @Html.LabelFor(model => model.MasterRegionId)
+                                   @Html.DatalistFor(model => model.MasterRegionId, new eShop.Models.MasterBusinessUnitRegionDatalist(), new { @class = "datalist2" })
+                                   @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-md-10">
+                                   @Html.LabelFor(model => model.Code)
+                                   @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                   @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                               </div>
+                               <div class="col-md-2 text-center">
+                                   @Html.LabelFor(model => model.Active)
+                                   <div class="checkbox text-center">
+                                       @Html.CheckBoxFor(model => model.Active)
+                                       @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-md-10">
+                                   @Html.LabelFor(model => model.Name)
+                                   @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                                   @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                               </div>
+                               <div class="col-md-2 text-center">
+                                   @Html.LabelFor(model => model.Tax)
+                                   <div class="checkbox text-center">
+                                       @Html.CheckBoxFor(model => model.Tax)
+                                       @Html.ValidationMessageFor(model => model.Tax, "", new { @class = "text-danger" })
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-md-6">
+                                   @Html.LabelFor(model => model.FixedAssetCategoryId)
+                                   @Html.DatalistFor(model => model.FixedAssetCategoryId, new eShop.Models.FixedAssetCategoryDatalist(), new { @class = "datalist" })
+                                   @Html.ValidationMessageFor(model => model.FixedAssetCategoryId, "", new { @class = "text-danger" })
+                               </div>
+                               <div class="col-md-6">
+                                   @Html.LabelFor(model => model.MethodType)
+                                   @Html.EnumDropDownListFor(model => model.MethodType, htmlAttributes: new { @class = "form-control", id = "methodType" })
+                                   @Html.ValidationMessageFor(model => model.MethodType, "", new { @class = "text-danger" })
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-md-6">
+                                   @Html.LabelFor(model => model.Quantity)
+                                   @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control" })
+                                   @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                               </div>
+                               <div class="col-md-6">
+                                   @Html.LabelFor(model => model.EstimatedLife)
+                                   @Html.TextBoxFor(model => model.EstimatedLife, new { @class = "form-control" })
+                                   @Html.ValidationMessageFor(model => model.EstimatedLife, "", new { @class = "text-danger" })
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <div class="col-md-6">
+                                   @Html.LabelFor(model => model.Purchasedate)
+                                   @Html.EditorFor(model => model.Purchasedate, new { htmlAttributes = new { @class = "form-control" } })
+                                   @Html.ValidationMessageFor(model => model.Purchasedate, "", new { @class = "text-danger" })
+                               </div>
+                               <div class="col-md-6">
+                                   @Html.LabelFor(model => model.Total)
+                                   @Html.TextBoxFor(model => model.Total, new { @class = "form-control" })
+                                   @Html.ValidationMessageFor(model => model.Total, "", new { @class = "text-danger" })
+                               </div>
+                           </div>
+                       </div>
+
+                       <div class="tab-pane form-horizontal" id="tab_2">
+                           <div class="form-group">
+                               <div class="col-md-8">
+                                   @Html.LabelFor(model => model.AssetAccountId)
+                                   @Html.DatalistFor(model => model.AssetAccountId, new eShop.Models.MasterBusinessRegionAccountDatalist(), new { @class = "datalist" })
+                                   @Html.ValidationMessageFor(model => model.AssetAccountId, "", new { @class = "text-danger" })
+                               </div>
+                               <div class="col-md-8">
+                                   @Html.LabelFor(model => model.AccumulatedDepreciationAccountId)
+                                   @Html.DatalistFor(model => model.AccumulatedDepreciationAccountId, new eShop.Models.MasterBusinessRegionAccountDatalist(), new { @class = "datalist" })
+                                   @Html.ValidationMessageFor(model => model.AccumulatedDepreciationAccountId, "", new { @class = "text-danger" })
+                               </div>
+                               <div class="col-md-8">
+                                   @Html.LabelFor(model => model.DepreciationAccountId)
+                                   @Html.DatalistFor(model => model.DepreciationAccountId, new eShop.Models.MasterBusinessRegionAccountDatalist(), new { @class = "datalist" })
+                                   @Html.ValidationMessageFor(model => model.DepreciationAccountId, "", new { @class = "text-danger" })
+                               </div>
+                           </div>
+                       </div>
+
+
+                       </div>
+                       <div class="text-right">
+                           <input type="submit" value="Save" class="btn btn-primary" />
+                       </div>
+                   </div>
+                            }
+                        </div>
+                  </div>
+        </div>
+    </div>
+

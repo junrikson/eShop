@@ -16,7 +16,9 @@ namespace eShop.Models
         [Display(Name = "Metode Garis Lurus")]
         StraightLine = 1,
         [Display(Name = "Metode Saldo Menurun Tetap")]
-        FixedDecliningBalance = 2
+        FixedDecliningBalance = 2,
+        [Display(Name = "Tanpa Penyusutan")]
+        NoDepreciation = 3
     }
     public class FixedAsset
     {
@@ -46,9 +48,16 @@ namespace eShop.Models
         [Remote("IsCodeExists", "FixedAssets", AdditionalFields = "Id", ErrorMessage = "This code has been used.")]
         public string Code { get; set; }
 
-        [Display(Name = "Nama Aset Tetap")]
+        [Display(Name = "Nama Aset")]
         [StringLength(128, ErrorMessage = "Maksimal 128 huruf.")]
         public string Name { get; set; }
+
+        [Display(Name = "Kategori")]
+        [Required(ErrorMessage = "Kategori harus diisi.")]
+        public int FixedAssetCategoryId { get; set; }
+
+        [Display(Name = "Kategori")]
+        public virtual FixedAssetCategory FixedAssetCategory { get; set; }
 
         [Required(ErrorMessage = "Metode Penyusutan harus diisi.")]
         [Display(Name = "Metode Penyusutan")]
@@ -58,14 +67,38 @@ namespace eShop.Models
         [Required(ErrorMessage = "Quantity harus diisi.")]
         public int Quantity { get; set; }
 
-        [Display(Name = "Umur Asset")]
-        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Umur Asset (Bulan)")]
+        [Required(ErrorMessage = "Umur Asset harus diisi.")]
         public int EstimatedLife { get; set; }
 
+        [DatalistColumn]
         [Display(Name = "Tgl Pembelian")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss tt}", ApplyFormatInEditMode = true)]
+        [Required(ErrorMessage = "Tanggal harus diisi.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Purchasedate { get; set; }
+
+        [Display(Name = "Akun Aset")]
+        [Required(ErrorMessage = "Akun Aset harus diisi.")]
+        public int AssetAccountId { get; set; }
+
+        [Display(Name = "Akun Aset")]
+        public virtual ChartOfAccount AssetAccount { get; set; }
+
+        [Display(Name = "Akun Akumulasi Penyusutan")]
+        [Required(ErrorMessage = "Akun Akumulasi Penyusutan.")]
+        public int AccumulatedDepreciationAccountId { get; set; }
+
+        [Display(Name = "Akun Akumulasi Penyusutan")]
+        public virtual ChartOfAccount AccumulatedDepreciationAccount { get; set; }
+
+        [Display(Name = "Akun Beban Penyusutan")]
+        [Required(ErrorMessage = "Akun Beban Penyusutan.")]
+        public int DepreciationAccountId { get; set; }
+
+        [Display(Name = "Akun Beban Penyusutan")]
+        public virtual ChartOfAccount DepreciationAccount { get; set; }
+
 
         [DatalistColumn]
         [Display(Name = "Keterangan")]
@@ -73,7 +106,7 @@ namespace eShop.Models
         public string Notes { get; set; }
 
         [Display(Name = "Total")]
-        [Required(ErrorMessage = "Quantity harus diisi.")]
+        [Required(ErrorMessage = "Total harus diisi.")]
         public int Total { get; set; }
 
         [Display(Name = "Aktif")]

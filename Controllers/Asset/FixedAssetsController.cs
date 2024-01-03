@@ -71,98 +71,79 @@ namespace eShop.Controllers
         public ActionResult Create()
         {
 
-            FixedAsset fixedAsset = new FixedAsset
+            FixedAsset obj = new FixedAsset
             {
-                Code = "temp/" + Guid.NewGuid().ToString(),
-                MasterBusinessUnitId = db.MasterBusinessUnits.FirstOrDefault().Id,
-                MasterRegionId = db.MasterRegions.FirstOrDefault().Id,
-                MethodType = EnumMethodType.FixedDecliningBalance,
-                Notes = "",
-                Active = false,
-                Tax = false,
+                Active = true,
                 Purchasedate = DateTime.Now,
-                Created = DateTime.Now,
-                Updated = DateTime.Now,
-                UserId = User.Identity.GetUserId<int>()
+                MethodType = EnumMethodType.StraightLine,
+                FixedAssetCategoryId = db.FixedAssetCategories.FirstOrDefault().Id
+
             };
-
-            using (DbContextTransaction dbTran = db.Database.BeginTransaction())
-            {
-                try
-                {
-                    db.FixedAssets.Add(fixedAsset);
-                    db.SaveChanges();
-
-                    dbTran.Commit();
-
-                    fixedAsset.Code = "";
-                    fixedAsset.Active = true;
-                    fixedAsset.MasterBusinessUnitId = 0;
-                    fixedAsset.MasterRegionId = 0;
-
-                }
-
-                catch (DbEntityValidationException ex)
-                {
-                    dbTran.Rollback();
-                    throw ex;
-                }
-            }
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
             ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name");
-            return View("../Asset/FixedAssets/Create", fixedAsset);
+            return View("../Asset/FixedAssets/_Create", obj);
         }
 
-        // POST: MasterItems/Create
+        // GET: MasterCosts/Details/5
+        [Authorize(Roles = "FixedAssetsView")]
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            FixedAsset obj = db.FixedAssets.Find(id);
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("../Asset/FixedAssets/_Details", obj);
+        }
+
+
+        // POST: MasterCosts/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "FixedAssetsAdd")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,MasterBusinessUnitId,MasterRegionId,Name,MethodType,Quantity,EstimatedLife,Purchasedate,Total,Tax,Notes,Active,Created,Updated,UserId")] FixedAsset fixedAsset)
+        [Authorize(Roles = "FixedAssetsAdd")]
+        public ActionResult Create([Bind(Include = "Id,Code,MasterBusinessUnitId,MasterRegionId,Name,FixedAssetCategoryId,MethodType,Quantity,EstimatedLife,Purchasedate,Total,Tax,Notes,AssetAccountId,AccumulatedDepreciationAccountId,DepreciationAccountId,Active,Created,Updated,UserId")] FixedAsset obj)
         {
-            fixedAsset.UserId = User.Identity.GetUserId<int>();
-            fixedAsset.Created = DateTime.Now;
-            fixedAsset.Updated = DateTime.Now;
-            fixedAsset.Purchasedate = DateTime.Now;
-
-            if (!string.IsNullOrEmpty(fixedAsset.Code)) fixedAsset.Code = fixedAsset.Code.ToUpper();
-            if (!string.IsNullOrEmpty(fixedAsset.Notes)) fixedAsset.Notes = fixedAsset.Notes.ToUpper();
-            if (!string.IsNullOrEmpty(fixedAsset.Name)) fixedAsset.Notes = fixedAsset.Name.ToUpper();
-
             if (ModelState.IsValid)
             {
-                db.Entry(fixedAsset).State = EntityState.Unchanged;
-                db.Entry(fixedAsset).Property("Code").IsModified = true;
-                db.Entry(fixedAsset).Property("Notes").IsModified = true;
-                db.Entry(fixedAsset).Property("MasterBusinessUnitId").IsModified = true;
-                db.Entry(fixedAsset).Property("MasterRegionId").IsModified = true;
-                db.Entry(fixedAsset).Property("Name").IsModified = true;
-                db.Entry(fixedAsset).Property("MethodType").IsModified = true;
-                db.Entry(fixedAsset).Property("Quantity").IsModified = true;
-                db.Entry(fixedAsset).Property("EstimatedLife").IsModified = true;
-                db.Entry(fixedAsset).Property("Purchasedate").IsModified = true;
-                db.Entry(fixedAsset).Property("Total").IsModified = true;
-                db.Entry(fixedAsset).Property("Tax").IsModified = true;
-                db.Entry(fixedAsset).Property("Active").IsModified = true;
-                db.Entry(fixedAsset).Property("Updated").IsModified = true;
-
                 using (DbContextTransaction dbTran = db.Database.BeginTransaction())
                 {
                     try
                     {
-                        if (ModelState.IsValid)
-                        {
-                            db.SaveChanges();
+                        if (!string.IsNullOrEmpty(obj.Code)) obj.Code = obj.Code.ToUpper();
+                        if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
+                        if (!string.IsNullOrEmpty(obj.Name)) obj.Notes = obj.Name.ToUpper();
 
-                            db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterItem, MenuId = fixedAsset.Id, MenuCode = fixedAsset.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
-                            db.SaveChanges();
+                        obj.MasterBusinessUnitId = obj.MasterBusinessUnitId;
+                        obj.MasterRegionId = obj.MasterRegionId;
+                        obj.MethodType = obj.MethodType;
+                        obj.Quantity = obj.Quantity;
+                        obj.EstimatedLife = obj.EstimatedLife;
+                        obj.Purchasedate = obj.Purchasedate;
+                        obj.Total = obj.Total;
+                        obj.Tax = obj.Tax;
+                        obj.FixedAssetCategoryId = obj.FixedAssetCategoryId;
+                        obj.AssetAccountId = obj.AssetAccountId;
+                        obj.AccumulatedDepreciationAccountId = obj.AccumulatedDepreciationAccountId;
+                        obj.DepreciationAccountId = obj.DepreciationAccountId;
+                        obj.Created = DateTime.Now;
+                        obj.Updated = DateTime.Now;
+                        obj.UserId = User.Identity.GetUserId<int>();
+                        db.FixedAssets.Add(obj);
+                        db.SaveChanges();
 
-                            dbTran.Commit();
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.FixedAssets, MenuId = obj.Id, MenuCode = obj.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SaveChanges();
 
-                            return RedirectToAction("Index");
-                        }
+                        dbTran.Commit();
+
+                        return Json("success", JsonRequestBehavior.AllowGet);
                     }
                     catch (DbEntityValidationException ex)
                     {
@@ -172,7 +153,9 @@ namespace eShop.Controllers
                 }
             }
 
-            return View("../Asset/FixedAssets/Create", fixedAsset);
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", obj.MasterBusinessUnitId);
+            return View("../Asset/FixedAssets/Create", obj);
         }
 
         [HttpPost]
@@ -217,17 +200,15 @@ namespace eShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            FixedAsset fixedAsset = db.FixedAssets.Find(id);
-            if (fixedAsset == null)
+            FixedAsset obj = db.FixedAssets.Find(id);
+            if (obj == null)
             {
                 return HttpNotFound();
             }
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
-
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", fixedAsset.MasterBusinessUnitId);
-
-            return View("../Asset/FixedAssets/Edit", fixedAsset);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", obj.MasterBusinessUnitId);
+            return View("../Asset/FixedAssets/_Edit", obj);
         }
 
         // POST: MasterItems/Edit/5
@@ -236,28 +217,31 @@ namespace eShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "FixedAssetsEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,MasterBusinessUnitId,MasterRegionId,Name,MethodType,Quantity,EstimatedLife,Purchasedate,Total,Tax,Notes,Active,Updated,UserId")] FixedAsset fixedAsset)
+        public ActionResult Edit([Bind(Include = "Id,Code,MasterBusinessUnitId,MasterRegionId,Name,FixedAssetCategoryId,MethodType,Quantity,EstimatedLife,Purchasedate,Total,Tax,Notes,AssetAccountId,AccumulatedDepreciationAccountId,DepreciationAccountId,Active,Updated,UserId")] FixedAsset obj)
         {
-            fixedAsset.Updated = DateTime.Now;
-            fixedAsset.UserId = User.Identity.GetUserId<int>();
+            obj.Updated = DateTime.Now;
+            obj.UserId = User.Identity.GetUserId<int>();
 
-            if (!string.IsNullOrEmpty(fixedAsset.Code)) fixedAsset.Code = fixedAsset.Code.ToUpper();
-            if (!string.IsNullOrEmpty(fixedAsset.Notes)) fixedAsset.Notes = fixedAsset.Notes.ToUpper();
+            if (!string.IsNullOrEmpty(obj.Code)) obj.Code = obj.Code.ToUpper();
+            if (!string.IsNullOrEmpty(obj.Notes)) obj.Notes = obj.Notes.ToUpper();
 
-            db.Entry(fixedAsset).State = EntityState.Unchanged;
-            db.Entry(fixedAsset).Property("Code").IsModified = true;
-            db.Entry(fixedAsset).Property("Notes").IsModified = true;
-            db.Entry(fixedAsset).Property("MasterBusinessUnitId").IsModified = true;
-            db.Entry(fixedAsset).Property("MasterRegionId").IsModified = true;
-            db.Entry(fixedAsset).Property("Name").IsModified = true;
-            db.Entry(fixedAsset).Property("MethodType").IsModified = true;
-            db.Entry(fixedAsset).Property("Quantity").IsModified = true;
-            db.Entry(fixedAsset).Property("EstimatedLife").IsModified = true;
-            db.Entry(fixedAsset).Property("Purchasedate").IsModified = true;
-            db.Entry(fixedAsset).Property("Total").IsModified = true;
-            db.Entry(fixedAsset).Property("Tax").IsModified = true;
-            db.Entry(fixedAsset).Property("Active").IsModified = true;
-            db.Entry(fixedAsset).Property("Updated").IsModified = true;
+            db.Entry(obj).State = EntityState.Unchanged;
+            db.Entry(obj).Property("Code").IsModified = true;
+            db.Entry(obj).Property("Notes").IsModified = true;
+            db.Entry(obj).Property("MasterBusinessUnitId").IsModified = true;
+            db.Entry(obj).Property("MasterRegionId").IsModified = true;
+            db.Entry(obj).Property("Name").IsModified = true;
+            db.Entry(obj).Property("MethodType").IsModified = true;
+            db.Entry(obj).Property("Quantity").IsModified = true;
+            db.Entry(obj).Property("EstimatedLife").IsModified = true;
+            db.Entry(obj).Property("Purchasedate").IsModified = true;
+            db.Entry(obj).Property("Total").IsModified = true;
+            db.Entry(obj).Property("AssetAccountId").IsModified = true;
+            db.Entry(obj).Property("AccumulatedDepreciationAccountId").IsModified = true;
+            db.Entry(obj).Property("DepreciationAccountId").IsModified = true;
+            db.Entry(obj).Property("Tax").IsModified = true;
+            db.Entry(obj).Property("Active").IsModified = true;
+            db.Entry(obj).Property("Updated").IsModified = true;
 
             if (ModelState.IsValid)
             {
@@ -267,12 +251,12 @@ namespace eShop.Controllers
                     {
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.FixedAssets, MenuId = fixedAsset.Id, MenuCode = fixedAsset.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.FixedAssets, MenuId = obj.Id, MenuCode = obj.Code, Actions = EnumActions.EDIT, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
 
-                        return RedirectToAction("Index");
+                        return Json("success", JsonRequestBehavior.AllowGet);
                     }
                     catch (DbEntityValidationException ex)
                     {
@@ -283,10 +267,8 @@ namespace eShop.Controllers
             }
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
-
-            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", fixedAsset.MasterBusinessUnitId);
-
-            return View("../Asset/FixedAssets/Edit", fixedAsset);
+            ViewBag.MasterBusinessUnitId = new SelectList(user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnit).Distinct(), "Id", "Name", obj.MasterBusinessUnitId);
+            return View("../Asset/FixedAssets/_Edit", obj);
         }
 
         [HttpPost]

@@ -15,7 +15,7 @@ namespace eShop.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: FixedAssetsCategories
+        // GET: MasterDestinations
         [Authorize(Roles = "FixedAssetsCategoriesActive")]
         public ActionResult Index()
         {
@@ -24,29 +24,31 @@ namespace eShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "FixedAssetsCategoriesActive")]
-        public PartialViewResult IndexGrid(string search)
+        public PartialViewResult IndexGrid(String search)
         {
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId<int>());
-            var masterRegions = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterRegionId).Distinct().ToList();
-            var masterBusinessUnits = user.ApplicationUserMasterBusinessUnitRegions.Select(x => x.MasterBusinessUnitId).Distinct().ToList();
-
-            if (string.IsNullOrEmpty(search))
-            {
-                return PartialView("../Asset/FixedAssetsCategories/_IndexGrid", db.Set<FixedAssetCategory>().Where(x =>
-                        masterRegions.Contains(x.MasterRegionId) &&
-                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable());
-            }
+            if (String.IsNullOrEmpty(search))
+                return PartialView("../Asset/FixedAssetsCategories/_IndexGrid", db.Set<FixedAssetCategory>().AsQueryable());
             else
-            {
-                return PartialView("../Asset/FixedAssetsCategories/_IndexGrid", db.Set<FixedAssetCategory>().Where(x =>
-                        masterRegions.Contains(x.MasterRegionId) &&
-                        masterBusinessUnits.Contains(x.MasterBusinessUnitId)).AsQueryable()
-                        .Where(x => x.Code.Contains(search)));
-
-            }
+                return PartialView("../Asset/FixedAssetsCategories/_IndexGrid", db.Set<FixedAssetCategory>().AsQueryable()
+                    .Where(x => x.Code.Contains(search)));
         }
 
-        [Authorize(Roles = "FixedAssetsCategoriesActive")]
+        // GET: MasterDestinations/Details/
+        [Authorize(Roles = "FixedAssetsCategoriesView")]
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            FixedAssetCategory obj = db.FixedAssetCategories.Find(id);
+            if (obj == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("../Asset/FixedAssetsCategories/_Details", obj);
+        }
+
         public JsonResult IsCodeExists(string Code, int? Id)
         {
             return Json(!IsAnyCode(Code, Id), JsonRequestBehavior.AllowGet);
@@ -64,33 +66,19 @@ namespace eShop.Controllers
             }
         }
 
-        // GET: FixedAssetsUnits/Details/
-        [Authorize(Roles = "FixedAssetsCategoriesView")]
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            FixedAssetCategory masterCategory = db.FixedAssetCategories.Find(id);
-            if (masterCategory == null)
-            {
-                return HttpNotFound();
-            }
-            return PartialView("../Asset/FixedAssetsCategories/_Details", masterCategory);
-        }
-
-        // GET: FixedAssetsCategories/Create
+        // GET: MasterDestinations/Create
         [Authorize(Roles = "FixedAssetsCategoriesAdd")]
         public ActionResult Create()
         {
-            FixedAssetCategory masterCategory = new FixedAssetCategory();
-            masterCategory.Active = true;
+            FixedAssetCategory obj = new FixedAssetCategory
+            { Active = true 
+            
+            };
 
-            return PartialView("../Asset/FixedAssetsCategories/_Create", masterCategory);
+            return PartialView("../Asset/FixedAssetsCategories/_Create", obj);
         }
 
-        // POST: FixedAssetsUnits/Create
+        // POST: MasterDestinations/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -115,7 +103,7 @@ namespace eShop.Controllers
                         db.FixedAssetCategories.Add(obj);
                         db.SaveChanges();
 
-                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.FixedAssetsCategory, MenuId = obj.Id, MenuCode = obj.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
+                        db.SystemLogs.Add(new SystemLog { Date = DateTime.Now, MenuType = EnumMenuType.MasterDestination, MenuId = obj.Id, MenuCode = obj.Code, Actions = EnumActions.CREATE, UserId = User.Identity.GetUserId<int>() });
                         db.SaveChanges();
 
                         dbTran.Commit();
@@ -133,7 +121,7 @@ namespace eShop.Controllers
             return PartialView("../Asset/FixedAssetsCategories/_Create", obj);
         }
 
-        // GET: FixedAssetsCategories/Edit/5
+        // GET: MasterDestinations/Edit/5
         [Authorize(Roles = "FixedAssetsCategoriesEdit")]
         public ActionResult Edit(int? id)
         {
@@ -149,13 +137,13 @@ namespace eShop.Controllers
             return PartialView("../Asset/FixedAssetsCategories/_Edit", obj);
         }
 
-        // POST: FixedAssetsCategories/Edit/5
+        // POST: MasterDestinations/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "FixedAssetsCategoriesEdit")]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,Notes,Active,Updated")] FixedAssetCategory obj)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,Notes,Active,Updated,UserId")] FixedAssetCategory obj)
         {
             obj.UserId = User.Identity.GetUserId<int>();
             obj.Updated = DateTime.Now;
@@ -229,7 +217,6 @@ namespace eShop.Controllers
                                 db.SaveChanges();
 
                                 dbTran.Commit();
-
                             }
                         }
                         return Json((ids.Length - failed).ToString() + " data berhasil dihapus.");
@@ -239,6 +226,8 @@ namespace eShop.Controllers
                         dbTran.Rollback();
                         throw ex;
                     }
+
+
                 }
             }
         }
