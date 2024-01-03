@@ -38,6 +38,16 @@ namespace eShop.Controllers
             return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult AllFixedAssetCategory(DatalistFilter filter)
+        {
+            FixedAssetCategoryDatalist datalist = new FixedAssetCategoryDatalist(db);
+            filter.AdditionalFilters["Active"] = true;
+            datalist.Filter = filter;
+
+            return Json(datalist.GetData(), JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult AllMasterBusinessUnitRelation(DatalistFilter filter, int MasterBusinessUnitId = 0)
         {
             MasterBusinessUnitRelationDatalist datalist = new MasterBusinessUnitRelationDatalist(db);

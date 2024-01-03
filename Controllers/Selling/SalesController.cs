@@ -932,24 +932,6 @@ namespace eShop.Controllers
             return Json(masterItemUnitId);
         }
 
-        [HttpPost]
-        [ValidateJsonAntiForgeryToken]
-        [Authorize(Roles = "SalesActive")]
-        public JsonResult GetMasterDestination(int id)
-        {
-            int masterDestinationId = 0;
-            MasterCustomer masterCustomer = db.MasterCustomers.Find(id);
-
-            if (masterCustomer != null)
-            {
-                MasterDestination masterDestination = db.MasterDestinations.Where(x => x.Id == masterCustomer.Id).FirstOrDefault();
-
-                if (masterDestination != null)
-                    masterDestinationId = masterDestination.Id;
-            }
-
-            return Json(masterDestinationId);
-        }
 
         [Authorize(Roles = "SalesActive")]
         public ActionResult ChangeCurrency(int? salesId)
@@ -1039,6 +1021,25 @@ namespace eShop.Controllers
         public JsonResult GetCurrencyRate(int id)
         {
             return Json(db.MasterCurrencies.Find(id).Rate);
+        }
+
+        [HttpPost]
+        [ValidateJsonAntiForgeryToken]
+        [Authorize(Roles = "SalesActive")]
+        public JsonResult GetMasterDestination(int id)
+        {
+            int masterDestinationId = 0;
+            MasterCustomer masterCustomer = db.MasterCustomers.Find(id);
+
+            if (masterCustomer != null)
+            {
+                MasterDestination masterDestination = db.MasterDestinations.Where(x => x.Id == masterCustomer.Id).FirstOrDefault();
+
+                if (masterDestination != null)
+                    masterDestinationId = masterDestination.Id;
+            }
+
+            return Json(masterDestinationId);
         }
 
 

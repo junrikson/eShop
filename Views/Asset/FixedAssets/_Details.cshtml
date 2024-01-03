@@ -1,52 +1,71 @@
-﻿@model eShop.Models.MasterItem
+﻿@model eShop.Models.FixedAsset
 
 @{
     Layout = null;
 }
 
-<div class="modal-dialog modal-xl">
+@section Styles {
+    @Styles.Render("~/style/mvcgrid")
+    @Styles.Render("~/style/MvcDatalist")
+    @Styles.Render("~/style/Select2")
+}
+
+<style>
+    .tablegrid-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+@Html.Partial("MvcDatalist/_Dialog")
+
+<div class="modal-dialog modal-lg">
     <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Detail - Aktiva</h4>
+        </div>
         <div class="modal-body">
             <section class="content">
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <i class="fa fa-plus"></i>
+                    <div class="col-md-12">
+                        <div id="divEmp">
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.Id)
 
-                                <h3 class="box-title">Details - Barang</h3>
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <form>
-                                    <div class="form-horizontal">
-                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#tab_1" data-toggle="tab">General</a></li>
+                                    <li><a href="#tab_2" data-toggle="tab">Account</a></li>
+                                </ul>
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="tab-content">
+                                    <div class="tab-pane active form-horizontal" id="tab_1">
                                         <div class="form-group">
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
+                                                @Html.LabelFor(model => model.MasterBusinessUnitId)
+                                                @Html.TextBoxFor(model => model.MasterBusinessUnit.Name, new { disabled = "disabled", @class = "form-control", id = "combinedTextBoxBusinessUnit" })
+                                                @Html.ValidationMessageFor(model => model.MasterBusinessUnitId, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-md-6">
+                                                @Html.LabelFor(model => model.MasterRegionId)
+                                                @Html.TextBoxFor(model => model.MasterRegion.Code, new { disabled = "disabled", @class = "form-control", id = "combinedTextBoxRegion" })
+                                                @Html.ValidationMessageFor(model => model.MasterRegionId, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
                                                 @Html.LabelFor(model => model.Code)
-                                                @Html.TextBoxFor(model => model.Code, new { disabled = "disabled", @class = "form-control" })
+                                                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
                                                 @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-12">
-                                                @Html.LabelFor(model => model.MasterCategory.Name)
-                                                @Html.TextBoxFor(model => model.MasterCategory.Name, new { disabled = "disabled", @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => model.MasterCategory.Name, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-12">
-                                                @Html.LabelFor(model => model.MasterBrand.Name)
-                                                @Html.TextBoxFor(model => model.MasterBrand.Name, new { disabled = "disabled", @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => model.MasterBrand.Name, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-12">
-                                                @Html.LabelFor(model => model.MasterSupplier.Name)
-                                                @Html.TextBoxFor(model => model.MasterSupplier.Name, new { disabled = "disabled", @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => model.MasterSupplier.Name, "", new { @class = "text-danger" })
+                                            <div class="col-md-2 text-center">
+                                                @Html.LabelFor(model => model.Active)
+                                                <div class="checkbox text-center">
+                                                    @Html.CheckBoxFor(model => model.Active)
+                                                    @Html.CheckBoxFor(model => model.Active, new { disabled = "disabled" })
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -56,55 +75,158 @@
                                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                             </div>
                                             <div class="col-md-2 text-center">
-                                                @Html.LabelFor(model => model.Active)
+                                                @Html.LabelFor(model => model.Tax)
                                                 <div class="checkbox text-center">
-                                                    @Html.CheckBoxFor(model => model.Active, new { disabled = "disabled" })
-                                                    @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                                    @Html.CheckBoxFor(model => model.Tax)
+                                                    @Html.CheckBoxFor(model => model.Tax, new { disabled = "disabled" })
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-md-12">
-                                                @Html.LabelFor(model => model.Notes)
-                                                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
-                                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                            <div class="col-md-6">
+                                                @Html.LabelFor(model => model.FixedAssetCategoryId)
+                                                @Html.TextBoxFor(model => model.FixedAssetCategory.Code, new { disabled = "disabled", @class = "form-control", id = "combinedTextBoxFixedAssetCategory" })
+                                                @Html.ValidationMessageFor(model => model.FixedAssetCategoryId, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-md-6">
+                                                @Html.LabelFor(model => model.MethodType)
+                                                @Html.EnumDropDownListFor(model => model.MethodType, htmlAttributes: new { disabled = "disabled", @class = "form-control", id = "methodType" })
+                                                @Html.ValidationMessageFor(model => model.MethodType, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                @Html.LabelFor(model => model.Quantity)
+                                                @Html.TextBoxFor(model => model.Quantity, new { disabled = "disabled", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-md-6">
+                                                @Html.LabelFor(model => model.EstimatedLife)
+                                                @Html.TextBoxFor(model => model.EstimatedLife, new { disabled = "disabled", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.EstimatedLife, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                @Html.LabelFor(model => model.Purchasedate)
+                                                @Html.EditorFor(model => model.Purchasedate, new { htmlAttributes = new { disabled = "disabled", @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Purchasedate, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-md-6">
+                                                @Html.LabelFor(model => model.Total)
+                                                @Html.TextBoxFor(model => model.Total, new { disabled = "disabled", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Total, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                            <!-- /.box-body -->
-                        </div>
-                        <!-- /.box -->
-                    </div>
-                    <!-- /.col -->
 
-                    <div class="col-md-8">
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <div class="col-md-2">
-                                    <i class="fa fa-info"></i>
-
-                                    <h3 class="box-title">Details</h3>
+                                    <div class="tab-pane form-horizontal" id="tab_2">
+                                        <div class="form-group">
+                                            <div class="col-md-8">
+                                                @Html.LabelFor(model => model.AssetAccountId)
+                                                @Html.TextBoxFor(model => model.AssetAccountId, new { disabled = "disabled", @class = "form-control", id = "combinedTextBoxAssetAccount" })
+                                                @Html.ValidationMessageFor(model => model.AssetAccountId, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-md-8">
+                                                @Html.LabelFor(model => model.AccumulatedDepreciationAccountId)
+                                                @Html.TextBoxFor(model => model.AccumulatedDepreciationAccountId, new { disabled = "disabled", @class = "form-control", id = "combinedTextBoxAccumulatedDepreciationAccount" })
+                                                @Html.ValidationMessageFor(model => model.AccumulatedDepreciationAccountId, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-md-8">
+                                                @Html.LabelFor(model => model.DepreciationAccountId)
+                                                @Html.TextBoxFor(model => model.DepreciationAccountId, new { disabled = "disabled", @class = "form-control", id = "combinedTextBoxDepreciationAccount" })
+                                                @Html.ValidationMessageFor(model => model.DepreciationAccountId, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(model => model.Created)
+                                        @Html.EditorFor(model => model.Created, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                                        @Html.ValidationMessageFor(model => model.Created, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(model => model.Updated)
+                                        @Html.EditorFor(model => model.Updated, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                                        @Html.ValidationMessageFor(model => model.Updated, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(model => model.User.UserName)
+                                        @Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { disabled = "disabled", @class = "form-control", @style = "text-transform:uppercase" } })
+                                        @Html.ValidationMessageFor(model => model.User.UserName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
                             </div>
-                            <!-- /.box-header -->
-                            <div class="box-body" style="overflow:auto; white-space: nowrap" id="DetailsViewGrid">
-                                @Html.AjaxGrid(Url.Action("ViewGrid", routeValues: new { Id = Html.ValueFor(model => model.Id) }), new { id = "view-table" })
-                            </div>
-                            <!-- /.box-body -->
+
                         </div>
-                        <!-- /.box -->
                     </div>
-                    <div class="col-md-12 text-center">
-                        <button type="button" class="btn btn-danger btn-block btn-lg" data-dismiss="modal">
-                            Close
-                        </button>
-                    </div>
-                    <!-- /.col -->
                 </div>
             </section>
+            <div class="text-right">
+                <button type="button" class="btn btn-danger btn-block btn-lg" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
         </div>
-    </div>
-</div>
+                </div>
+        </div>
 
+<script>
+    // Menggabungkan nilai Code dan Name saat halaman dimuat
+        $(document).ready(function () {
+        var codeValue = '@Model.MasterRegion.Code';
+        var nameValue = '@Model.MasterRegion.Notes';
+        var combinedValue = codeValue + ' - ' + nameValue;
+
+        // Mengatur nilai TextBox
+        $('#combinedTextBoxRegion').val(combinedValue);
+        });
+
+        $(document).ready(function () {
+        var codeValue = '@Model.MasterBusinessUnit.Code';
+        var nameValue = '@Model.MasterBusinessUnit.Name';
+        var combinedValue = codeValue + ' - ' + nameValue;
+
+        // Mengatur nilai TextBox
+         $('#combinedTextBoxBusinessUnit').val(combinedValue);
+        });
+
+         $(document).ready(function () {
+        var codeValue = '@Model.FixedAssetCategory.Code';
+        var nameValue = '@Model.FixedAssetCategory.Name';
+        var combinedValue = codeValue + ' - ' + nameValue;
+
+        // Mengatur nilai TextBox
+             $('#combinedTextBoxFixedAssetCategory').val(combinedValue);
+         });
+
+         $(document).ready(function () {
+        var codeValue = '@Model.DepreciationAccount.Code';
+        var nameValue = '@Model.DepreciationAccount.Name';
+        var combinedValue = codeValue + ' - ' + nameValue;
+
+        // Mengatur nilai TextBox
+             $('#combinedTextBoxDepreciationAccount').val(combinedValue);
+         });
+
+         $(document).ready(function () {
+        var codeValue = '@Model.AssetAccount.Code';
+        var nameValue = '@Model.AssetAccount.Name';
+        var combinedValue = codeValue + ' - ' + nameValue;
+
+        // Mengatur nilai TextBox
+             $('#combinedTextBoxAssetAccount').val(combinedValue);
+         });
+
+         $(document).ready(function () {
+        var codeValue = '@Model.AccumulatedDepreciationAccount.Code';
+        var nameValue = '@Model.AccumulatedDepreciationAccount.Name';
+        var combinedValue = codeValue + ' - ' + nameValue;
+
+        // Mengatur nilai TextBox
+             $('#combinedTextBoxAccumulatedDepreciationAccount').val(combinedValue);
+        });
+
+</script>

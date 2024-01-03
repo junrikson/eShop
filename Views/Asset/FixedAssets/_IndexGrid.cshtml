@@ -7,14 +7,16 @@
     .Grid(Model)
     .Build(columns =>
     {
+
         columns.Add(model => Html.CheckBox(model.Id.ToString(), new { id = model.Id.ToString(), value = model.Id.ToString() })).Titled(Html.CheckBox("CheckAll"));
-        columns.Add(model => ((User.IsInRole("ShippingFeesEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "FixedAsset", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
-        ((User.IsInRole("FixedAssetsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "FixedAssets", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a>" : "") +
-        ((User.IsInRole("FixedAssetsAdd")) ? "&nbsp;<a class=\"btn btn-warning btn-xs copy-data\" href=\"" + model.Id + "\"><i class=\"fa fa-copy\"></i> Copy</a>" : "") + "</div>").Encoded(false);
+        columns.Add(model => ((User.IsInRole("FixedAssetsEdit")) ? "<div class=\"text-center\"><a class=\"btn btn-success btn-xs edit-data\" href=\"" + @Url.Action("Edit", "FixedAssets", new { id = model.Id }) + "\"><i class=\"fa fa-edit\"></i> Edit</a>" : "") +
+        ((User.IsInRole("FixedAssetsView")) ? "&nbsp;<a class=\"btn btn-primary btn-xs view-data\" href=\"" + @Url.Action("Details", "FixedAssets", new { id = model.Id }) + "\"><i class=\"fa fa-eye\"></i> View</a></div>" : "")).Encoded(false);
+
         columns.Add(model => model.MasterBusinessUnit.Name).Titled(@Html.DisplayNameFor(model => model.MasterBusinessUnit.Name));
         columns.Add(model => model.MasterRegion.Code).Titled(@Html.DisplayNameFor(model => model.MasterRegion.Code));
         columns.Add(model => model.Code).Titled(@Html.DisplayNameFor(model => model.Code));
         columns.Add(model => model.Name).Titled(@Html.DisplayNameFor(model => model.Name));
+        columns.Add(model => model.FixedAssetCategory.Name).Titled(@Html.DisplayNameFor(model => model.FixedAssetCategory.Name));
         columns.Add(model => model.MethodType).Titled(@Html.DisplayNameFor(model => model.MethodType));
         columns.Add(model => model.Quantity).Titled(@Html.DisplayNameFor(model => model.Quantity));
         columns.Add(model => model.EstimatedLife).Titled(@Html.DisplayNameFor(model => model.EstimatedLife));
@@ -27,7 +29,6 @@
         columns.Add(model => model.User.FullName).Titled(@Html.DisplayNameFor(model => model.User.FullName));
         columns.Add(model => model.Updated).Titled(@Html.DisplayNameFor(model => model.Updated)).InitialSort(GridSortOrder.Desc);
     })
-    .RowAttributed(model => new { @class = (model.Active == true ? "" : "grid-column-red") })
     .Empty("Tidak ada data.")
     .Pageable(pager =>
     {

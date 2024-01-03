@@ -53,45 +53,91 @@
         </div>
     </section>
 </div>
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-    <div id="addContainer">
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div id="detailsContainer">
     </div>
 </div>
-
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-    <div id="editContainer">
-    </div>
-</div>
-
-<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-    <div id="viewContainer">
-    </div>
-</div>
-
 
 @section Scripts {
     @Scripts.Render("~/bundles/mvcgrid")
     @Scripts.Render("~/script/tableHeadFixer")
-    @Scripts.Render("~/script/InputMask")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/unobtrusive")
     @Scripts.Render("~/bundles/MvcDatalist")
+    @Scripts.Render("~/script/InputMask")
+
+    <script>
+        $.validator.methods.range = function (value, element, param) {
+            var globalizedValue = value.replace(",", ".");
+            return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+        }
+
+        $.validator.methods.number = function (value, element) {
+            return this.optional(element) || /-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+        }
+    </script>
 
     <script>
         [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
             new MvcGrid(element);
         });
 
-        [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-            new MvcDatalist(element);
+        Inputmask.extendAliases({
+            'myNum': {
+                alias: 'currency',
+                digits: 0,
+                digitsOptional: false,
+                integerDigits: 12,
+                prefix: '',
+                groupSeparator: '.',
+                radixPoint: ',',
+                groupSize: 3,
+                rightAlign: false,
+                autoUnmask: true
+            }
         });
+
+        Inputmask.extendAliases({
+            'myNum2': {
+                alias: 'currency',
+                digits: 2,
+                digitsOptional: false,
+                integerDigits: 12,
+                prefix: '',
+                groupSeparator: '.',
+                radixPoint: ',',
+                groupSize: 3,
+                rightAlign: false,
+                autoUnmask: true
+            }
+        });
+
+        Inputmask.extendAliases({
+            'myNum10': {
+                alias: 'currency',
+                digits: 10,
+                digitsOptional: false,
+                integerDigits: 12,
+                prefix: '',
+                groupSeparator: '.',
+                radixPoint: ',',
+                groupSize: 3,
+                rightAlign: false,
+                autoUnmask: true
+            }
+        });
+
 
         $('#btnAdd').click(function (event) {
             event.preventDefault();
             var url = $(this).attr("href");
             $.get(url, function (data) {
-                $('#addContainer').html(data);
-                $('#addModal').modal('show');
+                $('#detailsContainer').html(data);
+                $('#detailsModal').modal('show');
+
+                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                    new MvcDatalist(element);
+                });
 
                 $('form').each(function () {
                     var $el = $(this);
@@ -99,24 +145,78 @@
                     $.validator.unobtrusive.parse($el);
                 });
 
-                $(function () {
-                    $("#customerType").on("change", function () {
-                        var selectedType = $(this).children("option").filter(":selected").val();
-                        $(".hideable").hide();
-                        if (selectedType === "1") {
-                            $("#companyType").show();
-                        }
-                        else if (selectedType === "2") {
-                            $("#gender").show();
-                        }
-                    }).change();
-                });
+                Inputmask("myNum").mask("#Quantity");
+                Inputmask("myNum").mask("#EstimatedLife");
+                Inputmask("myNum").mask("#Total");
 
-                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                    new MvcDatalist(element);
-                });
+                //$("#MasterRegionId").on("change", function () {
+                //    var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                //    var masterRegionId = $("#MasterRegionId").val();
+                //    var id = $("#Id").val();
+                //    var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
+                //    var options = {};
+
+                //    if (masterRegionId != 0 && masterRegionId !== '') {
+                //        if ($("#MasterBusinessUnitId").val() === "") {
+                //            bootbox.alert("Unit Bisnis belum dipilih!");
+                //            document.getElementById('MasterRegionId').value = "0";
+                //        }
+                //        else {
+                //            options.url = "/FixedAssets/GetCode";
+                //            options.type = "POST";
+                //            options.headers = headers;
+                //            options.data = JSON.stringify(data);
+                //            options.contentType = "application/json";
+                //            options.dataType = "json";
+                //            options.success = function (code) {
+                //                document.getElementById('Code').value = code;
+
+                //                [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                //                    new MvcDatalist(element).reload();
+                //                });
+                //            };
+                //            options.error = function () {
+                //                document.getElementById('Code').value = "";
+                //                grid.reload();
+                //            };
+                //            $.ajax(options);
+                //        }
+                //    }
+                //}).change();
+
+                //$("#MasterBusinessUnitId").on("change", function () {
+                //    var id = $("#Id").val();
+                //    var masterBusinessUnitId = $("#MasterBusinessUnitId").val();
+                //    var masterRegionId = $("#MasterRegionId").val();
+                //    var data = { Id: id, MasterBusinessUnitId: masterBusinessUnitId, MasterRegionId: masterRegionId };
+                //    var options = {};
+
+                //    if (masterRegionId != 0 && masterRegionId !== '') {
+                //        options.url = "/FixedAssets/GetCode";
+                //        options.type = "POST";
+                //        options.headers = headers;
+                //        options.data = JSON.stringify(data);
+                //        options.contentType = "application/json";
+                //        options.dataType = "json";
+                //        options.success = function (code) {
+                //            document.getElementById('Code').value = code;
+
+                //            [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                //                new MvcDatalist(element).reload();
+                //            });
+                //        };
+                //        options.error = function () {
+                //            document.getElementById('Code').value = "";
+                //        };
+                //        $.ajax(options);
+                //    }
+                //}).change();
+
             });
+
         });
+
+
 
         $(document).on('keyup', '.mvc-grid-search', function () {
             var grid = new MvcGrid(document.querySelector('#data-table'));
@@ -127,11 +227,11 @@
 
         function CreateSuccess(data) {
             if (data !== "success") {
-                $('#addContainer').html(data);
+                $('#detailsContainer').html(data);
                 return;
             }
-            $('#addModal').modal('hide');
-            $('#addContainer').html("");
+            $('#detailsModal').modal('hide');
+            $('#detailsContainer').html("");
 
             var grid = new MvcGrid(document.querySelector('#data-table'));
             grid.reload();
@@ -139,15 +239,18 @@
 
         function EditSuccess(data) {
             if (data !== "success") {
-                $('#editContainer').html(data);
+                $('#detailsContainer').html(data);
                 return;
             }
-            $('#editModal').modal('hide');
-            $('#editContainer').html("");
+            $('#detailsModal').modal('hide');
+            $('#detailsContainer').html("");
 
             var grid = new MvcGrid(document.querySelector('#data-table'));
             grid.reload();
         }
+
+
+
     </script>
 
     <script>
@@ -206,30 +309,17 @@
                 event.preventDefault();
                 var url = $(this).attr("href");
                 $.get(url, function (data) {
-                    $('#editContainer').html(data);
-                    $('#editModal').modal('show');
+                    $('#detailsContainer').html(data);
+                    $('#detailsModal').modal('show');
+
+                    [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
+                        new MvcDatalist(element);
+                    });
 
                     $('form').each(function () {
                         var $el = $(this);
                         $el.data('validator', null);
                         $.validator.unobtrusive.parse($el);
-                    });
-
-                    $(function () {
-                        $("#customerType").on("change", function () {
-                            var selectedType = $(this).children("option").filter(":selected").val();
-                            $(".hideable").hide();
-                            if (selectedType === "1") {
-                                $("#companyType").show();
-                            }
-                            else if (selectedType === "2") {
-                                $("#gender").show();
-                            }
-                        }).change();
-                    });
-
-                    [].forEach.call(document.getElementsByClassName('datalist'), function (element) {
-                        new MvcDatalist(element);
                     });
                 });
             });
@@ -238,8 +328,8 @@
                 event.preventDefault();
                 var url = $(this).attr("href");
                 $.get(url, function (data) {
-                    $('#viewContainer').html(data);
-                    $('#viewModal').modal('show');
+                    $('#detailsContainer').html(data);
+                    $('#detailsModal').modal('show');
                 });
             });
 

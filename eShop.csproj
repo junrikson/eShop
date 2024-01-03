@@ -298,8 +298,8 @@
     <Compile Include="Controllers\Accounting\JournalsController.cs" />
     <Compile Include="Controllers\Accounting\OpeningBallanceController.cs" />
     <Compile Include="Controllers\Accounting\ReportTrialBalanceController.cs" />
-    <Compile Include="Controllers\Asset\FixedAssetsCategoriesController.cs" />
     <Compile Include="Controllers\Asset\FixedAssetsController.cs" />
+    <Compile Include="Controllers\Asset\FixedAssetsCategoriesController.cs" />
     <Compile Include="Controllers\Buying\GoodsReceiptsController.cs" />
     <Compile Include="Controllers\Buying\PurchaseReturnsController.cs" />
     <Compile Include="Controllers\Buying\Purchases.cs" />
@@ -7321,11 +7321,6 @@
     <Content Include="Views\Selling\Terms\Index.cshtml" />
     <Content Include="Views\Selling\Terms\_CustomersGrid.cshtml" />
     <Content Include="Views\Selling\Terms\_CustomersEdit.cshtml" />
-    <Content Include="Views\Asset\FixedAssetsCategories\_Create.cshtml" />
-    <Content Include="Views\Asset\FixedAssetsCategories\_Details.cshtml" />
-    <Content Include="Views\Asset\FixedAssetsCategories\_Edit.cshtml" />
-    <Content Include="Views\Asset\FixedAssetsCategories\_IndexGrid.cshtml" />
-    <Content Include="Views\Asset\FixedAssetsCategories\Index.cshtml" />
     <Content Include="Views\Masters\MasterDestinations\_Create.cshtml" />
     <Content Include="Views\Masters\MasterDestinations\_Details.cshtml" />
     <Content Include="Views\Masters\MasterDestinations\_Edit.cshtml" />
@@ -7341,14 +7336,15 @@
     <Content Include="Views\Selling\ShippingFees\Edit.cshtml" />
     <Content Include="Views\Selling\ShippingFees\Index.cshtml" />
     <Content Include="Views\Asset\FixedAssets\_Details.cshtml" />
-    <Content Include="Views\Asset\FixedAssets\_DetailsCreate.cshtml" />
-    <Content Include="Views\Asset\FixedAssets\_DetailsEdit.cshtml" />
-    <Content Include="Views\Asset\FixedAssets\_DetailsGrid.cshtml" />
     <Content Include="Views\Asset\FixedAssets\_IndexGrid.cshtml" />
-    <Content Include="Views\Asset\FixedAssets\_ViewGrid.cshtml" />
-    <Content Include="Views\Asset\FixedAssets\Create.cshtml" />
-    <Content Include="Views\Asset\FixedAssets\Edit.cshtml" />
+    <Content Include="Views\Asset\FixedAssets\_Create.cshtml" />
     <Content Include="Views\Asset\FixedAssets\Index.cshtml" />
+    <Content Include="Views\Asset\FixedAssets\_Edit.cshtml" />
+    <Content Include="Views\Asset\FixedAssetsCategories\_Create.cshtml" />
+    <Content Include="Views\Asset\FixedAssetsCategories\_Details.cshtml" />
+    <Content Include="Views\Asset\FixedAssetsCategories\_Edit.cshtml" />
+    <Content Include="Views\Asset\FixedAssetsCategories\_IndexGrid.cshtml" />
+    <Content Include="Views\Asset\FixedAssetsCategories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
